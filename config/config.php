@@ -1,5 +1,6 @@
 <?php
 //default timezone untuk upload file supaya set waktunya sesuai //
+// error_reporting(1);
 date_default_timezone_set('Asia/Jakarta');
 
 //untuk memulai session (session pemanggilan header)//
@@ -104,8 +105,8 @@ if(isset($_SESSION['user'])){
         UNION ALL SELECT id_group AS id , nama_group AS nama_org , npk_cord AS cord , id_section AS id_parent, part AS part FROM groupfrm WHERE id_group='$dataUser[id_area]'
         UNION ALL SELECT id_post AS id , nama_pos AS nama_org , npk_cord AS cord , id_group AS id_parent, part AS part FROM pos_leader WHERE id_post='$dataUser[id_area]'")or die(mysqli_error($link));
     $sqlArea = mysqli_fetch_assoc($union);
-    $areaUser = $sqlArea['nama_org'];
-    $idAreaUser = $sqlArea['id'];
+    $areaUser = (isset($sqlArea['nama_org']))?$sqlArea['nama_org']:"";
+    $idAreaUser = (isset($sqlArea['id']))?$sqlArea['id']:"";
     $accUser = $dataUser['department'];
     $jabatan = $dataUser['jabatan'];
     $role = $_SESSION['level'];

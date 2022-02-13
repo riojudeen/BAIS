@@ -58,8 +58,10 @@ if(isset($_SESSION['user'])){
 						$query_absen = mysqli_query($link, "SELECT check_in , check_out FROM absensi WHERE npk = '$npk_user' AND `date` = '$date' ")or die(mysqli_error($link));
 						$data_absen = mysqli_fetch_assoc($query_absen);
 						// echo mysqli_num_rows($query_absen);
-						$check_in = ($data_absen['check_in'] == "00:00:00")?"-":jam($data_absen['check_in']);
-						$check_out = ($data_absen['check_out'] == "00:00:00")?"-":jam($data_absen['check_out']);
+						$ci = (isset($data_absen['check_in']))?$data_absen['check_in']:"";
+						$co = (isset($data_absen['check_out']))?$data_absen['check_out']:"";
+						$check_in = ($ci == "00:00:00")?"-":jam($ci);
+						$check_out = ($co == "00:00:00")?"-":jam($co);
 						?>
 						<div class="col-lg-6 col-sm-12 col-md-6 ml-auto mr-auto">
 							<h5><?=$check_in?><br><small>Check In</small></h5>
