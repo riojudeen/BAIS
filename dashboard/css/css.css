@@ -1,0 +1,64 @@
+
+
+.navbar-brand {
+    font-family: "hotel_de_paris";
+
+}
+.navbar {
+    background-color: #2C3E50;
+
+}
+/*
+td:hover {
+    background-color: #B6B6B6;
+
+}
+*/
+
+
+
+#layoutSidenav_nav a:hover::after {
+    border-right: 15px solid #f4f3ef;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    right: -10px;
+    opacity: 1;
+    top: 7px;
+    transition: opacity 150ms ease-in;
+}
+/*
+th, td {
+    font-size: 10px;
+}
+*/
+
+
+
+
+
+/* Desktop Version */
+@media (min-width: 992px) {
+    .nav-link {
+        margin-right: 10px;
+        
+    }
+
+     .btn-block {
+
+        margin-top: 2px;
+        width: 100px;
+    }
+}
+/* Mobile Version iphone */
+@media (max-width: 500px) {
+    .nav-item {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }    
+    
+}
+
+

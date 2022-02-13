@@ -1,0 +1,58 @@
+@font-face {
+    font-family: 'FontMoreAwesome';
+    src: url('FontMoreAwesome-regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+.fa-divhead:before {
+    font-family: FontMoreAwesome;
+    content: "1";
+}
+.fa-depthead:before {
+    font-family: FontMoreAwesome;
+    content: "2";
+}
+.fa-secthead:before {
+    font-family: FontMoreAwesome;
+    content: "3";
+}
+.fa-foreman:before {
+    font-family: FontMoreAwesome;
+    content: "4";
+}
+.fa-leader:before {
+    font-family: FontMoreAwesome;
+    content: "5";
+}
+.fa-teammember:before {
+    font-family: FontMoreAwesome;
+    content: "6";
+}
+.fa-kontrak:before {
+    font-family: FontMoreAwesome;
+    content: "7";
+}
+.fa-daihatsu:before {
+    font-family: FontMoreAwesome;
+    content: "8";
+}
+.fa-kontrak1:before {
+    font-family: FontMoreAwesome;
+    content: "9";
+}
+.fa-kontrak2:before {
+    font-family: FontMoreAwesome;
+    content: ":";
+}
+.fa-permanent:before {
+    font-family: FontMoreAwesome;
+    content: ";";
+}
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }

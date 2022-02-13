@@ -1,0 +1,74 @@
+
+
+<!DOCTYPE html>
+<htm>
+    <head>
+        <title>Belajar Javascript</title>
+    </head>
+    <body>
+
+    </body>
+<script> 
+function salam(kapan, siapa){
+    return "Selamat "+kapan+ " "+siapa;
+}
+console.log (salam("malam", "Rio"));
+
+//first class citizen 
+//fungsi di dalam javascript bisa dianggap sebagai tipe data , sehingga bisa dimasukan ke dalam variable lain 
+var hitung = function rata_rata(a,b){//variable hitung didefinisikan sebagai fungsi rata_rata bukan berisi nilai dari fungsi rata_rata
+    return (a + b)/2;
+
+};
+
+console.log(hitung(2,3));
+//console.log(rata_rata(2,3)); //Uncaught ReferenceError: rata_rata is not defined (funcrtion rata_rata tidak bisa dipanggil)
+/*note
+pendefinisian fungsi sebagai variabel seperti diatas disebut function expression
+sedangkan untuk pembuatan fungsi regular , seperti biasa disebut function declaration */
+
+//dalam javascript diperbolehkan membuat fungsi tanpa nama , disebut anonymous function 
+var hitung = function(a,b){ return (a+b)/2;};
+console.log(hitung(4,3));
+
+
+//Java script obect 
+var object = {
+    properti1 : "nilai properti 1", //setiap properti dipisahkan dengan tanda koma
+    properti2 : "nilai properti 2", //setiap object diberi diberi tanda ":" bukan "="(operator assignment)
+    properti3 : "nilai properti 4", //akhir properti tidak usah diberi tanda koma, tapi jika ada object lagi harus diberi tanda koma
+    method1 : function method1(){ //properti berupa function disebut dengan merhod
+        return "nilai function 1";
+    },
+    method2 : function method2(){
+        return "nilai function 2";
+    },
+    "properti 4" : "nilai properi 4", //penulisan properti juga bisa menggunakan string
+    "5" : "nilai properti 5", //penulisan angka didalam tanda string juga bisa dilakukan
+    6 : "nilai properti 6" //penulisan properti tanpa tanda string
+}
+//cara mengaksesn properti 
+//dot notation 
+console.log(object.properti1);
+//bracket notation 
+console.log(object["properti2"]); //penuslisan dengan bracket notation harus menggunakan tanda " " karena pada dasarnya nilai yang harus dimasukan bernilai string
+//console.log(object.5); akan menghasilkan error karena penulisan properti tidak mengikuti cara penulisan identifier (tidak boleh diawali angka)
+//console.log(object.properti 4); //akses nilai properti dengan dot notation tidak bisa dilakukan karena propersi terpisah (error)
+console.log(object["properti 4"]) // keunggulan menggunakan bracket notation , bisa mengambil nilai properti yang berupa string terpisah
+//console.log(object.5);
+console.log(object["5"]);
+console.log(object[5]);
+console.log(object[6]);
+console.log(object["6"]);
+
+
+/*
+1. object prototype
+
+//Number Object 
+//Math Object
+
+
+*/
+</script>  
+</html>

@@ -1,0 +1,13 @@
+/*------------------------
+	icons
+-------------------------*/
+@function unicode($str) {
+  @return unquote("\"\\#{$str}\"");
+}
+
+$icon-dashboard-level: unicode(ea02);
+
+.icon-dashboard-level::before {
+  content: $icon-dashboard-level;
+}
+
