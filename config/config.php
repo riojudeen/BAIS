@@ -98,7 +98,7 @@ function shift_ubah($shift_){
 ///menyimpan data user
 if(isset($_SESSION['user'])){
     $npkUser = $_SESSION['user'];
-    $dataUser = mysqli_fetch_assoc(mysqli_query($link, "SELECT * FROM karyawan WHERE npk = '$npkUser' "));
+    $dataUser = mysqli_fetch_assoc(mysqli_query($link, "SELECT * FROM karyawan WHERE npk = '$npkUser' "))or die(mysqli_error($link));
     $union = mysqli_query($link, "SELECT id_div AS id , nama_divisi AS nama_org , npk_cord AS cord , id_company AS id_parent , part AS part FROM division WHERE id_div='$dataUser[id_area]'
         UNION ALL SELECT id_dept AS id , dept AS nama_org , npk_cord AS cord , id_div AS id_parent, part AS part FROM department WHERE id_dept='$dataUser[id_area]'
         UNION ALL SELECT id_section AS id , section AS nama_org , npk_cord AS cord , id_dept AS id_parent, part AS part FROM section WHERE id_section='$dataUser[id_area]'

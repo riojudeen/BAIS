@@ -211,9 +211,9 @@ if(isset($_SESSION['user'])){
                 const val = $(this).attr('data-id');
                 // console.log(val);
                 $.ajax({
-                type: 'POST',
-                url: "ajax/index.php?hal=<?=$hal?>&sort=<?=$sort?>&cari=<?=$cari?>",
-                data: {id : val },
+                    type: 'POST',
+                    url: "ajax/index.php?hal=<?=$hal?>&sort=<?=$sort?>&cari=<?=$cari?>",
+                    data: {id : val },
                 success: function(msg){
                     $("#monitor"+val).html(msg);
                     
@@ -251,7 +251,31 @@ if(isset($_SESSION['user'])){
             document.organization.submit();
         }); 
     </script>
-    
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '#preview_sub', function(a){
+                a.preventDefault();
+                
+                var data = $(this).attr('data-id');
+                var part = $(this).attr('data-name');
+                $.ajax({
+                    type: 'POST',
+                    url: "ajax/get_area.php",
+                    data: {data : data, part:part },
+                    success: function(msg){
+                        
+                        $('#sub_area_preview').html(msg)
+                        $('#data_sub').modal('show');
+                        
+                    }
+                })
+            })
+            // $('body').on('hidden.bs.modal', function(){
+            //     $(this).find('#sub_area_preview').empty();
+            // })
+
+        })  
+    </script>
     <?php
     include_once("../../endbody.php"); 
 } else{

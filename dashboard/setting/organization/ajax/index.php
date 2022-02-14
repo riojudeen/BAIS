@@ -18,7 +18,7 @@ if(isset($_SESSION['user'])){
                 b.nama_group AS parent_name 
                 FROM pos_leader AS a
                 LEFT JOIN groupfrm AS b ON a.id_group = b.id_group 
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_post";
                 $nama_area = "Team";
                 
 
@@ -35,7 +35,7 @@ if(isset($_SESSION['user'])){
                 b.section AS parent_name 
                 FROM groupfrm AS a
                 LEFT JOIN section AS b ON a.id_section = b.id_section
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord " ;
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_group" ;
                 $nama_area = "Group Process";
                 
 
@@ -52,7 +52,7 @@ if(isset($_SESSION['user'])){
                 b.dept AS parent_name 
                 FROM section AS a
                 LEFT JOIN department AS b ON a.id_dept = b.id_dept
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_section";
                 $nama_area = "Section Area";
                 
 
@@ -69,7 +69,7 @@ if(isset($_SESSION['user'])){
                 b.nama_divisi AS parent_name 
                 FROM department AS a
                 LEFT JOIN division AS b ON a.id_div = b.id_div
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_dept";
                 $nama_area = "Department Functional";
                 
         }else if($id == 'deptacc'){
@@ -85,7 +85,7 @@ if(isset($_SESSION['user'])){
                 b.nama_divisi AS parent_name 
                 FROM dept_account AS a
                 LEFT JOIN division AS b ON a.id_div = b.id_div
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_dept " ;
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_dept ORDER BY  a.id_dept_account" ;
                 $nama_area = "Department Account";
                 
         }else if($id == 'division'){
@@ -101,7 +101,7 @@ if(isset($_SESSION['user'])){
                 b.nama AS parent_name 
                 FROM division AS a
                 LEFT JOIN company AS b ON a.id_company = b.id_company
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY   a.id_div";
                 $nama_area = "Division";
         }
         // menghitung jumah data total
@@ -207,8 +207,8 @@ if(isset($_SESSION['user'])){
                 <tr class="">
                     <th>#</th>
                     <th colspan="2">Area</th>
-                    <th colspan="2">Kordinator Area</th>
-                    <th>Induk Organsasi</th>
+                    <th colspan="2">Coord.</th>
+                    <th>parent org</th>
                     <th class="text-right">Action</th>
                     <th scope="col" class="text-right">
                         <div class="form-check">
@@ -254,7 +254,16 @@ if(isset($_SESSION['user'])){
                         <tr class="<?=$dOrg['id']?> <?=$expatcolor?>">
                             <td><?=$noOrg++?></td>
                             <td><?=$dOrg['name']?></td>
-                            <td><span class="badge badge-pill badge-info"><?=$sub?></span></td>
+                            <td>
+                                <?php
+                                if($sub == ''){
+                                    ?>
+                                    <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-warning"><i class="nc-icon nc-simple-add"></i> sub org</a>
+                                <?php
+                                }
+                                ?>
+                                <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-info"><?=$sub?></a>
+                            </td>
                             <td><?=$dOrg['cord']?></td>
                             <td><?=$dOrg['cord_name']?></td>
                             <td><?=$dOrg['parent_name']?></td>

@@ -18,7 +18,7 @@ if(isset($_SESSION['user'])){
                 karyawan.nama AS nama_kary
                 
                 FROM `company`
-                LEFT JOIN karyawan ON karyawan.npk = company.npk_cord";
+                LEFT JOIN karyawan ON karyawan.npk = company.npk_cord ORDER BY company.id_company ASC";
 
                 break;
             case "deptAcc":
@@ -32,7 +32,7 @@ if(isset($_SESSION['user'])){
                 karyawan.nama AS nama_kary
                 
                 FROM `division`
-                LEFT JOIN karyawan ON karyawan.npk = division.npk_cord";
+                LEFT JOIN karyawan ON karyawan.npk = division.npk_cord ORDER BY division.id_div ASC";
                 break;
             case "dept":
                 $namaOrg = "Department Functional";
@@ -45,7 +45,7 @@ if(isset($_SESSION['user'])){
                 karyawan.nama AS nama_kary
                 
                 FROM `division`
-                LEFT JOIN karyawan ON karyawan.npk = division.npk_cord";
+                LEFT JOIN karyawan ON karyawan.npk = division.npk_cord ORDER BY division.id_div ASC";
                 break;
             case "section":
                 $namaOrg = "Section";
@@ -58,7 +58,7 @@ if(isset($_SESSION['user'])){
                 karyawan.nama AS nama_kary
                 
                 FROM `department`
-                LEFT JOIN karyawan ON karyawan.npk = department.npk_cord";
+                LEFT JOIN karyawan ON karyawan.npk = department.npk_cord ORDER BY department.id_dept ASC";
 
                 break;
             case "group":
@@ -87,7 +87,7 @@ if(isset($_SESSION['user'])){
                 karyawan.nama AS nama_kary
                 
                 FROM `groupfrm`
-                LEFT JOIN karyawan ON karyawan.npk = groupfrm.npk_cord";
+                LEFT JOIN karyawan ON karyawan.npk = groupfrm.npk_cord ORDER BY groupfrm.id_group ASC";
 
                 break;
         }
@@ -144,9 +144,13 @@ if(isset($_SESSION['user'])){
                                             <?php
                                             $s_area = mysqli_query($link, $q_area)or die(mysqli_error($link));
                                             while($d_area = mysqli_fetch_assoc($s_area)){
-                                                
+                                                if(isset($_POST['id_parent'])){
+                                                    $select = ($_POST['id_parent'] == $d_area['id_area'])?'selected':'';
+                                                }else{
+                                                    $select = "";
+                                                }
                                                 ?>
-                                                <option  data-subtext="<?=$d_area['nama_kary']?>" value="<?=$d_area['id_area']?>"><?=$d_area['nama_area']?></option>
+                                                <option <?=$select ?> data-subtext="<?=$d_area['nama_kary']?>" value="<?=$d_area['id_area']?>"><?=$d_area['nama_area']?></option>
                                                 <?php
                                             }
                                             
