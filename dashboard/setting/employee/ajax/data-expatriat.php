@@ -45,7 +45,7 @@ if(isset($_GET['delete'])){
         view_organization.id_division AS `id_division`,
         view_organization.id_plant AS `id_plant`,
         view_organization.id_area AS `id_area` FROM `view_organization`
-        JOIN expatriat ON expatriat.npk = view_organization.npk WHERE view_organization.id_area IS NOT NULL";
+        JOIN expatriat ON expatriat.npk = view_organization.npk ";
         
         $sql_dataKaryawan = mysqli_query($link, $q_dataKaryawan)or die(mysqli_error($link));
         if(mysqli_num_rows($sql_dataKaryawan)>0){

@@ -5,76 +5,72 @@ if(isset($_SESSION['user'])){
     if(isset($_POST['update'])){
         // update data karyawan 
         // $npk = $_POST['npk'];
-        $query = "REPLACE INTO karyawan (`npk`,`nama`,`tgl_masuk`,`jabatan`,`shift`,`status`,`department`,`id_area`) VALUES ";
-        $queryOrg = "REPLACE INTO org (`npk`,`post`,`grp`,`sect`,`dept`,`dept_account`,`division`,`plant`) VALUES ";
-        $queryUser = "REPLACE INTO data_user (`username`,`npk`,`pass`,`level`) VALUES ";
+        $query = "REPLACE INTO karyawan (`npk`,`nama`,`nama_depan`, `tgl_masuk`,`jabatan`,`shift`,`status`) VALUES ";
+        $queryUser = '';
+        $queryOrg = '';
+        
         if(isset($_POST['index'])){
             // echo count($_POST['index']);
             $total = count($_POST['index']);
             for($i = 0 ; $i < $total ;$i++){
                 $npk = $_POST['npk'];
-                $nama = $_POST['name'];
-                $tgl_masuk =$_POST['tgl_masuk'];
-                
+                // $nama = $_POST['name'];
+                $tgl_masuk = ($_POST['tgl_masuk']);
                 $index =$_POST['index'][$i];
                 $npk = $_POST['npk'][$i];
-                $nama = $_POST['name'][$i];
+                $nama = preg_replace("[']", "", $_POST['name'][$i]);
+                $nick = nick("$nama");
                 $tgl_masuk = $_POST['tgl_masuk'][$i];
                 $status = $_POST['status'][$i];
                 $jabatan = $_POST['jabatan'][$i];
                 $shift = $_POST['shift'][$i];
-                $deptAcc = $_POST['dept_account'][$i];
-                $idArea = $_POST['id_area'][$i];
+                
                 // organization data
-                $pos = $_POST['pos'][$i];
-                $group = $_POST['group'][$i];
-                $section = $_POST['section'][$i];
-                $dept = $_POST['dept'][$i];
-                $division = $_POST['division'][$i];
-                $plant = $_POST['plant'][$i];
+                // $pos = $_POST['pos'][$i];
+                // $group = $_POST['group'][$i];
+                // $section = $_POST['section'][$i];
+                // $dept = $_POST['dept'][$i];
+                // $division = $_POST['division'][$i];
+                // $plant = $_POST['plant'][$i];
                 // user data
+                // cek user data 
+                
                 $username = $_POST['username'][$i];
                 $pass = $_POST['pass'][$i];
                 $levelUser = $_POST['role'][$i];
-
-                $query .= "('$npk','$nama', '$tgl_masuk', '$jabatan','$shift','$status','$deptAcc','$idArea'),";
-                $queryOrg .= "('$npk','$pos', '$group', '$section','$dept','$deptAcc','$division','$plant'),";
-                $queryUser .= "('$username', '$npk', '$pass','$levelUser'),";
-            }
-            $sql = substr($query, 0 , -1); //untuk trim koma terakhir
-            $sqlUser = substr($queryUser, 0 , -1); //untuk trim koma terakhir
-            $sqlOrg = substr($queryOrg, 0 , -1); //untuk trim koma terakhir
-            $s_karyawan = mysqli_query($link, $sql)or die(mysqli_error($link));
-            // echo $sql;
-            if($s_karyawan){
-                // crud table user
-                $s_org = mysqli_query($link, $sqlOrg)or die(mysqli_error($link));
-                if($s_org){
-                    $s_user = mysqli_query($link, $sqlUser)or die(mysqli_error($link));
-                    if($s_user){
-                        $_SESSION['info'] = 'Disimpan';
-                        $_SESSION['pesan'] = 'Seluruh';
-                        echo "<script>document.location.href='../add_karyawan.php'</script>";
-                    }else{
-                        $_SESSION['info'] = 'Gagal Disimpan';
-                        $_SESSION['pesan'] = 'User';
-                        echo "<script>document.location.href='../add_karyawan.php'</script>";
-                    }
-                }else{
-                    $_SESSION['info'] = 'Disimpan';
-                    $_SESSION['pesan'] = 'Organization ';
-                    echo "<script>document.location.href='../add_karyawan.php'</script>";
-
+                
+                $query .= "('$npk','$nama', '$nick', '$tgl_masuk', '$jabatan','$shift','$status'),";
+                $q_cekMp  = mysqli_query($link, "SELECT npk FROM karyawan WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                $q_cekUser  = mysqli_query($link, "SELECT npk FROM data_user WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                $q_cekOrg  = mysqli_query($link, "SELECT npk FROM org WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                if(mysqli_num_rows($q_cekUser) <= 0 ){
+                    $q_User = mysqli_query($link, "INSERT INTO data_user (`username`,`npk`,`pass`,`level`) VALUES ('$username', '$npk', '$pass','$levelUser')");
                 }
+                if(mysqli_num_rows($q_cekOrg) <= 0 ){
+                    $q_Org = mysqli_query($link, "INSERT INTO org (`npk`,`plant`) VALUES ('$npk','1')");
+                }
+                
+            }
+            
+            $sql = substr($query, 0 , -1); //untuk trim koma terakhir
+            // $sqlUser = (isset($q_User))?substr($q_User.$queryUser, 0 , -1):''; //untuk trim koma terakhir
+            // $sqlOrg = (isset($q_Org))?substr($queryOrg, 0 , -1):''; //untuk trim koma terakhir
+            $s_karyawan = mysqli_query($link, $sql);
+            echo $sql;
+            if($s_karyawan){
+                $_SESSION['info'] = 'Disimpan';
+                $_SESSION['pesan'] = 'Seluruh Data Karyawan, Organisasi & User Berhasil Dibuat';
+                echo "<script>document.location.href='../add_karyawan.php'</script>";
+
             }else{
                 $_SESSION['info'] = 'Gagal Disimpan';
-                $_SESSION['pesan'] = 'Resource';
+                $_SESSION['pesan'] = 'Data';
                 echo "<script>document.location.href='../add_karyawan.php'</script>";
 
             }
         }else{
-                // $_SESSION['info'] = "Kosong";
-                // header("Location: ../add_karyawan.php");
+                $_SESSION['info'] = "Kosong";
+                echo "<script>document.location.href='../add_karyawan.php'</script>";
         }
         ?> 
         <?php

@@ -16,48 +16,7 @@
                                 <fieldset > 
                                 <legend class="text-muted h6">Employee Data : </legend>
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <label for="">Department Account</label>
-                                        <div class="form-group text-uppercase" style="background:rgba(255, 255, 255, 0.3)">
-                                            <select type="text" class="form-control bg-transparent data-deptfunctional text-uppercase" name="dept" id="deptacc" placeholder="select masal">
-                                                <?php
-                                                $s_div = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'division' ")or die(mysqli_error($link));
-                                                if(mysqli_num_rows($s_div)){
-                                                    ?>
-                                                    <option disabled>Pilih Department Account</option>
-                                                    <?php
-                                                    while($dataDiv=mysqli_fetch_assoc($s_div)){
-                                                        $s_dept = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'deptAcc' AND id_parent = '$dataDiv[id]' ")or die(mysqli_error($link));
-                                                        ?>
-                                                        <optgroup label="- <?=$dataDiv['nama_org']?> -">
-                                                        <?php
-                                                        if(mysqli_num_rows($s_dept)>0){
-                                                            while($dataDept = mysqli_fetch_assoc($s_dept)){
-                                                                ?>
-                                                                <option value="<?=$dataDept['id']?>"><?=$dataDept['nama_org']?></option>
-                                                                <?php
-                                                            }
-                                                            ?>
-                                                            </optgroup>
-                                                            
-                                                            <?php
-                                                        }else{
-                                                            ?>
-                                                            <option disabled>Belum Ada Data Department</option>
-                                                            <?php
-                                                        }
-                                                    }
-                                                }else{
-                                                    ?>
-                                                    <option disabled>Belum Ada Data Divisi</option>
-                                                    <?php
-                                                }
-                                                ?>
-                                                <option value="notset">Kosongkan</option>
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-md-2">
                                         <label for="">Group Shift</label>
                                         <div class="form-group " style="background:rgba(255, 255, 255, 0.3)">
@@ -193,77 +152,7 @@
                                 </div>
                                 </fieldset>
                                 <hr> 
-                                <fieldset>
-                                <legend class="text-muted h6">Organization Data</legend>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">Department Functional</label>
-                                        <div class="form-group text-uppercase" style="background:rgba(255, 255, 255, 0.3)">
-                                            <select type="text" class="form-control bg-transparent data-dept text-uppercase" id="department" placeholder="select masal">
-                                                <?php
-                                                $s_div = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'division' ")or die(mysqli_error($link));
-                                                if(mysqli_num_rows($s_div)){
-                                                    ?>
-                                                    <option disabled>Pilih Department Functional</option>
-                                                    <?php
-                                                    while($dataDiv=mysqli_fetch_assoc($s_div)){
-                                                        $s_dept = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'dept' AND id_parent = '$dataDiv[id]' ")or die(mysqli_error($link));
-                                                        ?>
-                                                        <optgroup label="- <?=$dataDiv['nama_org']?> -">
-                                                        <?php
-                                                        if(mysqli_num_rows($s_dept)>0){
-                                                            while($dataDept = mysqli_fetch_assoc($s_dept)){
-                                                                ?>
-                                                                <option value="<?=$dataDept['id']?>"><?=$dataDept['nama_org']?></option>
-                                                                <?php
-                                                            }
-                                                            ?>
-                                                            </optgroup>
-                                                
-                                                            <?php
-                                                        }else{
-                                                            ?>
-                                                            <option disabled>Belum Ada Data Department</option>
-                                                            <?php
-                                                        }
-                                                    }
-                                                }else{
-                                                    ?>
-                                                    <option disabled>Belum Ada Data Divisi</option>
-                                                    <?php
-                                                }
-                                                ?>
-                                                <option value="notset" selected>Kosongkan</option>
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="">Section</label>
-                                        <div class="form-group text-uppercase" style="background:rgba(255, 255, 255, 0.3)">
-                                            <select type="text" class="form-control bg-transparent data-section text-uppercase" id="section" placeholder="select masal">
-                                                <option value="notset">Kosongkan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="">Group</label>
-                                        <div class="form-group text-uppercase" style="background:rgba(255, 255, 255, 0.3)">
-                                            <select id="group" type="text" class="form-control bg-transparent data-group text-uppercase" placeholder="select masal">
-                                                <option value="notset">Kosongkan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="">Pos Leader</label>
-                                        <div class="form-group text-uppercase" style="background:rgba(255, 255, 255, 0.3)">
-                                            <select id="posleader" type="text" class="form-control bg-transparent data-pos  text-uppercase" placeholder="select masal">
-                                                <option value="notset">Kosongkan</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                </fieldset>
+                                
                             </div>
                         </div>
                         <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">

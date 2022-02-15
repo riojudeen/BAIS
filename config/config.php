@@ -124,8 +124,13 @@ if(isset($_SESSION['user'])){
     $npk_user =$npkUser;
 
     function nick($nama){
-        $pecah = explode(" ",$nama);
+        $pecah = explode(" ", $nama);
         $nick = $pecah[0];
+        if(strlen($nick) <= 2){
+            $nick = (isset($pecah[1]) && strlen($pecah[1]) > 2 )?$pecah[1]:$pecah[0];
+        }else{
+            $nick = $pecah[0];
+        }
         return $nick;
 
     }

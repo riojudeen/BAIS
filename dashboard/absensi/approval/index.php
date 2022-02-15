@@ -846,7 +846,7 @@ if(isset($_SESSION['user'])){
 
             });
 
-            $('.mp').on('click', function() {
+            $(document).on('click', '.mp', function() {
                 if($('.mp:checked').length == $('.mp').length){
                     $('#allmp').prop('checked', true)
                 } else {

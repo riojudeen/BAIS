@@ -70,8 +70,6 @@ if(isset($_GET['del'])){
         //lanjutan
         $sql .= "('$npk', '$nama', '$tanggal', '$jabatan' , '$shift' , '$status' , '$department' , '$id_area'),";
 
-    
-
     }
 
     $sql = substr($sql, 0 , -1); //untuk trim koma terakhir

@@ -1,5 +1,5 @@
 <?php
-
+$_SESSION['user'] = '1';
 //////////////////////////////////////////////////////////////////////
 require_once("../../../config/config.php"); 
 if(isset($_SESSION['user'])){
@@ -10,24 +10,9 @@ if(isset($_SESSION['user'])){
     // mysqli_query($link,"DELETE FROM karyawan");
     // mysqli_query($link,"DELETE FROM org");
     // mysqli_query($link,"DELETE FROM data_user");
+    
     ?>
-<!-- halaman utama -->
-<!-- <div class="row">
-    <div class="col-md-6 text-right">
-        <div class="dropdown dropleft">
-            <button class="btn btn-sm bg-transparent btn-icon btn-round text-default" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Menu</div>
-                <a class="dropdown-item" href="proses/export.php?export=organization">Export Data</a>
-                <a class="dropdown-item" href="file/Format_Register_Area.xlsx" >Download Format</a>
-                <a class="dropdown-item" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Import Data</a>
-                <a class="dropdown-item" data-toggle="modal" data-target="#generate" >Add</a>
-            </div>
-        </div>
-    </div>
-</div> -->
+
 
 <div class="row ">
     <div class="col-md-12">
@@ -35,12 +20,6 @@ if(isset($_SESSION['user'])){
             <div class="card-header row">
                 <h5 class="col-md-6 title">Resource Data (Karyawan & Management)</h5>
                 <div class="col-md-6">
-                    <a href="user.php" class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
-                        <span class="btn-label">
-                            <i class="fa fa-plus"></i>
-                        </span>
-                        Setting User
-                    </a>
                     <a href="proses/export.php?export=mp" class="btn btn-sm btn-success pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
                         <span class="btn-label">
                             <i class="far fa-file-excel"></i>
@@ -59,19 +38,21 @@ if(isset($_SESSION['user'])){
                             <div class="nav-tabs-wrapper">
                                 <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left" role="tablist">
                                     <?php
-                                    $s_employee = array('local','expatriat');
+                                    $s_employee = array('local', 'expatriat');
                                     $i = 0;
                                     foreach($s_employee AS $data){
                                         //membuat tab active terbuka untuk pertama kali
                                         $tab_active = ($data == 'local')? "active" :"";
                                     ?>
                                         <li class="nav-item" >
-                                            <a class="btn btn-sm btn-link btn-round btn-info <?=$data?> <?=$tab_active?> tab-<?=$tab_active?> list-tab" href="#<?=$data?>"  role="tab" data-toggle="tab"><?=$data?></a>
+                                            <a class="btn btn-sm btn-link btn-round btn-info navigasi <?=$data?> <?=$tab_active?> tab-<?=$tab_active?> tab-<?=$data?> list-tab" href="#<?=$data?>" data-id="<?=$data?>" role="tab" data-toggle="tab"><?=$data?></a>
                                         </li>
                                     <?php
                                         $i++;
                                     }
+                                    
                                     ?>
+                                    
                                 </ul>
                             </div>
                             
@@ -80,17 +61,90 @@ if(isset($_SESSION['user'])){
                     <div class="col-md-9">
                         <div class="row tab-content">
                             <div class="col-md-12 tab-pane active" id="local">
+                                
                                 <?php
-                                include_once('colapse.php');
-                                include_once('data_karyawan.php');
+                                include_once('colapse_add.php');
                                 ?>
+                                <div class="row">
+                                    <div class="col-md-12 filter_data ">
+                                        <div class="input-group no-border ">
+                                            <select class="form-control" name="div" id="s_div">
+                                                <option value="">Pilih Divisi</option>
+                                            </select>
+                                            
+                                            <select class="form-control" name="deptacc" id="s_deptAcc">
+                                                <option value="">Pilih Dept Administratif</option>
+                                                <option disabled value="">Pilih Division terlebih dahulu</option>
+                                                
+                                            </select>
+                                            <select class="form-control" name="shift" id="s_shift">
+                                                <option value="">Pilih Shift</option>
+                                                <?php
+                                                    $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
+                                                    if(mysqli_num_rows($query_shift)>0){
+                                                        while($data = mysqli_fetch_assoc($query_shift)){
+                                                            ?>
+                                                            <option value="<?=$data['id_shift']?>"><?=$data['shift']?></option>
+                                                            <?php
+                                                        }
+                                                    }else{
+                                                        ?>
+                                                        <option value="">Belum Ada Data Shift</option>
+                                                        <?php
+                                                    }
+                                                ?>
+                                            </select>
+                                            <div class="input-group-append ">
+                                                <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 filter_data">
+                                        <div class="input-group no-border ">
+                                            <select name="" id="jabatan_" class="form-control">
+                                                <option value="">Pilih Jabatan</option>
+                                                <?php
+                                                $q_jab = mysqli_query($link, "SELECT * FROM jabatan ORDER BY `level` ASC")or die(mysqli_error($link));
+                                                if(mysqli_num_rows($q_jab)>0){
+                                                    while($dataJab = mysqli_fetch_assoc($q_jab)){
+                                                        
+                                                    ?>
+                                                        <option value="<?=$dataJab['id_jabatan']?>"><?=$dataJab['jabatan']?></option>
+                                                    <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                            <select name="" id="status_" class="form-control">
+                                                <option value="">Pilih Status</option>
+                                                <?php
+                                                $q_jab = mysqli_query($link, "SELECT * FROM status_mp ORDER BY `level` ASC")or die(mysqli_error($link));
+                                                if(mysqli_num_rows($q_jab)>0){
+                                                    while($dataJab = mysqli_fetch_assoc($q_jab)){
+                                                        
+                                                    ?>
+                                                        <option value="<?=$dataJab['id']?>"><?=$dataJab['status_mp']?></option>
+                                                    <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                            <input type="text" name="cari" id="pencarian" class="form-control" placeholder="Cari NPK atau nama" value="">
+                                            <div class="input-group-append">
+                                                <div class="input-group-text">
+                                                    <i class="nc-icon nc-zoom-split"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="data-karyawan">
+                                    
+                                </div>
                             </div>
-                            <div class="col-md-12 tab-pane" id="expatriat">
-                            <?php
-                                include_once('colapse.php');
-                                include_once('data_expatriat.php');
-                                ?>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -116,6 +170,7 @@ if(isset($_SESSION['user'])){
         <!-- untuk proses tombol edit & delete masal -->
     <script>
     //untuk crud masal update department
+        
         $('.delete').on('click', function(e){
             e.preventDefault();
             var getLink = 'proses/proses.php';
@@ -152,23 +207,86 @@ if(isset($_SESSION['user'])){
     </script>
     <script>
         $(document).ready(function(){
-            function load_data(){
-                var id = $('.tab-active').attr('id');
+            function load_data(hal){
+                var id = $('.tab-active').attr('data-id');
+                var divisi = $('#s_div').val();
+                var deptAcc = $('#s_deptAcc').val();
+                var shift = $('#s_shift').val();
+                var cari = $('#pencarian').val();
+                var jab = $('#jabatan_').val();
+                var stat = $('#status_').val();
+                var page = $('.page_active').attr('id');
+                // console.log(page);
                 $.ajax({
-                    url: 'ajax/index.php?id='+id,
-                    method: 'get',
+                    url: 'data_karyawan.php',
+                    method: 'GET',
+                    data:{page:hal,id:id,shift:shift,divisi:divisi,deptAcc:deptAcc,cari:cari,jab:jab,stat:stat},
                     success:function(msg){
-                        $('.data-view').html(msg);
+                        $('#data-karyawan').fadeOut('fast', function(){
+                            $(this).html(msg).fadeIn('fast');
+                        });
                     }
                 });
             }
+
             load_data();
-            $('.list-tab').click(function(){
+            
+            $('.navigasi').click(function(){
                 var id = $(this).attr('id');
                 $('.list-tab').removeClass('tab-active');
                 $(this).addClass('tab-active');
                 load_data();
             });
+            function getDiv(){
+                var data = $('#s_div').val()
+                $.ajax({
+                    url: 'ajax/get_div.php',
+                    method: 'GET',
+                    data: {data:data},		
+                    success:function(data){
+                        $('#s_div').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        
+                    }
+                });
+            }
+            
+            function getDept(){
+                var data = $('#s_div').val()
+                $.ajax({
+                    url: 'ajax/get_dept.php',	
+                    method: 'GET',
+                    data: {data:data},
+                    success:function(data){
+                        $('#s_deptAcc').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        
+                    }
+                });
+            }
+            $('#s_div').on('change', function(){
+                getDept()
+            })
+            $('#jabatan_').on('change', function(){
+                load_data();
+            })
+            $('#status_').on('change', function(){
+                load_data();
+            })
+            $('#pencarian').on('keyup', function(){
+                load_data();
+            })
+            $(document).on('click','#filterGo', function(){
+                load_data();
+            })
+            getDiv()
+            $(document).on('click', '.halaman', function(){
+                var hal = $(this).attr("id");
+                load_data(hal);
+            });
+            
+            
+
+
+
             function get_data(kelas,linktujuan,kelastujuan){
                 var tag_kelas = kelas;
                 var value = $(tag_kelas).val();
@@ -243,10 +361,49 @@ if(isset($_SESSION['user'])){
             
         })
     </script>
-    <!-- upload ajax -->
     <script>
-        $(document).ready(function(e){
-            e.preventDefault
+        $(document).on('click', '#allmp', function(){
+            if(this.checked){
+                $('.mp').each(function() {
+                    this.checked = true;
+                })
+            } else {
+                $('.mp').each(function() {
+                    this.checked = false;
+                })
+            }
+
+        });
+
+        $(document).on('click', '.mp', function() {
+            if($('.mp:checked').length == $('.mp').length){
+                $('#allmp').prop('checked', true)
+            } else {
+                $('#allmp').prop('checked', false)
+            }
+        })
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '.tab-expatriat', function(){
+                $('.filter_data').fadeOut('fast', function(){
+                    $(this).addClass('d-none');
+                    $('.tambah').removeClass('show');
+                });
+                
+                
+            })
+            $(document).on('click', '.tab-local', function(){
+                $('.filter_data').removeClass('d-none').fadeIn('fast');
+                // $('.filter_data').removeClass('d-none');
+                
+            })
+
+        })
+    </script>
+    <!-- upload ajax -->
+    <!-- <script>
+        $(document).ready(function(){
             $('.load-data').on('click', function() {
                 var file_data = $('#file_export').prop('files')[0];   
                 var form_data = new FormData();
@@ -276,6 +433,67 @@ if(isset($_SESSION['user'])){
                 // alert(form_data);                             
                 $.ajax({
                     url: 'ajax/import.php?groupshift='+groupshift+'&jab='+jab+'&stats='+stats+'&deptacc='+deptacc+'&role='+roleuser+'&pass='+pass+'&dpass='+d_pass+'&dept='+dept+'&sect='+sect+'&group='+group+'&pos='+posleader+'&doccek='+doc_cek, // <-- point to server-side PHP script 
+                    dataType: 'text',  // <-- what to expect back from the PHP script, if anything
+                    // encode: 'true',  // <-- what to expect back from the PHP script, if anything
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function(resp){
+                        
+                        // var cek = Object.keys(file_data).length
+                        // console.log(file_data)
+                        if(file_data !== undefined){
+                            $('#datapreview').modal('show');
+                            $(".data_load").html(resp);
+                        }else{
+                            Swal.fire('Dokumen Belum dipilih')
+                        }
+                    }
+                });
+            });
+        })
+    </script> -->
+    <script>
+        $(document).ready(function(){
+            $('.load-data').on('click', function() {
+                var file_data = $('#file_export').prop('files')[0];   
+                var form_data = new FormData();
+                var groupshift = $('#groupshift').val();
+                var jab = $('#jabatan').val();
+                var stats = $('#status').val();
+                
+                var roleuser = $('#roleuser').val();
+                var pass = $('#password').val();
+                var d_pass =[];
+                $('#defaultpass').each(function(){
+                    if($(this).is(":checked")){
+						d_pass.push($(this).val());
+					}
+                });
+                var doc_cek = [];
+                $('#documentcek').each(function(){
+                    if($(this).is(":checked")){
+						doc_cek.push($(this).val());
+					}
+                });
+                var url = 'ajax/preview-import.php?groupshift='+groupshift+'&jab='+jab+'&stats='+stats+'&role='+roleuser+'&pass='+pass+'&dpass='+d_pass+'&dok='+doc_cek;
+                // console.log(file_data);
+                
+                // console.log(groupshift);
+                // console.log(jab);
+                // console.log(stats);
+                // console.log(roleuser);
+                // console.log(pass);
+                // console.log(d_pass);
+                // console.log(url);
+                
+                form_data.append('file-excel', file_data);
+                // console.log(form_data);
+                // alert(form_data);                             
+                $.ajax({
+                    url: url, // <-- point to server-side PHP script 
                     dataType: 'text',  // <-- what to expect back from the PHP script, if anything
                     // encode: 'true',  // <-- what to expect back from the PHP script, if anything
                     cache: false,

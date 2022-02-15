@@ -5,22 +5,52 @@ $id_role = $_GET['id'];
 $query_role = mysqli_query($link, "SELECT * FROM user_role WHERE id_role = '$id_role' ")or die(mysqli_error($link));
 $dataRrole = mysqli_fetch_assoc($query_role);
 $role = $dataRrole['role_name'];
-$pencarian = (isset($_GET['cari']))?$_GET['cari']:"";
-if($pencarian != ''){
-    $cari = " AND (npk LIKE '%$pencarian%' OR nama LIKE '%$pencarian%' )";
-}else{
-    $cari = '';
-}
+$cari = (isset($_GET['cari']))?$_GET['cari']:"";
+
+
+$q_data = "SELECT * FROM view_user 
+        WHERE `level_user` = '$id_role' ";
+
+$page = (isset($_GET['page']) && $_GET['page'] != 'undefined')? $_GET['page'] : 1;
+// echo $page;
+$limit = 100; 
+$limit_start = ($page - 1) * $limit;
+$no = $limit_start + 1;
+// echo $limit_start;
+$filter_cari = ($cari != '')?"AND ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )":'';
+
+$filter_gabung = $filter_cari;
+$filter = ($filter_gabung != '' )?" ". $filter_gabung :"";
+
+
+$addLimit = " LIMIT $limit_start, $limit";
+
+$total_dataKaryawan = $q_data;
+$jml = mysqli_query($link, $total_dataKaryawan)or die(mysqli_error($link));
+$j_dataKaryawan = $q_data.$filter;
+
+
+$q_data .= $filter.$addLimit;
+// echo $filter;
+$total_records= mysqli_num_rows($jml);
+
+// echo $total_records;
+// pagin
+$jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
+                
+$jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+$start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
+$end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
+    
+$sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
+
 // echo $pencarian;
 // echo $id_role;
 ?>
 <div class="tab-pane " id="">
 <?php
 ?>
-    <div class="row">
-        <h6 class="text-title col-md-8"><?=$role?></h6>
-        
-    </div>
+    
     <form class="table-responsive" name="proses">
         <table class="table table-hover" id="usersetting" cellspacing="0" width="100%">
             <thead>
@@ -29,7 +59,6 @@ if($pencarian != ''){
                 <th>Npk</th>
                 <th>Nama</th>
                 <th>Username</th>
-                <th>Dept</th>
                 <th class="text-right">Action</th>
                 <th scope="col" class="text-right">
                     <div class="form-check">
@@ -43,39 +72,11 @@ if($pencarian != ''){
             </thead>
             <tbody class="">
                 <?php
-                $q_data = "SELECT * FROM view_user 
-                WHERE `level_user` = '$id_role' ";
-                $batas = 50;
-                if(isset($_GET['hal'])){
-                    $hal = $_GET['hal'];
-                    $offset = ($hal - 1)* $batas;
-                    $sql_data = mysqli_query($link, $q_data." LIMIT $offset, $batas")or die(mysqli_error($link));
-                    // echo "yes";
-                    // echo $batas;
-                }else{
-                    $hal = 1;
-                    $offset = ($hal - 1)* $batas;
-                    $sql_data = mysqli_query($link, $q_data." LIMIT $offset, $batas")or die(mysqli_error($link));
-                    // echo "no";
-                }
-
-                if(isset($_GET['cari']) AND $_GET['cari'] != ''){
-                    $sql_data = mysqli_query($link, $q_data.$cari." LIMIT $offset, $batas ")or die(mysqli_error($link));
-                    $q_jml = mysqli_query($link, $q_data.$cari." LIMIT $offset, $batas ")or die(mysqli_error($link));
-                    $jml = mysqli_num_rows($q_jml );
-                    // echo "yes";
-                }else{
-                    $sql_data = $sql_data;
-                    $_GET['cari'] = '';
-                    $q_jml = mysqli_query($link, $q_data)or die(mysqli_error($link));
-                    $jml = mysqli_num_rows($q_jml); 
-                    // echo "no";
-                }
-
+                
               
                 // $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
                 if(mysqli_num_rows($sql_data)>0){
-                    $no= $offset + 1;
+                    
                     while($data = mysqli_fetch_assoc($sql_data)){
                         ?>
                         <tr  id="<?=$data['npk']?>">
@@ -83,7 +84,6 @@ if($pencarian != ''){
                             <td><?=$data['npk']?></td>
                             <td><?=$data['nama']?></td>
                             <td><?=$data['username']?></td>
-                            <td><?=$data['nama_dept']?></td>
                             <td class="text-right">
                                 <input type="hidden" name="tab" value="<?=$id_role?>">
                                 <a href="proses/proses.php?tab=<?=$id_role?>&reset=<?=$data['npk']?>" class="btn-round btn-outline-danger btn btn-danger btn-link btn-icon btn-sm reset"><i class="fas fa-undo-alt"></i></a>
@@ -116,52 +116,37 @@ if($pencarian != ''){
         </table>
     </form>  
     <div class="row">
-        <div class="col-md-6">
-            <p class="badge badge-warning badge-pill">total data ditemukan : <?=$jml?></p>
-        </div>
-        <div class="col-md-6 ">
-            <ul class="pagination pagination-sm pull-right" id="pagination">
-                <?php
-                // $sOrg = mysqli_query($link, $qOrg)or die(mysqli_error($link));
-                $jml_hal = ceil($jml / $batas);
-                $cari = (@$_GET['cari'] != '') ? @$_GET['cari'] : "";
-                $index_hal = 2;
-                $start = ($hal > $index_hal) ? $hal - $index_hal : 1;
-                $next = $hal + 1;
-        
-                $end = ($hal < ($jml_hal - $index_hal)) ? $hal + $index_hal : $jml_hal;
-                if($jml > 0){
-                    if($hal == 1){
-                        ?>
-                        <li class="page-item disabled"><a class="page-link btn-primary page" href="?cari=<?=$_GET['cari']?>&tab=<?=$id_role?>&hal=1#pagination"" aria-label="Previous">FIRST</a></li>
-                        <li class="page-item disabled"><a class="page-link btn-primary page" href="#pagination" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
-                        <?php
-                    } else{
-                        $prev = ($hal > 1)? $hal - 1 : 1;
-                        ?>
-                        <li class="page-item"><a class="page-link btn-primary page" data-id="1" href="?cari=<?=$_GET['cari']?>&tab=<?=$id_role?>&hal=1#pagination" aria-label="Previous">FIRST</a></li>
-                        <li class="page-item"><a class="page-link btn-primary page" data-id="<?=$prev?>" href="?cari=<?=$_GET['cari']?>&tab=<?=$id_role?>&hal=<?=$prev?>" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
-                        <?php
-                    }
-                    for($i = $start; $i <= $end; $i++){
-                        $link_active = ($hal == $i)? ' active' : '';
-                        ?>
-                        <li class="page-item <?=$link_active?>"><a href="?cari=<?=$_GET['cari']?>&tab=<?=$id_role?>&hal=<?=$i?>#pagination" data-id="<?=$i?>" class="page-link btn-primary btn-link page"><?=$i?></a></li>
-                        <?php
-                    }
-                    if($hal == $jml_hal){
-                        ?>
-                        <li class="page-item disabled"><a class="page-link btn-primary btn-link page" data-id="#" href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-                        <li class="page-item disabled"><a class="page-link btn-primary btn-link page" data-id="#" href="#">LAST</a></li>
-                        <?php
-                    } else{
-                        ?>
-                        <li class="page-item"><a class="page-link btn-primary btn-link page" data-id="<?=$next?>" href="?cari=<?=$_GET['cari']?>&tab=<?=$id_role?>&hal=<?=$next?>#pagination"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-                        <li class="page-item"><a class="page-link btn-primary btn-link page" data-id="<?=$jml_hal?>" href="?cari=<?=$_GET['cari']?>&tab=<?=$id_role?>&hal=<?=$jml_hal?>#pagination">LAST</a></li>
-                        <?php
-                    }
-                }
-                ?>
+        <div class="col-md-12 pull-rigt">
+            <ul class="pagination ">
+            <?php
+            // echo $page."<br>";
+            // echo $jumlah_page."<br>";
+            // echo $jumlah_number."<br>";
+            // echo $start_number."<br>";
+            // echo $end_number."<br>";
+            if($page == 1){
+                echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
+                echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
+            } else {
+                $link_prev = ($page > 1)? $page - 1 : 1;
+                echo '<li class="page-item halaman" id="1"><a class="page-link" >First</a></li>';
+                echo '<li class="page-item halaman" id="'.$link_prev.'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
+            }
+
+            for($i = $start_number; $i <= $end_number; $i++){
+                $link_active = ($page == $i)? ' active page_active' : '';
+                echo '<li class="page-item halaman '.$link_active.'" id="'.$i.'"><a class="page-link" >'.$i.'</a></li>';
+            }
+
+            if($page == $jumlah_page){
+                echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
+            } else {
+                $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
+                echo '<li class="page-item halaman" id="'.$link_next.'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item halaman" id="'.$jumlah_page.'"><a class="page-link" >Last</a></li>';
+            }
+            ?>
             </ul>
         </div>
     </div>

@@ -628,13 +628,19 @@
                 <li class="menu " data-name="workinghours" id="workinghours">
                   <a href="<?=base_url()?>/dashboard/wh">
                     <span class="sidebar-mini-icon">WH</span>
-                    <span class="sidebar-normal"> Working Hours</span>
+                    <span class="sidebar-normal"> Working Schedule</span>
                   </a>
                 </li>
                 <li class="menu " data-name="resource" id="resource">
                   <a href="<?=base_url()?>/dashboard/setting/employee/add_karyawan.php">
-                    <span class="sidebar-mini-icon">RS</span>
-                    <span class="sidebar-normal"> Resource Setting</span>
+                    <span class="sidebar-mini-icon">ED</span>
+                    <span class="sidebar-normal"> Employee Data</span>
+                  </a>
+                </li>
+                <li class="menu " data-name="user" id="user">
+                  <a href="<?=base_url()?>/dashboard/setting/employee/user.php">
+                    <span class="sidebar-mini-icon">UD</span>
+                    <span class="sidebar-normal"> User Data</span>
                   </a>
                 </li>
                 

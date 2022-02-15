@@ -1,3 +1,8 @@
+<?php
+
+//////////////////////////////////////////////////////////////////////
+require_once("../../../config/config.php"); 
+?>
 <style>
 
     .view {
@@ -113,79 +118,87 @@
 
 </style>
 <?php
-$pencarian = (isset($_GET['cari']))?$_GET['cari']:"";
-$deptAcc = (isset($_GET['deptAcc']))?$_GET['deptAcc']:"";
-if(isset($_GET['deptAcc'])){
-    $_SESSION['deptAcc'] = (isset($_GET['deptAcc']))?$_GET['deptAcc']:$_SESSION['deptAcc'];
-}else{
-    $_SESSION['deptAcc'] = (isset($_SESSION['deptAcc']))?$_SESSION['deptAcc']:"";
-}
+$id = (isset($_GET['id']))?$_GET['id']:'';
+$div = (isset($_GET['divisi']))?$_GET['divisi']:'';
+$deptAcc = (isset($_GET['deptAcc']))?$_GET['deptAcc']:'';
+$shift = (isset($_GET['shift']))?$_GET['shift']:'';
+$jab = (isset($_GET['jab']))?$_GET['jab']:'';
+$stat = (isset($_GET['stat']))?$_GET['stat']:'';
+$cari = (isset($_GET['cari']))?$_GET['cari']:'';
 
-$_GET['deptAcc'] = $_SESSION['deptAcc'];
-?>
 
-<div class="collapse show tambah collapse-view" id="data-show">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-6 text-left">
-                    <h6 >Resource Data</h6>
-                </div>
-                <div class="col-md-6 text-right">
-                    <a href="" class="btn btn-sm btn-warning editall">Edit data</a>
-                    <a href="" class="btn btn-sm btn-danger delete">Delete data</a>
-                    <a class="btn btn-sm btn-info" data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="collapseExample">Tambah data</a>
-                </div>
-            </div>
-            <div class="row">
-                <form class="col-md-4" method="get" action="#data-show">
-                    <div class="input-group no-border">
-                        <input type="text" name="cari" id="pencarian" class="form-control" placeholder="Cari NPK atau nama" value="<?=$pencarian?>">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <i class="nc-icon nc-zoom-split"></i>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <div class="col-md-8">
-                    <form class="pull-right" method="get" action="#data-show">
-                        <div class="input-group no-border">
-                            <select name="deptAcc" id="deptAcc" class="form-control text-uppercase">
-                                <?php
-                                $q_deptAcc = mysqli_query($link, "SELECT id, nama_org, nama_cord FROM view_cord_area WHERE part = 'deptAcc' AND part = 'deptAcc' ")or die(mysqli_error($link));
-                                if(mysqli_num_rows($q_deptAcc)){
-                                    while($data_deptAcc = mysqli_fetch_assoc($q_deptAcc)){
-                                        $selected = ($_SESSION['deptAcc'] == $data_deptAcc['id'])?"selected":"";
-                                        ?>
-                                        <option <?=$selected?> value="<?=$data_deptAcc['id']?>">department <?=$data_deptAcc['nama_org']?></option>
-                                        <?php
-                                    }
-                                    $selected = ($_SESSION['deptAcc'] == "")?"selected":"";
-                                    ?>
-                                    <option  <?=$selected?>  value="">Pilih semua</option>
-                                    <?php
-                                }else{
-                                    ?>
-                                    <option  value="">Belum Ada Data</option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                            <button type="submit" class="btn btn-link btn-warning btn-icon input-group-append" style="background:#F5F5F5;margin:2px"><i class="nc-icon nc-zoom-split"></i></button>
+if($id == 'local'){
+    $filter_divisi = ($div != '')?"AND id_division = '$div' ":'';
+    $filter_deptAcc = ($deptAcc != '')?"AND id_dept_account = '$deptAcc' ":'';
+    $filter_shift = ($shift != '')?"AND shift = '$shift' ":'';
+    $filter_jab = ($jab != '')?"AND jabatan = '$div' ":'';
+    $filter_status = ($stat != '')?"AND `status` = '$stat' ":'';
+    $filter_cari = ($cari != '')?"AND ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )":'';
+
+    $filter_gabung = $filter_divisi.$filter_deptAcc.$filter_shift.$filter_jab.$filter_status.$filter_cari;
+    $filter = ($filter_gabung != '' )?" ". $filter_gabung :"";
+
+    // echo $div;
+    // echo $deptAcc;
+    // echo $shift;
+    // echo $jab;
+    // echo $stat;
+    // echo $cari;
+    // echo $id;
+
+    $q_dataKaryawan = "SELECT `npk`,`nama`,`tgl_masuk`,`jabatan`,
+            `shift`,`status`,`subpos`,`pos`,`groupfrm`,`section`,`dept`,
+            `dept_account`,`division`,`plant`,`id_sub_pos`,`id_post_leader`,
+            `id_grp`,`id_sect`,`id_dept`,`id_dept_account`,`id_division`,
+            `id_plant`,`id_area`
+            FROM `view_organization` WHERE id_plant = '1' AND (SELECT count(`npk`) AS `exp` FROM expatriat WHERE npk = view_organization.npk ) = 0";
+
+
+
+    $page = (isset($_GET['page']) && $_GET['page'] != 'undefined')? $_GET['page'] : 1;
+    // echo $page;
+    $limit = 100; 
+    $limit_start = ($page - 1) * $limit;
+    $no = $limit_start + 1;
+    // echo $limit_start;
+
+    $addLimit = " LIMIT $limit_start, $limit";
+
+    $total_dataKaryawan = $q_dataKaryawan;
+    $jml = mysqli_query($link, $total_dataKaryawan)or die(mysqli_error($link));
+    $j_dataKaryawan = $q_dataKaryawan.$filter;
+    $q_dataKaryawan .= $filter.$addLimit;
+    $sql_dataKaryawan = mysqli_query($link, $q_dataKaryawan)or die(mysqli_error($link));
+    $total_records= mysqli_num_rows($jml);
+
+    // echo $total_records;
+    // pagin
+    $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
+                    
+    $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+    $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
+    $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
+
+    // echo $q_dataKaryawan;
+    ?>
+
     
-                        </div>
-                    </form>
-
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-6 text-left mt-3">
+            <h6 >Data Karyawan </h6>
+        </div>
+        <div class="col-md-6 text-right">
+            <a class="btn btn-sm btn-info" data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="collapseExample">Tambah data</a>
+        </div>
+        <div class="col-md-12">
+            
             <form class="table-responsive" name="proses" method="post">
                 <table class="table table-hover">
                     <thead>
                         <th class="text-right first-top-col first-col sticky-col">
                             <div class="form-check">
                                 <label class="form-check-label">
-                                    <input class="form-check-input check-all" type="checkbox">
+                                    <input class="form-check-input check-all" type="checkbox" id="allmp">
                                 <span class="form-check-sign"></span>
                                 </label>
                             </div>
@@ -202,42 +215,11 @@ $_GET['deptAcc'] = $_SESSION['deptAcc'];
                     </thead>
                     <tbody class="text-nowrap">
                         <?php
-                        $q_dataKaryawan = "SELECT `npk`,`nama`,`tgl_masuk`,`jabatan`,
-                        `shift`,`status`,`subpos`,`pos`,`groupfrm`,`section`,`dept`,
-                        `dept_account`,`division`,`plant`,`id_sub_pos`,`id_post_leader`,
-                        `id_grp`,`id_sect`,`id_dept`,`id_dept_account`,`id_division`,
-                        `id_plant`,`id_area`
-                         FROM `view_organization` WHERE id_area IS NOT NULL AND (SELECT count(`npk`) AS `exp` FROM expatriat WHERE npk = view_organization.npk ) = 0";
-                        if(isset($_GET['deptAcc']) AND $_GET['deptAcc'] != '' ){
-                            $deptAcc = " AND id_dept_account = '$_GET[deptAcc]'";
-                        }else{
-                            $deptAcc = "";
-                            $_GET['deptAcc'] = '';
-                        }
-                        $batas = 50;
-                        if(isset($_GET['hal'])){
-                            $hal = $_GET['hal'];
-                            $offset = ($hal - 1)* $batas;
-                            $sql_dataKaryawan = mysqli_query($link, $q_dataKaryawan.$deptAcc." LIMIT $offset, $batas")or die(mysqli_error($link));
-                        }else{
-                            $hal = 1;
-                            $offset = ($hal - 1)* $batas;
-                            $sql_dataKaryawan = mysqli_query($link, $q_dataKaryawan.$deptAcc." LIMIT $offset, $batas")or die(mysqli_error($link));
-                        }
-
-                        if(isset($_GET['cari']) AND $_GET['cari'] != ''){
-                            $sql_dataKaryawan = mysqli_query($link, $q_dataKaryawan." AND (npk LIKE '%$_GET[cari]%' OR nama LIKE '%$_GET[cari]%')".$deptAcc."LIMIT $offset, $batas ")or die(mysqli_error($link));
-                            $q_jml = mysqli_query($link, $q_dataKaryawan." AND (npk LIKE '%$_GET[cari]%' OR nama LIKE '%$_GET[cari]%')".$deptAcc)or die(mysqli_error($link));
-                            $jml = mysqli_num_rows($q_jml );
-                        }else{
-                            $sql_dataKaryawan = $sql_dataKaryawan;
-                            $_GET['cari'] = '';
-                            $q_jml = mysqli_query($link, $q_dataKaryawan.$deptAcc)or die(mysqli_error($link));
-                            $jml = mysqli_num_rows($q_jml);
-                        }
+                        
+                        
                         
                         if(mysqli_num_rows($sql_dataKaryawan)>0){
-                            $no = $offset +1 ;
+                            $no = $limit_start +1 ;  
                             while($dataKaryawan = mysqli_fetch_assoc($sql_dataKaryawan)){
                                 $q_atasan = mysqli_query($link, "SELECT id, nama_cord FROM view_cord_area WHERE id = '$dataKaryawan[id_area]' ");
                                 $s_atasan = mysqli_fetch_assoc($q_atasan);
@@ -247,7 +229,7 @@ $_GET['deptAcc'] = $_SESSION['deptAcc'];
                                     <td class="sticky-col first-col">
                                         <div class="form-check">
                                             <label class="form-check-label">
-                                                <input class="form-check-input check" type="checkbox" name="index[]"  value="<?=$dataKaryawan['npk']?>">
+                                                <input class="form-check-input mp check" type="checkbox" name="index[]"  value="<?=$dataKaryawan['npk']?>">
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
@@ -280,52 +262,37 @@ $_GET['deptAcc'] = $_SESSION['deptAcc'];
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            <p class="badge badge-warning badge-pill">total data ditemukan : <?=$jml?></p>
-        </div>
-        <div class="col-md-6 ">
-            <ul class="pagination pagination-sm pull-right" id="pagination">
-                <?php
-                // $sOrg = mysqli_query($link, $qOrg)or die(mysqli_error($link));
-                $jml_hal = ceil($jml / $batas);
-                $cari = (@$_GET['cari'] != '') ? @$_GET['cari'] : "";
-                $index_hal = 2;
-                $start = ($hal > $index_hal) ? $hal - $index_hal : 1;
-                $next = $hal + 1;
-        
-                $end = ($hal < ($jml_hal - $index_hal)) ? $hal + $index_hal : $jml_hal;
-                if($jml > 0){
-                    if($hal == 1){
-                        ?>
-                        <li class="page-item disabled"><a class="page-link btn-primary page" href="?cari=<?=$_GET['cari']?>&deptAcc=<?=$_GET['deptAcc']?>&hal=1#pagination"" aria-label="Previous">FIRST</a></li>
-                        <li class="page-item disabled"><a class="page-link btn-primary page" href="#pagination" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
-                        <?php
-                    } else{
-                        $prev = ($hal > 1)? $hal - 1 : 1;
-                        ?>
-                        <li class="page-item"><a class="page-link btn-primary page" data-id="1" href="?cari=<?=$_GET['cari']?>&deptAcc=<?=$_GET['deptAcc']?>&hal=1#pagination" aria-label="Previous">FIRST</a></li>
-                        <li class="page-item"><a class="page-link btn-primary page" data-id="<?=$prev?>" href="?cari=<?=$_GET['cari']?>&deptAcc=<?=$_GET['deptAcc']?>&hal=<?=$prev?>" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
-                        <?php
-                    }
-                    for($i = $start; $i <= $end; $i++){
-                        $link_active = ($hal == $i)? ' active' : '';
-                        ?>
-                        <li class="page-item <?=$link_active?>"><a href="?cari=<?=$_GET['cari']?>&deptAcc=<?=$_GET['deptAcc']?>&hal=<?=$i?>#pagination" data-id="<?=$i?>" class="page-link btn-primary btn-link page"><?=$i?></a></li>
-                        <?php
-                    }
-                    if($hal == $jml_hal){
-                        ?>
-                        <li class="page-item disabled"><a class="page-link btn-primary btn-link page" data-id="#" href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-                        <li class="page-item disabled"><a class="page-link btn-primary btn-link page" data-id="#" href="#">LAST</a></li>
-                        <?php
-                    } else{
-                        ?>
-                        <li class="page-item"><a class="page-link btn-primary btn-link page" data-id="<?=$next?>" href="?cari=<?=$_GET['cari']?>&deptAcc=<?=$_GET['deptAcc']?>&hal=<?=$next?>#pagination"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-                        <li class="page-item"><a class="page-link btn-primary btn-link page" data-id="<?=$jml_hal?>" href="?cari=<?=$_GET['cari']?>&deptAcc=<?=$_GET['deptAcc']?>&hal=<?=$jml_hal?>#pagination">LAST</a></li>
-                        <?php
-                    }
-                }
-                ?>
+        <div class="col-md-12 pull-rigt">
+            <ul class="pagination ">
+            <?php
+            // echo $page."<br>";
+            // echo $jumlah_page."<br>";
+            // echo $jumlah_number."<br>";
+            // echo $start_number."<br>";
+            // echo $end_number."<br>";
+            if($page == 1){
+                echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
+                echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
+            } else {
+                $link_prev = ($page > 1)? $page - 1 : 1;
+                echo '<li class="page-item halaman" id="1"><a class="page-link" >First</a></li>';
+                echo '<li class="page-item halaman" id="'.$link_prev.'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
+            }
+
+            for($i = $start_number; $i <= $end_number; $i++){
+                $link_active = ($page == $i)? ' active page_active' : '';
+                echo '<li class="page-item halaman '.$link_active.'" id="'.$i.'"><a class="page-link" >'.$i.'</a></li>';
+            }
+
+            if($page == $jumlah_page){
+                echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
+            } else {
+                $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
+                echo '<li class="page-item halaman" id="'.$link_next.'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item halaman" id="'.$jumlah_page.'"><a class="page-link" >Last</a></li>';
+            }
+            ?>
             </ul>
         </div>
     </div>
@@ -337,5 +304,120 @@ $_GET['deptAcc'] = $_SESSION['deptAcc'];
             <a class="btn btn-sm btn-info" data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="collapseExample">Tambah data</a>
         </div>
     </div>
+    <?php
+}else if($id == 'expatriat'){
+    ?>
+    <div class="collapse show" id="tambah">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-none border " style="background:rgba(201, 201, 201, 0.2)" >
+                <div class="card-body  mt-2">
+                    <form method="post" action="ajax/proses.php" id="form-add" class="form-data">
+                        <div class="row">
+                            <div class="col-sm-12 ">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label for="">NPK</label>
+                                        <div class="form-group " style="background:rgba(255, 255, 255, 0.3)">
+                                            <input type="number" class="form-control bg-transparent data-npk" id="data-npk" placeholder="input npk" autofocus/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="">Nama </label>
+                                        <div class="form-group " >
+                                            <input disabled type="text" class="form-control bg-transparent data-nama" placeholder="Nama" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Jabatan</label>
+                                        <div class="form-group " >
+                                            <input disabled type="text" class="form-control bg-transparent data-jabatan" placeholder="jabatan" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Status</label>
+                                        <div class="form-group " >
+                                            <input disabled type="text" class="form-control bg-transparent data-stats" placeholder="Status Karyawan" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="reset" class="btn btn-sm btn-warning ">Reset</button>
+                        <button type="button" id="save" class="btn btn-sm btn-primary pull-right d-none" name="add">Tambah</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6 text-left">
+                <h6 >Data Expatriat</h6>
+            </div>
+        </div>
+        <form class="table-responsive" method="post">
+            <div class="data-expatriat">
 
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $('.data-npk').keyup(function(){
+        var npk = $(this).val();
+        $.ajax({
+            url: 'ajax/get_resource.php',
+            method: 'get',
+            data: {data:npk},
+            success:function(data){
+                var obj = $.parseJSON(data);
+                var total = obj.msg[0].total;
+                var msg = obj.msg[0].msg;
+                if(total > 0){
+                    var nama = obj.data[0].nama;
+                    var status = obj.data[0].status;
+                    var jabatan = obj.data[0].jabatan;
+                    $('.data-nama').val(nama);
+                    $('.data-jabatan').val(jabatan);
+                    $('.data-stats').val(status);
+                    $('#save').removeClass('d-none');
+                }else if(total === 0){
+                    var nama = obj.msg[0].msg;
+                    var status = obj.msg[0].msg;
+                    var jabatan = obj.msg[0].msg;
+                    $('.data-nama').val(nama);
+                    $('.data-jabatan').val(jabatan);
+                    $('.data-stats').val(status);
+                    $('#save').addClass('d-none');
+                }else{
+                    var nama = obj.msg[0].msg;
+                    var status = obj.msg[0].msg;
+                    var jabatan = obj.msg[0].msg;
+                    $('.data-nama').val(nama);
+                    $('.data-jabatan').val(jabatan);
+                    $('.data-stats').val(status);
+                    $('#save').addClass('d-none');
+                }
+            }
+        })
+    })
+</script>
+<script>
+    $('.data-expatriat').load("ajax/data-expatriat.php");
+    $('#save').click(function(){
+        var npk = $('.data-npk').val();
+        $.ajax({
+            url: 'ajax/data-expatriat.php',
+            method: 'get',
+            data: {proses:"add", npk:npk},
+            success:function(data){
+                $('.data-expatriat').load("ajax/data-expatriat.php");
+            }
+        })
+    })
+</script>
+    <?php
+}

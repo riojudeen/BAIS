@@ -59,7 +59,7 @@ if(isset($_SESSION['user'])){
                                         $tab_active = ($setTab == $tab[$i])? "active" :"";
                                     ?>
                                         <li class="nav-item">
-                                            <a class="btn btn-sm btn-link btn-round btn-info <?=$tab_active?> tab-<?=$tab_active?> list-tab" href="#<?=$user_role['id_role']?>" id="<?=$user_role['id_role']?>" role="tab" data-toggle="tab"><?=$user_role['role_name']?></a>
+                                            <a class="btn btn-sm btn-link btn-round btn-info <?=$tab_active?> tab-<?=$tab_active?> list-tab" href="#<?=$user_role['id_role']?>" id="<?=$user_role['id_role']?>" data-name="<?=$user_role['role_name']?>" role="tab" data-toggle="tab"><?=$user_role['role_name']?></a>
                                         </li>
                                     <?php
                                         $i++;
@@ -70,16 +70,19 @@ if(isset($_SESSION['user'])){
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <form class="col-md-4 pull-right" method="get" action="">
-                            <div class="input-group no-border">
-                                <input type="text" name="cari" id="pencarian" class="form-control cari" placeholder="Cari NPK atau nama" >
-                                <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <i class="nc-icon nc-zoom-split"></i>
+                        <div class="row">
+                            <h6 class="text-title col-md-8 content-title"></h6>
+                            <div class="col-md-4 text-right">
+                                <div class="input-group no-border">
+                                    <input type="text" name="cari" id="pencarian" class="form-control cari" placeholder="Cari NPK atau nama" >
+                                    <div class="input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="nc-icon nc-zoom-split"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                         <div class="data-view"></div>
                     </div>
                 </div>
@@ -134,17 +137,38 @@ $hal = (isset($_GET['hal']))?$_GET['hal']:1;
     </script>
     <script>
         $(document).ready(function(){
-            function load_data(){
+            function load_data(hal){
                 var id = $('.tab-active').attr('id');
+                var name = $('.tab-active').attr('data-name');
                 var cari = $('.cari').val();
+                // console.log(name);
+                $('.content-title').text(name);
                 $.ajax({
-                    url: 'ajax/index.php?id='+id+'&cari='+cari+'&hal=<?=$hal?>',
-                    method: 'get',
+                    url: 'ajax/index.php',
+                    method: 'GET',
+                    data:{page:hal,id:id,cari:cari},
                     success:function(msg){
-                        $('.data-view').html(msg);
+                        $('.data-view').fadeOut('fast', function(){
+                            $(this).html(msg).fadeIn('fast');
+                            
+                        });
                     }
                 });
             }
+            load_data();
+            $('.cari').keyup(function(){
+                load_data();
+            })
+            $('.list-tab').click(function(){
+                var id = $(this).attr('id');
+                $('.list-tab').removeClass('tab-active');
+                $(this).addClass('tab-active');
+                load_data();
+            });
+            $(document).on('click', '.halaman', function(){
+                var hal = $(this).attr("id");
+                load_data(hal);
+            });
             load_data();
             $('.cari').keyup(function(){
                 load_data();
