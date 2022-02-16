@@ -1,5 +1,233 @@
 <?php
 include_once('config.php');
+function strukturOrg($link, $part, $id_area){
+    if($id_area != ''){
+        if($part == 'pos'){
+            $query = "SELECT 
+            pos_leader.id_post AS idPost,
+            pos_leader.nama_pos AS pos,
+            pos_leader.npk_cord AS post_cord,
+            pos_leader.id_group AS leader,
+    
+            groupfrm.id_group AS idGroup,
+            groupfrm.nama_group AS groupfrm,
+            groupfrm.npk_cord AS group_cord,
+            groupfrm.id_section AS id_sect,
+    
+            section.id_section AS idSect,
+            section.section AS section,
+            section.npk_cord AS spv,
+            section.id_dept AS id_dept,
+    
+            department.id_dept AS idDept,
+            department.dept AS dept,
+            department.npk_cord AS dept_cord,
+            department.id_div AS id_div,
+    
+            division.id_div AS idDiv,
+            division.nama_divisi AS divisi,
+            division.npk_cord AS dh,
+            division.id_company AS id_company,
+    
+            company.id_company AS idCompany,
+            company.nama AS namaCompany ,
+            company.npk_cord AS directure
+    
+            FROM pos_leader
+            JOIN groupfrm ON pos_leader.id_group = groupfrm.id_group 
+            JOIN section ON groupfrm.id_section = section.id_section
+            JOIN department ON section.id_dept = department.id_dept
+            JOIN division ON department.id_div = division.id_div
+            JOIN company ON division.id_company = company.id_company WHERE pos_leader.id_post = '$id_area' ";
+
+            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+            $data = mysqli_fetch_assoc($sql);
+            $pos = (isset($data['idPost']))?$data['idPost']:'';
+            $group = (isset($data['idGroup']))?$data['idGroup']:'';
+            $section = (isset($data['idSect']))?$data['idSect']:'';
+            $dept = (isset($data['idDept']))?$data['idDept']:'';
+            $division = (isset($data['idDiv']))?$data['idDiv']:'';
+            $plant = (isset($data['idCompany']))?$data['idCompany']:'';
+            $dept_account = '';
+
+        }else if($part == 'group'){
+            $query = "SELECT 
+            groupfrm.id_group AS idGroup,
+            groupfrm.nama_group AS groupfrm,
+            groupfrm.npk_cord AS group_cord,
+            groupfrm.id_section AS id_sect,
+    
+            section.id_section AS idSect,
+            section.section AS section,
+            section.npk_cord AS spv,
+            section.id_dept AS id_dept,
+    
+            department.id_dept AS idDept,
+            department.dept AS dept,
+            department.npk_cord AS dept_cord,
+            department.id_div AS id_div,
+    
+            division.id_div AS idDiv,
+            division.nama_divisi AS divisi,
+            division.npk_cord AS dh,
+            division.id_company AS id_company,
+    
+            company.id_company AS idCompany,
+            company.nama AS namaCompany ,
+            company.npk_cord AS directure
+    
+            FROM  groupfrm 
+            JOIN section ON groupfrm.id_section = section.id_section
+            JOIN department ON section.id_dept = department.id_dept
+            JOIN division ON department.id_div = division.id_div
+            JOIN company ON division.id_company = company.id_company WHERE groupfrm.id_group = '$id_area'";
+
+            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+            $data = mysqli_fetch_assoc($sql);
+            $pos = '';
+            $group = (isset($data['idGroup']))?$data['idGroup']:'';
+            $section = (isset($data['idSect']))?$data['idSect']:'';
+            $dept = (isset($data['idDept']))?$data['idDept']:'';
+            $division = (isset($data['idDiv']))?$data['idDiv']:'';
+            $plant = (isset($data['idCompany']))?$data['idCompany']:'';
+            $dept_account = '';
+            
+        }else if($part == 'section'){
+            $query = "SELECT 
+            section.id_section AS idSect,
+            section.section AS section,
+            section.npk_cord AS spv,
+            section.id_dept AS id_dept,
+    
+            department.id_dept AS idDept,
+            department.dept AS dept,
+            department.npk_cord AS dept_cord,
+            department.id_div AS id_div,
+    
+            division.id_div AS idDiv,
+            division.nama_divisi AS divisi,
+            division.npk_cord AS dh,
+            division.id_company AS id_company,
+    
+            company.id_company AS idCompany,
+            company.nama AS namaCompany ,
+            company.npk_cord AS directure
+    
+            FROM  section
+            JOIN department ON section.id_dept = department.id_dept
+            JOIN division ON department.id_div = division.id_div
+            JOIN company ON division.id_company = company.id_company WHERE section.id_section = '$id_area'";
+
+            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+            $data = mysqli_fetch_assoc($sql);
+            $pos = '';
+            $group = '';
+            $section = (isset($data['idSect']))?$data['idSect']:'';
+            $dept = (isset($data['idDept']))?$data['idDept']:'';
+            $division = (isset($data['idDiv']))?$data['idDiv']:'';
+            $plant = (isset($data['idCompany']))?$data['idCompany']:'';
+            $dept_account = '';
+            
+        }else if($part == 'dept'){
+            $query = "SELECT 
+            department.id_dept AS idDept,
+            department.dept AS dept,
+            department.npk_cord AS dept_cord,
+            department.id_div AS id_div,
+    
+            division.id_div AS idDiv,
+            division.nama_divisi AS divisi,
+            division.npk_cord AS dh,
+            division.id_company AS id_company,
+    
+            company.id_company AS idCompany,
+            company.nama AS namaCompany ,
+            company.npk_cord AS directure
+    
+            FROM department 
+            JOIN division ON department.id_div = division.id_div
+            JOIN company ON division.id_company = company.id_company WHERE department.id_dept = '$id_area'";
+
+            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+            $data = mysqli_fetch_assoc($sql);
+            $pos = '';
+            $group = '';
+            $section = '';
+            $dept = (isset($data['idDept']))?$data['idDept']:'';
+            $division = (isset($data['idDiv']))?$data['idDiv']:'';
+            $plant = (isset($data['idCompany']))?$data['idCompany']:'';
+            $dept_account = '';
+        }else if($part == 'division'){
+            $query = "SELECT 
+           
+            division.id_div AS idDiv,
+            division.nama_divisi AS divisi,
+            division.npk_cord AS dh,
+            division.id_company AS id_company,
+    
+            company.id_company AS idCompany,
+            company.nama AS namaCompany ,
+            company.npk_cord AS directure
+    
+            FROM division
+            JOIN company ON division.id_company = company.id_company WHERE division.id_div = '$id_area'";
+            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+            $data = mysqli_fetch_assoc($sql);
+            $pos = '';
+            $group = '';
+            $section = '';
+            $dept = '';
+            $division = (isset($data['idDiv']))?$data['idDiv']:'';
+            $plant = (isset($data['idCompany']))?$data['idCompany']:'';
+            $dept_account = '';
+        }else if($part == 'deptacc'){
+            $query = "SELECT 
+
+            dept_account.id_dept_account AS idDeptAcc,
+            dept_account.department_account AS deptAcc,
+            dept_account.npk_dept AS mg, 
+            dept_account.id_div AS id_div,
+            
+            division.id_div AS idDiv,
+            division.nama_divisi AS divisi,
+            division.npk_cord AS dh,
+            division.id_company AS id_company,
+    
+            company.id_company AS idCompany,
+            company.nama AS namaCompany ,
+            company.npk_cord AS directure
+            FROM dept_account 
+            JOIN division ON dept_account.id_div = division.id_div
+            JOIN company ON division.id_company = company.id_company WHERE dept_account.id_dept_account = '$id_area'";
+            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+            $data = mysqli_fetch_assoc($sql);
+            $pos = '';
+            $group = '';
+            $section = '';
+            $dept = '';
+            $division = (isset($data['idDiv']))?$data['idDiv']:'';
+            $plant = (isset($data['idCompany']))?$data['idCompany']:'';
+            $dept_account = (isset($data['idDeptAcc']))?$data['idDeptAcc']:'';
+        }else{
+            $pos = '';
+            $group = '';
+            $section = '';
+            $dept = '';
+            $division = '';
+            $plant = '';
+            $dept_account = '';
+        }
+    }else{
+        $pos = '';
+        $group = '';
+        $section = '';
+        $dept = '';
+        $division = '';
+        $plant = '';
+        $dept_account = '';
+    }
+    return array($pos,$group,$section,$dept,$division,$plant,$dept_account);
+}
 function noData(){
     return "TIDAK DITEMUKAN DATA DI DATABASE";
 }

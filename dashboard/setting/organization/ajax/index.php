@@ -18,8 +18,9 @@ if(isset($_SESSION['user'])){
                 b.nama_group AS parent_name 
                 FROM pos_leader AS a
                 LEFT JOIN groupfrm AS b ON a.id_group = b.id_group 
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_post";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
                 $nama_area = "Team";
+                $order = " ORDER BY  a.id_post";
                 
 
         }else if($id == 'group'){
@@ -35,7 +36,8 @@ if(isset($_SESSION['user'])){
                 b.section AS parent_name 
                 FROM groupfrm AS a
                 LEFT JOIN section AS b ON a.id_section = b.id_section
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_group" ;
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord " ;
+                $order = " ORDER BY  a.id_group";
                 $nama_area = "Group Process";
                 
 
@@ -52,7 +54,8 @@ if(isset($_SESSION['user'])){
                 b.dept AS parent_name 
                 FROM section AS a
                 LEFT JOIN department AS b ON a.id_dept = b.id_dept
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_section";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
+                $order = " ORDER BY  a.id_section";
                 $nama_area = "Section Area";
                 
 
@@ -69,7 +72,8 @@ if(isset($_SESSION['user'])){
                 b.nama_divisi AS parent_name 
                 FROM department AS a
                 LEFT JOIN division AS b ON a.id_div = b.id_div
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY  a.id_dept";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
+                $order =" ORDER BY  a.id_dept";
                 $nama_area = "Department Functional";
                 
         }else if($id == 'deptacc'){
@@ -85,8 +89,9 @@ if(isset($_SESSION['user'])){
                 b.nama_divisi AS parent_name 
                 FROM dept_account AS a
                 LEFT JOIN division AS b ON a.id_div = b.id_div
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_dept ORDER BY  a.id_dept_account" ;
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_dept " ;
                 $nama_area = "Department Account";
+                $order = " ORDER BY  a.id_dept_account";
                 
         }else if($id == 'division'){
             $qOrg = "SELECT 
@@ -101,54 +106,15 @@ if(isset($_SESSION['user'])){
                 b.nama AS parent_name 
                 FROM division AS a
                 LEFT JOIN company AS b ON a.id_company = b.id_company
-                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ORDER BY   a.id_div";
+                LEFT JOIN karyawan AS c ON c.npk = a.npk_cord ";
                 $nama_area = "Division";
+                $order = " ORDER BY   a.id_div";
         }
-        // menghitung jumah data total
-        $sOrg = mysqli_query($link, $qOrg)or die(mysqli_error($link));
-        $jml = mysqli_num_rows($sOrg);
-        // echo $jml;
-        // echo $qOrg;
-        // unset ($_SESSION['sort']);
-        if(isset($_GET['sort'])){
-            if($_GET['sort'] > $jml ){
-                $batas = $jml;
-            }else if($_GET['sort'] <= 0){
-                $batas = 20;
-            }else{
-                $batas = $_GET['sort'];
-            }
-        }else{
-            $batas = 20;
-        }
-        if($jml > 0){
-            $jml_hal = ceil($jml / $batas);
-        }else{
-            $jml_hal = 0;
-        }
-
-        $hal = (@$_GET['hal'] > $jml_hal)? 1 : @$_GET['hal'];
-        $cari = (@$_GET['cari'] != '') ? @$_GET['cari'] : "";
         
-        // jika tidak ada get halaman
-        if(empty($hal)){
-            $_SESSION['tab'] = $id;
-            $posisi = 0;
-            $hal = 1;
-            
-        } else {
-            // jika ada get halaman
-            $_SESSION['tab'] = $id;
-            $posisi = ($hal - 1) * $batas; 
-        }
+        
         
         // query data jika tidak ada pencarian
-        if(empty($cari)){
-            $_SESSION['tab'] = $id;
-            // gunakan limitation
-            $qOrg = $qOrg." LIMIT $posisi, $batas" ; 
-            $sOrg = mysqli_query($link, $qOrg)or die(mysqli_error($link));
-        }else{
+        
             if($id == 'pos'){
                 $nama_cord = 'c.nama';
                 $namaArea = 'a.nama_pos';
@@ -180,26 +146,52 @@ if(isset($_SESSION['user'])){
                 $npkCord = 'a.npk_cord' ;
                 $namaParent =  'b.nama';
             }
+
             $_SESSION['tab'] = $id;
-            $qOrg = $qOrg." WHERE $nama_cord LIKE '%$cari%' OR $namaArea LIKE '%$cari%' OR $npkCord LIKE '%$cari%' OR $namaParent LIKE '%$cari%'" ; 
-            $sOrg = mysqli_query($link, $qOrg)or die(mysqli_error($link));
-        }
+            
+       
         // echo $qOrg;
         // echo $batas."</br>";
         // echo $posisi."</br>";
         // 
-        
+        $page = (isset($_POST['page']) && $_POST['page'] != 'undefined')? $_POST['page'] : 1;
+        // echo $page;
+        $limit = 50; 
+        $limit_start = ($page - 1) * $limit;
+        $no = $limit_start + 1;
 
-        $index_hal = 2;
-        $start = ($hal > $index_hal) ? $hal - $index_hal : 1;
-        $next = $hal + 1;
+       
 
-        $end = ($hal < ($jml_hal - $index_hal)) ? $hal + $index_hal : $jml_hal;
+        // pencarian
+        $cari = (isset($_POST['cari']))?$_POST['cari']:'';
+        $filter_cari = ($cari != '')?"WHERE ($nama_cord LIKE '%$cari%' OR $namaArea LIKE '%$cari%' OR $npkCord LIKE '%$cari%' OR $namaParent LIKE '%$cari%')":'';
+
+        $filter_gabung = $filter_cari;
+        $filter = ($filter_gabung != '' )?" ". $filter_gabung :"";
+
+        // limit dan offset
+        $addLimit = " LIMIT $limit_start, $limit";
+
+        // total data
+        $total_dataOrg = $qOrg;
+        $jml = mysqli_query($link, $total_dataOrg)or die(mysqli_error($link));
+        $total_records= mysqli_num_rows($jml);
+
+        // query untuk pemanggilan data
+        $addLimit = " LIMIT $limit_start, $limit";
+        $qOrg .= $filter.$addLimit;
+        // echo $qOrg;
+
+        $sOrg = mysqli_query($link, $qOrg)or die(mysqli_error($link));
+
+        // untuk pagination
+        $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
+                        
+        $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+        $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
+        $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
         ?>
-    <hr>
-    <h5 class="title" id="page-<?=$id?>">Data Register <?=$nama_area?></h5>
     <?php
-    require_once('../../../component/sorter.php');
     ?>
     <div class="table-responsive" >
         <table class="table table_org text-uppercase " id="datamonitoring" data-id="<?=$id?>" cellspacing="0" width="100%">
@@ -280,8 +272,9 @@ if(isset($_SESSION['user'])){
                                         <a class="dropdown-item" href="">Add Employee</a>
                                     </div>
                                 </span> -->
-                                <a href="proses/edit.php?<?=$id?>[]=<?=$dOrg['id']?>" class="btn-round  btn-warning btn btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>
-                                <a href="proses/prosesOrg.php?del<?=$id?>=<?=$dOrg['id']?>" class="btn btn-round  btn-danger  btn-icon btn-sm remove"><i class="fas fa-eraser"></i></a>
+                                <a href="proses/edit.php?<?=$id?>[]=<?=$dOrg['id']?>" class="btn btn-warning  btn-sm edit"><i class="fa fa-edit"></i></a>
+                                <a href="proses/prosesOrg.php?del<?=$id?>=<?=$dOrg['id']?>" class="btn  btn-danger   btn-sm remove"><i class="fas fa-eraser"></i></a>
+                                <a href="data-update.php?id=<?=$dOrg['id']?>&part=<?=$id?>" class="btn  btn-success btn-sm "><i class="nc-icon nc-simple-add"></i> Update</a>
                                 
                             </td>
                             <td class="text-right">
@@ -308,53 +301,39 @@ if(isset($_SESSION['user'])){
             </table>
         </div>  
     </div>
-    <?php
-    if($jml > 0){
-        $display = '';
-    }else{
-        $display = 'd-none';
+    <div class="row">
+        <div class="col-md-12 pull-rigt">
+            <ul class="pagination ">
+            <?php
+            // echo $page."<br>";
+            // echo $jumlah_page."<br>";
+            // echo $jumlah_number."<br>";
+            // echo $start_number."<br>";
+            // echo $end_number."<br>";
+            if($page == 1){
+                echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
+                echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
+            } else {
+                $link_prev = ($page > 1)? $page - 1 : 1;
+                echo '<li class="page-item halaman" id="1"><a class="page-link" >First</a></li>';
+                echo '<li class="page-item halaman" id="'.$link_prev.'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
+            }
 
-    }
-    ?>
-    <div class="row <?=$display?>">
-        <div class="col-md-6 text-left ">
-            <ul class="pagination pagination-sm">
-                <?php
-                if($hal == 1){
-                    ?>
-                    <li class="page-item disabled"><a class="page-link btn-primary page" href="#mainpage" aria-label="Previous">FIRST</a></li>
-                    <li class="page-item disabled"><a class="page-link btn-primary page" href="#mainpage" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
-                    <?php
-                } else{
-                    $prev = ($hal > 1)? $hal - 1 : 1;
-                    ?>
-                    <li class="page-item"><a class="page-link btn-primary page" data-id="1" href="#mainpage" aria-label="Previous">FIRST</a></li>
-                    <li class="page-item"><a class="page-link btn-primary page" data-id="<?=$prev?>" href="?hal=<?=$prev?>" aria-label="Previous"><span aria-hidden="true"><i class="fa fa-angle-double-left" aria-hidden="true"></i></span></a></li>
-                    <?php
-                }
-                for($i = $start; $i <= $end; $i++){
-                    $link_active = ($hal == $i)? ' active' : '';
-                    ?>
-                    <li class="page-item <?=$link_active?>"><a href="?hal=<?=$i?>&sort=<?=$_GET['sort']?>#mainpage" data-id="<?=$i?>" class="page-link btn-primary btn-link page"><?=$i?></a></li>
-                    <?php
-                }
-                if($hal == $jml_hal){
-                    ?>
-                    <li class="page-item disabled"><a class="page-link btn-primary btn-link page" data-id="#" href="#"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-                    <li class="page-item disabled"><a class="page-link btn-primary btn-link page" data-id="#" href="#">LAST</a></li>
-                    <?php
-                } else{
-                    ?>
-                    <li class="page-item"><a class="page-link btn-primary btn-link page" data-id="<?=$next?>" href="?hal=<?=$next?>&sort=<?=$_GET['sort']?>#mainpage"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a></li>
-                    <li class="page-item"><a class="page-link btn-primary btn-link page" data-id="<?=$jml_hal?>" href="?=<?=$jml_hal?>&sort=<?=$_GET['sort']?>#mainpage">LAST</a></li>
-                    <?php
-                }
-                ///////////////////////////////////////////////////////////////
+            for($i = $start_number; $i <= $end_number; $i++){
+                $link_active = ($page == $i)? ' active page_active' : '';
+                echo '<li class="page-item halaman '.$link_active.'" id="'.$i.'"><a class="page-link" >'.$i.'</a></li>';
+            }
+
+            if($page == $jumlah_page){
+                echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
+            } else {
+                $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
+                echo '<li class="page-item halaman" id="'.$link_next.'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item halaman" id="'.$jumlah_page.'"><a class="page-link" >Last</a></li>';
+            }
             ?>
             </ul>
-        </div>
-        <div class="col-md-6 text-right">
-            <span class="badge badge-pill badge-primary">total data ditemukan : <?=$jml?></span>
         </div>
     </div>
         

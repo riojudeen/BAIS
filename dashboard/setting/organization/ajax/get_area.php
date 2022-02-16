@@ -25,13 +25,13 @@ if(isset($_SESSION['user'])){
         <input type="hidden" class="form-control" name="part" value="<?=$subpart?>" >
         <input type="hidden" class="form-control" name="id_parent" value="<?=$_POST['data']?>" >
     </div>
-    <div class="table-full-width">
+    <div class="table-full-width table-striped " >
         
                 <?php
                 $queryArea = mysqli_query($link, "SELECT `nama_org` , `cord`, `nama_cord` FROM view_cord_area WHERE id_parent = '$data' AND part = '$subpart' ")or die(mysqli_error($link));
                 if(mysqli_num_rows($queryArea)> 0){
                     ?>
-                    <table class="table text-uppercase">
+                    <table style="width:100%" class="table-sm text-uppercase">
                         <thead>
                             <tr>
                                 <th colspan="4">Sub Area</th>
@@ -49,9 +49,9 @@ if(isset($_SESSION['user'])){
                         
                         <tr>
                             <td><?=$no++?></td>
-                            <td><?=$namaArea?> <label class="badge badge-sm badge-<?=$color?> badge-pill badge-round"><?=$nama_cord?></label></td>
+                            <td><?=$namaArea?> </td>
                             <td>
-                                <a href="" class="btn btn-success btn-sm btn-round btn-icon"><i class="nc-icon nc-simple-add"></i></a>
+                            <label class="badge badge-sm badge-<?=$color?> badge-pill badge-round"><?=$cord?><?=$nama_cord?></label>
                             </td>
                         </tr>
                         <?php

@@ -76,6 +76,8 @@ if(isset($_SESSION['user'])){
             echo "<script>window.location='".base_url('dashboard/setting/organization')."';</script>";
         }
         
+    }else if($_POST['id_area_posting']){
+        echo "SUKSES";
     }else{
         $_SESSION['info'] = "Kosong";
         $_SESSION['tab'] = "division";

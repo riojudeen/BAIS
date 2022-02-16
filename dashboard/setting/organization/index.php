@@ -120,15 +120,17 @@ if(isset($_SESSION['user'])){
                 <div class="row">
                     <div class="col-md-3 card" style="box-shadow: rgb(223, 220, 220) -5px 0.0px 20px -13px inset;">
                         <div class="sticker" >
-                            <h6>organization parts</h6>
+                            <h6>Data Organisasi</h6>
                             <div class="nav-tabs-wrapper">
+                            
                                 <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left" role="tablist">
                                     <!--  -->
                                     <?php
                                     foreach($listOrg as $list){
+                                        
                                         ?>
                                         <li class="nav-item ">
-                                            <a class="btn btn-sm btn-link btn-round btn-info org <?=$list['2']?>"  data-toggle="tab" data-id="<?=$list['1']?>" href="#<?=$list['1']?>" role="tab" aria-expanded="true"><?=$list['0']?></a>
+                                            <a class=" btn btn-sm btn-link btn-round btn-info tab-<?=$list['2']?> <?=$list['2']?> list-tab"  data-toggle="tab" data-id="<?=$list['1']?>" id="<?=$list['1']?>" href="#<?=$list['1']?>" role="tab" data-name="<?=$list['0']?>" aria-expanded="true"><?=$list['0']?></a>
                                         </li>
                                         <?php
                                     }
@@ -139,20 +141,22 @@ if(isset($_SESSION['user'])){
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <?php
-                        require_once('collapse.php');
-                        ?>
-                        <div id="my-tab-content" class="tab-content ">
-                            <?php
-                            foreach($listOrg as $list){
-                                ?>
-                                <div class="tab-pane <?=$list['2']?>" id="<?=$list['1']?>" role="tabpanel" aria-expanded="true">
-                                    <div id="monitor<?=$list['1']?>"></div>
+                        
+                        <div class="row">
+                            <h6 class="text-title col-md-8 content-title"></h6>
+                            <div class="col-md-4 text-right">
+                                <div class="input-group no-border">
+                                    <input type="text" name="cari" id="pencarian" class="form-control cari" placeholder="Cari NPK atau nama" >
+                                    <div class="input-group-append">
+                                        <div class="input-group-text">
+                                            <i class="nc-icon nc-zoom-split"></i>
+                                        </div>
+                                    </div>
                                 </div>
-                                <?php
-                            }
-                            ?>
+                            </div>
                         </div>
+                        <div id="monitor"></div>
+                        
                     </div>
                 </div>
             </form>
@@ -174,52 +178,67 @@ if(isset($_SESSION['user'])){
     </div>
 </div>
 <?php
-    if(isset($_GET['sort'])){
-        
-        if($_GET['sort'] <= 0){
-            $sort = 20;
-        }else{
-            $sort = $_GET['sort'];
-        }
-    }else{
-        $sort = 20;
-    }
-    // echo $sort;
-    $hal = (isset($_GET['hal']))?$_GET['hal']:1;
-    $cari = (isset($_GET['cari']))?$_GET['cari']:"";
+   
     include_once("../../footer.php");
     //javascript
     ?>
     <script>
         $(document).ready(function(){
-            function getActive(){
-                var active = $(".org.active").attr('data-id');
-                // console.log(active);
+            function getActive(hal){
+                var active = $(".tab-active").attr('data-id');
+                var name = $(".tab-active").attr('data-name');
+                var cari = $('.cari').val();
+                $('.content-title').text(name);
+                $('#text_'+active).removeClass('d-none');
+                // var sort = $('')
+
+                console.log('#text_'+active);
                 $.ajax({
-                type: 'POST',
-                url: "ajax/index.php?hal=<?=$hal?>&sort=<?=$sort?>&cari=<?=$cari?>",
-                data: {id : active },
-                success: function(msg){
-                    $("#monitor"+active).html(msg);
-                    
+                    type: 'POST',
+                    url: "ajax/index.php",
+                    data:{page:hal,id:active,cari:cari},
+                    success: function(msg){
+                        
+                        $("#monitor").fadeOut('fast', function(){
+                            $(this).html(msg).fadeIn('fast');
+                            
+                        });
                     }
                 });
             }
             getActive();
-            
-            $(".org").click(function(){
-                const val = $(this).attr('data-id');
-                // console.log(val);
+            $('#pencarian').keyup(function(){
+                getActive();
+            })
+            $('.list-tab').click(function(){
+                var id = $(this).attr('id');
+                $('.list-tab').removeClass('tab-active');
+                $('.inputnpk').addClass('d-none');
+                $(this).addClass('tab-active');
+                getActive();
+            });
+            $(document).on('click', '.halaman', function(){
+                var hal = $(this).attr("id");
+                getActive(hal);
+                console.log(hal)
+            });
+            $('.inputnpk').blur(function(){
+                var active = $(".tab-active").attr('data-id');
                 $.ajax({
                     type: 'POST',
-                    url: "ajax/index.php?hal=<?=$hal?>&sort=<?=$sort?>&cari=<?=$cari?>",
-                    data: {id : val },
-                success: function(msg){
-                    $("#monitor"+val).html(msg);
-                    
+                    url: "ajax/tes.php",
+                    data:{id:active},
+                    success: function(msg){
+                        
+                        $("#monitor").fadeOut('fast', function(){
+                            $(this).html(msg).fadeIn('fast');
+                            
+                        });
                     }
                 });
             })
+            
+            
         })
     </script>
     <script>
@@ -282,4 +301,3 @@ if(isset($_SESSION['user'])){
     echo "<script>window.location='".base_url('auth/login.php')."';</script>";
   }
 ?>
-

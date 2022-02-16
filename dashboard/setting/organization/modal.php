@@ -2,7 +2,7 @@
 ?>
 <div class="modal fade" id="generate" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
-        <div class="modal-content mx-0 px-0">
+        <div class="modal-content mx-1 px-1">
             <form action="proses/add.php" method="POST" id="RangeValidation">
                 <div class="modal-header justify-content-center">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -54,7 +54,7 @@
                     </button>
                     <h5 class="title title-up">Jumlah Record Organization</h5>
                 </div>
-                <div class="modal-body px-2">
+                <div class="modal-body px-4">
                 
                     <div class="form-group-sm " id="sub_area_preview" >
                         

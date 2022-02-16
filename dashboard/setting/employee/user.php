@@ -6,23 +6,7 @@ if(isset($_SESSION['user'])){
     include_once("../../header.php");
     $_SESSION['tab'] = @$_GET['tab'];
 ?>
-<!-- halaman utama -->
-<!-- <div class="row">
-    <div class="col-md-6 text-right">
-        <div class="dropdown dropleft">
-            <button class="btn btn-sm bg-transparent btn-icon btn-round text-default" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-v"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header">Menu</div>
-                <a class="dropdown-item" href="proses/export.php?export=organization">Export Data</a>
-                <a class="dropdown-item" href="file/Format_Register_Area.xlsx" >Download Format</a>
-                <a class="dropdown-item" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Import Data</a>
-                <a class="dropdown-item" data-toggle="modal" data-target="#generate" >Add</a>
-            </div>
-        </div>
-    </div>
-</div> -->
+
 
 <div class="row ">
     <div class="col-md-12">
@@ -170,15 +154,8 @@ $hal = (isset($_GET['hal']))?$_GET['hal']:1;
                 load_data(hal);
             });
             load_data();
-            $('.cari').keyup(function(){
-                load_data();
-            })
-            $('.list-tab').click(function(){
-                var id = $(this).attr('id');
-                $('.list-tab').removeClass('tab-active');
-                $(this).addClass('tab-active');
-                load_data();
-            });
+            
+            
             
         })
     </script>
