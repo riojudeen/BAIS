@@ -362,7 +362,7 @@ if(isset($_SESSION['user'])){
             load_data()
             getSumary()
         })
-        $('#cari').on('keyup', function(){
+        $('#cari').on('blur', function(){
             load_data()
             getSumary()
         

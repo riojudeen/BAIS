@@ -610,7 +610,7 @@ if(isset($_SESSION['user'])){
     </div>
 
     <?php
-    include_once('hr_absensi.php');
+    // include_once('hr_absensi.php');
     }else{
         include_once ("../../no_access.php");
     }
@@ -629,17 +629,18 @@ if(isset($_SESSION['user'])){
                 var shift = $('#s_shift').val();
                 var start = $('#start_date').val();
                 var end = $('#end_date').val();
+                var cari = $('#cari').val();
 
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
-                // console.log(sort)
+                console.log(cari);
                 // $('#monitor').load("ajax/index.php?id="+id+"&start="+start+"&end="+end);
                
                 $.ajax({
                     url:"ajax/index.php",
                     method:"GET",
-                    data:{page:page,id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,filter:'yes'},
+                    data:{page:page,cari:cari,id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,filter:'yes'},
                     success:function(data){
                         $('#monitor').fadeOut('fast', function(){
                             $(this).html(data).fadeIn('fast');
@@ -720,11 +721,14 @@ if(isset($_SESSION['user'])){
         $('#s_section').on('change', function(){
             getGroup()
         })
-        $('#cari').on('keyup', function(){
+        $(document).on('blur', '#cari', function(){
+            // var cari = $(this).val()
             dataActive()
-            getSumary()
-        
+            // console.log(cari);
         });
+        $('#filterGo').on('click', function(){
+            dataActive();
+        })
         
         $(document).on('click', '.sort', function(){
             var div_id = $('#s_div').val();

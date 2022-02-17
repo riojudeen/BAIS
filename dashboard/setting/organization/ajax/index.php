@@ -262,7 +262,6 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
-                            
                         }
                         // echo $dOrg['id'];
                         ?>

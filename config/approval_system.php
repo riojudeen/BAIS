@@ -940,7 +940,7 @@ function filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $de
         $addFilterShift = "";
     }
     if($cari != ''){
-        $addFilterCari = " AND  npk LIKE '%$cari%' OR nama LIKE '%$cari%' ";
+        $addFilterCari = " AND  ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )";
     }else{
         $addFilterCari = '';
     }

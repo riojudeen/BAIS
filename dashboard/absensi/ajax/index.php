@@ -73,11 +73,11 @@ if(isset($_GET['id'])){
     // count($_GET['sort']);
     if($_GET['id'] == 'req'){
         $_GET['prog'] = '';
-        $_GET['cari'] = '';
+        // $_GET['cari'] = '';
         $_GET['att_type'] = '';
         $start = $_GET['start'];
         $end = $_GET['end'];
-        // echo $start;s
+        // echo $start;
         $filter = $_GET['filter'];
         $div_filter = $_GET['div'];
         // echo $div;
@@ -91,7 +91,8 @@ if(isset($_GET['id'])){
         // echo $deptAcc_filter;
         $shift = $_GET['shift'];
         // echo $shift;
-        $cari = $_GET['cari'];
+        $cari = (isset($_GET['cari']))?$_GET['cari']:'';
+        // echo $cari;
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
@@ -104,8 +105,7 @@ if(isset($_GET['id'])){
             view_absen_hr.work_date,
             view_absen_hr.check_in,
             view_absen_hr.check_out,
-            view_absen_hr.CODE,
-            CONCAT(view_absen_hr.req_status, view_absen_hr.req_status_absen)
+            view_absen_hr.CODE
             FROM view_absen_hr ";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
@@ -118,13 +118,62 @@ if(isset($_GET['id'])){
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $exception = " AND view_absen_hr.CODE  <> '' AND (view_absen_hr.CODE = 'M' OR view_absen_hr.CODE = 'TL' ) ";
         // view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL OR view_absen_hr.att_alias = '9'
-
+        $filter_cari = ($add_filter != '')?"( $add_filter)":'';
+        // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$filterProg.$exception;
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$exception;
         
-        echo $query_req_absensi;
+        // echo $query_req_absensi;
+
+        // $qry = "SELECT
+        //     bais_db.absensi.id AS id_absensi,
+        //     bais_db.absensi.npk AS npk,
+        //     bais_db.karyawan.nama AS nama,
+        //     bais_db.karyawan.shift AS employee_shift,
+
+        //     bais_db.org.sub_post AS sub_post,
+        //     bais_db.org.post AS post,
+        //     bais_db.org.grp AS grp,
+        //     bais_db.org.sect AS sect,
+        //     bais_db.org.dept AS dept,
+        //     bais_db.org.dept_account AS dept_account,
+        //     bais_db.org.division AS division,
+        //     bais_db.org.plant AS plant,
+
+        //     bais_db.absensi.shift AS att_shift,
+        //     bais_db.absensi.date AS work_date,
+        //     bais_db.absensi.check_in AS check_in,
+        //     bais_db.absensi.check_out AS check_out,
+        //     bais_db.absensi.ket AS CODE,
+
+        //     bais_db.attendance_code.keterangan AS keterangan,
+        //     bais_db.attendance_code.type AS att_type,
+        //     bais_db.attendance_code.alias AS att_alias
+
+        //     -- bais_db.req_absensi.shift AS req_shift,
+        //     -- bais_db.req_absensi.date AS req_work_date,
+        //     -- bais_db.req_absensi.date_in AS req_date_in,
+        //     -- bais_db.req_absensi.date_out AS req_date_out,
+        //     -- bais_db.req_absensi.check_in AS req_in,
+        //     -- bais_db.req_absensi.check_out AS req_out,
+        //     -- bais_db.req_absensi.keterangan AS req_code,
+            
+        //     -- bais_db.req_absensi.requester AS requester,
+        //     -- bais_db.req_absensi.status AS req_status_absen,
+        //     -- bais_db.req_absensi.req_status AS req_status,
+        //     -- bais_db.req_absensi.req_date AS req_date
+
+           
+            
+        // FROM bais_db.absensi
+        // JOIN bais_db.org ON bais_db.absensi.npk = bais_db.org.npk
+        // LEFT JOIN bais_db.karyawan ON bais_db.org.npk = bais_db.karyawan.npk
+        
+        // LEFT JOIN bais_db.attendance_code ON bais_db.attendance_code.kode = bais_db.absensi.ket";
+    //  $sql= mysqli_query($link, $qry)or die(mysqli_error($link));
+    //  echo mysqli_num_rows($sql);
         ?>
     
         <div class="row">
@@ -224,7 +273,8 @@ if(isset($_GET['id'])){
                     <div class="col-md-6">
                         <div class="mr-2 float-right order-3">
                             <div class="input-group bg-transparent">
-                                <input type="text" name="cari" id="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk..">
+
+                                <input type="text" name="cari" id="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." value="<?=$cari?>">
                                 <div class="input-group-append bg-transparent">
                                     <div class="input-group-text bg-transparent">
                                         <i class="nc-icon nc-zoom-split"></i>
@@ -247,8 +297,8 @@ if(isset($_GET['id'])){
                                 <th>Group</th>
                                 <th>Administratif</th>
                                 <th>Tanggal</th>
-                                <th>Check in</th>
-                                <th>Check out</th>
+                                <th>in</th>
+                                <th>out</th>
                                 <th>Ket</th>
                                 <th>Batas</th>
                                 <th class="text-right">Action</th>
@@ -267,9 +317,9 @@ if(isset($_GET['id'])){
                         $limit_start = ($page - 1) * $limit;
                         $no = $limit_start + 1;
                         // echo $limit_start;
-                        $addOrder = " ORDER BY req_date, requester DESC ";
+                        $addOrder = " ORDER BY work_date DESC ";
                         $addLimit = " LIMIT $limit_start, $limit";
-                        $no = 1;
+                        // $no = 1*$page;
 
                         // pagin
                         $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
@@ -291,27 +341,61 @@ if(isset($_GET['id'])){
                                 $dept_acc = $deptAcc['nama_org'];
                                 $checkIn = ($data['check_in'] == '00:00:00')? "-" : jam($data['check_in']);
                                 $checkOut = ($data['check_out'] == '00:00:00')? "-" : jam($data['check_out']);
-                                ?>
-                                <tr id="<?=$data['id_absensi']?>" >
-                                    <td class="td"><?=$no++?></td>
-                                    <td class="td"><?=$data['npk']?></td>
-                                    <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
-                                    <td class="td"><?=$data['employee_shift']?></td>
-                                    <td style="max-width:100px" class="text-truncate"><?=$group?></td>
-                                    <td class="td"><?=$dept_acc ?></td>
-                                    <td class="td"><?=tgl($data['work_date'])?></td>
-                                    <td class="td"><?=$checkIn?></td>
-                                    <td class="td"><?=$checkOut?></td>
-                                    <td class="td"><?=$data['CODE']?></td>
-                                    <td class="td"><?=tgl(date('Y-m-t', strtotime($data['work_date'])))?></td>
-                                    <td class="text-right">
-                                    <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary  btn-sm">SKTA</a>
-                                    <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary btn-sm">SUPEM</a>
-                                    </td>
-                                   
-                                </tr>
+                                $work_date = $data['work_date'];
+                                $limit_date = tgl(date('Y-m-t', strtotime($data['work_date'])));
+                                $str_date = strtotime($work_date);
+                                $str_limit = strtotime($limit_date);
+                                $today = date('Y-m-d');//harus diganti tanggal out kerja
+                                $str_today = strtotime($today);
+                                
 
-                                <?php
+                                $q_cekReq = mysqli_query($link, "SELECT check_in , check_out, keterangan, requester FROM req_absensi WHERE shift_req <> 1 AND id_absensi = '$data[id_absensi]' ")or die(mysqli_error($link));
+                                if(mysqli_num_rows($q_cekReq) <= 0 ){
+                                    ?>
+                                    <tr id="<?=$data['id_absensi']?>" >
+                                        <td class="td"><?=$no++?></td>
+                                        <td class="td"><?=$data['npk']?></td>
+                                        <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
+                                        <td class="td"><?=$data['employee_shift']?></td>
+                                        <td style="max-width:100px" class="text-truncate"><?=$group?></td>
+                                        <td class="td"><?=$dept_acc ?></td>
+                                        <td class="td"><?=tgl($data['work_date'])?></td>
+                                        <td class="td"><?=$checkIn?></td>
+                                        <td class="td"><?=$checkOut?></td>
+                                        <td class="td"><?=$data['CODE']?></td>
+                                        <td class="td">
+                                            <span class="badge badge-sm badge-warning">
+                                                <?=tgl(date('Y-m-t', strtotime($data['work_date'])))?>
+
+                                            </span>
+                                        </td>
+                                        <td class="text-right">
+                                            <?php
+                                                if($str_today > $str_limit){
+                                                    ?>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-info  btn-sm">SKTA</a>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary btn-sm">SUPEM</a>
+                                        
+                                                    <?php
+                                                }else{
+                                                    if($level == 8 || $level == 7 || $level == 6 || $level == 5){
+                                                        ?>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-info  btn-sm">SKTA</a>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary btn-sm">SUPEM</a>
+                                                        <?php
+                                                    }else{
+                                                        ?>
+                                                        <span class="badge badge-sm badge-danger">expired</span>
+                                                        <?php
+                                                    }
+                                                }
+                                            ?>
+                                        </td>
+                                    
+                                    </tr>
+
+                                    <?php
+                                }
                             }
                         }else{
                             ?>
@@ -388,7 +472,7 @@ if(isset($_GET['id'])){
         // echo $deptAcc_filter;
         $shift = $_GET['shift'];
         // echo $shift;
-        $cari = $_GET['cari'];
+        $cari = (isset($_GET['cari']))?$_GET['cari']:'';
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
