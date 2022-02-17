@@ -223,22 +223,46 @@ if(isset($_SESSION['user'])){
                         if($id == 'pos'){
                             $subArea = mysqli_query($link, "SELECT id_post FROM pos WHERE id_pos_leader = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
+                            $cek_mp = mysqli_query($link, "SELECT post FROM org WHERE post = '$dOrg[id]'")or die(mysqli_error($link));
+                            $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
+                            $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
+                            $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
                         }else if($id == 'group'){
                             $subArea = mysqli_query($link, "SELECT id_post FROM pos_leader WHERE id_group = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
-                            
+                            $cek_mp = mysqli_query($link, "SELECT grp FROM org WHERE grp = '$dOrg[id]'")or die(mysqli_error($link));
+                            $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
+                            $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
+                            $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
                         }else if($id == 'section'){
                             $subArea = mysqli_query($link, "SELECT id_group FROM groupfrm WHERE id_section = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
+                            $cek_mp = mysqli_query($link, "SELECT sect FROM org WHERE sect = '$dOrg[id]'")or die(mysqli_error($link));
+                            $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
+                            $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
+                            $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
                         }else if($id == 'dept'){
                             $subArea = mysqli_query($link, "SELECT id_section FROM section WHERE id_dept = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
+                            $cek_mp = mysqli_query($link, "SELECT dept FROM org WHERE dept = '$dOrg[id]'")or die(mysqli_error($link));
+                            $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
+                            $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
+                            $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
                         }else if($id == 'deptacc'){
                             $subArea = mysqli_query($link, "SELECT id_section FROM section WHERE id_dept = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
+                            $cek_mp = mysqli_query($link, "SELECT dept_account FROM org WHERE dept_account = '$dOrg[id]'")or die(mysqli_error($link));
+                            $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
+                            $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
+                            $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
                         }else if($id == 'division'){
                             $subArea = mysqli_query($link, "SELECT id_dept FROM department WHERE id_div = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
+                            $cek_mp = mysqli_query($link, "SELECT division FROM org WHERE division = '$dOrg[id]'")or die(mysqli_error($link));
+                            $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
+                            $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
+                            $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            
                         }
                         // echo $dOrg['id'];
                         ?>
@@ -262,25 +286,16 @@ if(isset($_SESSION['user'])){
                             
                             <td class="text-right text-nowrap">
                             
-                                <!-- <span class="dropdown">
-                                    <button class="btn btn-success btn-sm btn-link btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-user"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-left" aria-labelledby="dropdownMenuButton">
-                                        <div class="dropdown-header">Menu</div>
-                                        <a class="dropdown-item" href="">View Employee</a>
-                                        <a class="dropdown-item" href="">Add Employee</a>
-                                    </div>
-                                </span> -->
+                               
                                 <a href="proses/edit.php?<?=$id?>[]=<?=$dOrg['id']?>" class="btn btn-warning  btn-sm edit"><i class="fa fa-edit"></i></a>
-                                <a href="proses/prosesOrg.php?del<?=$id?>=<?=$dOrg['id']?>" class="btn  btn-danger   btn-sm remove"><i class="fas fa-eraser"></i></a>
+                                <a <?=$disabled?> href="proses/prosesOrg.php?del<?=$id?>=<?=$dOrg['id']?>" class="btn  btn-danger   btn-sm remove"><i class="fas fa-eraser"></i></a>
                                 <a href="data-update.php?id=<?=$dOrg['id']?>&part=<?=$id?>" class="btn  btn-success btn-sm "><i class="nc-icon nc-simple-add"></i> Update</a>
                                 
                             </td>
                             <td class="text-right">
                                 <div class="form-check text-right">
                                     <label class="form-check-label">
-                                        <input class="form-check-input check-<?=$id?> checkone" name="<?=$id?>[]" value="<?=$dOrg['id']?>" type="checkbox" data="<?=$id?>">
+                                        <input <?=$disabled?> class="form-check-input <?=$check_parent?> <?=$check?>" name="<?=$id?>[]" value="<?=$dOrg['id']?>" type="checkbox" data="<?=$id?>">
                                     <span class="form-check-sign"></span>
                                     </label>
                                 </div>
@@ -302,7 +317,7 @@ if(isset($_SESSION['user'])){
         </div>  
     </div>
     <div class="row">
-        <div class="col-md-12 pull-rigt">
+        <div class="col-md-6 ">
             <ul class="pagination ">
             <?php
             // echo $page."<br>";
@@ -334,6 +349,14 @@ if(isset($_SESSION['user'])){
             }
             ?>
             </ul>
+        </div>
+        <div class="col-md-6 text-right">
+            <button class="btn btn-sm btn-danger deleteall" id="hapus">
+                <span class="btn-label">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </span>
+                delete
+            </button>
         </div>
     </div>
         

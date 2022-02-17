@@ -155,25 +155,13 @@ if(isset($_SESSION['user'])){
                                 </div>
                             </div>
                         </div>
+                        <hr class="my-0">
                         <div id="monitor"></div>
                         
                     </div>
                 </div>
             </form>
-            <div class="card-footer text-right">
-                <button class="btn btn-sm  btn-warning editall" id="edit">
-                    <span class="btn-label">
-                        <i class="nc-icon nc-ruler-pencil"></i>
-                    </span>
-                    edit
-                </button>
-                <button class="btn btn-sm btn-danger deleteall" id="hapus">
-                    <span class="btn-label">
-                        <i class="nc-icon nc-simple-remove"></i>
-                    </span>
-                    delete
-                </button>
-            </div>
+            
         </div>
     </div>
 </div>
@@ -189,10 +177,9 @@ if(isset($_SESSION['user'])){
                 var name = $(".tab-active").attr('data-name');
                 var cari = $('.cari').val();
                 $('.content-title').text(name);
-                $('#text_'+active).removeClass('d-none');
                 // var sort = $('')
 
-                console.log('#text_'+active);
+                
                 $.ajax({
                     type: 'POST',
                     url: "ajax/index.php",
@@ -213,14 +200,14 @@ if(isset($_SESSION['user'])){
             $('.list-tab').click(function(){
                 var id = $(this).attr('id');
                 $('.list-tab').removeClass('tab-active');
-                $('.inputnpk').addClass('d-none');
                 $(this).addClass('tab-active');
                 getActive();
             });
+            
             $(document).on('click', '.halaman', function(){
                 var hal = $(this).attr("id");
                 getActive(hal);
-                console.log(hal)
+                // console.log(hal)
             });
             $('.inputnpk').blur(function(){
                 var active = $(".tab-active").attr('data-id');
@@ -244,7 +231,7 @@ if(isset($_SESSION['user'])){
     <script>
     //untuk crud masal update department
 
-        $('.deleteall').on('click', function(e){
+        $(document).on('click', '.deleteall', function(e){
             e.preventDefault();
             var getLink = 'proses/mass_del.php';
             Swal.fire({
@@ -262,13 +249,13 @@ if(isset($_SESSION['user'])){
                 }
             })
         });
-        $('.editall').on('click', function(e){
-            e.preventDefault();
-            var getLink = 'proses/editOrg.php';
+        // $('.editall').on('click', function(e){
+        //     e.preventDefault();
+        //     var getLink = 'proses/editOrg.php';
 
-            document.organization.action = getLink;
-            document.organization.submit();
-        }); 
+        //     document.organization.action = getLink;
+        //     document.organization.submit();
+        // }); 
     </script>
     <script>
         $(document).ready(function(){

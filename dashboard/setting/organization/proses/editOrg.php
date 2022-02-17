@@ -1,6 +1,6 @@
 <?php
 //////////////////////////////////////////////////////////////////////
-require_once("../../config/config.php"); 
+require_once("../../../../config/config.php"); 
 if(isset($_SESSION['user'])){
     
     $total = 0;
@@ -42,7 +42,7 @@ if(isset($_SESSION['user'])){
     }
     if($total > 0){
     $halaman = "Edit Organisasi";
-    include_once("../header.php");
+    include_once("../../../header.php");
     ?>
     <form method="post" action="proses/org/proses.php">
         <div class="row">

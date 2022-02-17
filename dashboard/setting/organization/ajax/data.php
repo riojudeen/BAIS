@@ -4,7 +4,7 @@ require_once("../../../../config/config.php");
 if(isset($_SESSION['user'])){
     if(isset($_POST['id'])){
         $id = $_POST['id'];
-        // echo $id;
+        // echo $_POST['part_area'];
         $part_area = (isset($_POST['part_area']))?$_POST['part_area']:'';
         $id_area = (isset($_POST['id_area']))?$_POST['id_area']:'';
         if($level >=1 && $level <=8){
@@ -32,6 +32,9 @@ if(isset($_SESSION['user'])){
                     $addOrder = " ORDER BY view_organization.id_dept DESC ";
                 }
                 // echo $nama_kolom;
+                // echo $id_area;
+                $filter_cari = (isset($_POST['cari']) && $_POST['cari'] != '')?$_POST['cari']:'';
+                $pencarian = ($filter_cari != '')?" AND ( npk LIKE '%$_POST[cari]%' OR nama LIKE '%$_POST[cari]%' )":'';
                 $filter_area = ($id_area != '')?" $nama_kolom = '$id_area' ":'';
                 $filter = ($filter_area != '')?" WHERE $filter_area":'';
                 $origin_query = "SELECT 
@@ -53,7 +56,7 @@ if(isset($_SESSION['user'])){
                     FROM view_organization ";
                 $q_data = $origin_query.$filter;
                 $q_total = $q_data;
-
+                // echo $filter;
                 
                 ?>
             <div class="table-responsive" >
@@ -109,8 +112,8 @@ if(isset($_SESSION['user'])){
                         $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
                         // echo $jumlah_page."<br>";s
                         $query = $q_data.$addOrder.$addLimit;
-                        // echo $q_data;
-                        $sql = mysqli_query($link, $q_data.$addOrder.$addLimit)or die(mysqli_error($link));
+                        // echo $q_data.$pencarian.$addOrder.$addLimit;
+                        $sql = mysqli_query($link, $q_data.$pencarian.$addOrder.$addLimit)or die(mysqli_error($link));
                         
                         if(mysqli_num_rows($sql)>0){
                             while($data = mysqli_fetch_assoc($sql)){
@@ -151,7 +154,7 @@ if(isset($_SESSION['user'])){
                                     <td>
                                         <div class="form-check ">
                                             <label class="form-check-label ">
-                                                <input class="form-check-input mp " name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>">
+                                                <input class="form-check-input mp" name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>">
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
@@ -256,7 +259,7 @@ if(isset($_SESSION['user'])){
                                     <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
                                         <div class="form-check">
                                             <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" id="allmp">
+                                                <input checked class="form-check-input check-all" type="checkbox" >
                                             <span class="form-check-sign"></span>
                                             </label>
                                         </div>
@@ -287,6 +290,11 @@ if(isset($_SESSION['user'])){
                                                 
                                                 FROM view_organization WHERE npk = '$npk'";
                                             $query = mysqli_query($link, $origin_query)or die(mysqli_error($link));
+                                            $jml = mysqli_num_rows($query);
+                                            // $checked = ($jml > 0)?'disabled':'';
+                                            // $checked_class = ($jml > 0)?'':'check';
+                                            
+                                            // echo $id_area;
                                             $sql = mysqli_fetch_assoc($query);
                                             $data_nama = (isset($sql['nama']))?$sql['nama']:'';
                                             $data_npk = (isset($sql['npk']))?$sql['npk']:'';
@@ -302,6 +310,29 @@ if(isset($_SESSION['user'])){
                                             $data_dept = (isset($sql['dept']))?$sql['dept']:'';
                                             $data_dept_account = (isset($sql['dept_account']))?$sql['dept_account']:'';
                                             $data_division = (isset($sql['division']))?$sql['division']:'';
+                                            // echo $data_section;
+                                            if($part_area == 'pos'){
+                                                $check = ($data_pos != '')?'':'checked';
+                                                $check_class = ($data_pos != '')?'':'check';
+                                            }else if($part_area == 'group'){
+                                                $check = ($data_group != '')?'':'checked';
+                                                $check_class = ($data_group != '')?'':'check';
+                                            }else if($part_area == 'section'){
+                                                $check = ($data_section != '')?'':'checked';
+                                                $check_class = ($data_section != '')?'':'check';
+                                            }else if($part_area == 'dept'){
+                                                $check = ($data_dept != '')?'':'checked';
+                                                $check_class = ($data_dept != '')?'':'check';
+                                            }else if($part_area == 'deptacc'){
+                                                $check = ($data_dept_account != '')?'':'checked';
+                                                $check_class = ($data_dept_account != '')?'':'check';
+                                            }else if($part_area == 'division'){
+                                                $check = ($data_division != '')?'':'checked';
+                                                $check_class = ($data_division != '')?'':'check';
+                                            }else{
+                                                $check = 'disabled';
+                                                $check_class = '';
+                                            }
                                             ?>
                                             <tr>
                                                 <td><?=$no?></td>
@@ -321,7 +352,7 @@ if(isset($_SESSION['user'])){
                                                 <td class="text-right">
                                                     <div class="form-check text-right">
                                                         <label class="form-check-label">
-                                                            <input checked class="form-check-input check-mp checkone" name="mp[]" value="<?=$data_npk?>" type="checkbox" data="<?=$no?>">
+                                                            <input class="form-check-input <?=$check_class?>" <?=$check?> name="checked[]" value="<?=$data_npk?>" type="checkbox" data="<?=$no?>">
                                                         <span class="form-check-sign"></span>
                                                         </label>
                                                     </div>

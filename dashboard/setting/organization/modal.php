@@ -63,10 +63,10 @@
                     <h6>Tambah sub organisasi</h6>
                     <div class="form-group">
                         
-                        <input type="number" name="count" class="form-control text-center gen" min="1" id="inputgenerate" placeholder="input record set" autofocus required>
+                        <input type="number" name="count" class="form-control text-center gen footer_btn" min="1" id="inputgenerate" placeholder="input record set" autofocus required>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer footer_btn" >
                     <div class="left-side">
                         <button type="button" class="btn btn-default btn-link" data-dismiss="modal">Cancel</button>
                     </div>

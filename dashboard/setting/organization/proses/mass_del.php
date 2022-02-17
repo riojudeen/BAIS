@@ -24,7 +24,6 @@ if(isset($_SESSION['user'])){
             $qry = "DELETE FROM `section` WHERE `id_section`= '$section' ";
             $sql = mysqli_query($link, $qry)or die(mysqli_error($link));
         }
-        
     }
     if(isset($_POST['dept'])){
         $_SESSION['tab'] = "dept";

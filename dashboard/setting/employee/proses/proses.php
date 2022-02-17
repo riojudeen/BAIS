@@ -227,7 +227,8 @@ if(isset($_SESSION['user'])){
         // }
     }else if(isset($_GET['reset'])){
         // get tanggal masuk
-        $role = $_POST['tab'];
+        $role = $_GET['tab'];
+        // echo $_GET['tab'];
         $q_karyawan = mysqli_query($link, "SELECT tgl_masuk FROM karyawan WHERE npk = '$_GET[reset]'")or die(mysqli_error($link));
         $sql_karyawan = mysqli_fetch_assoc($q_karyawan);
         $pass = default_password($sql_karyawan['tgl_masuk']);

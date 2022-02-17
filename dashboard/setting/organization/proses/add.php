@@ -6,7 +6,7 @@ if(isset($_SESSION['user'])){
         $total = $_POST['count'];
         include_once("../../../header.php");
 
-        // echo $_POST['part'];
+        echo $_POST['part'];
         switch($_POST['part']){
             case "division":
                 $namaOrg = "Division";
@@ -22,6 +22,19 @@ if(isset($_SESSION['user'])){
 
                 break;
             case "deptAcc":
+                $namaOrg = "Department Account";
+                $id = "deptAcc";
+                $q_area = "SELECT division.id_div AS id_area, 
+                division.nama_divisi AS nama_area, 
+                division.npk_cord AS cordinator, 
+                division.id_company AS id_parent,
+                karyawan.npk AS npk_kary,
+                karyawan.nama AS nama_kary
+                
+                FROM `division`
+                LEFT JOIN karyawan ON karyawan.npk = division.npk_cord ORDER BY division.id_div ASC";
+                break;
+            case "deptacc":
                 $namaOrg = "Department Account";
                 $id = "deptAcc";
                 $q_area = "SELECT division.id_div AS id_area, 

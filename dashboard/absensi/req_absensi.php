@@ -654,6 +654,11 @@ if(isset($_SESSION['user'])){
             $(this).addClass('data-active');
             dataActive()
         });
+        $(document).on('click', '.halaman', function(){
+            var page = $(this).attr("id");
+            dataActive(page)
+            // console.log(hal)
+        });
         // getSumary()
         function getDiv(){
             var data = $('#s_div').val()

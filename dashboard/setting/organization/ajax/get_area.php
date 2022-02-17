@@ -13,9 +13,12 @@ if(isset($_SESSION['user'])){
         $subpart = 'group';
     }else if($part == 'group'){
         $subpart = 'pos';
+    }else if($part == 'deptacc'){
+        $subpart = 'deptacc';
     }
     // echo $data;
     $area = getOrgName($link, $data, $part);
+    // echo $part;
     $q_area = mysqli_query($link, "SELECT `nama_org` , `cord`, `nama_cord` FROM view_cord_area WHERE id = '$data' AND part = '$part' ")or die(mysqli_error($link));
     $dataArea = mysqli_fetch_assoc($q_area);
 
@@ -28,41 +31,51 @@ if(isset($_SESSION['user'])){
     <div class="table-full-width table-striped " >
         
                 <?php
-                $queryArea = mysqli_query($link, "SELECT `nama_org` , `cord`, `nama_cord` FROM view_cord_area WHERE id_parent = '$data' AND part = '$subpart' ")or die(mysqli_error($link));
-                if(mysqli_num_rows($queryArea)> 0){
-                    ?>
-                    <table style="width:100%" class="table-sm text-uppercase">
-                        <thead>
+                if($part != 'deptacc'){
+                    $queryArea = mysqli_query($link, "SELECT `nama_org` , `cord`, `nama_cord` FROM view_cord_area WHERE id_parent = '$data' AND part = '$subpart' ")or die(mysqli_error($link));
+                
+                    if(mysqli_num_rows($queryArea)> 0){
+                        ?>
+                        <table style="width:100%" class="table-sm text-uppercase">
+                            <thead>
+                                <tr>
+                                    <th colspan="4">Sub Area</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        <?php
+                        $no = 1;
+                        while($dataArea = mysqli_fetch_assoc($queryArea)){
+                            $namaArea = (isset($dataArea['nama_org']))?$dataArea['nama_org']:'';
+                            $cord = (isset($dataArea['cord']))?$dataArea['cord']:'';
+                            $nama_cord = (isset($dataArea['nama_cord']))?' - '.$dataArea['nama_cord']:'N/A data Coord';
+                            $color = (isset($dataArea['nama_cord']))?'success':'warning';
+                            ?>
+                            
                             <tr>
-                                <th colspan="4">Sub Area</th>
+                                <td><?=$no++?></td>
+                                <td><?=$namaArea?> </td>
+                                <td>
+                                <label class="badge badge-sm badge-<?=$color?> badge-pill badge-round"><?=$cord?><?=$nama_cord?></label>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                    <?php
-                    $no = 1;
-                    while($dataArea = mysqli_fetch_assoc($queryArea)){
-                        $namaArea = (isset($dataArea['nama_org']))?$dataArea['nama_org']:'';
-                        $cord = (isset($dataArea['cord']))?$dataArea['cord']:'';
-                        $nama_cord = (isset($dataArea['nama_cord']))?' - '.$dataArea['nama_cord']:'N/A data Coord';
-                        $color = (isset($dataArea['nama_cord']))?'success':'warning';
+                            <?php
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                        <?php
+                    }else{
                         ?>
                         
-                        <tr>
-                            <td><?=$no++?></td>
-                            <td><?=$namaArea?> </td>
-                            <td>
-                            <label class="badge badge-sm badge-<?=$color?> badge-pill badge-round"><?=$cord?><?=$nama_cord?></label>
-                            </td>
-                        </tr>
                         <?php
                     }
-                    ?>
-                    </tbody>
-                </table>
-                    <?php
                 }else{
+                    $queryArea = mysqli_query($link, "SELECT `npk` FROM org WHERE dept_account = '$data'  ")or die(mysqli_error($link));
+                    $jml = (mysqli_num_rows($queryArea)>0)?mysqli_num_rows($queryArea)." karyawan":'tidak ada data terdaftar';
+                    $color = ($jml > 0)?'success':'warning';
                     ?>
-                    
+                    <label class="badge badge-sm badge-<?=$color?> badge-pill badge-round"><?=$jml?> karyawan</label>
                     <?php
                 }
                 ?>

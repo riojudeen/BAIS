@@ -116,8 +116,8 @@ if(isset($_GET['id'])){
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $exception = " AND view_absen_hr.CODE  <> '' AND (view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL) ";
-        
+        $exception = " AND view_absen_hr.CODE  <> '' AND (view_absen_hr.CODE = 'M' OR view_absen_hr.CODE = 'TL' ) ";
+        // view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL OR view_absen_hr.att_alias = '9'
 
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
@@ -305,7 +305,8 @@ if(isset($_GET['id'])){
                                     <td class="td"><?=$data['CODE']?></td>
                                     <td class="td"><?=tgl(date('Y-m-t', strtotime($data['work_date'])))?></td>
                                     <td class="text-right">
-                                    <a  href="add.php?id=<?=$data['id_absensi']?>" class="btn-round btn-outline-primary btn btn-primary btn-link btn-icon btn-sm"><i class="nc-icon nc-simple-add"></i></a>
+                                    <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary  btn-sm">SKTA</a>
+                                    <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary btn-sm">SUPEM</a>
                                     </td>
                                    
                                 </tr>
