@@ -5,7 +5,24 @@
 // $shift_start = $_POST['shift_start'];
 // $start_day = $_POST['start_day'];
 // $skema = $_POST['skema'];
+function loopHari($mulai, $jmlHari){
+    $mulai = $month = strtotime($mulai);
+    $jmlHari = ($jmlHari > 0 )?$jmlHari-1:'';
+    $selesai = date('Y-m-d', strtotime("+$jmlHari day", $mulai));
 
+    $end = strtotime($selesai);
+
+    $i = 0;
+    $array_tgl = array();
+    while($month <= $end){
+        $tgl = date('Y-m-d', $month);
+        $month = strtotime("+1 day", $month);
+        $array_tgl[$i++] = $tgl;
+    }
+    $data = json_encode($array_tgl);
+    return $data;
+
+}
 $tgl_mulai = '2021-01-13';
 $tgl_selesai = '2021-10-1';
 

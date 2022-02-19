@@ -596,6 +596,7 @@ if(isset($_SESSION['user'])){
                         <div class="col-md-9">
                             <div id="my-tab-content" class="tab-content ">
                                 <div class="tab-pane active " id="request" role="tabpanel" aria-expanded="true">
+                                    
                                     <div id="monitor">
                                         
                                     </div>
@@ -650,6 +651,43 @@ if(isset($_SESSION['user'])){
                 })
             }
         }
+        function get_notifData(){
+            var data = $('#notification_result').attr('data-id');
+            console.log(data)
+            if(data == '1'){
+                $('#prosesrequest').removeClass('d-none')
+            }else{
+                $('#prosesrequest').addClass('d-none')
+            }
+            
+        }
+        
+        function get_cek(){
+            
+            var npk = $('#npk_karyawan').val();
+            var mulai = $('#tanggal_mulai').val();
+            var jumlah_hari = $('#jumlah_hari').val();
+            var code = $('#attendance_code').val();
+
+            // console.log("ok");
+            $.ajax({
+                url:"ajax/notification.php",
+                method:"GET",
+                data:{npk:npk,mulai:mulai,total:jumlah_hari,code:code},
+                success:function(data){
+                    $('.notification').fadeOut('fast', function(){
+                        $(this).html(data).fadeIn('fast');
+                    });
+                    // $('#data-monitoring').html(data)
+                }
+            })
+            // $('.notification').html()
+        }
+        $(document).on('click', '.cek_data', function(e){
+            e.preventDefault();
+            get_cek();
+            
+        })
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
             $(this).addClass('data-active');

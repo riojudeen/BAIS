@@ -1,18 +1,20 @@
 <?php
 require_once("../../config/config.php"); 
+require_once("../../config/schedule_system.php"); 
+require_once("../../config/approval_system.php"); 
 if(isset($_SESSION['user'])){
     $halaman = "Monitor Request Absensi";
     include_once("../header.php");
     // include_once("leave_calc.php");
     $npk_kry = $_GET['npk'];
-    $tgl = dateToDB($_GET['tanggal']);
+    $tgl = $_GET['tanggal'];
+    $jmlHari = $_GET['count'];
+    $tanggal_array = json_decode(loopHari($tgl, $jmlHari));
 
     // echo $tgl;
     $sql_reqAbs = mysqli_query($link, "SELECT * FROM req_absensi
     WHERE npk = '$npk_kry' AND `date` = '$tgl' ")or die(mysqli_error($link));
     
-
-
     $sql_absenHr = mysqli_query($link, "SELECT absensi.id AS id_absen,
                 absensi.npk AS npk_absen, 
                 absensi.shift AS shift_absen,
@@ -45,16 +47,6 @@ if(isset($_SESSION['user'])){
     
     $dataAbsenHr = mysqli_fetch_assoc($sql_absenHr);
     
-    // /// cek working days
-
-    
-    // $tanggal = DBtoForm($dataAbsenHr['tanggal']);
-    // echo $tanggal;
-    
-
-    
-
-
     // echo mysqli_num_rows($sql_absenHr);
 
     if(mysqli_num_rows($sql_absenHr) > 0){
@@ -136,7 +128,7 @@ if(isset($_SESSION['user'])){
         <hr>
         <form action="proses.php" method="POST">
             <div class="card-body">
-                <h5><?=$nama_." - ".$npk_kry?></h5>
+                
                 <input type="hidden" name="id_" class="form-control" value="<?=$_GET['id']?>">
                 <input type="hidden" name="npk" class="form-control" value="<?=$npk_kry?>">
                 
@@ -324,119 +316,109 @@ if(isset($_SESSION['user'])){
                    
                     
                     <div class="col-9 border-left pull-right" id="sticker">
-                    <h6>Input Pengajuan Absensi</h6>
-                        <label>Tanggal Muai</label>
-                        <input readonly id="DateTimePicker1" type="text" name="sd" class="form-control col-lg-12 datepicker mr-0" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($tgl)?>" required >
-                        <label>Tanggal Selesai</label>
-                        <input <?=$disableTanggalAkhir?> id="DateTimePicker2" type="text" name="ed" class="form-control col-lg-12 datepicker mr-0" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($tgl)?>" required data-date-end-date="10d">
-                        
-                        <label for="">Shift</label>
-                        <div class="form-inline">
-                        <input type="text" name="shift[]" class="form-control col-lg-12"  value="<?=$shift?>" required readonly>
+                    <?php
+                            list($npk,$subpost,$post,$group,$sect,$dept,$dept_account,$div,$plant) = dataOrg($link, $npk_kry);
+                        ?>
+                        <h5><?=$nama_." - ".$npk_kry?></h5>
+                        <div class="row">
+                            <div class="col-md-3 pr-1">
+                                <label for="">Divisi</label>
+                                <div class="form-group">
+                                    <input disabled type="text" class="form-control" value="<?=getOrgName($link, $div, "division")?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1">
+                                <label for="">Department</label>
+                                <div class="form-group">
+                                    <input disabled type="text" class="form-control" value="<?=getOrgName($link, $dept, "dept")?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1">
+                                <label for="">Section</label>
+                                <div class="form-group">
+                                    <input disabled type="text" class="form-control" value="<?=getOrgName($link, $sect, "section")?>">
+                                </div>
+                            </div>
+                            <div class="col-md-3 px-1">
+                                <label for="">Group</label>
+                                <div class="form-group">
+                                    <input disabled type="text" class="form-control" value="<?=getOrgName($link, $group, "group")?>">
+                                </div>
+                            </div>
                         </div>
-                        <br>
+                        <hr>
+                         <h6>Input Pengajuan Absensi</h6>
+                         
+                        <?php
+                        $no = 1;
+                        $sql_code = mysqli_query($link, "SELECT * FROM attendance_code WHERE `type` = 'SUPEM' AND kode = '$_GET[att_code]' ")or die(mysqli_error($link));
+                            
+                        foreach($tanggal_array AS $date){
+                            $readonly = ($date == $tgl)?'readonly':'';
+                            ?>
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="form-horizontal">
+                                        <div class="row">
+                                            <label class="col-md-2 col-form-label text-left">Cuti ke-<?=$no++?></label>
+                                            <div class="col-md-10"> 
+                                                <div class="form-group">
+                                                    <input <?=$readonly?> type="text" name="sd" class="form-control col-lg-12 datepicker mr-0" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($date)?>" required >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
+                        }
+
+                        ?>
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="form-horizontal">
+                                    <div class="row">
+                                        <label class="col-md-2 col-form-label text-left">Shift</label>
+                                        <div class="col-md-10"> 
+                                            <div class="form-group">
+                                                 <input type="text" name="shift[]" class="form-control col-lg-12"  value="<?=$shift?>" required readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
                         <label>Pengajuan</label>
-                        <select disabled name="tipe[]" class="form-control col-lg-12 text-uppercase col-lg-4" id="keterangan" data-id="<?=$_GET['id']?>">
-                        <option >pilih pengajuan</option>
-                        <option selected value="SUPEM" >Surat Pemberitahuan</option>
-                        <option value="SUKET">Surat Keterangan</option>
-                        </select>
-                        <br>
                         <?php
-                        
-                        if(mysqli_num_rows($sql_reqAbs) > 0){
-                            
-                            $btn = "edit";
-                            $dataReq = mysqli_fetch_assoc($sql_reqAbs);
-                            $cekin = ($dataReq['check_in'] == '00:00:00')? "-" : $dataReq['check_in'];
-                            $cekot = ($dataReq['check_out'] == '00:00:00')? "-" : $dataReq['check_out'];
-                            $stts_ = ($dataReq['status'] < 25)?"active":"";
-                            $note_ = $dataReq['note'];
-                            ?>
-                            <h6>History Pengajuan</h6>
-                            <div class="">
-                                <label>Keterangan</label>
-                                <div class="form-inline">
-                                    <input disabled type="text" name="ci[]" minLength="8" maxLength="8" class="form-control col-lg-4  mr-2 "  value="<?=$dataReq['keterangan']?>" required >
-                                    
-                                </div>
-                                <label>Check In / Check Out</label>
-                                <div class="form-inline">
-                                    <input disabled type="text"  class="form-control col-lg-4 datepicker mr-2 " value="<?=$cekin?>" data-date-format="HH:mm:ss" required >
-                                    <label>sampai </label>
-                                    <input disabled type="text" name="co[]" class="form-control col-lg-4 datepicker ml-2"  value="<?=$cekot?>" data-date-format="HH:mm:ss" required >
-                                </div>
-                            </div>
-                            <?php
-                        }else{
-                            $note_ = "";
-                            $btn = "schedule";
-                        }
-                        ///cek apakah pengajuan sudah diproses atau masih draft
-                        $sql_draft = mysqli_query($link, "SELECT * FROM req_absensi
-                        WHERE npk = '$npk_kry' AND `date` = '$tgl' AND `status` > '0'")or die(mysqli_error($link));
-                        // echo mysqli_num_rows($sql_draft);
-
-                        $disable_Edit = (mysqli_num_rows($sql_draft) > 0)?"disabled":"";
-                        $pesan_ = (mysqli_num_rows($sql_draft) > 0)?"Data Sudah Diproses (tidak dapat diubah)":"Piih / Ubah Jenis Cuti";
-                        
+                        $query_attendance_type = mysqli_query($link, "SELECT * FROM attendance_type WHERE `id` = '$_GET[jenis]' ")or die(mysqli_error($link));
+                        $att_type = mysqli_fetch_assoc($query_attendance_type)or die(mysqli_error($link));
+                        $type = $att_type['name'];
                         ?>
-                        <br>
-                        <div class="">
-                        <h6><?=$pesan_?></h6>
-                            <label>Keterangan</label>
-                            <?php
-                                if(isset($ket)){
-                                    $disabled= "disabled";
-                                }else{
-                                    $disabled= "";
-                                }
-                            ?>
-                            <select <?=$disabled?> <?=$disable_Edit?> name="kode_absen[]" class="form-control col-lg-12 text-uppercase col-lg-4" id="">
-                            <?php
-                            $sqlAbs = mysqli_query($link, "SELECT * FROM attendance_code WHERE `type` = 'SUPEM' ")or die(mysqli_error($link));
-                            echo mysqli_num_rows($sqlAbs);
-                            if(mysqli_num_rows($sqlAbs) > 0){
-                                
-                                ?>
-                                <option disabled>pilih</option>
-                                <?php
-                                while($dataCode = mysqli_fetch_assoc($sqlAbs)){
-                                    if(isset($ket)){
-                                        $slct = ($dataCode['kode'] == $dataAbsenHr['ket'])? "selected" : "";
-                                    }else{
-                                        $slct ="";
-                                    }
-                                    
-                                    ?>
-                                    <option  value="<?=$dataCode['kode']?>" <?=$slct?>><?=$dataCode['keterangan']?> - <?=$dataCode['kode']?></option>
-                                        
-                                    
-                                    <?php
-                                }
-                            }
-
-                            ?>
-
-                            </select>
-                            <br/>
-                            
-                            <label>Alasan / keperluan</label>
-                            <div class="form-inline">
-                                <textarea <?=$disable_Edit?>  <?=$disabled?> name="note[]" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required><?=$note_?></textarea>
-                            </div>
+                        <div class="form-group ">
+                            <input readonly name="tipe[]" type="text" value="<?=$type?>" class="text-uppercase form-control">
+                        </div>
+                        <?php
+                        $query_attendance_code = mysqli_query($link, "SELECT * FROM attendance_code WHERE `kode` = '$_GET[att_code]' ")or die(mysqli_error($link));
+                        $att_code = mysqli_fetch_assoc($query_attendance_code)or die(mysqli_error($link));
+                        $code = $att_code['keterangan'];
+                        ?>
+                        <div class="form-group ">
+                            <input readonly name="tipe[]" type="text" value="<?=$code?>" class="text-uppercase form-control">
                         </div>
                         
+                        <label>Alasan / keperluan</label>
+                        <div class="form-group">
+                            <textarea  name="note[]" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <input class="btn btn-success float-right" type="submit" name="" value="Submit SUPEM">
+                            </div>
+                        </div>
                     
                     </div>
                 </div>
-                <hr>   
-                <div class="col-12">
-                        <input <?=$disabled?> <?=$disable_Edit?> class="btn btn-success pull-right" type="submit" name="<?=$btn?>" value="<?=$btn?>">
-               
-                </div>
-                <br>
                 
             </div>   
             

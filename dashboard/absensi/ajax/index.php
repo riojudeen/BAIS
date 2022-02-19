@@ -1,6 +1,7 @@
 <?php
 include("../../../config/config.php");
 include("../../../config/approval_system.php");
+include("../../../config/schedule_system.php");
 $approve = (isset($_GET['approve']))?"checked":"";
 $reject = (isset($_GET['reject']))?"checked":"";
 $wait = (isset($_GET['wait']))?"checked":"";
@@ -190,18 +191,26 @@ if(isset($_GET['id'])){
 
                                 <div class="card-body  mt-2">
                                 
-                                    <form method="get" action="add.php">
+                                    <form method="get" action="schedule.php">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="notification"></div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-3 pr-1">
                                                 <div class="form-group">
                                                     <label for="">Tanggal Mulai</label>
-                                                    <input type="date" name="tanggal" class="datepicker form-control no-border" required>
+                                                    <?php
+                                                    $hari_ini = date('Y-m-d');
+                                                    ?>
+                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class="datepicker form-control no-border" id="tanggal_mulai" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-2 pl-1 pr-1">
                                                 <div class="form-group">
                                                     <label for="">NPK Karyawan</label>
-                                                    <input name="npk" type="number" class="form-control no-border data-npk" required>
+                                                    <input name="npk" type="number" class="form-control no-border data-npk" id="npk_karyawan" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pl-1">
@@ -236,7 +245,7 @@ if(isset($_GET['id'])){
                                             <div class="col-md-5 pl-1 pr-1">
                                                 <label for="">Pilih Pengajuan</label>
                                                 <div class="input-group">
-                                                    <select name="jenis" type="number" class="form-control no-border" id="attendance_code" required>
+                                                    <select name="att_code" type="number" class="form-control no-border" id="attendance_code" required>
                                                         <option value="-">Pengajuan Belum Dipilih</option>
                                                     </select>
                                                     <div class="input-group-append">
@@ -249,7 +258,7 @@ if(isset($_GET['id'])){
                                             <div class="col-md-3">
                                                 <label for="">Jumlah Hari</label>
                                                 <div class="input-group">
-                                                    <input type="number" class="form-control no-border" required>
+                                                    <input type="number" name="count" min="1" class="form-control no-border" id="jumlah_hari" value="1" required>
                                                     <div class="input-group-append ">
                                                         <span class="input-group-text px-3 py-0">
                                                             Hari
@@ -260,6 +269,7 @@ if(isset($_GET['id'])){
                                         </div>
                                         
                                         <button type="reset" class="btn btn-sm btn-warning">Reset</button>
+                                        <button type="button" name="check" disabled  id="cek_data"  class="btn btn-sm btn-warning cek_data pull-right" >Proses</button>
                                         <button type="submit" name="add_request" disabled id="prosesrequest"  class="btn btn-sm btn-primary load-data pull-right" >Proses</button>
                                         
                                     </form>
@@ -267,6 +277,7 @@ if(isset($_GET['id'])){
                             </div>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="row">
                     <h6 class="col-md-6 float-left mt-2">Konfirmasi Absensi</h6>
@@ -284,8 +295,6 @@ if(isset($_GET['id'])){
                         </div>
                     </div>
                 </div>
-                
-                
                 <div class="table-responsive text-nowrap" >
                     <table class="table table-striped">
                         <thead>
@@ -350,6 +359,7 @@ if(isset($_GET['id'])){
                                 
 
                                 $q_cekReq = mysqli_query($link, "SELECT check_in , check_out, keterangan, requester FROM req_absensi WHERE shift_req <> 1 AND id_absensi = '$data[id_absensi]' ")or die(mysqli_error($link));
+                                
                                 if(mysqli_num_rows($q_cekReq) <= 0 ){
                                     ?>
                                     <tr id="<?=$data['id_absensi']?>" >
@@ -372,16 +382,17 @@ if(isset($_GET['id'])){
                                         <td class="text-right">
                                             <?php
                                                 if($str_today > $str_limit){
+
                                                     ?>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-info  btn-sm">SKTA</a>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary btn-sm">SUPEM</a>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUKET" class="  btn btn-info  btn-sm">SKTA</a>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUPEM" class="  btn btn-primary btn-sm">SUPEM</a>
                                         
                                                     <?php
                                                 }else{
                                                     if($level == 8 || $level == 7 || $level == 6 || $level == 5){
                                                         ?>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-info  btn-sm">SKTA</a>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>" class="  btn btn-primary btn-sm">SUPEM</a>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUKET" class="  btn btn-info  btn-sm">SKTA</a>
+                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUPEM" class="  btn btn-primary btn-sm">SUPEM</a>
                                                         <?php
                                                     }else{
                                                         ?>
@@ -1252,12 +1263,16 @@ $(document).ready(function(){
             $('#att_code').text(att_code)
         }
         att_code();
-        var id = $('#attendance_type').val();
-        $('#attendance_type').change(function() {
-            var id = $(this).val();
+        att_type();
+        function att_type(){
+            var id = $('#attendance_type').val();
             $('#attendance_code').load("ajax/attendance_code.php?id="+id, function(){
                 att_code();
             })
+        }
+        
+        $('#attendance_type').change(function() {
+            att_type();
         });
         $('#attendance_code').change(function() {
             att_code();
@@ -1282,7 +1297,10 @@ $(document).ready(function(){
                     $('.data-nama').val(nama);
                     $('.data-jabatan').val(jabatan);
                     $('.data-stats').val(status);
-                    $('#prosesrequest').prop("disabled", false);
+                    // $('#prosesrequest').prop("disabled", false);
+                    // $('#cek_data').removeClass("d-none");
+                    $('#cek_data').prop("disabled", false);
+                    
                 }else if(total === 0){
                     var nama = obj.msg[0].msg;
                     var status = obj.msg[0].msg;
@@ -1290,7 +1308,9 @@ $(document).ready(function(){
                     $('.data-nama').val(nama);
                     $('.data-jabatan').val(jabatan);
                     $('.data-stats').val(status);
-                    $('#prosesrequest').prop("disabled", true);
+                    // $('#prosesrequest').prop("disabled", true);
+                    // $('#cek_data').addClass("d-none");
+                    $('#cek_data').prop("disabled", true);
                 }else{
                     var nama = obj.msg[0].msg;
                     var status = obj.msg[0].msg;
@@ -1298,7 +1318,9 @@ $(document).ready(function(){
                     $('.data-nama').val(nama);
                     $('.data-jabatan').val(jabatan);
                     $('.data-stats').val(status);
-                    $('#prosesrequest').prop("disabled", true);
+                    // $('#prosesrequest').prop("disabled", true);
+                    // $('#cek_data').addClass("d-none");
+                    $('#cek_data').prop("disabled", true);
                 }
             }
         })
