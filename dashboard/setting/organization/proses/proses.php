@@ -255,6 +255,7 @@ if(isset($_SESSION['user'])){
         }
         if(isset($_POST['kode_division'])){
             $_SESSION['tab'] = "division";
+            // echo $_POST['kode_division'][0];
             for($i=0 ; $i < count($_POST['kode_division']);$i++){
                 $id = $_POST['kode_division'][$i];
                 $nama = $_POST['nama_division'][$i];
@@ -264,6 +265,7 @@ if(isset($_SESSION['user'])){
                 $qry = "UPDATE `division` SET `nama_divisi` = '$nama' , `npk_cord` = '$cord' , `id_company` = '$id_parent' , `part` = '$part' WHERE `id_div` = '$id' ";
                 $sql = mysqli_query($link, $qry)or die(mysqli_error($link));
             }
+            // echo "tes";
         }
         if($sql){
             $_SESSION['info'] = "Disimpan";

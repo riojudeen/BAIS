@@ -4,7 +4,7 @@ require_once("../../../config/config.php");
 // require("../../../_assets/vendor/autoload.php");
 if(isset($_SESSION['user'])){
 /////////////
-
+// echo $_POST['editMaster'];
 //jika add
 if(isset($_POST['addMaster'])){
     $tab = $_POST['master'];
@@ -111,7 +111,9 @@ if(isset($_POST['addMaster'])){
 
 //jika edit
 }else if(isset($_POST['editMaster'])){
+    // echo $_POST['editMaster'];
     $tab = $_POST['master'];
+    
     if($_POST['master'] == "jbtn"){
         $i = 0;
         $code = trim(mysqli_real_escape_string($link, $_POST['code'][$i]));
@@ -138,13 +140,19 @@ if(isset($_POST['addMaster'])){
         }
 
     }else if($_POST['master'] == "shf"){
+        // echo $_POST['master'];
         $i = 0;
         $code = trim(mysqli_real_escape_string($link, $_POST['code'][$i]));
         $shift = trim(mysqli_real_escape_string($link, $_POST['shift'][$i]));
         $prod = trim(mysqli_real_escape_string($link, $_POST['production'][$i]));
         $sql = mysqli_query($link,"UPDATE shift SET shift = '$shift', production = '$prod'  WHERE id_shift = '$code' " );
+        // echo "UPDATE shift SET shift = '$shift', production = '$prod'  WHERE id_shift = '$code' ";
         if($sql){
             $_SESSION['info'] = 'Disimpan'; 
+            echo "<script>document.location.href='../master.php?tab=$tab'</script>";
+        }else{
+            $_SESSION['info'] = 'Gagal Disimpan'; 
+            $_SESSION['pesan'] = mysqli_error($link); 
             echo "<script>document.location.href='../master.php?tab=$tab'</script>";
         }
 
@@ -164,6 +172,7 @@ if(isset($_POST['addMaster'])){
     
 }else if(isset($_GET['del'])){
     $tab = $_GET['del'];
+
     if($_GET['del'] == "jbtn"){
         mysqli_query($link, "DELETE FROM jabatan WHERE  id_jabatan = '$_GET[jbt]' ");
         $_SESSION['info'] = 'Dihapus';

@@ -156,19 +156,35 @@ if(isset($_SESSION['user'])){
             $_SESSION['pesan'] = 'Resource';
             echo "<script>document.location.href='../add_karyawan.php'</script>";
         }
-    }else if(isset($_POST['delete'])){
-
+    }else if(isset($_GET['del'])){
+        $npk = $_GET['del'];
+        $sqlmp = mysqli_query($link, "DELETE FROM karyawan WHERE npk = '$npk'") or die(mysqli_error($link));
+        if($sqlmp){
+            $sqluser = mysqli_query($link, "DELETE FROM data_user WHERE npk = '$npk'") or die(mysqli_error($link));
+            $sqlexpat = mysqli_query($link, "DELETE FROM expatriat WHERE npk = '$npk'") or die(mysqli_error($link));
+            $sqluser = mysqli_query($link, "DELETE FROM data_user WHERE npk = '$npk'") or die(mysqli_error($link));
+            $sqlOrg = mysqli_query($link, "DELETE FROM org WHERE npk = '$npk'") or die(mysqli_error($link));
+            $_SESSION['info'] = 'Dihapus';
+            echo "<script>document.location.href='../add_karyawan.php'</script>";
+        }else{
+            $_SESSION['info'] = 'Gagal Dihapus';
+            echo "<script>document.location.href='../add_karyawan.php'</script>";
+        }
     }else if(isset($_POST['index'])){
+        // echo "berhasil";
+        
         foreach($_POST['index'] as $npk){
             $sqlmp = mysqli_query($link, "DELETE FROM karyawan WHERE npk = '$npk'") or die(mysqli_error($link));
             $sqlexpat = mysqli_query($link, "DELETE FROM expatriat WHERE npk = '$npk'") or die(mysqli_error($link));
-            $sqlexpat = mysqli_query($link, "DELETE FROM data_user WHERE npk = '$npk'") or die(mysqli_error($link));
+            $sqluser = mysqli_query($link, "DELETE FROM data_user WHERE npk = '$npk'") or die(mysqli_error($link));
+            $sqlOrg = mysqli_query($link, "DELETE FROM org WHERE npk = '$npk'") or die(mysqli_error($link));
         }
         if($sqlmp){
             $_SESSION['info'] = 'Dihapus';
             echo "<script>document.location.href='../add_karyawan.php'</script>";
         }else{
-
+            $_SESSION['info'] = 'Gagal Dihapus';
+            echo "<script>document.location.href='../add_karyawan.php'</script>";
         }
 
     }else if(isset($_POST['edituser'])){

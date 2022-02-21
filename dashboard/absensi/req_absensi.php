@@ -651,16 +651,20 @@ if(isset($_SESSION['user'])){
                 })
             }
         }
+        
         function get_notifData(){
             var data = $('#notification_result').attr('data-id');
-            console.log(data)
+            // console.log(data)
             if(data == '1'){
-                $('#prosesrequest').removeClass('d-none')
+                $('#prosesrequest').prop('disabled', false )
+            }else if(data == '0'){
+                $('#prosesrequest').prop('disabled', true )
             }else{
-                $('#prosesrequest').addClass('d-none')
+                $('#prosesrequest').prop('disabled', true )
             }
             
         }
+        get_notifData()
         
         function get_cek(){
             
@@ -677,6 +681,7 @@ if(isset($_SESSION['user'])){
                 success:function(data){
                     $('.notification').fadeOut('fast', function(){
                         $(this).html(data).fadeIn('fast');
+                        get_notifData()
                     });
                     // $('#data-monitoring').html(data)
                 }
@@ -686,7 +691,25 @@ if(isset($_SESSION['user'])){
         $(document).on('click', '.cek_data', function(e){
             e.preventDefault();
             get_cek();
-            
+        })
+        $(document).on('blur', '.data-npk',function(){
+            get_cek();
+        })
+        $(document).on('change', '#attendance_code', function(){
+            get_cek();
+        })
+        $(document).on('change', '#attendance_type', function(){
+            get_cek();
+        })
+        $(document).on('change', '#tanggal_mulai', function(){
+            get_cek();
+        })
+        $(document).on('change', '#jumlah_hari', function(){
+            get_cek();
+        })
+        $(document).on('click', '.reset', function(){
+            $('.data-npk').val('');
+            get_cek();
         })
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
@@ -930,6 +953,54 @@ if(isset($_SESSION['user'])){
             });
         });
     </script>
+    <script>
+    
+    $(document).on('keyup', '.data-npk',function(){
+        var npk = $(this).val();
+        
+        $.ajax({
+            url: 'ajax/get_resource.php',
+            method: 'get',
+            data: {data:npk},
+            success:function(data){
+                var obj = $.parseJSON(data);
+                var total = obj.msg[0].total;
+                var msg = obj.msg[0].msg;
+                if(total > 0){
+                    var nama = obj.data[0].nama;
+                    var status = obj.data[0].status;
+                    var jabatan = obj.data[0].jabatan;
+                    $('.data-nama').val(nama);
+                    $('.data-jabatan').val(jabatan);
+                    $('.data-stats').val(status);
+                    $('#prosesrequest').removeClass("d-none");
+                    // $('#cek_data').removeClass("d-none");
+                    // $('#cek_data').prop("disabled", false);
+                    
+                }else if(total === 0){
+                    var nama = obj.msg[0].msg;
+                    var status = obj.msg[0].msg;
+                    var jabatan = obj.msg[0].msg;
+                    $('.data-nama').val(nama);
+                    $('.data-jabatan').val(jabatan);
+                    $('.data-stats').val(status);
+                    $('#prosesrequest').addClass("d-none", true);
+                    // $('#cek_data').addClass("d-none");
+                }else{
+                    var nama = obj.msg[0].msg;
+                    var status = obj.msg[0].msg;
+                    var jabatan = obj.msg[0].msg;
+                    $('.data-nama').val(nama);
+                    $('.data-jabatan').val(jabatan);
+                    $('.data-stats').val(status);
+                    $('#prosesrequest').addClass("d-none", true);
+                    // $('#prosesrequest').prop("disabled", true);
+                    // $('#cek_data').addClass("d-none");
+                }
+            }
+        })
+    })
+</script>
 <?php
     include_once("../endbody.php"); 
 

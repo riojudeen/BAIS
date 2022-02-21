@@ -192,11 +192,7 @@ if(isset($_GET['id'])){
                                 <div class="card-body  mt-2">
                                 
                                     <form method="get" action="schedule.php">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="notification"></div>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="row">
                                             <div class="col-md-3 pr-1">
                                                 <div class="form-group">
@@ -268,10 +264,13 @@ if(isset($_GET['id'])){
                                             </div>
                                         </div>
                                         
-                                        <button type="reset" class="btn btn-sm btn-warning">Reset</button>
-                                        <button type="button" name="check" disabled  id="cek_data"  class="btn btn-sm btn-warning cek_data pull-right" >Proses</button>
-                                        <button type="submit" name="add_request" disabled id="prosesrequest"  class="btn btn-sm btn-primary load-data pull-right" >Proses</button>
-                                        
+                                        <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
+                                        <button type="submit" name="add_request" disabled id="prosesrequest"  class="d-none btn btn-sm btn-primary load-data pull-right" >Proses</button>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="notification"></div>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -1277,52 +1276,5 @@ $(document).ready(function(){
         $('#attendance_code').change(function() {
             att_code();
         });
-    })
-</script>
-<script>
-    $('.data-npk').keyup(function(){
-        var npk = $(this).val();
-        $.ajax({
-            url: 'ajax/get_resource.php',
-            method: 'get',
-            data: {data:npk},
-            success:function(data){
-                var obj = $.parseJSON(data);
-                var total = obj.msg[0].total;
-                var msg = obj.msg[0].msg;
-                if(total > 0){
-                    var nama = obj.data[0].nama;
-                    var status = obj.data[0].status;
-                    var jabatan = obj.data[0].jabatan;
-                    $('.data-nama').val(nama);
-                    $('.data-jabatan').val(jabatan);
-                    $('.data-stats').val(status);
-                    // $('#prosesrequest').prop("disabled", false);
-                    // $('#cek_data').removeClass("d-none");
-                    $('#cek_data').prop("disabled", false);
-                    
-                }else if(total === 0){
-                    var nama = obj.msg[0].msg;
-                    var status = obj.msg[0].msg;
-                    var jabatan = obj.msg[0].msg;
-                    $('.data-nama').val(nama);
-                    $('.data-jabatan').val(jabatan);
-                    $('.data-stats').val(status);
-                    // $('#prosesrequest').prop("disabled", true);
-                    // $('#cek_data').addClass("d-none");
-                    $('#cek_data').prop("disabled", true);
-                }else{
-                    var nama = obj.msg[0].msg;
-                    var status = obj.msg[0].msg;
-                    var jabatan = obj.msg[0].msg;
-                    $('.data-nama').val(nama);
-                    $('.data-jabatan').val(jabatan);
-                    $('.data-stats').val(status);
-                    // $('#prosesrequest').prop("disabled", true);
-                    // $('#cek_data').addClass("d-none");
-                    $('#cek_data').prop("disabled", true);
-                }
-            }
-        })
     })
 </script>

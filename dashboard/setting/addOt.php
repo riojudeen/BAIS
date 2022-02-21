@@ -30,7 +30,7 @@ if(isset($_SESSION['user'])){
                         <label>Kode Overtime</label>
                         <input type="text" name="code[]" class="form-control" maxLength="5" placeholder="maximum 5 karakter (ex. ABC001 etc...)" required >
                         <label>Activity</label>
-                        <input type="text" name="lembur[]" class="form-control" placeholder="Shift" required >
+                        <input type="text" name="lembur[]" class="form-control" placeholder="Nama Aktifitas" required >
                         
                         <hr>
                     </div>

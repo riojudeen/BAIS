@@ -129,7 +129,7 @@ if(isset($_SESSION['user'])){
         <form action="proses.php" method="POST">
             <div class="card-body">
                 
-                <input type="hidden" name="id_" class="form-control" value="<?=$_GET['id']?>">
+                <input type="hidden" name="id_" class="form-control" value="<?=$_GET['jenis']?>">
                 <input type="hidden" name="npk" class="form-control" value="<?=$npk_kry?>">
                 
                 <div class="form-group after-add-more row">
@@ -350,22 +350,80 @@ if(isset($_SESSION['user'])){
                          <h6>Input Pengajuan Absensi</h6>
                          
                         <?php
+                        $col = ($_GET['jenis'] == 'SUKET')?'4':'10';
                         $no = 1;
                         $sql_code = mysqli_query($link, "SELECT * FROM attendance_code WHERE `type` = 'SUPEM' AND kode = '$_GET[att_code]' ")or die(mysqli_error($link));
-                            
+                        
                         foreach($tanggal_array AS $date){
                             $readonly = ($date == $tgl)?'readonly':'';
+                            $q_absensi = "SELECT shift, `date`, check_in, check_out, ket FROM absensi WHERE `date` = '$date' AND npk = '$npk_kry'";
+                            $q_reqabsensi = "SELECT shift, `date`, check_in, check_out, keterangan FROM req_absensi WHERE `date` = '$date' AND npk = '$npk_kry'";
+                            $sql_absensi = mysqli_query($link, $q_absensi)or die(mysqli_error($link));
+                            $sql_reqabsensi = mysqli_query($link, $q_reqabsensi)or die(mysqli_error($link));
+                            $data_absensi = mysqli_fetch_assoc($sql_absensi);
+                            $data_reqabsensi = mysqli_fetch_assoc($sql_reqabsensi);
+                            // echo $q_absensi;
+                            if(mysqli_num_rows($sql_reqabsensi) > 0){
+                                
+                                $pesan = "pengajuan sudah pernah dibuat";
+                                $disabled_in = 'readonly';
+                                $disabled_out = 'readonly';
+
+                                $in_ = (isset($data_reqabsensi['check_in']) && $data_reqabsensi['check_in'] != "00:00:00" )?$data_reqabsensi['check_in']:'';
+                                $out_ = (isset($data_reqabsensi['check_out']) && $data_reqabsensi['check_out'] != "00:00:00" )?$data_reqabsensi['check_out']:'';
+
+                            }else{
+                                if(mysqli_num_rows($sql_absensi) > 0){
+                                    $disabled_in = (isset($data_absensi['check_in']) && $data_absensi['check_in'] != "00:00:00" )?'readony':'';
+                                    $disabled_out = (isset($data_absensi['check_out']) && $data_absensi['check_out'] != "00:00:00" )?'readony':'';
+                                    $pesan = "";
+                                    $in_ = (isset($data_absensi['check_in']) && $data_absensi['check_in'] != "00:00:00" )?$data_absensi['check_in']:'';
+                                    $out_ = (isset($data_absensi['check_out']) && $data_absensi['check_out'] != "00:00:00" )?$data_absensi['check_out']:'';
+                                }else{
+                                    $pesan = "data absensi belum tersedia";
+                                    $disabled_in = 'readonly';
+                                    $disabled_out = 'readonly';
+    
+                                    $in_ = '';
+                                    $out_ = '';
+                                }
+                            }
+                            // echo $pesan;
+                            $disabled_tgl = ($_GET['jenis'] == 'SUKET')?'readony':'';
                             ?>
                             <div class="row">
                                 <div class="col-md-12 ">
                                     <div class="form-horizontal">
                                         <div class="row">
                                             <label class="col-md-2 col-form-label text-left">Cuti ke-<?=$no++?></label>
-                                            <div class="col-md-10"> 
+                                            <div class="col-md-<?=$col?>"> 
                                                 <div class="form-group">
-                                                    <input <?=$readonly?> type="text" name="sd" class="form-control col-lg-12 datepicker mr-0" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($date)?>" required >
+                                                    <input <?=$disabled_tgl?> <?=$readonly?> type="text" name="sd[]" class="form-control col-lg-12 datepicker mr-0 datepickertgl" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($date)?>" required >
                                                 </div>
+                                                
                                             </div>
+                                            <?php
+                                                if($_GET['jenis'] == 'SUKET'){
+                                                    
+                                                    ?>
+                                                        <label class="col-md-1 col-form-label text-right px-1"><i class="nc-icon  nc-time-alarm"></i> In</label>
+                                                <div class="col-md-2"> 
+                                                    <div class="form-group">
+                                                        <input <?=$disabled_in?> type="text" name="ci[]" class="form-control text-center col-lg-12 datepicker mr-0" data-date-format="H:mm" value="<?=$in_?>" required >
+                                                    </div>
+                                                    
+                                                </div>
+                                                <label class="col-md-1 col-form-label text-right px-1"><i class="nc-icon nc-time-alarm"></i> Out</label>
+                                                <div class="col-md-2"> 
+                                                    <div class="form-group">
+                                                        <input <?=$disabled_out?> type="text" name="co[]" class="form-control text-center col-lg-12 datepicker mr-0" data-date-format="HH:mm" value="<?=$out_?>" required >
+                                                    </div>
+                                                    
+                                                </div>
+                                                <?php
+                                            }
+                                            ?>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -404,16 +462,16 @@ if(isset($_SESSION['user'])){
                         $code = $att_code['keterangan'];
                         ?>
                         <div class="form-group ">
-                            <input readonly name="tipe[]" type="text" value="<?=$code?>" class="text-uppercase form-control">
+                            <input readonly name="tipe" type="text" value="<?=$code?>" class="text-uppercase form-control">
                         </div>
                         
                         <label>Alasan / keperluan</label>
                         <div class="form-group">
-                            <textarea  name="note[]" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required></textarea>
+                            <textarea  name="note" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required></textarea>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <input class="btn btn-success float-right" type="submit" name="" value="Submit SUPEM">
+                                <input class="btn btn-success float-right" type="submit" name="req_<?=$_GET['jenis']?>" value="Submit <?=$_GET['jenis']?>">
                             </div>
                         </div>
                     
@@ -437,7 +495,7 @@ if(isset($_SESSION['user'])){
     include_once("../footer.php");
     ?>
   <script>
-    $('.datepicker').datetimepicker({
+    $('.datepickertgl').datetimepicker({
             //   daysOfWeekDisabled: [0, 6],
         disabledDates: [
             // moment("06/11/2021"), //bulan/tanggal/tahun

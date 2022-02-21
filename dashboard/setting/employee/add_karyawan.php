@@ -38,7 +38,7 @@ if(isset($_SESSION['user'])){
                             <div class="nav-tabs-wrapper">
                                 <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left" role="tablist">
                                     <?php
-                                    $s_employee = array('local', 'expatriat');
+                                    $s_employee = array('local', 'expatriat', 'layoff');
                                     $i = 0;
                                     foreach($s_employee AS $data){
                                         //membuat tab active terbuka untuk pertama kali
@@ -61,7 +61,31 @@ if(isset($_SESSION['user'])){
                     <div class="col-md-9">
                         <div class="row tab-content">
                             <div class="col-md-12 tab-pane active" id="local">
-                                
+                                <div class="collapse" id="layoff_input">
+                                    <div class="row ">
+                                        
+                                        <div class="col-md-12">
+                                            <form action="">
+                                                <div class="card shadow-none border inputnpk " style="background:rgba(201, 201, 201, 0.2)" >
+                                                    <div class="card-body  mt-2">
+                                                        
+                                                        <div class="form-group">
+                                                            <textarea class="form-control " name="" id="text_input" cols="30" rows="10"></textarea>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <button type="reset" class="btn btn-sm btn-warning">Reset</button>
+                                                            </div>
+                                                            <div class="col-md-6 text-right">
+                                                                <button type="submit" id="upload_npk" class="btn btn-sm btn-primary pull-right">Upload</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                                 <?php
                                 include_once('colapse_add.php');
                                 ?>
@@ -171,7 +195,26 @@ if(isset($_SESSION['user'])){
     <script>
     //untuk crud masal update department
         
-        $('.delete').on('click', function(e){
+        $(document).on('click', '.del', function(e){
+            e.preventDefault();
+            var getLink = $(this).attr('href');
+            Swal.fire({
+            title: 'Anda Yakin ?',
+            text: "Semua data yang dicheck / centang akan dihapus permanent",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#FF5733',
+            cancelButtonColor: '#B2BABB',
+            confirmButtonText: 'Yes, delete!'
+            }).then((result) => {
+                if (result.value) {
+                    document.proses.action = getLink;
+                    document.proses.submit();
+                }
+            })
+            
+        });
+        $(document).on('click', '.delete', function(e){
             e.preventDefault();
             var getLink = 'proses/proses.php';
             Swal.fire({
@@ -190,19 +233,11 @@ if(isset($_SESSION['user'])){
             })
             
         });
-        $('.editall').on('click', function(e){
+        $(document).on('click', '.editall', function(e){
             e.preventDefault();
             var getLink = 'proses/mass_editMp.php';
             document.proses.action = getLink;
             document.proses.submit();
-        }); 
-    </script>
-    <script>
-        $('.editall').on('click', function(e){
-            e.preventDefault();
-            var getLink = 'mass_editMp.php';
-            document.prosesmp.action = getLink;
-            document.prosesmp.submit();
         }); 
     </script>
     <script>
@@ -216,11 +251,12 @@ if(isset($_SESSION['user'])){
                 var jab = $('#jabatan_').val();
                 var stat = $('#status_').val();
                 var page = $('.page_active').attr('id');
+                var text_input = $('textarea#text_input').val();
                 // console.log(page);
                 $.ajax({
                     url: 'data_karyawan.php',
                     method: 'GET',
-                    data:{page:hal,id:id,shift:shift,divisi:divisi,deptAcc:deptAcc,cari:cari,jab:jab,stat:stat},
+                    data:{input:text_input,page:hal,id:id,shift:shift,divisi:divisi,deptAcc:deptAcc,cari:cari,jab:jab,stat:stat},
                     success:function(msg){
                         $('#data-karyawan').fadeOut('fast', function(){
                             $(this).html(msg).fadeIn('fast');
@@ -230,7 +266,20 @@ if(isset($_SESSION['user'])){
             }
 
             load_data();
-            
+            $(document).on('click', '.layoff_btn', function(){
+                var data = $(this).attr('data-id');
+                var npk = $(this).attr('id');
+                console.log(npk)
+                $.ajax({
+                    url: 'ajax/proses_layoff.php',
+                    method: 'POST',
+                    data:{data:data,npk:npk},
+                    success:function(){
+                        load_data();
+                    }
+                });
+                // load_data();
+            })
             $('.navigasi').click(function(){
                 var id = $(this).attr('id');
                 $('.list-tab').removeClass('tab-active');
@@ -281,6 +330,10 @@ if(isset($_SESSION['user'])){
             $(document).on('click', '.halaman', function(){
                 var hal = $(this).attr("id");
                 load_data(hal);
+            });
+            $(document).on('click', '#upload_npk', function(a){
+                a.preventDefault();
+                load_data();
             });
             
             
@@ -394,6 +447,11 @@ if(isset($_SESSION['user'])){
                 
             })
             $(document).on('click', '.tab-local', function(){
+                $('.filter_data').removeClass('d-none').fadeIn('fast');
+                // $('.filter_data').removeClass('d-none');
+                
+            })
+            $(document).on('click', '.tab-layoff', function(){
                 $('.filter_data').removeClass('d-none').fadeIn('fast');
                 // $('.filter_data').removeClass('d-none');
                 

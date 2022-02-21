@@ -450,7 +450,7 @@ if(isset($_SESSION['user'])){
                                             <tr>
                                                 <td class="">
                                                     <?=$i++?>
-                                                    <input type="hidden" name="kode_<?=$id?>[]" class="form-control bg-transparent " value="<?=$dvision?>"/>
+                                                    <input type="hidden" name="kode_<?=$id?>[]" class="form-control bg-transparent " value="<?=$division?>"/>
                                                 </td>
                                                 
                                                 <td class="col-md-4">

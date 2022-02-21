@@ -47,10 +47,14 @@ if(isset($_SESSION['user'])){
                             <td><?=$leave_aloc['jenis_cuti']?></td>
                             <td><?=$leave_aloc['alocation']?></td>
                             <td><?=DBtoForm($leave_aloc['eff_date'])?></td>
-                            <td class="text-right">
-                            <a href="edit.php?edit=<?=$leave_aloc['id_aloc']?>&kode=<?=$leave_aloc['id_leave']?>" class="btn-round btn-outline-warning btn btn-warning btn-link btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>
-                                <a href="edit.php?edit=<?=$leave_aloc['id_aloc']?>&kode=<?=$leave_aloc['id_leave']?>" class="btn-round btn-outline-warning btn btn-warning btn-link btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>
-                                <a href="proses.php?del=<?=$leave_aloc['id_aloc']?>" class="btn-round btn-outline-danger btn btn-danger btn-link btn-icon btn-sm remove"><i class="fa fa-times"></i></a>
+                            <td class="text-right text-nowrap">
+                                <span>
+                                    <a href="edit.php?edit=<?=$leave_aloc['id_aloc']?>&kode=<?=$leave_aloc['id_leave']?>" class="btn-round btn-outline-warning btn btn-warning btn-link btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>
+                                </span>
+                                <span>
+                                    <a href="proses.php?del=<?=$leave_aloc['id_aloc']?>" class="btn-round btn-outline-danger btn btn-danger btn-link btn-icon btn-sm remove"><i class="fa fa-times"></i></a>
+                                </span>
+
                             </td>
                         </tr>
 

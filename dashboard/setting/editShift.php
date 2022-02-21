@@ -36,7 +36,7 @@ if(isset($_SESSION['user'])){
                     <label>Kode Shift</label>
                     <input readonly value="<?=$data['id_shift']?>" type="text" name="code[]" class="form-control" maxLength="5" placeholder="maximum 5 karakter (ex. ABC001 etc...)" required autofocus>
                     <label>Shift</label>
-                    <input value="<?=$data['shift']?>" type="text" name="shift[]" class="form-control" placeholder="nama jabatan " required autofocus>
+                    <input value="<?=$data['shift']?>" type="text" name="shift[]" class="form-control" placeholder="nama shift " maxLength="10" required autofocus>
                     <label for="">Production Shift</label>
                     <select name="production[]" id="" class="form-control">
                         <?php

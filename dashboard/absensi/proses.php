@@ -321,6 +321,100 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
            }
        }
+    }else if(isset($_POST['req_SUPEM'])){
+        echo "SUPEM";
+        count($_POST['sd']);
+        // echo "SUKET";
+        $shift_req = 0;
+        
+        // echo count($_POST['sd']);
+        // echo count($_POST['ci']);
+        // echo count($_POST['co']);
+        $query = $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
+             VALUES ";
+
+        $npk = $_POST['npk'];
+        $shift = $_POST['shift'][0];
+        $type = $_POST['tipe'];
+        $alasan = $_POST['note'];
+        $i = 0;
+        $reqStats = 'a';
+        $status = '25';
+        
+        foreach($_POST['sd'] AS $tgl){
+            
+            $tgl = dateToDB($tgl);
+            $id_absensi = $npk.$tgl;
+            $id = $npk.$tgl;
+            $ci = (isset($_POST['ci']) && $_POST['ci'][$i] != '')?$_POST['ci'][$i]:'00:00:00';
+            $co = (isset($_POST['ci']) &&  $_POST['co'][$i] != '')?$_POST['co'][$i]:'00:00:00';
+            $end_date = end_date($tgl,$link,$shift);
+            $start_date = $tgl;
+
+            $req_date = date('Y-m-d');
+            // $co = $_POST['ci'][$i];
+            // echo $shift."-".$npk."-".$type."-".$alasan."-".$tgl."-".$ci."-".$co."-".$start_date."-".$end_date."<br>";
+            $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$co' , '$ci' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', '$id_absensi' ),";
+            $i++;
+        }
+        $query = substr($query, 0, -1);
+        echo $query;
+        // $sql = mysqli_query($link, $query);
+        // if($sql){
+        //     $_SESSION['info'] = 'Disimpan';
+        //     echo "<script>document.location.href='req_absensi.php'</script>";
+        // }else{
+        //     $_SESSION['info'] = 'Gagal Disimpan';
+        //     $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
+        //     echo "<script>document.location.href='req_absensi.php'</script>";
+        // }
+
+
+    }else if(isset($_POST['req_SUKET'])){
+        // echo "SUKET";
+        $shift_req = 0;
+        
+        // echo count($_POST['sd']);
+        // echo count($_POST['ci']);
+        // echo count($_POST['co']);
+        $query = $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
+             VALUES ";
+
+        $npk = $_POST['npk'];
+        $shift = $_POST['shift'][0];
+        $type = $_POST['tipe'];
+        $alasan = $_POST['note'];
+        $i = 0;
+        $reqStats = 'a';
+        $status = '25';
+        
+        foreach($_POST['sd'] AS $tgl){
+            
+            $tgl = dateToDB($tgl);
+            $id_absensi = $npk.$tgl;
+            $id = $npk.$tgl;
+            $ci = ($_POST['ci'][$i] != '')?$_POST['ci'][$i]:'00:00:00';
+            $co = ($_POST['co'][$i] != '')?$_POST['co'][$i]:'00:00:00';
+            $end_date = end_date($tgl,$link,$shift);
+            $start_date = $tgl;
+
+            $req_date = date('Y-m-d');
+            // $co = $_POST['ci'][$i];
+            // echo $shift."-".$npk."-".$type."-".$alasan."-".$tgl."-".$ci."-".$co."-".$start_date."-".$end_date."<br>";
+            $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$co' , '$ci' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', '$id_absensi' ),";
+            $i++;
+        }
+        $query = substr($query, 0, -1);
+        // echo $query;
+        $sql = mysqli_query($link, $query);
+        if($sql){
+            $_SESSION['info'] = 'Disimpan';
+            echo "<script>document.location.href='req_absensi.php'</script>";
+        }else{
+            $_SESSION['info'] = 'Gagal Disimpan';
+            $_SESSION['pesan'] = mysqli_error($link);
+            echo "<script>document.location.href='req_absensi.php'</script>";
+        }
     }else if(isset($_GET['delete_multiple'])){
         //proses approve oleh admin
         

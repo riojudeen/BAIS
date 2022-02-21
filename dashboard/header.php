@@ -485,7 +485,7 @@
                 <li class="menu " data-name="mp" id="mp">
                   <a href="<?=base_url()?>/dashboard/pages/manpower.php"><!---link halaman update MP--->
                     <span class="sidebar-mini-icon">EM</span>
-                    <span class="sidebar-normal"> Employee Monitoring </span>
+                    <span class="sidebar-normal"> Employee Monitoring (exp)</span>
                   </a>
                 </li> 
                 <?php
@@ -493,14 +493,20 @@
                 ?>
                 <li class="menu " data-name="mpu" id="mpu">
                   <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
-                    <span class="sidebar-mini-icon">MR</span>
-                    <span class="sidebar-normal"> MP Update Update </span>
+                    <span class="sidebar-mini-icon">EM</span>
+                    <span class="sidebar-normal"> Employee Monitoring  </span>
+                  </a>
+                </li>
+                <li class="menu " data-name="lo" id="lo">
+                  <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
+                    <span class="sidebar-mini-icon">EM</span>
+                    <span class="sidebar-normal"> Layoff Monitoring  </span>
                   </a>
                 </li>
                 <li class="menu " data-name="reqmp" id="reqmp">
                   <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
                     <span class="sidebar-mini-icon">MR</span>
-                    <span class="sidebar-normal"> MP Update Request </span>
+                    <span class="sidebar-normal"> Employee Update Request </span>
                   </a>
                 </li>
 

@@ -231,7 +231,7 @@ if(isset($_SESSION['user'])){
                 $dept_name = getOrgName($link, $dept, 'dept');
                 $div_name = getOrgName($link, $division, 'division');
                 // echo $div_name;
-                $data_npk = explode(PHP_EOL, $_POST['input']);
+                $data_npk = preg_split("/\r\n|\n|\r/", $_POST['input']);
                 $q_deptAccount = mysqli_query($link, "SELECT department_account AS `name` FROM dept_account WHERE id_dept_account = '$dept_account' ")or die(mysqli_error($link));
                 $data_dept_account = mysqli_fetch_assoc($q_deptAccount);
                 $deptAcc_name = (isset($data_dept_account['name']))?$data_dept_account['name']:'';

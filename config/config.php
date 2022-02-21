@@ -686,11 +686,33 @@ function jam($jam){
     $jam_baru = date('H:i', strtotime($jam));
     return $jam_baru;
 }
-function start_date($tgl){
-
-}
-function end_date($tgl){
+function start_date($tgl,$link){
     
+}
+function end_date($tgl,$link,$shift){
+    $shift_karyawan = $shift;
+    $q_workingDate = mysqli_query($link,"SELECT 
+        working_days.shift AS `shift`, 
+        working_hours.start AS `start`,  
+        working_hours.end  AS `end`,
+        working_hours.end  AS `code_name` FROM working_days 
+        LEFT JOIN working_hours ON working_hours.id = working_days.wh 
+        WHERE working_days.shift = '$shift_karyawan' AND working_days.date = '$tgl'
+    ")or die(mysqli_error($link));
+    $sql = mysqli_fetch_assoc($q_workingDate);
+    $start_ = $sql['start'];
+    $end_ = $sql['end'];
+
+    $strStart = strtotime("$tgl $start_");
+    $strEnd= strtotime("$tgl $end_");
+    if($strStart > $strEnd){
+        $end_date = date('Y-m-d',strtotime('+1day', $tgl));
+    }else{
+        $end_date = $tgl;
+    }
+    return $end_date;
+
+
 }
 function MasaKerja($tgl_masuk,$tgl_sekarang){
     if($tgl_masuk=='0000-00-00'){
