@@ -21,7 +21,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         }
         
         $spreadsheet = $reader->load($_FILES['file_import']['tmp_name']);
-        $query = "INSERT INTO absensi (id , npk , shift , `date` , date_in , date_out , check_in , check_out , ket, id_req) VALUES ";
+        // $query = "INSERT INTO absensi (id , npk , shift , `date` , date_in , date_out , check_in , check_out , ket, id_req) VALUES ";
 
         // $dataUser = "INSERT INTO data_user (npk ,username , nama , pass , `level`, id_user) VALUES ";
         
@@ -78,31 +78,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 </tr>
             </tbody>
         </table>
-        <div class="card card-body">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-12 pl-1">
-                        <div class="input-group no-border">
-                            <select name="sortdate" id="sortdate" class="form-control no-border ml-2">
-                                <?php
-                                foreach($array_tgl AS $sort){
-                                    ?>
-                                    <option value="<?=$sort?>"><?=$sort?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                            
-                            <div class="input-group-append ">
-                                <span class=" pr-1 btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-               
-            </div>
-            
-        </div>
         
         <?php
         
@@ -134,6 +109,10 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 gunakan shift awal
                 */
                 $q_reqAbsensi = mysqli_query($link, "SELECT `shift` FROM req_absensi WHERE npk = '$npk' AND `date` = '$date' AND shift_req = '1' ")or die(mysqli_error($link));
+                
+
+
+                
                 $q_shift = mysqli_query($link, "SELECT shift FROM karyawan WHERE npk = '$npk' ")or die(mysqli_error($link));
                 if(mysqli_num_rows($q_reqAbsensi) > 0){
                     $data = mysqli_fetch_assoc($q_reqAbsensi);
@@ -145,6 +124,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     // menggunakan shift dari dokumen
                     $shift = shift_ubah($shift);
                 }
+                
                 
                 $query .= "('$id','$npk','$shift', '$date', '$date','$date','$checkin','$checkout','$ket','$id','$npkUser'),";
                 

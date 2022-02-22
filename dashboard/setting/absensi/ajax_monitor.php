@@ -1,35 +1,111 @@
 <?php
 require_once("../../../config/config.php");
+require_once("../../../config/approval_system.php");
 require "../../../_assets/vendor/autoload.php";
 if(isset($_SESSION['user'])){
     
-    $tanggalAwal = $_GET['start'];
-    $tanggalAkhir = $_GET['end'];
-    $sort = $_GET['sort'];
-    $page = $_GET['index'];
-    $cari = $_GET['cari'];
-    $sqlAbs = mysqli_query($link, "SELECT view_organization.npk AS `npk`,
-        view_organization.nama AS `nama`, 
-        view_organization.dept_account AS `dept_account`,
-        view_organization.shift AS `shift`,
-        absensi.date AS `work_date`,
-        absensi.date_in AS `in_date`,
-        absensi.date_out AS `out_date`,
-        absensi.check_in AS `check_in`,
-        absensi.check_out AS `check_out`,
-        absensi.ket AS `ket`,
-        karyawan.nama AS `requester`
+    
+    
+    // $cari = $_GET['cari'];
+    // $sqlAbs = mysqli_query($link, "SELECT view_organization.npk AS `npk`,
+    //     view_organization.nama AS `nama`, 
+    //     view_organization.dept_account AS `dept_account`,
+    //     view_organization.shift AS `shift`,
+    //     absensi.date AS `work_date`,
+    //     absensi.date_in AS `in_date`,
+    //     absensi.date_out AS `out_date`,
+    //     absensi.check_in AS `check_in`,
+    //     absensi.check_out AS `check_out`,
+    //     absensi.ket AS `ket`,
+    //     karyawan.nama AS `requester`
         
-        FROM view_organization
-        JOIN absensi ON view_organization.npk = absensi.npk 
-        JOIN karyawan ON karyawan.npk = absensi.requester
+    //     FROM view_organization
+    //     JOIN absensi ON view_organization.npk = absensi.npk 
+    //     JOIN karyawan ON karyawan.npk = absensi.requester
         
-        WHERE absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir'")or die(mysqli_error($link));
-        $jml = mysqli_num_rows($sqlAbs);
-        $jml_hal = ceil($jml / $sort);
-        echo $jml;
+    //     WHERE absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir'")or die(mysqli_error($link));
+    //     $jml = mysqli_num_rows($sqlAbs);
+    //     $jml_hal = ceil($jml / $sort);
+    //     echo $jml;
+    $div_filter = $_GET['div'];
+    // echo $div_filter;
+    $dept_filter = $_GET['dept'];
+    // echo $dept_filter;
+    $sect_filter = $_GET['sect'];
+    // echo $sect_filter;
+    $group_filter = $_GET['group'];
+    // echo $group_filter;
+    $deptAcc_filter = $_GET['deptAcc'];
+    // echo $deptAcc_filter;
+    $shift = $_GET['shift'];
+    // echo $shift;
+    $cari = '';
+    
+
+        $_GET['prog'] = '';
+        // $_GET['cari'] = '';
+        $_GET['att_type'] = '';
+        $start = dateToDB($_GET['start']);
+        $end = dateToDB($_GET['end']);
+        // echo $start;
+        // $div_filter = $dept_filter = $sect_filter = $group_filter = $deptAcc_filter = $shift = $cari = '';
+        // echo $shift;
+        $cari = (isset($_GET['cari']))?$_GET['cari']:'';
+        // echo $cari;
+        $level = $level;
+        $npk = $npkUser;
+        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+        $origin_query = "SELECT view_absen_hr.id_absensi,
+            view_absen_hr.npk,
+            view_absen_hr.nama,
+            view_absen_hr.employee_shift,
+            view_absen_hr.grp,
+            view_absen_hr.dept_account,
+            view_absen_hr.work_date,
+            view_absen_hr.check_in,
+            view_absen_hr.check_out,
+            view_absen_hr.CODE
+            FROM view_absen_hr ";
+        $access_org = orgAccess($level);
+        $data_access = generateAccess($link,$level,$npk);
+        $table = partAccess($level, "table");
+        $field_request = partAccess($level, "field_request");
+        $table_field1 = partAccess($level, "table_field1");
+        $table_field2 = partAccess($level, "table_field2");
+        $part = partAccess($level, "part");
+        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        // echo $add_filter;
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter;
+        // echo $query_req_absensi;
 
 
+        
+        $page = (isset($_GET['page']) && $_GET['page'] != 'undefined' )? $_GET['page'] : 1;
+        // echo $page;
+        $limit = 100; 
+        $limit_start = ($page - 1) * $limit;
+        $no = $limit_start + 1;
+        // echo $limit_start;
+        $addOrder = " ORDER BY work_date DESC ";
+        $addLimit = " LIMIT $limit_start, $limit";
+        // $no = 1*$page;
+
+        $sql_jml = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
+        $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
+        $total_records= mysqli_num_rows($sql_jml);
+
+
+        // pagin
+        $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
+        
+        $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+        $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
+        $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
+        
+    
+        
+        
 
     // $cari = (@$_GET['cari'] != '') ? @$_GET['cari'] : "";
     // $index_hal = 2;
@@ -39,29 +115,28 @@ if(isset($_SESSION['user'])){
 
     ?>
     <form method="post" name="proses" action="" id="form_absensi">
-        <?php
-    $total = mysqli_num_rows(mysqli_query($link, "SELECT * FROM absensi WHERE `date` BETWEEN '$tanggalAwal' AND '$tanggalAkhir' LIMIT $sort"))
-    ?>
+      
     <div class="table-responsive">
-        <table class="table table-striped table_org" id="uangmakan" cellspacing="0" width="100%">
+        <table class="text-nowrap table table-striped " id="absensi_hr" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>NPK</th>
                     <th>Nama</th>
                     <th>Shift</th>
+                    <th>Group</th>
                     <th>Dept</th>
-                    <th>Tanggal Kerja</th>
-                    <th>Tanggal Masuk</th>
-                    <th>Tanggal Pulang</th>
+                    <th>Tanggal</th>
+                    <th>Masuk</th>
+                    <th>Pulang</th>
                     <th>In</th>
                     <th>Out</th>
                     <th>Ket</th>
                     <th>Diupdate Oleh</th>
                     <th class="text-right">
-                        <div class="form-check">
+                        <div class="form-check ">
                             <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" id="allcek">
+                                <input class="form-check-input check-all" type="checkbox" >
                             <span class="form-check-sign"></span>
                             </label>
                         </div>
@@ -69,93 +144,100 @@ if(isset($_SESSION['user'])){
                 </tr>
             </thead>
             <tbody>
-            <?php
-            if($cari == ""){
-            $no = 1;
-            $mulai = ($page <= 1)?0:$page - 1;
-            $offset = $mulai * $sort;
-            // page 1 --> start offset 0
-            // page > 1 --> start offset page*sort - 1
-            $sqlAtt = mysqli_query($link, "SELECT view_organization.npk AS `npk`,
-            view_organization.nama AS `nama`, 
-            view_organization.dept_account AS `dept_account`,
-            view_organization.shift AS `shift`,
-            absensi.date AS `work_date`,
-            absensi.date_in AS `in_date`,
-            absensi.date_out AS `out_date`,
-            absensi.check_in AS `check_in`,
-            absensi.check_out AS `check_out`,
-            absensi.ket AS `ket`,
-            karyawan.nama AS `requester`
-            
-            FROM view_organization
-            JOIN absensi ON view_organization.npk = absensi.npk 
-            JOIN karyawan ON karyawan.npk = absensi.requester
-            
-            WHERE absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir' LIMIT $offset,  $sort ")or die(mysqli_error($link));
-            
-            // echo mysqli_num_rows($sqlAtt);
-            if(mysqli_num_rows($sqlAtt) > 0){
-                while($dataAtt = mysqli_fetch_assoc($sqlAtt)){
-                    $check_in = ($dataAtt['check_in'] == "00:00:00")?"-": jam($dataAtt['check_in']);
-                    $check_out = ($dataAtt['check_out'] == "00:00:00")?"-": jam($dataAtt['check_out']);
-            ?>
-            
-                <tr>
-                    <td><?=$no?></td>
-                    <td><?=$dataAtt['npk']?></td>
-                    <td><?=$dataAtt['nama']?></td>
-                    <td><?=$dataAtt['shift']?></td>
-                    <td><?=$dataAtt['dept_account']?></td>
-                    <td><?=hari_singkat($dataAtt['work_date']).", ".DBtoForm($dataAtt['work_date'])?></td>
-                    <td><?=DBtoForm($dataAtt['in_date'])?></td>
-                    <td><?=DBtoForm($dataAtt['out_date'])?></td>
-                    <td><?=$check_in?></td>
-                    <td><?=$check_out?></td>
-                    <td><?=$dataAtt['ket']?></td>
-                    <td><?=$dataAtt['requester']?></td>
-                    
-
-                    <td class="text-right">
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input cek" name="mpchecked[]" type="checkbox" value="<?=$dataAtt['id']?>">
-                            <span class="form-check-sign"></span>
-                            </label>
-                        </div>
-                    </td>
-                </tr>
-            <?php
-                $no++;
+                <?php
+                if(mysqli_num_rows($sql)>0){
+                    while($data = mysqli_fetch_assoc($sql)){
+                        $dept = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc' ")or die(mysqli_error($link));
+                        $area = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
+                        $sql_area = mysqli_fetch_assoc($area);
+                        $sql_dept = mysqli_fetch_assoc($dept);
+                        $updater = mysqli_query($link, "SELECT absensi.date_in AS `date_in` , absensi.date_out AS `date_out` , karyawan.npk AS `npk`, karyawan.nama AS `nama` FROM absensi LEFT JOIN karyawan ON karyawan.npk = absensi.requester WHERE absensi.id = '$data[id_absensi]' ")or die(mysqli_error($link));
+                        $dataUpdater = mysqli_fetch_assoc($updater);
+                        $namaUpdater = (isset($dataUpdater['nama']))?nick($dataUpdater['nama'])."[$npk]":'';
+                        $ci = (isset($data['check_in'])&& $data['check_in'] != '00:00:00')?jam($data['check_in']):"";
+                        $co = (isset($data['check_out'])&& $data['check_out'] != '00:00:00')?jam($data['check_out']):"";
+                        ?>
+                        <tr>
+                            <td><?=$no++?></td>
+                            <td><?=$data['npk']?></td>
+                            <td><?=$data['nama']?></td>
+                            <td><?=$data['employee_shift']?></td>
+                            <td><?=$sql_area['nama_org']?></td>
+                            <td><?=$sql_dept['nama_org']?></td>
+                            <td><?=tgl($data['work_date'])?></td>
+                            <td><?=tgl($dataUpdater['date_in'])?></td>
+                            <td><?=tgl($dataUpdater['date_out'])?></td>
+                            <td><?=$ci?></td>
+                            <td><?=$co?></td>
+                            <td><?=$data['CODE']?></td>
+                            <td><?=$namaUpdater?></td>
+                            <td>
+                                <div class="form-check text-right">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input check"  name="checked[]" value="<?=$data['npk']?>" type="checkbox" data="<?=$no?>">
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }else{
+                    ?>
+                    <tr>
+                        <td colspan="15" class="text-center"><?=noData()?></td>
+                    </tr>
+                    <?php
                 }
-            }else{
-                echo "<td class=\"text-center\" colspan=\"13\">Tidak ditemukan data di database</td>";
-            }
-        }else{
-            echo "pencarian";
-        }
-            ?>
-        </tbody>
+                ?>
+                
+            </tbody>
         
-    </table>
-</div>
+        </table>
+    </div>
+    <div class="box pull-right">
+        <button  class="btn btn-sm btn-danger  deleteall" >
+            <span class="btn-label">
+                <i class="nc-icon nc-simple-remove" ></i>
+            </span>    
+            Delete
+        </button>
+    </div>
+    <div class="row">
+            <div class="col-md-12 pull-rigt">
+                <ul class="pagination ">
+                <?php
+                // echo $page."<br>";
+                // echo $jumlah_page."<br>";
+                // echo $jumlah_number."<br>";
+                // echo $start_number."<br>";
+                // echo $end_number."<br>";
+                if($page == 1){
+                    echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
+                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
+                } else {
+                    $link_prev = ($page > 1)? $page - 1 : 1;
+                    echo '<li class="page-item halaman" id="1"><a class="page-link" >First</a></li>';
+                    echo '<li class="page-item halaman" id="'.$link_prev.'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
+                }
 
-<label for="" class="text-danger">
-<?=$page?> / 
-    <span id="hal"><?=$jml_hal?></span>
-</label>
+                for($i = $start_number; $i <= $end_number; $i++){
+                    $link_active = ($page == $i)? ' active page_active' : '';
+                    echo '<li class="page-item halaman '.$link_active.'" id="'.$i.'"><a class="page-link" >'.$i.'</a></li>';
+                }
 
-<hr>
-<div class="box pull-right">
-    <button  class="btn btn-danger  deleteall" >
-        <span class="btn-label">
-            <i class="nc-icon nc-simple-remove" ></i>
-        </span>    
-        Delete
-    </button>
-
-</div>
-</form>
+                if($page == $jumlah_page){
+                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                    echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
+                } else {
+                    $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
+                    echo '<li class="page-item halaman" id="'.$link_next.'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                    echo '<li class="page-item halaman" id="'.$jumlah_page.'"><a class="page-link" >Last</a></li>';
+                }
+                ?>
+                </ul>
+            </div>
+        </div>
 
 <?php
     

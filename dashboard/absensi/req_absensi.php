@@ -635,7 +635,7 @@ if(isset($_SESSION['user'])){
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
-                console.log(cari);
+                // console.log(cari);
                 // $('#monitor').load("ajax/index.php?id="+id+"&start="+start+"&end="+end);
                
                 $.ajax({

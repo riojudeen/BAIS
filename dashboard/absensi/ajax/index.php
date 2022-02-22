@@ -819,7 +819,7 @@ if(isset($_GET['id'])){
                 </form>
                 
                 <div class="table-responsive text-nowrap" >
-                    <table class="table table-striped">
+                    <table class="table table-striped" width="100%">
                         <thead>
                             <tr>
                                 <th>#</th>

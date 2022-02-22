@@ -4,26 +4,17 @@ require_once("../../config/config.php");
 if(isset($_SESSION['user'])){
     $halaman = "Portal Data Absensi";
     include_once("../header.php");
-    // mysqli_query($link, "DELETE FROM absensi ");
-    // mysqli_query($link, "DELETE FROM absensi");
-//filtering
-    $_SESSION['thn'] = (isset($_POST['tahun']))? $_POST['tahun'] : date('Y');
-    $_SESSION['startM'] = (isset($_POST['start']))? $_POST['start'] : date('m');
-    $_SESSION['endM'] = (isset($_POST['end']))? $_POST['end'] : date('m');
-    $y = $_SESSION['thn'];
-    // echo $y."<br>";
-    $sM = $_SESSION['startM'];
-    $eM = $_SESSION['endM'];
-    // mysqli_query($link, "UPDATE working_days SET ket = 'DOP' WHERE ket = 'DOT' ");
-    // echo $_SESSION['startM']."<br >";
-    // echo $_SESSION['endM']."<br >";
-    $tahun = $_SESSION['thn'];
+    
+    
+    $_SESSION['start'] = (isset($_POST['start']))? dateToDB($_POST['start']) : date('Y-m-1');
+    $_SESSION['end'] = (isset($_POST['end']))? dateToDB($_POST['end']) : date('Y-m-d');
+    $sM = $_SESSION['start'];
+    $eM = $_SESSION['end'];
+    // echo $sM."<br>";
 
-    $tanggalAwal = date('Y-m-d', strtotime($y.'-'.$sM.'-01'));
-    // echo "tanggal awal : ".$tanggalAwal."<br>";
-    $tanggalAkhir = date('Y-m-t', strtotime($y.'-'.$eM.'-01'));
-    // echo "tanggal akhir : ". $tanggalAkhir."<br>";
 
+    $tanggalAwal = date('Y-m-d', strtotime($sM));
+    $tanggalAkhir = date('Y-m-t', strtotime($eM));
 
     $count_awal = date_create($tanggalAwal);
     $count_akhir = date_create($tanggalAkhir);
@@ -36,10 +27,8 @@ if(isset($_SESSION['user'])){
     $awal = $blnAwal = strtotime($tanggalAwal); // merubah tanggal awal menjadi format timestamp agar bisa dijumlahkan;
     $akhir =  strtotime($tanggalAkhir); // merubah tanggal akhir menjadi format timestamp agar bisa dijumlahkan;
 
-    $bln = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","Sepember","Oktober","November","Desember");
-    $totalBln = count($bln);
-    echo $tanggalAwal;
-    echo $tanggalAkhir;
+    
+    $today = date('Y-m-d');
 
 ?>
 <!-- halaman utama -->
@@ -59,47 +48,15 @@ if(isset($_SESSION['user'])){
                             </div>
                         </div>
                         <!-- <input  type="text" name="tahun" class=" form-control datepicker" data-date-format="MM-YYYY"> -->
-                        <select type="date" name="start" class="form-control bg-transparent" >
-                            <option Disabled>Pilih Bulan</option>
-                            <?php
-                            
-                            $i =0;
-                            foreach($bln AS $namaBln){
-                                $i++;
-                                $selectBln = ($i == $sM)?"selected":"";
-                                
-                                echo "<option  $selectBln value=\"$i\">$namaBln</option>";
-                            }
-                            ?>
-                        </select>
+                        <input type="text" id="start_date" value="<?=DBtoForm($sM)?>" name="start" data-date-format="DD/MM/YYYY" class="form-control bg-transparent datepicker" >
+                        
                         <div class="input-group-prepend ml-0 bg-transparent">
                             <div class="input-group-text px-2 bg-transparent">
                                 <i>to</i>
                             </div>
                         </div>
-                        <select type="date" name="end" class="form-control bg-transparent" >
-                            <option Disabled>Pilih Bulan</option>
-                            <?php
-                            
-                            $i =0;
-                            foreach($bln AS $namaBln){
-                                $i++;
-                                $selectBln = ($i == $eM)?"selected":"";
-                                
-                                echo "<option  $selectBln value=\"$i\">$namaBln</option>";
-                            }
-                            ?>
-                        </select>
-                        <select type="text" name="tahun" class=" form-control bg-transparent">
-                        <option Disabled>Tahun</option>
-                        <?php
-                        $thnPertama = 2021;
-                        for($i=date("Y"); $i>=$thnPertama; $i--){
-                            $selectThn = ($i == $tahun)?"selected":"";
-                            echo "<option $selectThn value=\"$i\">$i</option>";
-                        }
-                        ?>
-                        </select>
+                        <input type="text" name="end" id="end_date"  value="<?=DBtoForm($eM)?>" data-date-format="DD/MM/YYYY" class="form-control bg-transparent datepicker" >
+                        
                         <input type="submit" name="sort" class="btn-icon btn btn-round p-0 ml-2 my-auto " value="go" >
                         
                     </div>
@@ -150,13 +107,15 @@ if(isset($_SESSION['user'])){
                                 <div class="col-md-4  pr-1 ">
                                     <div class="form-group text-left">
                                         <label for="">Tanggal Mulai</label>
-                                        <input name="start" type="text" id="mulai" data-date-format="DD/MM/YYYY" class="form-control datepicker" required>
+                                        <input name="start" type="text" id="mulai" value="<?=DBtoForm($tanggalAwal)?>" data-date-format="DD/MM/YYYY" class="form-control datepicker" required>
+                                        
                                     </div>
                                 </div>
                                 <div class="col-md-4 pl-1">
                                     <div class="form-group text-left">
                                         <label for="">Tanggal Selesai</label>
-                                        <input name="end" type="text" id="selesai" data-date-format="DD/MM/YYYY" class="form-control datepicker" required>
+                                        <input name="end" type="text" id="selesai" value="<?=DBtoForm($today)?>"  data-date-format="DD/MM/YYYY" class="form-control datepicker" required>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -194,8 +153,7 @@ if(isset($_SESSION['user'])){
                                         <h6 class="title col-md-6">Upload</h6>
                                         <div class="col-md-12" id="process_upload" style="display:block;">
                                             <div class="progress" style="height: 20px;">
-                                                <div class="progress-bar bg-success text-right progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 25%"  >
-                                                
+                                                <div class="progress-bar bg-success text-info progress-bar-striped active persen " role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"  >
                                                 </div>
                                                 
                                             </div>
@@ -203,64 +161,34 @@ if(isset($_SESSION['user'])){
 
                                     </div>
                                     <div class="row">
-                                        <p class="category col-md-6 text-left" id="total_upload">Total 2Mb dari 200mb</p>
-                                        <p class="category col-md-6 text-right" id="total_upload">100%</p>
+                                        <p class="category col-md-6 text-left" id="total"></p>
+                                        <p class="category col-md-6 text-right" id="success_message"></p>
                                     </div>
-                                    <div class="row">
-                                        <h6 class="title col-md-6">Upload</h6>
-                                        <div class="col-md-12" id="process_upload" style="display:block;">
-                                            <div class="progress" style="height: 20px;">
-                                                <div class="progress-bar bg-warning text-right progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 25%"  >
-                                                
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <p class="category col-md-6 text-left" id="total_upload">Total 2Mb dari 200mb</p>
-                                        <p class="category col-md-6 text-right" id="total_upload">100%</p>
-                                    </div>
-                                    <div class="row">
-
-                                        <div class="col-md-12">
-                                            <table class=" table table-xs table-bordered " width="500px">
-                                                <tbody class="py-0">
-                                                    <tr class="py-0">
-                                                        <th colspan="3" scope="row">Total Hari</th>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colspan="3" scope="row">Total Baris Data</th>
-                                                        <td>0</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">Total Karyawan</th>
-                                                        <td>0</td>
-                                                        <th scope="row">Unregistered</th>
-                                                        <td>0</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class='percent_upload' id='percent_upload'></div>
-                                    <span id="success_message_upload"></span>
-                                    <div class="form-group" id="process" style="display:none;">
-                                        <div class="progress" style="height: 50px;">
-                                            <div class="progress-bar persen text-right progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" >
-                                            
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                    <p id="total"></p>
-                                    <div class='percent' id='percent'></div>
-                                    <span id="success_message"></span>
+                                    
+                                    
                                     <form method="post" name="proses" action="" id="form_absensi">
                                         <div class="data_preview " >
-                                            
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class=" table table-xs table-bordered " width="500px">
+                                                        <tbody class="py-0">
+                                                            <tr class="py-0">
+                                                                <th colspan="3" scope="row">Total Hari</th>
+                                                                <td>0</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="3" scope="row">Total Baris Data</th>
+                                                                <td>0</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="3" scope="row">Total Karyawan</th>
+                                                                <td>0</td>
+                                                                
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -280,9 +208,7 @@ if(isset($_SESSION['user'])){
 			<div class="card-header">
 				<h5 class="title pull-left">Database Absensi</h5>
                 <div class="box pull-right">
-                    <a href="../file/Format_absensi_upload.xlsx" class="btn btn-warning btn-icon btn-round" data-toggle="tooltip" data-placement="bottom" title="Download Format">
-                        <i class="nc-icon nc-paper"></i>
-                    </a>
+                    
                     <button class="btn btn-sm btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         <span class="btn-label">
                             <i class="nc-icon nc-cloud-download-93"></i>
@@ -306,9 +232,63 @@ if(isset($_SESSION['user'])){
                 </div>
 			</div>
 			<div class="card-body">
-                <div class="row pagin">
-                    
-                    
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group no-border">
+                            <select class="form-control" name="div" id="s_div">
+                                <option value="">Pilih Divisi</option>
+                            </select>
+                            <select class="form-control" name="dept" id="s_dept">
+                                <option value="">Pilih Department</option>
+                                <option value="" disabled>Pilih Division Terlebih Dahulu</option>
+                            </select>
+                            <select class="form-control" name="section" id="s_section">
+                                <option value="">Pilih Section</option>
+                                <option value="" disabled>Pilih Department Terlebih Dahulu</option>
+                            </select>
+                            <select class="form-control" name="groupfrm" id="s_goupfrm">
+                                <option value="">Pilih Group</option>
+                                <option value="" disabled>Pilih Section Terlebih Dahulu</option>
+                            </select>
+                            <select class="form-control" name="shift" id="s_shift">
+                                <option value="">Pilih Shift</option>
+                                <?php
+                                    $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
+                                    if(mysqli_num_rows($query_shift)>0){
+                                        while($data = mysqli_fetch_assoc($query_shift)){
+                                            ?>
+                                            <option value="<?=$data['id_shift']?>"><?=$data['shift']?></option>
+                                            <?php
+                                        }
+                                    }else{
+                                        ?>
+                                        <option value="">Belum Ada Data Shift</option>
+                                        <?php
+                                    }
+                                ?>
+                            </select>
+                            <select class="form-control" name="deptacc" id="s_deptAcc">
+                                <option value="">Pilih Department Administratif</option>
+                                <?php
+                                    $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
+                                    if(mysqli_num_rows($q_div) > 0){
+                                        while($data = mysqli_fetch_assoc($q_div)){
+                                        ?>
+                                        <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
+                                        <?php
+                                        }
+                                    }else{
+                                        ?>
+                                        <option value="">Belum Ada Data Department Administratif</option>
+                                        <?php
+                                    }
+                                ?>
+                                </select>
+                            <div class="input-group-append ">
+                                <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -320,10 +300,6 @@ if(isset($_SESSION['user'])){
             <div class="card-footer">
                 
             </div>
-                
-                
-            
-	
 		
 		</div>
 	</div>
@@ -402,7 +378,7 @@ if(isset($_SESSION['user'])){
                     
                     // console.log(xhr);
                     ajax.upload.addEventListener("progress", uploadHandler, false);
-                    ajax.addEventListener("progress", progressHandler, false);
+                    ajax.addEventListener("progress", progressHandler, true);
                     ajax.addEventListener("load", completeHandler, false);
                     ajax.addEventListener("error", errorHandler, false);
                     ajax.addEventListener("abort", abortHandler, false);
@@ -415,33 +391,7 @@ if(isset($_SESSION['user'])){
                             const size = new TextEncoder().encode(JSON.stringify(ajax.responseText)).length;
                             console.log(size);
                             const kiloBytes = size / 1024;
-                            console.log(kiloBytes);
-                            var total = data.result;
-                            console.log(data.results[loaded])
-                            for (var loaded = 0; loaded < total; loaded++){
-                                var obj = data.results[loaded];
-                                console.log(obj);
-                            }
-                            // var percent_complete = (loaded / total)*100;
-                            // percent_complete = Math.floor(percent_complete);
-                            // var duration = ( new Date().getTime() - startTime ) / 1000;
-                            // var bps = loaded / duration;
-                            // var kbps = bps / 1024;
-                            // kbps = Math.floor(kbps);
-                            
-                            // var time = (total - loaded) / bps;
-                            // var seconds = time % 60;
-                            // var minutes = time / 60;
-                            
-                            // seconds = Math.floor(seconds);
-                            // minutes = Math.floor(minutes);
-                    
-                            // progress.setAttribute("aria-valuemax", total);
-                            // progress.setAttribute("aria-valuenow", loaded);
-                            // progress.style.width = percent_complete + "%";
-                            // progress.innerHTML = percent_complete + "%";
-                    
-                            // downloadProgressText.innerHTML = kbps + " KB / s" + "<br>" + minutes + " min " + seconds + " sec remaining";
+                            document.getElementById("total").innerHTML = "Telah terupload "+bytesToSize(event.loaded);
                         }
                     };
                         
@@ -456,38 +406,37 @@ if(isset($_SESSION['user'])){
                     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
                 }
                 function progressHandler(event){
-                    if (event.lengthComputable) {
+                    if(event.lengthComputable) {
                         var percentComplete = event.loaded / event.total;
                         // Do something with download progress
                         console.log(percentComplete);
                     }
-                    // hitung prosentase
-                    $('#process').css("display","block");
                     var percent = (event.loaded / event.total) * 100;
                     $('.progress-bar').css('width', '0%');
                     $('.progress-bar').css('width', percent + '%')
-                    // menampilkan prosentase ke komponen id 'status'
-                    document.getElementById("success_message").innerHTML = Math.round(percent)+"% telah terupload";
-                    // menampilkan file size yg tlh terupload dan totalnya ke komponen id 'total'
-                    document.getElementById("total").innerHTML = "Telah terupload "+bytesToSize(event.loaded)+" bytes dari "+event.total;
-                    console.log(event.length);
+                    $('.progress-bar').removeClass('bg-info');
+                    $('.progress-bar').addClass('bg-success');
+                    $('#success_message').text('sedang mendownload . . .');
+                    
+                    document.getElementById("total").innerHTML = "Download Data "+bytesToSize(event.loaded);
+                    // console.log(event.length);
                     
                 }
                 function uploadHandler(event){
                     // document.getElementById("total").innerHTML = "Telah terupload "+event.loaded+" bytes dari "+event.total;
                     if (event.lengthComputable) {
                         var percent = (event.loaded / event.total) * 100;
-                        console.log(event.total)
-                        $('.progress-bar').css('width', percentage + '%');
-                        $('.persen').text(percentage + '%');
-                        if(percentage > 100)
-                        {
-                            clearInterval(timer);
+                        console.log(percent)
+                        $('.progress-bar').css('width', percent + '%');
+                        $('.persen').text(percent + '%');
+                        document.getElementById("success_message").innerHTML = Math.round(percent)+"% telah terupload";
+                        if(percent > 100){
+                            // clearInterval(timer);
+                            
                             // $('#upload_data')[0].reset();
                             $('#process').css('display', 'none');
                             $('.progress-bar').css('width', '0%');
                             $('.data_load').attr('disabled', false);
-                            $('#success_message').html("<div class='alert alert-success'>Data Imported</div>");
                             setTimeout(function(){
                             $('#success_message').html('');
                             }, 5000);
@@ -496,7 +445,11 @@ if(isset($_SESSION['user'])){
                 }
                 function completeHandler(event){
                     $('.data_preview').html(event.target.responseText);
-                    $('#process').css("display","none");
+                    $('.progress-bar').css('width','100%'); 
+                    $('#total').text(''); 
+                    $('#success_message').text('data telah siap 100%');
+                    $('.progress-bar').removeClass('bg-success');
+                    $('.progress-bar').addClass('bg-info');
                 }
                 function errorHandler(event){
                     $('#success_message').html("Upload Failed");
@@ -505,25 +458,6 @@ if(isset($_SESSION['user'])){
                     $('#success_message').html("Upload Aborted");
                 }
                 
-                // alert(form_data);                             
-                
-                // function progress_bar_process(percentage, timer)
-                // {
-                //     $('.progress-bar').css('width', percentage + '%');
-                //     $('.persen').text(percentage + '%');
-                //     if(percentage > 100)
-                //     {
-                //         clearInterval(timer);
-                //         // $('#upload_data')[0].reset();
-                //         $('#process').css('display', 'none');
-                //         $('.progress-bar').css('width', '0%');
-                //         $('.data_load').attr('disabled', false);
-                //         $('#success_message').html("<div class='alert alert-success'>Data Imported</div>");
-                //         setTimeout(function(){
-                //         $('#success_message').html('');
-                //         }, 5000);
-                //     }
-                // }
             });
             $('.reset').click(function(){
                 $('#upload_data')[0].reset();
@@ -534,7 +468,118 @@ if(isset($_SESSION['user'])){
     </script>
     <script>
         $(document).ready(function(){
-            $('.pagin').load("absensi/pagin.php?index=1&start=<?=$tanggalAwal?>&end=<?=$tanggalAkhir?>&sort=1&cari=1");
+            function loadData(page){
+                var div_id = $('#s_div').val();
+                var dept_id = $('#s_dept').val();
+                var section_id = $('#s_section').val();
+                var group_id = $('#s_goupfrm').val();
+                var deptAcc_id = $('#s_deptAcc').val();
+                var shift = $('#s_shift').val();
+
+                var start = $('#start_date').val();
+                var end = $('#end_date').val();
+                var dept = $('#deptAcc').val();
+                $.ajax({
+                    url:"absensi/ajax_monitor.php",
+                    method:"GET",
+                    data:{page:page,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
+                    success:function(data){
+                        $('.data-monitor').fadeOut('fast', function(){
+                            $(this).html(data).fadeIn('fast');
+                        });
+                        
+                    }
+                })
+            }
+            loadData()
+            $(document).on('click', '.halaman', function(){
+                var page = $(this).attr("id");
+                loadData(page)
+                // console.log(hal)
+            });
+            $(document).on('click','.check-all', function(){
+                if(this.checked){
+                    $('.check').each(function() {
+                        this.checked = true;
+                    })
+                } else {
+                    $('.check').each(function() {
+                        this.checked = false;
+                    })
+                }
+            });
+            $(document).on('click', '.check', function() {
+                if($('.check:checked').length == $('.check').length){
+                    $('.check-all').prop('checked', true)
+                } else {
+                    $('.check-all').prop('checked', false)
+                }
+            })
+            // getSumary()
+            function getDiv(){
+                var data = $('#s_div').val()
+                $.ajax({
+                    url: 'ajax/get_div.php',
+                    method: 'GET',
+                    data: {data:data},		
+                    success:function(data){
+                        $('#s_div').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        
+                    }
+                });
+            }
+            function getDept(){
+                var data = $('#s_div').val()
+                $.ajax({
+                    url: 'ajax/get_dept.php',	
+                    method: 'GET',
+                    data: {data:data},
+                    success:function(data){
+                        $('#s_dept').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        // console.log(data)
+                    }
+                });
+            }
+            function getSect(){
+                var data = $('#s_dept').val()
+                $.ajax({
+                    url: 'ajax/get_sect.php',	
+                    method: 'GET',
+                    data: {data:data},		
+                    success:function(data){
+                        $('#s_section').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        
+                    }
+                });
+            }
+            function getGroup(){
+                var data = $('#s_section').val()
+                $.ajax({
+                    url: 'ajax/get_group.php',
+                    method: 'GET',
+                    data: {data:data},
+                    success:function(data){
+                        $('#s_goupfrm').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                });
+            }
+            getDiv()
+            $('#s_div').on('change', function(){
+                getDept()
+                getSect()
+                getGroup()
+            })
+            $('#s_dept').on('change', function(){
+                getSect()
+                getGroup()
+            })
+            $('#s_section').on('change', function(){
+                getGroup()
+            })
+            $('#filterGo').on('click', function(){
+                loadData();
+            })
+           
         })
     </script>
     <?php
