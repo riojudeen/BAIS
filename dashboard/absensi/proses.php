@@ -322,7 +322,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
            }
        }
     }else if(isset($_POST['req_SUPEM'])){
-        echo "SUPEM";
+        // echo "SUPEM";
         count($_POST['sd']);
         // echo "SUKET";
         $shift_req = 0;
@@ -335,7 +335,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
 
         $npk = $_POST['npk'];
         $shift = $_POST['shift'][0];
-        $type = $_POST['tipe'];
+        $type = $_POST['code'];
         $alasan = $_POST['note'];
         $i = 0;
         $reqStats = 'a';
@@ -358,16 +358,16 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $i++;
         }
         $query = substr($query, 0, -1);
-        echo $query;
-        // $sql = mysqli_query($link, $query);
-        // if($sql){
-        //     $_SESSION['info'] = 'Disimpan';
-        //     echo "<script>document.location.href='req_absensi.php'</script>";
-        // }else{
-        //     $_SESSION['info'] = 'Gagal Disimpan';
-        //     $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
-        //     echo "<script>document.location.href='req_absensi.php'</script>";
-        // }
+        // echo $query;
+        $sql = mysqli_query($link, $query);
+        if($sql){
+            $_SESSION['info'] = 'Disimpan';
+            echo "<script>document.location.href='req_absensi.php'</script>";
+        }else{
+            $_SESSION['info'] = 'Gagal Disimpan';
+            $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
+            echo "<script>document.location.href='req_absensi.php'</script>";
+        }
 
 
     }else if(isset($_POST['req_SUKET'])){
@@ -382,7 +382,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
 
         $npk = $_POST['npk'];
         $shift = $_POST['shift'][0];
-        $type = $_POST['tipe'];
+        $type = $_POST['code'];
         $alasan = $_POST['note'];
         $i = 0;
         $reqStats = 'a';

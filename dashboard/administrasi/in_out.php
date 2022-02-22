@@ -63,200 +63,245 @@ if(isset($_SESSION['user'])){
     </div>
     <div class="col-md-12 ">
         <div class="owl-carousel">
+        <?php
+            $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
+            $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
+            $s_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
+            if(mysqli_num_rows($s_div)>0){
+                while($div=mysqli_fetch_assoc($s_div)){
+                    $q_dept = $q_org." WHERE id_parent = '$div[id]' AND part = 'dept'";
+                    $s_dept = mysqli_query($link, $q_dept )or die(mysqli_error($link));
+                    if(mysqli_num_rows($s_dept)>0){
+                        while($dept = mysqli_fetch_assoc($s_dept)){
+                            $q_sect = $q_org." WHERE id_parent = '$dept[id]' AND part = 'section'";
+                            $s_sect = mysqli_query($link, $q_sect )or die(mysqli_error($link));
+                            if(mysqli_num_rows($s_sect)>0){
+                                while($sect = mysqli_fetch_assoc($s_sect)){
+                                    $q_grp = $q_org." WHERE id_parent = '$sect[id]' AND part = 'group'";
+                                    $s_grp = mysqli_query($link, $q_grp )or die(mysqli_error($link));
+                                    
+                                    if(mysqli_num_rows($s_grp)>0){
+                                        $group_name = array();
+                                        $group_mp = array();
+                                        $i=0;
+                                        while($grp = mysqli_fetch_assoc($s_grp)){
+                                            $org_query = mysqli_query($link, "SELECT npk FROM org WHERE grp = '$grp[id]' ")or die(mysqli_error($link));
+                                            $group_name[$i] = cutName($grp['nama_org']);
+                                            $group_mp[$i] = mysqli_num_rows($org_query);
+                                            $i++
+                                            ?>
+                                            <!-- group -->
+                                            <div class="card card-plain rounded-lg border ">
+                                                <div class="card-header">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
+                                                                <div class="card-body ">
+                                                                    <div class="row">
+                                                                        <div class="col-5 col-md-4">
+                                                                            <div class="icon-big text-center icon-warning">
+                                                                                <i class="fa fa-briefcase text-success"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-7 col-md-8 ">
+                                                                            <div class="numbers pr-2">
+                                                                                <p class="card-category">Masuk</p>
+                                                                                <p class="card-title">50 MP<p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
+                                                                <div class="card-body ">
+                                                                    <div class="row">
+                                                                        <div class="col-5 col-md-4">
+                                                                            <div class="icon-big text-center icon-warning">
+                                                                                <i class="fa fa-bell-slash text-danger"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-7 col-md-8 ">
+                                                                            <div class="numbers pr-2">
+                                                                                <p class="card-category">TA Keterangan</p>
+                                                                                <p class="card-title">50 MP<p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
+                                                                <div class="card-body ">
+                                                                    <div class="row">
+                                                                        <div class="col-5 col-md-4">
+                                                                            <div class="icon-big text-center icon-warning">
+                                                                                <i class=" fas fa-suitcase-rolling text-info"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-7 col-md-8 ">
+                                                                            <div class="numbers pr-2">
+                                                                                <p class="card-category">Ijin / Sakit</p>
+                                                                                <p class="card-title">50 MP<p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
+                                                                <div class="card-body ">
+                                                                    <div class="row">
+                                                                        <div class="col-5 col-md-4">
+                                                                            <div class="icon-big text-center icon-warning">
+                                                                                <i class="nc-icon nc-user-run text-warning"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-7 col-md-8 ">
+                                                                            <div class="numbers pr-2">
+                                                                                <p class="card-category">Terlambat</p>
+                                                                                <p class="card-title">50 MP<p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                <div class="card-footer">
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr class="m-0">
+                                                
+                                                <div class="card-body ">
+                                                    <div class="col-md-12">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                            <h5 class="text-uppercase title"><?=$grp['nama_org']?></h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <div class="table-full-width">
+                                                                    <table class="table-sm" width="100%">
+                                                                        <tbody>
+                                                                        <?php
+                                                                        $q_team = "SELECT org.npk AS `npk`, karyawan.nama AS `nama`, org.grp AS `grp`, org.post AS `pos` FROM org LEFT JOIN pos_leader ON pos_leader.id_post 
+                                                                        LEFT JOIN karyawan ON karyawan.npk = org.npk 
+                                                                        WHERE org.grp = '$grp[id]' GROUP BY org.post";
+                                                                        $q_team_mp = "SELECT org.npk AS `npk`, karyawan.nama AS `nama`, org.grp AS `grp`, org.post AS `pos` FROM org LEFT JOIN pos_leader ON pos_leader.id_post 
+                                                                        LEFT JOIN karyawan ON karyawan.npk = org.npk 
+                                                                        WHERE org.grp = '$grp[id]' ";
+                                                                        $q_tm = "SELECT org.npk AS `npk`, karyawan.nama AS `nama` FROM org LEFT JOIN karyawan ON karyawan.npk = org.npk ";
+                                                                        $s_team = mysqli_query($link, $q_team)or die(mysqli_error($link));
+                                                                        if(mysqli_num_rows($s_team)>0){
+                                                                            
+                                                                            while($team = mysqli_fetch_assoc($s_team)){
+                                                                                $team_name = ($team['pos'] == '')?'Tidak Teregister':$team['pos'];
+                                                                                ?>
+                                                                                <tr>
+                                                                                    <td colspan="20"><?=$team_name?></td>
+                                                                                </tr>
+                                                                                
+                                                                                <?php
+                                                                                ?>
+                                                                                
 
-            <div class="card card-plain rounded-lg border ">
-                <div class="card-header">
-                    <h5 class="">Under Body</h5>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
-                                <div class="card-body ">
-                                    <div class="row">
-                                        <div class="col-5 col-md-4">
-                                            <div class="icon-big text-center icon-warning">
-                                                 <i class="fa fa-briefcase text-success"></i>
+                                                                                <tr>
+                                                                                <?php
+                                                                                $tm = $q_tm." WHERE org.post = '$team[pos]' ";
+                                                                                $s_tm = mysqli_query($link, $tm)or die(mysqli_error($link));
+                                                                                if(mysqli_num_rows($s_tm)>0){
+                                                                                    echo mysqli_num_rows($s_tm);
+                                                                                    ?>
+                                                                                    
+                                                                                    <?php
+                                                                                    $no = 1;
+                                                                                    while($data = mysqli_fetch_assoc($s_tm)){
+                                                                                        ?>
+                                                                                        <td><?=$data['nama']?></td>
+                                                                                        <?php
+                                                                                    }
+                                                                                }else{
+                                                                                    // echo "tidak ada data";
+                                                                                    ?>
+                                                                                    <td><?=$data['nama']?></td>
+                                                                                    <?php
+                                                                                }
+                                                                                
+                                                                                ?>
+
+                                                                                <?php
+                                                                            }
+                                                                        }
+                                                                    ?> 
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>   
+                                                
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-7 col-md-8 ">
-                                            <div class="numbers pr-2">
-                                                <p class="card-category">Masuk</p>
-                                                <p class="card-title">50 MP<p>
-                                            </div>
-                                        </div>
-                                    </div>
+
+
+
+                                            <?php
+                                        }
+                                        $data_group = '';
+                                        foreach($group_name AS $group){
+                                            $data_group .= "\"$group\",";
+                                        }
+                                        $total = '';
+                                        foreach($group_mp AS $tot_data){
+                                            $total .= "$tot_data,";
+                                        }
+                                        
+
+                                    }
+                                    $data = substr($data_group, 0, -1);
+                                    $data_jml = substr($total, 0, -1);
                                     
-                                </div>
-                                <div class="card-footer">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
-                                <div class="card-body ">
-                                    <div class="row">
-                                        <div class="col-5 col-md-4">
-                                            <div class="icon-big text-center icon-warning">
-                                                 <i class="fa fa-bell-slash text-danger"></i>
-                                            </div>
-                                        </div>
-                                        <div class="col-7 col-md-8 ">
-                                            <div class="numbers pr-2">
-                                                <p class="card-category">TA Keterangan</p>
-                                                <p class="card-title">50 MP<p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="card-footer">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
-                                <div class="card-body ">
-                                    <div class="row">
-                                        <div class="col-5 col-md-4">
-                                            <div class="icon-big text-center icon-warning">
-                                                 <i class=" fas fa-suitcase-rolling text-info"></i>
-                                            </div>
-                                        </div>
-                                        <div class="col-7 col-md-8 ">
-                                            <div class="numbers pr-2">
-                                                <p class="card-category">Ijin / Sakit</p>
-                                                <p class="card-title">50 MP<p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="card-footer">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card card-stats " style="border: 1px solid rgba(184, 223, 254)">
-                                <div class="card-body ">
-                                    <div class="row">
-                                        <div class="col-5 col-md-4">
-                                            <div class="icon-big text-center icon-warning">
-                                                 <i class="nc-icon nc-user-run text-warning"></i>
-                                            </div>
-                                        </div>
-                                        <div class="col-7 col-md-8 ">
-                                            <div class="numbers pr-2">
-                                                <p class="card-category">Terlambat</p>
-                                                <p class="card-title">50 MP<p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                <div class="card-footer">
-                                    <div class="progress">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <!-- <a href="in_out.php" class="stretched-link "></a> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body table-striped table-full-width">
-                    <table class="table table-sm text-truncate text-center">
-                        <thead>
-                            <th >Foreman</th>
-                            <th >Team Leader</th>
-                            <th colspan="10">Team Member</th>
-                        </thead>
-                        <tbody >
-                            <tr class="border">
-                                <td rowspan="20" style="max-width:50px" class=" text-truncate table-success align-top">Jepri Dhani Pratama</td>
-                                <td rowspan="3" style="max-width:50px" class=" text-truncate table-success align-top ">Muhammad</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Juju</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Sulaiman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Jajang</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Setiawan</td>
-                                <td style="max-width:50px" class=" text-truncate table-danger ">Dedy</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Bambang</td>
-                                <td style="max-width:50px" class=" text-truncate table-danger ">Yudhoyono</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Yudhoyono</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Raffi</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">BlackPink</td>
-                            </tr>
-                            <tr>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Andri</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Darwanto</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">dafit</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Setiawan</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Dedy</td>
-                                <td style="max-width:50px" class=" text-truncate table-info ">Sudarman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Yudhoyono</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Yudhoyono</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Subagja</td>
-                            </tr>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Sudarman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">dafit</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Darwanto</td>
-                                <td style="max-width:50px" class=" text-truncate table-warning ">Andri</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Subagja</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosmiana</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Jokowi</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Megawati</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Soeharto</td>
-                            </tr>
-                                <td rowspan="1" style="max-width:50px" class=" text-truncate table-success align-top ">Muhammad</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Ranger</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">dafit</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Sudarman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Megawati</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosmiana</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Subagja</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Darwanto</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Soeharto</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Jokowi</td>
-                            </tr>
-                            </tr>
-                                <td rowspan="2" style="max-width:50px" class=" text-truncate table-success align-top ">Muhammad</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Subagja</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Ranger</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">dafit</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Sudarman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Megawati</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosmiana</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Rosman</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Jokowi</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Darwanto</td>
-                                <td style="max-width:50px" class=" text-truncate table-success ">Soeharto</td>
-                            </tr>
-                            </tr>
-                                
-                            <td style="max-width:50px" class=" text-truncate table-success ">Darwanto</td>
-                            <td style="max-width:50px" class=" text-truncate table-success ">Megawati</td>
-                            <td style="max-width:50px" class=" text-truncate table-success ">dafit</td>
-                            <td style="max-width:50px" class=" text-truncate table-success ">Sudarman</td>
-                            <td style="max-width:50px" class=" text-truncate table-success ">Soeharto</td>
-                            <td style="max-width:50px" class=" text-truncate table-success ">Ranger</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            ?>
+            
             <div class="card card-plain rounded-lg border ">
                 <div class="card-header">
                     <h5 class="">Under Body</h5>
@@ -298,7 +343,7 @@ if(isset($_SESSION['user'])){
                                         </div>
                                         <div class="col-7 col-md-8 ">
                                             <div class="numbers pr-2">
-                                                <p class="card-category">TA Keterangan</p>
+                                                <p class="card-category">TA Ket</p>
                                                 <p class="card-title">50 MP<p>
                                             </div>
                                         </div>

@@ -454,15 +454,19 @@ if(isset($_SESSION['user'])){
                         $type = $att_type['name'];
                         ?>
                         <div class="form-group ">
-                            <input readonly name="tipe[]" type="text" value="<?=$type?>" class="text-uppercase form-control">
+                            <input readonly name="jenis" type="text" value="<?=$type?>" class="text-uppercase form-control">
                         </div>
                         <?php
                         $query_attendance_code = mysqli_query($link, "SELECT * FROM attendance_code WHERE `kode` = '$_GET[att_code]' ")or die(mysqli_error($link));
                         $att_code = mysqli_fetch_assoc($query_attendance_code)or die(mysqli_error($link));
-                        $code = $att_code['keterangan'];
+                        $code = $att_code['kode'];
+                        $ket = $att_code['keterangan'];
                         ?>
                         <div class="form-group ">
-                            <input readonly name="tipe" type="text" value="<?=$code?>" class="text-uppercase form-control">
+                            <input name="code" type="hidden" value="<?=$code?>" class="text-uppercase form-control">
+                        </div>
+                        <div class="form-group ">
+                            <input readonly name="ket" type="text" value="<?=$ket?>" class="text-uppercase form-control">
                         </div>
                         
                         <label>Alasan / keperluan</label>

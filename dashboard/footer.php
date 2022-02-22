@@ -81,6 +81,7 @@
 <script src="<?=base_url('assets/js/selectcustom.js')?>"></script>
 <script src="<?=base_url('assets/js/timeku.js')?>"></script>
 <script src="<?=base_url('assets/js/approvalsistem.js')?>"></script>
+<script src="<?=base_url('assets/js/jquery.idle-master/jquery.idle.js')?>"></script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/sticksy/dist/sticksy.min.js"></script>

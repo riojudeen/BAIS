@@ -813,4 +813,17 @@ function MasaKerja($tgl_masuk,$tgl_sekarang){
 function dataTableDB($db){
     return $db;
 }
+function initial($nama){
+    $arr = explode(' ', $nama);
+    $singkatan = '';
+    foreach($arr as $kata)
+    {
+        $singkatan .= substr($kata, 0, 1);
+    }
+    return $singkatan;
+}
+function cutName($nama){
+    $singkatan = substr($nama, 0, 7);
+    return $singkatan."...";
+}
 ?>
