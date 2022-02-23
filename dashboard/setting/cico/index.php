@@ -1,9 +1,9 @@
 <?php
 //////////////////////////////////////////////////////////////////////
-require_once("../../config/config.php"); 
+require_once("../../../config/config.php"); 
 if(isset($_SESSION['user'])){
     $halaman = "Portal Data Absensi";
-    include_once("../header.php");
+    include_once("../../header.php");
     
     
     $_SESSION['start'] = (isset($_POST['start']))? dateToDB($_POST['start']) : date('Y-m-1');
@@ -306,7 +306,7 @@ if(isset($_SESSION['user'])){
 </div>
 <!-- halaman utama end -->
 <?php
-    include_once("../footer.php"); 
+    include_once("../../footer.php"); 
     //javascript
     ?>
 
@@ -382,7 +382,7 @@ if(isset($_SESSION['user'])){
                     ajax.addEventListener("load", completeHandler, false);
                     ajax.addEventListener("error", errorHandler, false);
                     ajax.addEventListener("abort", abortHandler, false);
-                    ajax.open("POST", 'absensi/index.php?mulai='+mulai+'&selesai='+selesai);
+                    ajax.open("POST", 'migrate.php?mulai='+mulai+'&selesai='+selesai);
                     ajax.send(form_data);
                     ajax.onreadystatechange = function() {
                         if(this.readyState == 4 && this.status == 200) {
@@ -584,7 +584,7 @@ if(isset($_SESSION['user'])){
         })
     </script>
     <?php
-    include_once("../endbody.php"); 
+    include_once("../../endbody.php"); 
 } else{
     echo "<script>window.location='".base_url('auth/login.php')."';</script>";
   }

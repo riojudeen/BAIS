@@ -559,6 +559,12 @@
                     <span class="sidebar-normal"> Leave Approval </span>
                   </a>
                 </li>
+                <li class="menu " data-name="cico" id="cico">
+                  <a href="<?=base_url()?>/dashboard/setting/cico/index.php">
+                    <span class="sidebar-mini-icon">MC</span>
+                    <span class="sidebar-normal"> Migrasi CiCo </span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
