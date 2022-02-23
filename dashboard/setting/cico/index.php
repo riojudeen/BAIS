@@ -34,6 +34,93 @@ if(isset($_SESSION['user'])){
 <!-- halaman utama -->
 <!-- filter -->
 
+<div id="load_trigger" data-id="0"></div>
+<div class="collapse show" id="collapseExample">
+    <div class="row ">
+        <div class="col-md-12">
+            
+            <div class="card card-plain" style="border: 1px #CACACA solid;  border-radius: 15px 15px 15px 15px">
+                <div class="card-header">
+                    <h5 class="card-title pull-left">Import Data Absensi</h5>
+                    <div class="pull-right"> 
+                        
+                    </div>
+                </div>
+                <hr>
+                
+                <div class="card-body px-3" >
+                    <div class="row " id="tes">
+                         
+                        <div class="col-lg-12 col-md-12 col-sm-12 border-left">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="row">
+                                        <h6 class="title col-md-6">Progress</h6>
+                                        <div class="col-md-12" id="process_upload" style="display:block;">
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar bg-success text-info progress-bar-animated progress-bar-striped active persen " role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%; border-radius: 50px"  >
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <p class="category col-md-6 text-left" id="total"></p>
+                                        <p class="category col-md-6 text-right" id="success_message"></p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 col-md-4 col-sm-12 ">
+                                            <form method="POST" id="upload_data" enctype="multipart/form-data" action="proses/import_absensi.php">
+                                                <h6 class="title">Input Data</h6>
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="button" class="btn btn-sm btn-primary data_load col-md-12" value="Load">
+                                                    </div>
+                                                </div>
+                                            </form>                          
+                                        </div> 
+
+                                    </div>
+                                    
+                                    <form method="post" name="proses" action="" id="form_absensi">
+                                        <div class="data_preview " >
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <table class=" table table-xs table-bordered " width="500px">
+                                                        <tbody class="py-0">
+                                                            <tr class="py-0">
+                                                                <th colspan="3" scope="row">Total Hari</th>
+                                                                <td>0</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="3" scope="row">Total Baris Data</th>
+                                                                <td>0</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="3" scope="row">Total Karyawan</th>
+                                                                <td>0</td>
+                                                                
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
 <form method="POST">
 <div class="row">
     <div class="col-md-12" >
@@ -73,135 +160,6 @@ if(isset($_SESSION['user'])){
     </div>
 </div>
 </form>
-<div class="collapse show" id="collapseExample">
-    <div class="row ">
-        <div class="col-md-12">
-            
-            <div class="card card-plain" style="border: 1px #CACACA solid;  border-radius: 15px 15px 15px 15px">
-                <div class="card-header">
-                    <h5 class="card-title pull-left">Import Data Absensi</h5>
-                    <div class="pull-right"> 
-                        <a href="../../file/template/Format_absensi_upload.xlsx" class="btn btn-sm btn-danger btn-link" data-toggle="tooltip" data-placement="bottom" title="Download Format">
-                            <i class="nc-icon nc-paper"></i> Dowload Format
-                        </a> 
-                        <a  class="btn btn-sm btn-danger btn-icon btn-round btn-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="nc-icon nc-simple-remove"></i></a>
-                    </div>
-                </div>
-                <hr>
-                
-                <div class="card-body px-3" >
-                    <div class="row " id="tes">
-                        <div class="col-lg-6 col-md-4 col-sm-12 ">
-                        <form method="POST" id="upload_data" enctype="multipart/form-data" action="proses/import_absensi.php">
-                            <h6 class="title">Input Data</h6>
-                            <div class="row">
-                                <div class="col-md-4  pr-1 ">
-                                    <div class="form-group text-left">
-                                        <label for="">Mode Upload</label>
-                                        <select class="form-control" name="" id="">
-                                            <option value="">Migrasi Absensi</option>
-                                            <option value="">Upload Progress</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4  pr-1 ">
-                                    <div class="form-group text-left">
-                                        <label for="">Tanggal Mulai</label>
-                                        <input name="start" type="text" id="mulai" value="<?=DBtoForm($tanggalAwal)?>" data-date-format="DD/MM/YYYY" class="form-control datepicker" required>
-                                        
-                                    </div>
-                                </div>
-                                <div class="col-md-4 pl-1">
-                                    <div class="form-group text-left">
-                                        <label for="">Tanggal Selesai</label>
-                                        <input name="end" type="text" id="selesai" value="<?=DBtoForm($today)?>"  data-date-format="DD/MM/YYYY" class="form-control datepicker" required>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group border rounded py-auto  text-center col-md-12 ">
-                                <div class="fileinput fileinput-new text-center" data-provides="fileinput">
-                                    <div class="fileinput-new thumbnail">
-                                        
-                                    </div>
-                                    <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0 shadow-none">
-                                        <input type="text" class="form-control mx-0">
-                                    </div>
-                                    <div>
-                                        <span class="btn btn-sm btn-outline-default btn-round btn-rose btn-file">
-                                        <span class="fileinput-new ">Select File</span>
-                                        <span class="fileinput-exists">Change</span>
-                                        
-                                            <input type="file" id="file_import" name="file_import" />
-                                        </span>
-                                        <a href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <input type="button" class="btn btn-sm btn-primary data_load col-md-12" value="Load">
-                                    <input type="reset" class="btn btn-sm btn-warning col-md-12 reset " value="Reset" style="display:none;">
-                                </div>
-                            </div>
-                        </div>  
-                        </form>                          
-                        <div class="col-lg-6 col-md-7 col-sm-12 border-left">
-                            <div class="row">
-                                <div class="col-md-12 ">
-                                    <div class="row">
-                                        <h6 class="title col-md-6">Upload</h6>
-                                        <div class="col-md-12" id="process_upload" style="display:block;">
-                                            <div class="progress" style="height: 20px;">
-                                                <div class="progress-bar bg-success text-info progress-bar-striped active persen " role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"  >
-                                                </div>
-                                                
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <p class="category col-md-6 text-left" id="total"></p>
-                                        <p class="category col-md-6 text-right" id="success_message"></p>
-                                    </div>
-                                    
-                                    
-                                    <form method="post" name="proses" action="" id="form_absensi">
-                                        <div class="data_preview " >
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <table class=" table table-xs table-bordered " width="500px">
-                                                        <tbody class="py-0">
-                                                            <tr class="py-0">
-                                                                <th colspan="3" scope="row">Total Hari</th>
-                                                                <td>0</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3" scope="row">Total Baris Data</th>
-                                                                <td>0</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3" scope="row">Total Karyawan</th>
-                                                                <td>0</td>
-                                                                
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</div>
 <div class="row ">
 	<div class="col-md-12 ">
 		<div class="card">
@@ -362,43 +320,52 @@ if(isset($_SESSION['user'])){
     <script>
         $(document).ready(function(){
             
-            $('.data_load').on('click', function(e) {
-                e.preventDefault();
-                var file_data = $('#file_import').prop('files')[0]; 
-                var mulai = $('#mulai').val();
-                var selesai = $('#selesai').val();
-               
-                // console.log(form_data);
-                if(file_data !== undefined && mulai !== '' && selesai !== ''){
-                    // jika form diisi
-                    var form_data = new FormData();
-                    form_data.append('file_import', file_data);
-                        
-                    var ajax = new XMLHttpRequest();
-                    
-                    // console.log(xhr);
-                    ajax.upload.addEventListener("progress", uploadHandler, false);
-                    ajax.addEventListener("progress", progressHandler, true);
-                    ajax.addEventListener("load", completeHandler, false);
-                    ajax.addEventListener("error", errorHandler, false);
-                    ajax.addEventListener("abort", abortHandler, false);
-                    ajax.open("POST", 'migrate.php?mulai='+mulai+'&selesai='+selesai);
-                    ajax.send(form_data);
-                    ajax.onreadystatechange = function() {
-                        if(this.readyState == 4 && this.status == 200) {
-                            // console.log(ajax.responseText);
-                            var data = ajax.responseText;
-                            const size = new TextEncoder().encode(JSON.stringify(ajax.responseText)).length;
-                            console.log(size);
-                            const kiloBytes = size / 1024;
-                            document.getElementById("total").innerHTML = "Telah terupload "+bytesToSize(event.loaded);
-                        }
-                    };
-                        
-                    
-                }else{
-                    Swal.fire('Tanggal Belum Diisi atau Dokumen Belum dipilih')
+            
+        })
+    </script>
+    <script>
+        $(document).ready(function(){
+
+            function triggerLoad(val){
+                var trigger = 1;
+                if(val == trigger){
+                    upload_data();
                 }
+            }
+            
+            $('.data_load').on('click', function(e) {
+                e.preventDefault(); 
+                upload_data();
+            });
+            $('.reset').click(function(){
+                $('#upload_data')[0].reset();
+                $('.data_load').css('display', 'block');
+                $('.reset').css('display', 'none');
+            })
+            function upload_data(){
+                var ajax = new XMLHttpRequest();
+                
+                // console.log(xhr);
+                ajax.upload.addEventListener("progress", uploadHandler, false);
+                ajax.addEventListener("progress", progressHandler, true);
+                ajax.addEventListener("load", completeHandler, false);
+                ajax.addEventListener("error", errorHandler, false);
+                ajax.addEventListener("abort", abortHandler, false);
+                ajax.open("POST", 'migrate.php');
+                ajax.send();
+                ajax.onreadystatechange = function() {
+                    if(this.readyState == 4 && this.status == 200) {
+                        // console.log(ajax.responseText);
+                        var data = ajax.responseText;
+                        const size = new TextEncoder().encode(JSON.stringify(ajax.responseText)).length;
+                        console.log(size);
+                        const kiloBytes = size / 1024;
+                        document.getElementById("total").innerHTML = "Telah terupload "+bytesToSize(event.loaded);
+                    }
+                };
+                // }else{
+                //     Swal.fire('Tanggal Belum Diisi atau Dokumen Belum dipilih')
+                // }
                 function bytesToSize(bytes) {
                     var sizes = ['Bytes', 'Kb', 'Mb', 'Gb', 'Tb'];
                     if (bytes == 0) return '0 Byte';  
@@ -412,11 +379,16 @@ if(isset($_SESSION['user'])){
                         console.log(percentComplete);
                     }
                     var percent = (event.loaded / event.total) * 100;
+                   
                     $('.progress-bar').css('width', '0%');
-                    $('.progress-bar').css('width', percent + '%')
                     $('.progress-bar').removeClass('bg-info');
-                    $('.progress-bar').addClass('bg-success');
                     $('#success_message').text('sedang mendownload . . .');
+                    $('.progress-bar').addClass('bg-success');
+                    
+                    setTimeout(function (){
+                        $('.progress-bar').css('width', percent + '%')
+                    },5000);
+                    
                     
                     document.getElementById("total").innerHTML = "Download Data "+bytesToSize(event.loaded);
                     // console.log(event.length);
@@ -438,7 +410,7 @@ if(isset($_SESSION['user'])){
                             $('.progress-bar').css('width', '0%');
                             $('.data_load').attr('disabled', false);
                             setTimeout(function(){
-                            $('#success_message').html('');
+                                $('#success_message').html('');
                             }, 5000);
                         }
                     };
@@ -450,7 +422,11 @@ if(isset($_SESSION['user'])){
                     $('#success_message').text('data telah siap 100%');
                     $('.progress-bar').removeClass('bg-success');
                     $('.progress-bar').addClass('bg-info');
-                    loadData();
+                    setTimeout(function (){
+                        $('.progress-bar').removeClass('bg-info');
+                        $('.progress-bar').css('width', '0%');
+                    },5000);
+                    // loadData();
                 }
                 function errorHandler(event){
                     $('#success_message').html("Upload Failed");
@@ -458,17 +434,13 @@ if(isset($_SESSION['user'])){
                 function abortHandler(event){
                     $('#success_message').html("Upload Aborted");
                 }
-                
-            });
-            $('.reset').click(function(){
-                $('#upload_data')[0].reset();
-                $('.data_load').css('display', 'block');
-                $('.reset').css('display', 'none');
-            })
-        })
-    </script>
-    <script>
-        $(document).ready(function(){
+            }
+
+
+
+
+
+
             function loadData(page){
                 var div_id = $('#s_div').val();
                 var dept_id = $('#s_dept').val();
@@ -481,7 +453,7 @@ if(isset($_SESSION['user'])){
                 var end = $('#end_date').val();
                 var dept = $('#deptAcc').val();
                 $.ajax({
-                    url:"absensi/ajax_monitor.php",
+                    url:"../absensi/ajax_monitor.php",
                     method:"GET",
                     data:{page:page,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
                     success:function(data){
@@ -520,7 +492,7 @@ if(isset($_SESSION['user'])){
             function getDiv(){
                 var data = $('#s_div').val()
                 $.ajax({
-                    url: 'ajax/get_div.php',
+                    url: '../ajax/get_div.php',
                     method: 'GET',
                     data: {data:data},		
                     success:function(data){
@@ -532,7 +504,7 @@ if(isset($_SESSION['user'])){
             function getDept(){
                 var data = $('#s_div').val()
                 $.ajax({
-                    url: 'ajax/get_dept.php',	
+                    url: '../ajax/get_dept.php',	
                     method: 'GET',
                     data: {data:data},
                     success:function(data){
@@ -544,7 +516,7 @@ if(isset($_SESSION['user'])){
             function getSect(){
                 var data = $('#s_dept').val()
                 $.ajax({
-                    url: 'ajax/get_sect.php',	
+                    url: '../ajax/get_sect.php',	
                     method: 'GET',
                     data: {data:data},		
                     success:function(data){
@@ -556,7 +528,7 @@ if(isset($_SESSION['user'])){
             function getGroup(){
                 var data = $('#s_section').val()
                 $.ajax({
-                    url: 'ajax/get_group.php',
+                    url: '../ajax/get_group.php',
                     method: 'GET',
                     data: {data:data},
                     success:function(data){
@@ -580,10 +552,88 @@ if(isset($_SESSION['user'])){
             $('#filterGo').on('click', function(){
                 loadData();
             })
-           
+            var link = document.getElementsByClassName('data_load');
+            var load = 0;
+            var approval_num = setInterval(function ()
+                { 
+                    const load1 = 6 * 60 + 30;
+                        const load2 =  7 * 60 + 0;                 
+                    const load3 = 7 * 60 + 30;
+                        const load4 =  8 * 60 + 30;
+                    const load5 = 9 * 60 + 0;
+                        const load6 =  16 * 60 + 0;
+                    const load7 = 16 * 60 + 30;
+                        const load8 =  17 * 60 + 0;
+                    const load9 = 17 * 60 + 30;
+                        const load10 =  18 * 60 + 0;
+                    const load11 = 18 * 60 + 30;
+                        const load12 =  19 * 60 + 0;                 
+                    const load13 = 19 * 60 + 48;
+                        const load14 =  20 * 60 + 0;
+                    const load15 = 20 * 60 + 30;
+                        const load16 =  21 * 60 + 0;
+                    const load17 = 21 * 60 + 30;
+                        const load18 =  22 * 60 + 0;
+                    const load19 = 22 * 60 + 30;
+                        const load20 =  23 * 60 + 0;
+                    const load21 = 4 * 60 + 0;
+                        const load22 =  4 * 60 + 30;                 
+                    const load23 = 5 * 60 + 0;
+                        const load24 =  5 * 60 + 30;
+                    const load25 = 6 * 60 + 0;
+
+                    const batas = 20;
+                    
+                    const date = new Date(); 
+                    const now = date.getHours() * 60 + date.getMinutes();
+                    // console.log(now);
+                    if((load1 == now ) || 
+                        (load2 == now ) || 
+                        (load3 == now ) || 
+                        (load4 == now ) || 
+                        (load5 == now ) || 
+                        (load6 == now ) || 
+                        (load7 == now ) || 
+                        (load8 == now ) || 
+                        (load9 == now ) || 
+                        (load10 == now ) || 
+                        (load11 == now ) || 
+                        (load12 == now ) || 
+                        (load13 == now ) || 
+                        (load14 == now ) || 
+                        (load15 == now ) || 
+                        (load16 == now ) || 
+                        (load17 == now ) || 
+                        (load18 == now ) || 
+                        (load20 == now ) || 
+                        (load21 == now ) || 
+                        (load22 == now ) || 
+                        (load23 == now ) || 
+                        (load24 == now ) || 
+                        (load25 == now ) 
+                       )
+                    {
+                       
+                        load++;
+                        triggerLoad(load)
+                        
+                        $('#load_trigger').attr('data-id', "1");
+                        $('#load_trigger').text('data-id 1');
+                        
+                    }else{
+                        $('#load_trigger').attr('data-id', "0");
+                        $('#load_trigger').text('data-id 0');
+                        // console.log('0')
+                        load = 0;
+                        
+                    }
+                }, 1000 // refresh every 10000 milliseconds
+            );   
+            
         })
     </script>
     <?php
+    
     include_once("../../endbody.php"); 
 } else{
     echo "<script>window.location='".base_url('auth/login.php')."';</script>";

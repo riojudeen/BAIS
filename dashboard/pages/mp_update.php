@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
 require_once("../../config/approval_system.php");
-
+// halaman khusus untuk kordinator area
 //redirect ke halaman dashboard index jika sudah ada session
 
 $halaman = "Daftar Man Power";
@@ -11,17 +11,22 @@ if(isset($_SESSION['user'])){
 
     include("../header.php");
     if($level >=1 && $level <=8){
+        if(isset($_GET['org'])){
+            // jika akses dari admin
+            $q_area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$_GET[part]' AND id = '$_GET[org]' ")or die(mysqli_error($link));
+            $data_area = mysqli_fetch_assoc($q_area_cord);
+            $npk =$data_area['cord'];
+            $q_user_level = mysqli_query($link, "SELECT user_role.role_name AS 'name', user_role.level AS 'level' FROM data_user JOIN user_role ON user_role.id_role = data_user.level WHERE data_user.npk = '$npk' ")or die(mysqli_error($link));
+            $datalevel = mysqli_fetch_assoc($q_user_level);
+            $level = $datalevel['level'];
+            // echo $datalevel['level'];
+        }else{
+            // untuk kordinator area
+            $npk =$npkUser;
+            $level = $level;
 
-            $shift = array('DAY', 'NIGHT');
-            $groupShift = 'A';
-            // hitung jumlah group shift
-            $jmlShift = 3 ;
-            // hirung jumlah hari
-            $jmlHari = 21;
-            // hitung schema perulangan
-            $schema = 7; //peganitan shift setiap 7 hari
-            
-        // }
+        }
+           
     
         // include("../manpower/filter.php"); 
         ?>
@@ -42,19 +47,11 @@ if(isset($_SESSION['user'])){
         }
 
         $filter = '';
-        $div_filter = '';
-        // echo $div;
-        $dept_filter = '';
-        // echo $dept_filter;
-        $sect_filter = '';
-        // echo $sect_filter;
-        $group_filter = '';
-        // echo $group_filter;
-        $deptAcc_filter = '';
+        
         // echo $deptAcc_filter;
         $shift = '';
         // echo $shift;
-        $cari = '';
+        $cari = 'tes';
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
         $origin_query = "SELECT 
             view_organization.npk,
@@ -73,6 +70,17 @@ if(isset($_SESSION['user'])){
             view_organization.dept_account
             
             FROM view_organization ";
+        $div_filter = '';
+        // echo $div;
+        $dept_filter = '';
+        // echo $dept_filter;
+        $sect_filter = ($_GET['part'] == 'section')?" AND id_sect = '$_GET[org]' ":'';
+        // echo $sect_filter;
+        $group_filter = ($_GET['part'] == 'group')?" AND id_grp = '$_GET[org]'":'';
+        // echo $group_filter;
+        $deptAcc_filter = '';
+        $add_filter = $sect_filter.$group_filter;
+        
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -81,13 +89,48 @@ if(isset($_SESSION['user'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
+        $addTl = " AND  (jabatan = 'TL' OR jabatan = 'ATL')";
+        $addFrm = " AND  (jabatan = 'FRM' OR jabatan = 'AFRM')";
+        $addSpv = " AND  (jabatan = 'SPV' OR jabatan = 'ASPV')";
+        $addMng = " AND  (jabatan = 'MNG' OR jabatan = 'AMNG')";
+        $addDh = " AND  (jabatan = 'DH' OR jabatan = 'ADH')";
         $addPermanent = " AND `status` = 'P' AND jabatan = 'TM' ";
         $addK1 = " AND `status` = 'C1' AND jabatan = 'TM' ";
         $addK2 = " AND `status` = 'C1' AND jabatan = 'TM' ";
-        
-        $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
+        $addTtm = " AND jabatan = 'TM' ";
+        if($level == 1){
+            $addGroup = "";
+        }else if($level == 2){
+            $addGroup = "";
+        }else if($level == 3){
+            $addGroup = "  GROUP BY pos";
+            $sub = "pos";
+            
+        }else if($level == 4){
+            $addGroup = "  GROUP BY groupfrm";
+            $sub = "groupfrm";
+        }else if($level == 5){
+            $addGroup = "  GROUP BY groupfrm";
+            $sub = "groupfrm";
+        }else if($level == 6){
+            $addGroup = " GROUP BY groupfrm";
+            $sub = "groupfrm";
+        }else if($level == 7){
+            $addGroup = " GROUP BY groupfrm";
+            $sub = "groupfrm";
+        }else if($level == 1){
+            $addGroup = " GROUP BY groupfrm";
+            $sub = "groupfrm";
+        }else{
+            $addGroup = " GROUP BY groupfrm";
+            $sub = "groupfrm";
+        }
+        $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
+        $sql_group = mysqli_query($link, $queryMP.$add_filter.$addGroup)or die(mysqli_error($link));
+        $sql_total_mp = mysqli_query($link, $queryMP.$add_filter)or die(mysqli_error($link));
+        // echo mysqli_num_rows($sql_group);
         // echo $add_filter."<br>";
         // echo $access_org."<br>";
         // echo $data_access."<br>";
@@ -96,7 +139,11 @@ if(isset($_SESSION['user'])){
         // echo $table_field2."<br>";
         // echo $part."<br>";
         // echo $generate."<br>";
-        // echo $queryMP."<br>";
+        echo $queryMP."<br>";
+        // echo $npk."<br>";
+        // echo $part."<br>";
+
+        
 
         ?>
         
@@ -336,7 +383,7 @@ if(isset($_SESSION['user'])){
                                     <div class="card-header">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <h4 class="text-uppercase title mb-0">Jalur Under Body</h4>
+                                                <h4 class="text-uppercase title mb-0"><?=$_GET['part']." ".getOrgName($link, $_GET['org'], $_GET['part'])?></h4>
                                             </div>
                                             <div class="col-md-6 text-right pt-4 mb-0">
                                                 <a  href="" class="btn btn-sm btn-success mb-0"> + Register Organisasi</a>
@@ -351,6 +398,9 @@ if(isset($_SESSION['user'])){
                                                         <th>#</th>
                                                         <th>Area</th>
                                                         <th>Jml Emp</th>
+                                                        <th>DH</th>
+                                                        <th>MNG</th>
+                                                        <th>SPV</th>
                                                         <th>FRM</th>
                                                         <th>TL</th>
                                                         <th>TM</th>
@@ -361,34 +411,56 @@ if(isset($_SESSION['user'])){
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>Team 1</td>
-                                                        <td>30</td>
-                                                        <td>0</td>
-                                                        <td>1</td>
-                                                        <td>30</td>
-                                                        <td>10</td>
-                                                        <td>10</td>
-                                                        <td>10</td>
-                                                        <td class="text-right">
-                                                            <a  href="" class="btn btn-sm btn-success">Detail</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>1</td>
-                                                        <td>Area Tidak Terdaftar</td>
-                                                        <td>30</td>
-                                                        <td>0</td>
-                                                        <td>1</td>
-                                                        <td>30</td>
-                                                        <td>10</td>
-                                                        <td>10</td>
-                                                        <td>10</td>
-                                                        <td class="text-right">
-                                                            <a  href="" class="btn btn-sm btn-success">Detail</a>
-                                                        </td>
-                                                    </tr>
+                                                    <?php
+                                                    if(mysqli_num_rows($sql_group)>0){
+                                                        $no = 1;
+                                                        while($data = mysqli_fetch_assoc($sql_group)){
+                                                            $part = $_GET['part'];
+                                                            $total = mysqli_num_rows($sql_total_mp);
+                                                            $nama_area = (getOrgName($link, $data[$sub], $part) != '' )?getOrgName($link, $data[$sub], $part):'Belum Diregister';
+                                                            $permanent = mysqli_query($link, $queryMP.$addPermanent)or die(mysqli_error($link));
+                                                            
+                                                            $kontrak1 = mysqli_query($link, $queryMP.$addK1)or die(mysqli_error($link));
+                                                            $kontrak2 = mysqli_query($link, $queryMP.$addK2)or die(mysqli_error($link));
+                                                            $TM = mysqli_query($link, $queryMP.$addTtm)or die(mysqli_error($link));
+                                                            $FRM = mysqli_query($link, $queryMP.$addFrm)or die(mysqli_error($link));
+                                                            $TL = mysqli_query($link, $queryMP.$addTl)or die(mysqli_error($link));
+                                                            $SPV = mysqli_query($link, $queryMP.$addSpv)or die(mysqli_error($link));
+                                                            $MNG = mysqli_query($link, $queryMP.$addMng)or die(mysqli_error($link));
+                                                            $DH = mysqli_query($link, $queryMP.$addDh)or die(mysqli_error($link));
+                                                            $jm_permanen = mysqli_num_rows($permanent);
+                                                            $jm_kontrak1 = mysqli_num_rows($kontrak1);
+                                                            $jm_kontrak2 = mysqli_num_rows($kontrak2);
+                                                            $jm_TM = mysqli_num_rows($TM);
+                                                            $jm_TL = mysqli_num_rows($TL);
+                                                            $jm_FRM = mysqli_num_rows($FRM);
+                                                            $jm_SPV = mysqli_num_rows($SPV);
+                                                            $jm_MNG = mysqli_num_rows($MNG);
+                                                            $jm_DH = mysqli_num_rows($DH);
+                                                            // echo $queryMP.$addMng;
+                                                            ?>
+                                                            <tr>
+                                                                <td><?=$no++?></td>
+                                                                <td><?=$nama_area?></td>
+                                                                <td><?=$total?></td>
+                                                                <td><?=$jm_DH?></td>
+                                                                <td><?=$jm_MNG?></td>
+                                                                <td><?=$jm_SPV?></td>
+                                                                <td><?=$jm_FRM?></td>
+                                                                <td><?=$jm_TL?></td>
+                                                                <td><?=$jm_TM?></td>
+                                                                <td><?=$jm_kontrak1?></td>
+                                                                <td><?=$jm_kontrak2?></td>
+                                                                <td><?=$jm_permanen?></td>
+                                                                <td class="text-right">
+                                                                    <a  href="" class="btn btn-sm btn-success">Detail</a>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>

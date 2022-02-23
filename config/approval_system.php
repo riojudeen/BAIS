@@ -761,7 +761,7 @@ function generateAccess($link, $level, $npk){
         $data8 = $sql['division'];
         // $data9 = $sql['plant'];
     }else{
-        $data1 = $data4 = $data5 = $data6 = $data7 = $data8 = "null";
+        $data1 = $data4 = $data5 = $data6 = $data8 = "null";
         
     }
     if($level == 1){
