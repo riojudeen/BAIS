@@ -20,7 +20,8 @@ if(isset($_SESSION['user'])){
         $shift = $_GET['shift'];
         // echo $shift;
         $cari = $_GET['cari'];
-        $npk = $npkUser;
+        $npk = $_GET['npk'];
+        $level = $_GET['level'];
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
         $origin_query = "SELECT 
             view_organization.npk,
@@ -50,7 +51,7 @@ if(isset($_SESSION['user'])){
         $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
         
-        $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
+        $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
         
         // echo $access_org."<br>";
         // echo $data_access."<br>";
@@ -81,15 +82,7 @@ if(isset($_SESSION['user'])){
                         <th scope="col">Section</th>
                         <th scope="col">Dept</th>
                         <th scope="col">Dept Adm</th>
-                        <th scope="col">Action</th>
-                        <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="allmp">
-                                <span class="form-check-sign"></span>
-                                </label>
-                            </div>
-                        </th>
+                        
                     </tr>
                 </thead>
                 <tbody class="text-uppercase text-nowrap">
@@ -106,7 +99,7 @@ if(isset($_SESSION['user'])){
                     // echo $limit_start;
                     $addOrder = " ORDER BY id_division, id_dept_account, id_dept, id_sect, id_grp, id_post_leader DESC ";
                     $addLimit = " LIMIT $limit_start, $limit";
-                    $no = 1;
+                    
                     // echo $addOrder."<br>";
                     // echo $addLimit."<br>";
                     // pagin
@@ -138,31 +131,7 @@ if(isset($_SESSION['user'])){
                                 <td class="td"><?=$data['dept']?></td>
                                 <td class="td"><?=$data['dept_account']?></td>
                                 
-                                <td class="text-right">
-                                    
-                                        
-                                        <?php
-                                    
-                                    ?>
-                                    <span class="dropleft text-center">
-                                        <button class="btn btn-sm  btn-info  btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fa fa-ellipsis-v"></i>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right shadow-lg text-center ">
-                                            <!-- <div class="dropdown-header">Menu</div> -->
-                                            
-                                            
-                                        </div>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="form-check ">
-                                        <label class="form-check-label ">
-                                            <input class="form-check-input mp " name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>">
-                                            <span class="form-check-sign"></span>
-                                        </label>
-                                    </div>
-                                </td>
+                                
                             </tr>
 
                             <?php
@@ -187,11 +156,6 @@ if(isset($_SESSION['user'])){
             <div class="col-md-12 pull-rigt">
                 <ul class="pagination ">
                 <?php
-                // echo $page."<br>";
-                // echo $jumlah_page."<br>";
-                // echo $jumlah_number."<br>";
-                // echo $start_number."<br>";
-                // echo $end_number."<br>";
                 if($page == 1){
                     echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
                     echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';

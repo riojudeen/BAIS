@@ -1,6 +1,6 @@
 <?php
 ?>
-<div class="collapse " id="collapseExample">
+<div class="collapse " id="collapsePlot">
     <div class="row ">
         <div class="col-md-12">
             <div class="card shadow-none border inputnpk " style="background:rgba(201, 201, 201, 0.2)" >

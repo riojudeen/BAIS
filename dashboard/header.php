@@ -482,7 +482,7 @@
                 // }else{
                 
                 ?>
-                <li class="menu " data-name="mp" id="mp">
+                <li class="menu " data-name="emp" id="emp">
                   <a href="<?=base_url()?>/dashboard/pages/manpower.php"><!---link halaman update MP--->
                     <span class="sidebar-mini-icon">EM</span>
                     <span class="sidebar-normal"> Employee Monitoring (exp)</span>

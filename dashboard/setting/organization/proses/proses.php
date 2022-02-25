@@ -12,20 +12,22 @@ if(isset($_SESSION['user'])){
         $qry_div = "INSERT INTO `division`(`id_div`, `nama_divisi`, `npk_cord`, `id_company`, `part`) VALUES ";
         // echo "OK";
         if(isset($_POST['kode_pos'])){
-            $qry_code = mysqli_query($link, "SELECT max(`id_post`) AS pos FROM pos_leader")or die(mysqli_error($link));
+            
+            $qry_code = mysqli_query($link, "SELECT max(SUBSTRING(`id_post`, -3)) AS pos FROM pos_leader")or die(mysqli_error($link));
             $d = mysqli_fetch_assoc($qry_code);
 
             for($i=0 ; $i < count($_POST['kode_pos']);$i++){
-                
+                // echo $i;
                 $nama = $_POST['nama_pos'][$i];
                 $cord = $_POST['cord_pos'][$i];
                 $id_parent = $_POST['parentpos'][$i];
                 $part = "pos";
-
-                $urutan = (int) substr($d['pos'], -3) + ($i+1);
+                // echo $nama;
+                $urutan = (int) $d['pos'] + ($i+1);
+                // echo $urutan."<br>";
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
-
+                // echo $id."<br>";
                 $qry_pos .= " ('$id', '$nama', '$cord', '$id_parent', '$part'),";
             }
             $qry_pos = substr($qry_pos, 0, -1);
@@ -42,7 +44,7 @@ if(isset($_SESSION['user'])){
                 echo "<script>window.location='../index.php';</script>";
             }
         }else if(isset($_POST['kode_group'])){
-            $qry_code = mysqli_query($link, "SELECT max(`id_group`) AS `group` FROM groupfrm")or die(mysqli_error($link));
+            $qry_code = mysqli_query($link, "SELECT max(SUBSTRING(`id_group`, -3)) AS `group` FROM groupfrm")or die(mysqli_error($link));
             $d = mysqli_fetch_assoc($qry_code);
 
             for($i=0 ; $i < count($_POST['kode_group']);$i++){
@@ -52,7 +54,7 @@ if(isset($_SESSION['user'])){
                 $id_parent = $_POST['parentgroup'][$i];
                 $part = "group";
                 
-                $urutan = (int) substr($d['group'], -3) + ($i+1);
+                $urutan = (int) $d['group'] + ($i+1);
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
 
@@ -73,7 +75,7 @@ if(isset($_SESSION['user'])){
             }
             // echo "group";
         }else if(isset($_POST['kode_section'])){
-            $qry_code = mysqli_query($link, "SELECT max(`id_section`) AS `section` FROM section")or die(mysqli_error($link));
+            $qry_code = mysqli_query($link, "SELECT max(SUBSTRING(`id_section`, -3)) AS `section` FROM section")or die(mysqli_error($link));
             $d = mysqli_fetch_assoc($qry_code);
 
             for($i=0 ; $i < count($_POST['kode_section']);$i++){
@@ -82,7 +84,7 @@ if(isset($_SESSION['user'])){
                 $id_parent = $_POST['parentsection'][$i];
                 $part = "section";
                 
-                $urutan = (int) substr($d['section'], -3) + ($i+1);
+                $urutan = (int) $d['section'] + ($i+1);
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
                 $qry_sct .= " ('$id', '$nama', '$cord', '$id_parent', '$part'),";
@@ -101,7 +103,7 @@ if(isset($_SESSION['user'])){
                 echo "<script>window.location='../index.php';</script>";
             }
         }else if(isset($_POST['kode_dept'])){
-            $qry_code = mysqli_query($link, "SELECT max(`id_dept`) AS `dept` FROM department")or die(mysqli_error($link));
+            $qry_code = mysqli_query($link, "SELECT max(SUBSTRING(`id_dept`, -3))  AS `dept` FROM department")or die(mysqli_error($link));
             $d = mysqli_fetch_assoc($qry_code);
             for($i=0 ; $i < count($_POST['kode_dept']);$i++){
                 
@@ -110,7 +112,7 @@ if(isset($_SESSION['user'])){
                 $id_parent = $_POST['parentdept'][$i];
                 $part = "dept";
 
-                $urutan = (int) substr($d['dept'], -3) + ($i+1);
+                $urutan = (int) $d['dept'] + ($i+1);
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
                 $qry_dpt .= " ('$id', '$nama', '$cord', '$id_parent', '$part'),";
@@ -129,7 +131,7 @@ if(isset($_SESSION['user'])){
                 echo "<script>window.location='../index.php';</script>";
             }
         }else if(isset($_POST['kode_deptAcc'])){
-            $qry_code = mysqli_query($link, "SELECT max(`id_dept_account`) AS `deptAcc` FROM dept_account")or die(mysqli_error($link));
+            $qry_code = mysqli_query($link, "SELECT max(SUBSTRING(`id_dept_account`, -3)) AS `deptAcc` FROM dept_account")or die(mysqli_error($link));
             $d = mysqli_fetch_assoc($qry_code);
             for($i=0 ; $i < count($_POST['kode_deptAcc']);$i++){
                 $nama = $_POST['nama_deptAcc'][$i];
@@ -137,7 +139,7 @@ if(isset($_SESSION['user'])){
                 $id_parent = $_POST['parentdeptAcc'][$i];
                 $part = "deptAcc";
 
-                $urutan = (int) substr($d['deptAcc'], -3) + ($i+1);
+                $urutan = (int) $d['deptAcc'] + ($i+1);
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
 
@@ -159,7 +161,7 @@ if(isset($_SESSION['user'])){
                 echo "<script>window.location='../index.php';</script>";
             }
         }else if(isset($_POST['kode_division'])){
-            $qry_code = mysqli_query($link, "SELECT max(`id_div`) AS `div` FROM division")or die(mysqli_error($link));
+            $qry_code = mysqli_query($link, "SELECT  max(SUBSTRING(`id_div`, -3)) AS `div` FROM division")or die(mysqli_error($link));
             $d = mysqli_fetch_assoc($qry_code);
             $_SESSION['tab'] = "division";
             for($i=0 ; $i < count($_POST['kode_division']);$i++){
@@ -169,7 +171,7 @@ if(isset($_SESSION['user'])){
                 $id_parent = $_POST['parentdivision'][$i];
                 $part = "division";
 
-                $urutan = (int) substr($d['div'], -3) + ($i+1);
+                $urutan = (int) $d['div'] + ($i+1);
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
                 $qry_div .= " ('$id', '$nama', '$cord', '$id_parent', '$part'),";

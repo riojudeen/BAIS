@@ -227,6 +227,7 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            $simulasi = "0";
                         }else if($id == 'group'){
                             $subArea = mysqli_query($link, "SELECT id_post FROM pos_leader WHERE id_group = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
@@ -234,6 +235,7 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            $simulasi = "1";
                         }else if($id == 'section'){
                             $subArea = mysqli_query($link, "SELECT id_group FROM groupfrm WHERE id_section = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
@@ -241,6 +243,7 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            $simulasi = "0";
                         }else if($id == 'dept'){
                             $subArea = mysqli_query($link, "SELECT id_section FROM section WHERE id_dept = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
@@ -248,6 +251,7 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            $simulasi = "0";
                         }else if($id == 'deptacc'){
                             $subArea = mysqli_query($link, "SELECT id_section FROM section WHERE id_dept = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
@@ -255,6 +259,7 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            $simulasi = "0";
                         }else if($id == 'division'){
                             $subArea = mysqli_query($link, "SELECT id_dept FROM department WHERE id_div = '$dOrg[id]' ")or die(mysqli_error($link));
                             $sub = (mysqli_num_rows($subArea) > 0) ? mysqli_num_rows($subArea)." sub area" : "";
@@ -262,29 +267,42 @@ if(isset($_SESSION['user'])){
                             $disabled = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"disabled":"";
                             $check = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"checkone";
                             $check_parent = (mysqli_num_rows($cek_mp)>0 OR $sub != "")?"":"check-$id";
+                            $simulasi = "0";
                         }
                         // echo $dOrg['id'];
                         ?>
                         
                         <tr class="<?=$dOrg['id']?> <?=$expatcolor?>">
                             <td><?=$noOrg++?></td>
+                            
                             <td><?=$dOrg['name']?></td>
                             <td>
                                 <?php
-                                if($sub == ''){
+                                if($id != 'deptacc'){
+                                    if($sub == ''){
+                                        ?>
+                                        <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-warning"><i class="nc-icon nc-simple-add"></i> sub org</a>
+                                    <?php
+                                    }
                                     ?>
-                                    <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-warning"><i class="nc-icon nc-simple-add"></i> sub org</a>
-                                <?php
+                                    <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-info"><?=$sub?></a>
+                                    <?php
                                 }
                                 ?>
-                                <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-info"><?=$sub?></a>
+                                
                             </td>
                             <td><?=$dOrg['cord']?></td>
                             <td><?=$dOrg['cord_name']?></td>
                             <td><?=$dOrg['parent_name']?></td>
                             
                             <td class="text-right text-nowrap">
-                            
+                                <?php
+                                if($simulasi != "0"){
+                                    ?>
+                                        <a href="../../pages/mp_update.php?&part=<?=$id?>&org=<?=$dOrg['id']?>" class="btn btn-info  btn-sm edit"><i class="fa fa-eye"></i></a>
+                                    <?php
+                                }
+                                ?>
                                
                                 <a href="proses/edit.php?<?=$id?>[]=<?=$dOrg['id']?>" class="btn btn-warning  btn-sm edit"><i class="fa fa-edit"></i></a>
                                 <a <?=$disabled?> href="proses/prosesOrg.php?del<?=$id?>=<?=$dOrg['id']?>" class="btn  btn-danger   btn-sm remove"><i class="fas fa-eraser"></i></a>

@@ -762,7 +762,6 @@ function generateAccess($link, $level, $npk){
         // $data9 = $sql['plant'];
     }else{
         $data1 = $data4 = $data5 = $data6 = $data8 = "null";
-        
     }
     if($level == 1){
         // general user

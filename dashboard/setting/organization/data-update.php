@@ -17,9 +17,22 @@ if(isset($_SESSION['user'])){
                 <div class="card-header">
                     <div class="row">
                         <h5 class="title pull-left col-md-6" id="mainpage">Update Organization</h5>
-                        <div class="col-md-6 text-right">
-                            <a href="index.php" class="btn">Kembali</a>
-                        </div>
+                        <?php
+                        if(isset($_GET['frm'])){
+                            ?>
+                            <div class="col-md-6 text-right">
+                                <a href="../../pages/mp_update.php" class="btn">Kembali</a>
+                            </div>
+                            <?php
+                        }else{
+                            ?>
+                            <div class="col-md-6 text-right">
+                                <a href="index.php" class="btn">Kembali</a>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                        
                     </div>
                     <?php
                     if($part_area == 'pos'){
@@ -221,10 +234,10 @@ if(isset($_SESSION['user'])){
                 // console.log(hal)
             });
             $(document).on('click', '#add_mp', function(){
-                $('.collapse').addClass('show').fadeIn('fast');
+                $('#collapsePlot').addClass('show').fadeIn('fast');
             });
             $(document).on('click', '#mp', function(){
-                $('.collapse').removeClass('show').fadeOut('fast');
+                $('#collapsePlot').removeClass('show').fadeOut('fast');
             });
             $('.inputnpk').blur(function(){
                 var active = $(".tab-active").attr('data-id');

@@ -6,7 +6,7 @@ if(isset($_SESSION['user'])){
         $total = $_POST['count'];
         include_once("../../../header.php");
 
-        echo $_POST['part'];
+        // echo $_POST['id_parent'];
         switch($_POST['part']){
             case "division":
                 $namaOrg = "Division";
@@ -111,10 +111,24 @@ if(isset($_SESSION['user'])){
                 <div class="card ">
                     <div class="card-header ">
                         <h4 class="card-title pull-left">Register <?=$namaOrg?></h4>
-                        <div class=" box pull-right">
-                            <a href="../index.php" class="btn btn-default "><i
-                                class="nc-icon nc-minimal-left"></i> Kembali</a>
-                        </div>
+                        <?php
+                        if(isset($_POST['frm'])){
+                            ?>
+                            <div class=" box pull-right">
+                                <a href="../../../pages/mp_update.php" class="btn btn-default "><i
+                                    class="nc-icon nc-minimal-left"></i> Kembali</a>
+                            </div>
+                            <?php
+                        }else{
+                            ?>
+                            <div class=" box pull-right">
+                                <a href="../index.php" class="btn btn-default "><i
+                                    class="nc-icon nc-minimal-left"></i> Kembali</a>
+                            </div>
+                            <?php
+                        }
+                        ?>
+                        
                     </div>
                     <div class="card-body">
                         <table class="table table-striped ">

@@ -11,590 +11,660 @@ if(isset($_SESSION['user'])){
 
     include("../header.php");
     if($level >=1 && $level <=8){
-        if(isset($_GET['org'])){
-            // jika akses dari admin
-            $q_area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$_GET[part]' AND id = '$_GET[org]' ")or die(mysqli_error($link));
-            $data_area = mysqli_fetch_assoc($q_area_cord);
-            $npk =$data_area['cord'];
-            $q_user_level = mysqli_query($link, "SELECT user_role.role_name AS 'name', user_role.level AS 'level' FROM data_user JOIN user_role ON user_role.id_role = data_user.level WHERE data_user.npk = '$npk' ")or die(mysqli_error($link));
-            $datalevel = mysqli_fetch_assoc($q_user_level);
-            $level = $datalevel['level'];
-            // echo $datalevel['level'];
-        }else{
-            // untuk kordinator area
-            $npk =$npkUser;
-            $level = $level;
+        $cek_area = mysqli_query($link, "SELECT cord FROM view_daftar_area WHERE cord = '$npkUser' AND part <> 'pos' ")or die(mysqli_error($link));
+        // echo mysqli_num_rows($cek_area);
+        if(mysqli_num_rows($cek_area) == 0){
 
-        }
-           
-    
-        // include("../manpower/filter.php"); 
-        ?>
-        <form action="proses.php" method="GET">
-            <div id="view_data"></div>
-        </form>
-        
-        <?php
-        $jam = date('H');
-        if($jam >= 0 && $jam <= 11){
-            $selamat = "Selamat Pagi";
-        }else if($jam >= 11 && $jam <= 15 ){
-            $selamat = "Selamat Siang";
-        }else if($jam >= 16 && $jam <= 18 ){
-            $selamat = "Selamat Sore";
-        }else if($jam >= 19 && $jam <= 23 ){
-            $selamat = "Selamat Malam";
-        }
-
-        $filter = '';
-        
-        // echo $deptAcc_filter;
-        $shift = '';
-        // echo $shift;
-        $cari = 'tes';
-        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT 
-            view_organization.npk,
-            view_organization.nama,
-            view_organization.tgl_masuk,
-            view_organization.jabatan,
-            view_organization.shift,
-            view_organization.pos,
-            view_organization.status,
-            view_organization.pos,
-            view_organization.groupfrm,
-            view_organization.section,
-            view_organization.dept,
-            view_organization.subpos,
-            view_organization.division,
-            view_organization.dept_account
-            
-            FROM view_organization ";
-        $div_filter = '';
-        // echo $div;
-        $dept_filter = '';
-        // echo $dept_filter;
-        $sect_filter = ($_GET['part'] == 'section')?" AND id_sect = '$_GET[org]' ":'';
-        // echo $sect_filter;
-        $group_filter = ($_GET['part'] == 'group')?" AND id_grp = '$_GET[org]'":'';
-        // echo $group_filter;
-        $deptAcc_filter = '';
-        $add_filter = $sect_filter.$group_filter;
-        
-        $access_org = orgAccessOrg($level);
-        $data_access = generateAccess($link,$level,$npk);
-        $table = partAccess($level, "table");
-        $field_request = partAccess($level, "field_request");
-        $table_field1 = partAccess($level, "table_field1");
-        $table_field2 = partAccess($level, "table_field2");
-        $part = partAccess($level, "part");
-        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        
-        $addTl = " AND  (jabatan = 'TL' OR jabatan = 'ATL')";
-        $addFrm = " AND  (jabatan = 'FRM' OR jabatan = 'AFRM')";
-        $addSpv = " AND  (jabatan = 'SPV' OR jabatan = 'ASPV')";
-        $addMng = " AND  (jabatan = 'MNG' OR jabatan = 'AMNG')";
-        $addDh = " AND  (jabatan = 'DH' OR jabatan = 'ADH')";
-        $addPermanent = " AND `status` = 'P' AND jabatan = 'TM' ";
-        $addK1 = " AND `status` = 'C1' AND jabatan = 'TM' ";
-        $addK2 = " AND `status` = 'C1' AND jabatan = 'TM' ";
-        $addTtm = " AND jabatan = 'TM' ";
-        if($level == 1){
-            $addGroup = "";
-        }else if($level == 2){
-            $addGroup = "";
-        }else if($level == 3){
-            $addGroup = "  GROUP BY pos";
-            $sub = "pos";
-            
-        }else if($level == 4){
-            $addGroup = "  GROUP BY groupfrm";
-            $sub = "groupfrm";
-        }else if($level == 5){
-            $addGroup = "  GROUP BY groupfrm";
-            $sub = "groupfrm";
-        }else if($level == 6){
-            $addGroup = " GROUP BY groupfrm";
-            $sub = "groupfrm";
-        }else if($level == 7){
-            $addGroup = " GROUP BY groupfrm";
-            $sub = "groupfrm";
-        }else if($level == 1){
-            $addGroup = " GROUP BY groupfrm";
-            $sub = "groupfrm";
-        }else{
-            $addGroup = " GROUP BY groupfrm";
-            $sub = "groupfrm";
-        }
-        $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
-        $sql_group = mysqli_query($link, $queryMP.$add_filter.$addGroup)or die(mysqli_error($link));
-        $sql_total_mp = mysqli_query($link, $queryMP.$add_filter)or die(mysqli_error($link));
-        // echo mysqli_num_rows($sql_group);
-        // echo $add_filter."<br>";
-        // echo $access_org."<br>";
-        // echo $data_access."<br>";
-        // echo $field_request."<br>";
-        // echo $table_field1."<br>";
-        // echo $table_field2."<br>";
-        // echo $part."<br>";
-        // echo $generate."<br>";
-        echo $queryMP."<br>";
-        // echo $npk."<br>";
-        // echo $part."<br>";
-
-        
-
-        ?>
-        
-        <div class="jumbotron jumbotron-fluid bg-white" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 80%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
-            <div class="container " >
+            if(isset($_GET['org'])){
+                // jika akses dari admin
+                $q_area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$_GET[part]' AND id = '$_GET[org]' ")or die(mysqli_error($link));
+                $data_area = mysqli_fetch_assoc($q_area_cord);
+                // $npk = $data_area['cord'];
+                $npk = $data_area['cord'];
+                $q_user_level = mysqli_query($link, "SELECT user_role.role_name AS 'name', user_role.level AS 'level' FROM data_user JOIN user_role ON user_role.id_role = data_user.level WHERE data_user.npk = '$npk' ")or die(mysqli_error($link));
+                $datalevel = mysqli_fetch_assoc($q_user_level);
+                $level = $datalevel['level'];
+                $part = $_GET['part'];
+                $data_access = $_GET['org'];
+                $npkCord = $data_area['cord'];
+                $sect_filter = ($part == 'section')?" AND id_sect = '$data_access' ":'';
+                $group_filter = ($part == 'group')?" AND id_grp = '$data_access'":'';
                 
+                $stringPart = "part=";
+                $headerGroup = " ".getOrgName($link, $data_access, $part)." ";
+                // echo $datalevel['level'];
+            }else{
+                // untuk kordinator area
+                $level = $level;
+                $part = partAccess($level, "part");
+                $npk = $npkUser;
+                $data_access = generateAccess($link,$level,$npk);
+                // echo $data_access;
+                $q_area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$part' AND cord = '$npkUser' ")or die(mysqli_error($link));
+                
+                // echo mysqli_num_rows($q_area_cord);
+                $area = array();
+                if(mysqli_num_rows($q_area_cord) > 0){
+                    $in = 0;
+                    while($data = mysqli_fetch_assoc($q_area_cord)){
+                        $area[$in++] = $data['id'];
+                        // echo $data['id'];
+                    }
+                }
+                $area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$part' AND cord = '$npkUser' ")or die(mysqli_error($link));
+                $data_area = mysqli_fetch_assoc($area_cord);
+                $npkCord = $data_area['cord'];
+                $sect_filter = '';
+                $group_filter = '';
+                
+                // echo count($area);
+                $headerGroup = '';
+                foreach($area AS $area){
+                    $headerGroup .= " ".getOrgName($link, $area, $part)." & ";
+                }
+                $headerGroup = substr($headerGroup, 0, -2);
+            }
+            // echo $npkCord;
+            if($npkUser == $npkCord){
+                $disabled = ($level == 3)?"":"disabled";
+                $mes = "koordinator area";
+                $edit = 1;
+            }else{
+                $disabled = "disabled";
+                $mes = "anda bukan koordinator area";
+                $edit = 0;
+            }
+           
+            ?>
+            <form action="proses.php" method="GET">
+                <div id="view_data"></div>
+            </form>
+            
+            <?php
+            $jam = date('H');
+            if($jam >= 0 && $jam <= 11){
+                $selamat = "Selamat Pagi";
+            }else if($jam >= 11 && $jam <= 15 ){
+                $selamat = "Selamat Siang";
+            }else if($jam >= 16 && $jam <= 18 ){
+                $selamat = "Selamat Sore";
+            }else if($jam >= 19 && $jam <= 23 ){
+                $selamat = "Selamat Malam";
+            }
+    
+            $filter = '';
+            
+            // echo $deptAcc_filter;
+            $shift = '';
+            // echo $shift;
+            $cari = '';
+            list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+            $origin_query = "SELECT 
+                view_organization.npk,
+                view_organization.nama,
+                view_organization.tgl_masuk,
+                view_organization.jabatan,
+                view_organization.shift,
+                view_organization.pos,
+                view_organization.status,
+                view_organization.pos,
+                view_organization.groupfrm,
+                view_organization.section,
+                view_organization.dept,
+                view_organization.subpos,
+                view_organization.division,
+                view_organization.id_post_leader,
+                view_organization.id_grp,
+                view_organization.id_sect,
+                view_organization.id_dept,
+                view_organization.id_sub_pos,
+                view_organization.id_division,
+                view_organization.id_dept_account,
+                view_organization.dept_account
+                
+                FROM view_organization ";
+            $div_filter = '';
+            // echo $div;
+            $dept_filter = '';
+            // echo $dept_filter;
+            
+            // echo $group_filter;
+            $deptAcc_filter = '';
+            $add_filter = $sect_filter.$group_filter;
+            // echo $data_access_org;
+            $access_org = orgAccessOrg($level);
+            // echo $access_org;
+            $table = partAccess($level, "table");
+            $field_request = partAccess($level, "field_request");
+            $table_field1 = partAccess($level, "table_field1");
+            $table_field2 = partAccess($level, "table_field2");
+            
+            $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+            // echo $generate;
+            // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+            // echo "$level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access";
+            $addTl = " AND  (jabatan = 'TL' OR jabatan = 'ATL')";
+            $addFrm = " AND  (jabatan = 'FRM' OR jabatan = 'AFRM')";
+            $addSpv = " AND  (jabatan = 'SPV' OR jabatan = 'ASPV')";
+            $addMng = " AND  (jabatan = 'MNG' OR jabatan = 'AMNG')";
+            $addDh = " AND  (jabatan = 'DH' OR jabatan = 'ADH')";
+            $addPermanent = " AND `status` = 'P' AND jabatan = 'TM' ";
+            $addK1 = " AND `status` = 'C1' AND jabatan = 'TM' ";
+            $addK2 = " AND `status` = 'C2' AND jabatan = 'TM' ";
+            $addTtm = " AND jabatan = 'TM' ";
+            if($level == 1){
+                $addGroup = "";
+                $sub = "id_post_leader";
+                $sub_part = "pos";
+            }else if($level == 2){
+                $addGroup = "";
+                $sub = "id_post_leader";
+                $sub_part = "pos";
+            }else if($level == 3){
+                $addGroup = "  GROUP BY id_post_leader";
+                $sub = "id_post_leader";
+                $sub_part = "pos";
+            }else if($level == 4){
+                $addGroup = "  GROUP BY id_grp";
+                $sub = "id_grp";
+                $sub_part = "group";
+            }else if($level == 5){
+                $addGroup = "  GROUP BY id_grp";
+                $sub = "id_grp";
+                $sub_part = "group";
+            }else if($level == 6){
+                $addGroup = " GROUP BY id_grp";
+                $sub = "id_grp";
+                $sub_part = "group";
+            }else if($level == 7){
+                $addGroup = " GROUP BY id_grp";
+                $sub = "id_grp";
+                $sub_part = "group";
+            }else if($level == 1){
+                $addGroup = " GROUP BY id_grp";
+                $sub = "id_grp";
+                $sub_part = "group";
+            }else{
+                $addGroup = " GROUP BY groupfrm";
+                $sub = "id_grp";
+                $sub_part = "group";
+            }
+
+            $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
+            // echo $queryMP;
+            $sql_group = mysqli_query($link, $queryMP.$add_filter.$addGroup." ORDER by $sub ASC")or die(mysqli_error($link));
+            $sql_total_mp = mysqli_query($link, $queryMP.$add_filter)or die(mysqli_error($link));
+           
+            $permanent = mysqli_query($link, $queryMP.$addPermanent)or die(mysqli_error($link));
+            $kontrak1 = mysqli_query($link, $queryMP.$addK1)or die(mysqli_error($link));
+            $kontrak2 = mysqli_query($link, $queryMP.$addK2)or die(mysqli_error($link));
+            $TM = mysqli_query($link, $queryMP.$addTtm)or die(mysqli_error($link));
+            $FRM = mysqli_query($link, $queryMP.$addFrm)or die(mysqli_error($link));
+            $TL = mysqli_query($link, $queryMP.$addTl)or die(mysqli_error($link));
+            
+            $jm_permanen = mysqli_num_rows($permanent);
+            $jm_kontrak1 = mysqli_num_rows($kontrak1);
+            $jm_kontrak2 = mysqli_num_rows($kontrak2);
+            $jm_TM = mysqli_num_rows($TM);
+            $jm_TL = mysqli_num_rows($TL);
+            $jm_FRM = mysqli_num_rows($FRM);
+    
+            // echo "$jm_permanen";
+    
+            ?>
+            
+            <div class="jumbotron jumbotron-fluid bg-white" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 80%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
+                <div class="container " >
+                    <input type="hidden" name="npk" id="npk" value="<?=$npk?>">
+                    <input type="hidden" name="level" id="level" value="<?=$level?>">
+                </div>
             </div>
-        </div>
-        <div class="row" style="margin-top:-200px">
-            <div class="col-md-4" >
-                <div class="row" style="margin-top:115px">
-                    <div class="col-md-12 pl-5">
-                        <div class="card card-user " >
-                            <div class="card-body">
-                                <div class="author">
-                                    <a href="#">
-                                        <img class="avatar border-gray" src="<?=$base64?>" alt="...">
-                                        <h5 class="title text-uppercase"><?=$namaUser?></h5>
-                                    </a>
-                                    <p class="description">
-                                        Coordinator UB Pick Up
-                                    </p>
+            <div class="row" style="margin-top:-200px">
+                <div class="col-md-4" >
+                    <div class="row" style="margin-top:115px">
+                        <div class="col-md-12 pl-5">
+                            <div class="card card-user " >
+                                <div class="card-body">
+                                    <div class="author">
+                                        <a href="#">
+                                            <img class="avatar border-gray" src="<?=$base64?>" alt="...">
+                                            <h5 class="title text-uppercase"><?=$namaUser?></h5>
+                                        </a>
+                                        <p class="description text-uppercase">
+                                            <?=$mes?>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-footer">
-                                
+                                <div class="card-footer">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-8 ">
-                <div class="row ">
-                    <div class="col-md-12 pr-5">
-                        
-                        <div class="row ">
-                            <div class="col-md-12 ">
-                                
-                                <div class="owl-carousel ">
-                                    <!-- <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                        <div class="card card-stats  text-white" style="background:#D2D2D2">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-warning border-right">
-                                                            <i class="fa fa-divhead"> </i>
+                <div class="col-md-8 ">
+                    <div class="row ">
+                        <div class="col-md-12 pr-5">
+                            
+                            <div class="row ">
+                                <div class="col-md-12 ">
+                                    
+                                    <div class="owl-carousel ">
+                                        
+                                        <!-- </div>
+                                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
+                                            <div class="card card-stats  text-white" style="background:#57E4FA">
+                                                <div class="card-body ">
+                                                    <div class="row">
+                                                        <div class="col-5 col-md-4">
+                                                            <div class="icon-big text-center icon-warning border-right">
+                                                                <i class="fa fa-foreman"> </i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Division Head</p>
-                                                            <p class="card-title stretched-link"> MP</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="dh"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6" > -->
-                                        <div class="card card-stats  text-white" style="background:#FD6C48">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-warning border-right">
-                                                            <i class="fa fa-depthead"> </i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Dept Head</p>
-                                                            <p class="card-title"> MP </p>
+                                                        <div class="col-7 col-md-8">
+                                                            <div class="numbers">
+                                                                <p class="card-category text-white">Foreman</p>
+                                                                <p class="card-title"> <?=$jm_FRM?>
+                                                                <p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="card-footer">
+                                                    <a href="" class="stretched-link view_data" id="fr"></a>
+                                                </div>
                                             </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="de"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-md-4"> -->
-                                        <div class="card card-stats bg-info text-white">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-warning border-right">
-                                                            <i class="fa fa-secthead"> </i>
+                                        <!-- </div>
+                                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
+                                            <div class="card card-stats text-white" style="background:#F1DB68">
+                                                <div class="card-body ">
+                                                    <div class="row">
+                                                        <div class="col-5 col-md-4">
+                                                            <div class="icon-big text-center icon-white border-right">
+                                                            <i class="fa fa-leader"></i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Section Head</p>
-                                                            <p class="card-title"> MP
-                                                            <p>
+                                                        <div class="col-7 col-md-8">
+                                                            <div class="numbers">
+                                                                <p class="card-category text-white">Team leader</p>
+                                                                <p class="card-title"> <?=$jm_TL?>
+                                                                <p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="card-footer">
+                                                    <a href="" class="stretched-link view_data" id="tl"></a>
+                                                </div>
                                             </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="sh"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                        <div class="card card-stats  text-white" style="background:#57E4FA">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-warning border-right">
-                                                            <i class="fa fa-foreman"> </i>
+                                        <!-- </div>
+                                        <div class="col-md-4 "> -->
+                                            <div class="card card-stats bg-danger text-white ">
+                                                <div class="card-body ">
+                                                    <div class="row">
+                                                        <div class="col-5 col-md-4">
+                                                            <div class="icon-big text-center icon-white border-right">
+                                                                <i class="fa fa-permanent"></i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Foreman</p>
-                                                            <p class="card-title"> MP
-                                                            <p>
+                                                        <div class="col-7 col-md-8">
+                                                            <div class="numbers">
+                                                                <p class="card-category text-white">Permanent</p>
+                                                                <p class="card-title"> <?=$jm_permanen?>
+                                                                <p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="card-footer">
+                                                    <a href="" class="stretched-link view_data" id="p"></a>
+                                                </div>
                                             </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="fr"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                        <div class="card card-stats text-white" style="background:#F1DB68">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-white border-right">
-                                                        <i class="fa fa-leader"></i>
+                                        <!-- </div>
+                                        <div class="col-lg-4 col-md-6 col-sm-6 "> -->
+                                            <div class="card card-stats text-white bg-primary" >
+                                                <div class="card-body ">
+                                                    <div class="row">
+                                                        <div class="col-5 col-md-4">
+                                                            <div class="icon-big text-center icon-white border-right">
+                                                                <i class="fa fa-kontrak2"></i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Team leader</p>
-                                                            <p class="card-title"> MP
-                                                            <p>
+                                                        <div class="col-7 col-md-8">
+                                                            <div class="numbers">
+                                                                <p class="card-category text-white">Kontrak 2</p>
+                                                                <p class="card-title"> <?=$jm_kontrak2?>
+                                                                <p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="card-footer">
+                                                    <a href="" class="stretched-link view_data" id="k2"></a>
+                                                </div>
                                             </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="tl"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-md-4 "> -->
-                                        <div class="card card-stats bg-danger text-white ">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-white border-right">
-                                                            <i class="fa fa-permanent"></i>
+                                        <!-- </div>
+                                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
+                                            <div class="card card-stats bg-success text-white">
+                                                <div class="card-body ">
+                                                    <div class="row">
+                                                        <div class="col-5 col-md-4">
+                                                            <div class="icon-big text-center icon-white border-right">
+                                                                <i class="fa fa-kontrak1"></i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Permanent</p>
-                                                            <p class="card-title"> MP
-                                                            <p>
+                                                        <div class="col-7 col-md-8">
+                                                            <div class="numbers">
+                                                                <p class="card-category text-white">Kontrak 1</p>
+                                                                <p class="card-title"> <?=$jm_kontrak1?>
+                                                                <p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="p"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6 "> -->
-                                        <div class="card card-stats text-white bg-primary" >
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-white border-right">
-                                                            <i class="fa fa-kontrak2"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Kontrak 2</p>
-                                                            <p class="card-title"> MP
-                                                            <p>
-                                                        </div>
-                                                    </div>
+                                                <div class="card-footer">
+                                                    <a href="" class="stretched-link view_data" id="k1"></a>
                                                 </div>
                                             </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="k2"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                        <div class="card card-stats bg-success text-white">
-                                            <div class="card-body ">
-                                                <div class="row">
-                                                    <div class="col-5 col-md-4">
-                                                        <div class="icon-big text-center icon-white border-right">
-                                                            <i class="fa fa-kontrak1"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-7 col-md-8">
-                                                        <div class="numbers">
-                                                            <p class="card-category text-white">Kontrak 1</p>
-                                                            <p class="card-title"> MP
-                                                            <p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer">
-                                                <a href="" class="stretched-link view_data" id="k1"></a>
-                                            </div>
-                                        </div>
-                                    <!-- </div> -->
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-0">
-
-                            <div class="col-md-12 mt-0">
-                                <div class="card ">
-                                    <div class="card-body">
-                                    <p class="card-category mb-0">Hi, <?=$nick?> , <?=$selamat?>!</p>
+                                        <!-- </div> -->
+    
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <h4 class="text-uppercase title mb-0"><?=$_GET['part']." ".getOrgName($link, $_GET['org'], $_GET['part'])?></h4>
-                                            </div>
-                                            <div class="col-md-6 text-right pt-4 mb-0">
-                                                <a  href="" class="btn btn-sm btn-success mb-0"> + Register Organisasi</a>
-                                            </div>
+                            <div class="row mt-0">
+    
+                                <div class="col-md-12 mt-0">
+                                    <div class="card ">
+                                        <div class="card-body">
+                                        <p class="card-category mb-0">Hi, <?=$nick?> , <?=$selamat?>!</p>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                        <div class="table-full-width">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Area</th>
-                                                        <th>Jml Emp</th>
-                                                        <th>DH</th>
-                                                        <th>MNG</th>
-                                                        <th>SPV</th>
-                                                        <th>FRM</th>
-                                                        <th>TL</th>
-                                                        <th>TM</th>
-                                                        <th>TM K1</th>
-                                                        <th>TM K2</th>
-                                                        <th>TM P</th>
-                                                        <th class="text-right">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    if(mysqli_num_rows($sql_group)>0){
-                                                        $no = 1;
-                                                        while($data = mysqli_fetch_assoc($sql_group)){
-                                                            $part = $_GET['part'];
-                                                            $total = mysqli_num_rows($sql_total_mp);
-                                                            $nama_area = (getOrgName($link, $data[$sub], $part) != '' )?getOrgName($link, $data[$sub], $part):'Belum Diregister';
-                                                            $permanent = mysqli_query($link, $queryMP.$addPermanent)or die(mysqli_error($link));
-                                                            
-                                                            $kontrak1 = mysqli_query($link, $queryMP.$addK1)or die(mysqli_error($link));
-                                                            $kontrak2 = mysqli_query($link, $queryMP.$addK2)or die(mysqli_error($link));
-                                                            $TM = mysqli_query($link, $queryMP.$addTtm)or die(mysqli_error($link));
-                                                            $FRM = mysqli_query($link, $queryMP.$addFrm)or die(mysqli_error($link));
-                                                            $TL = mysqli_query($link, $queryMP.$addTl)or die(mysqli_error($link));
-                                                            $SPV = mysqli_query($link, $queryMP.$addSpv)or die(mysqli_error($link));
-                                                            $MNG = mysqli_query($link, $queryMP.$addMng)or die(mysqli_error($link));
-                                                            $DH = mysqli_query($link, $queryMP.$addDh)or die(mysqli_error($link));
-                                                            $jm_permanen = mysqli_num_rows($permanent);
-                                                            $jm_kontrak1 = mysqli_num_rows($kontrak1);
-                                                            $jm_kontrak2 = mysqli_num_rows($kontrak2);
-                                                            $jm_TM = mysqli_num_rows($TM);
-                                                            $jm_TL = mysqli_num_rows($TL);
-                                                            $jm_FRM = mysqli_num_rows($FRM);
-                                                            $jm_SPV = mysqli_num_rows($SPV);
-                                                            $jm_MNG = mysqli_num_rows($MNG);
-                                                            $jm_DH = mysqli_num_rows($DH);
-                                                            // echo $queryMP.$addMng;
-                                                            ?>
-                                                            <tr>
-                                                                <td><?=$no++?></td>
-                                                                <td><?=$nama_area?></td>
-                                                                <td><?=$total?></td>
-                                                                <td><?=$jm_DH?></td>
-                                                                <td><?=$jm_MNG?></td>
-                                                                <td><?=$jm_SPV?></td>
-                                                                <td><?=$jm_FRM?></td>
-                                                                <td><?=$jm_TL?></td>
-                                                                <td><?=$jm_TM?></td>
-                                                                <td><?=$jm_kontrak1?></td>
-                                                                <td><?=$jm_kontrak2?></td>
-                                                                <td><?=$jm_permanen?></td>
-                                                                <td class="text-right">
-                                                                    <a  href="" class="btn btn-sm btn-success">Detail</a>
-                                                                </td>
-                                                            </tr>
-                                                            <?php
-                                                        }
-                                                    }
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h4 class="text-uppercase title "><?=$part.$headerGroup?></h4>
+                                                </div>
+                                                
+                                                <?php
+                                                if($edit == 1){
                                                     ?>
-                                                    
-                                                </tbody>
-                                            </table>
+                                                    <form action="../setting/organization/proses/add.php" method="POST" class="col-md-6 text-right pt-4 mb-0">
+                                                        <input type="hidden" name="part" value="<?=$sub_part?>">
+                                                        <input type="hidden" name="id_parent" value="<?=$data_access?>">
+                                                        <input type="hidden" name="count" value="1">
+                                                        <input type="hidden" name="frm" value="1">
+                                                        <input type="submit" class="btn btn-sm btn-success mb-0" value="Register Organisasi">
+                                                    </form>
+                                                    <?php
+                                                }else{
+                                                    ?>
+                                                    <div class="col-md-6 text-right pt-4 mb-0">
+                                                        <a  href="../setting/organization/" class="btn btn-sm mb-0"> Kembali </a>
+                                                    </div>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="table-full-width no-border text-uppercase">
+                                                    <table class="table">
+                                                        <?php
+                                                        $q_newArea = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE cord = '$npkUser' AND part = '$part'  ")or die(mysqli_error($link));
+                                                        if(mysqli_num_rows($q_newArea)> 0){
+                                                            $no=1;
+                                                            while($dataNewArea = mysqli_fetch_assoc($q_newArea)){
+                                                                // echo $sub_part;
+                                                                $q_cekPos = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = '$sub_part' AND id_parent = '$dataNewArea[id]' ")or die(mysqli_error($link));
+                                                                if(mysqli_num_rows($q_cekPos)>0){
+                                                                    while($dataPos = mysqli_fetch_assoc($q_cekPos)){
+                                                                        $query_total = mysqli_query($link, $queryMP.$add_filter." AND $sub = '$dataPos[id]' ")or die(mysqli_error($link));
+                                                                        if(mysqli_num_rows($query_total) == 0){
+                                                                            ?>
+                                                                            <tr class="table-danger">
+                                                                                
+                                                                                
+                                                                                <td class="text-danger pl-4 title">
+                                                                                    <div class="title">
+                                                                                        <?=$dataPos['nama_org']?>
+
+                                                                                    </div>
+                                                                                    <div class="badge badge-pill">Data Karyawan belum diposting</div>
+                                                                                </td>
+                                                                                <td class="text-right pr-4">
+                                                                                    <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-round btn-outline-danger btn-success">Update</a>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <?php
+                                                                        }
+                                                                        
+                                                                    }
+                                                                }
+                                                                
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-full-width table-responsive text-uppercase" style="max-height: 500px">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Area</th>
+                                                            <th>Jml Emp</th>
+                                                            <th>FRM</th>
+                                                            <th>TL</th>
+                                                            <th>TM</th>
+                                                            <th class="table-warning">TM K1</th>
+                                                            <th class="table-warning">TM K2</th>
+                                                            <th class="table-warning">TM P</th>
+                                                            <th class="text-right">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        if(mysqli_num_rows($sql_group)>0){
+                                                            $no = 1;
+                                                            while($data = mysqli_fetch_assoc($sql_group)){
+                                                                $part = $part;
+                                                                $color = ($data[$sub] == '')?"text-danger ":"";
+                                                                $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
+                                                                $addSub = " AND $sub $filter_sub";
+                                                                $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
+                                                                $total = mysqli_num_rows($query_total);
+                                                                // echo $addSub;
+                                                                // if($no == 1){
+                                                                //     echo $queryMP.$addPermanent.$addSub;
+                                                                // }
+                                                                $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
+                                                                $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
+                                                                $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
+                                                                $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
+                                                                $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
+                                                                $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
+                                                                $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
+                                                                
+                                                                $jm_permanen = mysqli_num_rows($permanent);
+                                                                $jm_kontrak1 = mysqli_num_rows($kontrak1);
+                                                                $jm_kontrak2 = mysqli_num_rows($kontrak2);
+                                                                $jm_TM = mysqli_num_rows($TM);
+                                                                $jm_TL = mysqli_num_rows($TL);
+                                                                $jm_FRM = mysqli_num_rows($FRM);
+                                                                // echo $queryMP.$addMng;
+                                                                ?>
+                                                                <tr class="<?=$color?>">
+                                                                    <td><?=$no++?></td>
+                                                                    <td><?=$nama_area?></td>
+                                                                    <td><?=$total?></td>
+                                                                   
+                                                                    <td><?=$jm_FRM?></td>
+                                                                    <td><?=$jm_TL?></td>
+                                                                    <td><?=$jm_TM?></td>
+                                                                    <td class="table-warning"><?=$jm_kontrak1?></td>
+                                                                    <td class="table-warning"><?=$jm_kontrak2?></td>
+                                                                    <td class="table-warning"><?=$jm_permanen?></td>
+                                                                    <td class="text-right">
+                                                                        <?php
+                                                                        if($data[$sub] != ''){
+                                                                            ?>
+                                                                            <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
+                                                                            <?php
+                                                                        }
+                                                                        ?>
+                                                                    </td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     
                 </div>
                 
             </div>
-            
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <h5 class="title col-md-6">Daftar Man Power</h5>
-                            <div class="col-md-6 ">
-                                <div class="my-2 mr-2 float-right order-3">
-                                    <div class="input-group bg-transparent">
-                                        <input type="text" name="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." id="cari">
-                                        <div class="input-group-append bg-transparent">
-                                            <div class="input-group-text bg-transparent">
-                                                <i class="nc-icon nc-zoom-split"></i>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <h5 class="title col-md-6">Daftar Man Power</h5>
+                                <div class="col-md-6 ">
+                                    <div class="my-2 mr-2 float-right order-3">
+                                        <div class="input-group bg-transparent">
+                                            <input type="text" name="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." id="cari">
+                                            <div class="input-group-append bg-transparent">
+                                                <div class="input-group-text bg-transparent">
+                                                    <i class="nc-icon nc-zoom-split"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+    
                             </div>
-
                         </div>
-                    </div>
-                    <hr>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="input-group no-border">
-                                    
-                                    <select class="form-control" name="div" id="s_div">
-                                        <option value="">Pilih Divisi</option>
-                                    </select>
-                                    <select class="form-control" name="dept" id="s_dept">
-                                        <option value="">Pilih Department</option>
-                                        <option value="" disabled>Pilih Division Terlebih Dahulu</option>
-                                    </select>
-                                    <select class="form-control" name="section" id="s_section">
-                                        <option value="">Pilih Section</option>
-                                        <option value="" disabled>Pilih Department Terlebih Dahulu</option>
-                                    </select>
-                                    <select class="form-control" name="groupfrm" id="s_goupfrm">
-                                        <option value="">Pilih Group</option>
-                                        <option value="" disabled>Pilih Section Terlebih Dahulu</option>
-                                    </select>
-                                    <select class="form-control" name="shift" id="s_shift">
-                                        <option value="">Pilih Shift</option>
+                        <hr>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group no-border">
                                         
-                                        <?php
-                                            $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
-                                            if(mysqli_num_rows($query_shift)>0){
-                                                while($data = mysqli_fetch_assoc($query_shift)){
+                                        <select class="form-control" name="div" id="s_div">
+                                            <option value="">Pilih Divisi</option>
+                                        </select>
+                                        <select class="form-control" name="dept" id="s_dept">
+                                            <option value="">Pilih Department</option>
+                                            <option value="" disabled>Pilih Division Terlebih Dahulu</option>
+                                        </select>
+                                        <select class="form-control" name="section" id="s_section">
+                                            <option value="">Pilih Section</option>
+                                            <option value="" disabled>Pilih Department Terlebih Dahulu</option>
+                                        </select>
+                                        <select class="form-control" name="groupfrm" id="s_goupfrm">
+                                            <option value="">Pilih Group</option>
+                                            <option value="" disabled>Pilih Section Terlebih Dahulu</option>
+                                        </select>
+                                        <select class="form-control" name="shift" id="s_shift">
+                                            <option value="">Pilih Shift</option>
+                                            
+                                            <?php
+                                                $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
+                                                if(mysqli_num_rows($query_shift)>0){
+                                                    while($data = mysqli_fetch_assoc($query_shift)){
+                                                        ?>
+                                                        <option value="<?=$data['id_shift']?>"><?=$data['shift']?> - <?=$data['id_shift']?></option>
+                                                        <?php
+                                                    }
+                                                }else{
                                                     ?>
-                                                    <option value="<?=$data['id_shift']?>"><?=$data['shift']?> - <?=$data['id_shift']?></option>
+                                                    <option value="">Belum Ada Data Shift</option>
                                                     <?php
                                                 }
-                                            }else{
-                                                ?>
-                                                <option value="">Belum Ada Data Shift</option>
-                                                <?php
-                                            }
-                                        ?>
-                                    </select>
-                                    <select class="form-control" name="deptacc" id="s_deptAcc">
-                                        <option value="">Pilih Department Administratif</option>
-                                        <?php
-                                            $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
-                                            if(mysqli_num_rows($q_div) > 0){
-                                                while($data = mysqli_fetch_assoc($q_div)){
-                                                ?>
-                                                <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
-                                                <?php
-                                                }
-                                            }else{
-                                                ?>
-                                                <option value="">Belum Ada Data Department Administratif</option>
-                                                <?php
-                                            }
-                                        ?>
+                                            ?>
                                         </select>
-                                    <div class="input-group-append ">
-                                        <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                        <select class="form-control" name="deptacc" id="s_deptAcc">
+                                            <option value="">Pilih Department Administratif</option>
+                                            <?php
+                                                $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
+                                                if(mysqli_num_rows($q_div) > 0){
+                                                    while($data = mysqli_fetch_assoc($q_div)){
+                                                    ?>
+                                                    <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
+                                                    <?php
+                                                    }
+                                                }else{
+                                                    ?>
+                                                    <option value="">Belum Ada Data Department Administratif</option>
+                                                    <?php
+                                                }
+                                            ?>
+                                            </select>
+                                        <div class="input-group-append ">
+                                            <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12" id="data-monitoring">
-                                <div class="table-responsive" style="height:200">
-                                    <table class="table table-striped table-hover text-nowrap" id="table_mp">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">No</th>
-                                                <th scope="col">NPK</th>
-                                                <th scope="col">Nama</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Jabatan</th>
-                                                <th scope="col">Tanggal Masuk</th>
-                                                <th scope="col">Shift</th>
-                                                <th scope="col">Area / Pos</th>
-                                                <th scope="col">Group</th>
-                                                <th scope="col">Section</th>
-                                                <th scope="col">Dept</th>
-                                                <th scope="col">Dept Adm</th>
-                                                <th scope="col">Action</th>
-                                                <th scope="col">
-                                                    <input type="checkbox" name="select_all" id="select_all" value="">
-                                                </th>
-            
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <td colspan="14" class="text-center"><?=noData()?></td>
-                                        </tbody>
-                                    </table>
+                            <div class="row">
+                                <div class="col-md-12" id="data-monitoring">
+                                    <div class="table-responsive" style="height:200">
+                                        <table class="table table-striped table-hover text-nowrap" id="table_mp">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col">NPK</th>
+                                                    <th scope="col">Nama</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Jabatan</th>
+                                                    <th scope="col">Tanggal Masuk</th>
+                                                    <th scope="col">Shift</th>
+                                                    <th scope="col">Area / Pos</th>
+                                                    <th scope="col">Group</th>
+                                                    <th scope="col">Section</th>
+                                                    <th scope="col">Dept</th>
+                                                    <th scope="col">Dept Adm</th>
+                                                    <th scope="col">Action</th>
+                                                    <th scope="col">
+                                                        <input type="checkbox" name="select_all" id="select_all" value="">
+                                                    </th>
+                
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <td colspan="14" class="text-center"><?=noData()?></td>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <?php
+            <?php
+            }else{
+                include_once ("../no_access.php");
+            }
         }else{
             include_once ("../no_access.php");
         }
@@ -617,10 +687,12 @@ if(isset($_SESSION['user'])){
                     var start = $('#start_date').val();
                     var end = $('#end_date').val();
                     var att_type = $('#att_type').val();
+                    var level = $('#level').val();
+                    var npk = $('#npk').val();
                     $.ajax({
                         url:"../manpower/ajax/index.php",
                         method:"GET",
-                        data:{page:page,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,filter:'yes'},
+                        data:{level:level,npk:npk,page:page,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,filter:'yes'},
                         success:function(data){
                             $('#data-monitoring').fadeOut('fast', function(){
                                 $(this).html(data).fadeIn('fast');
@@ -649,38 +721,9 @@ if(isset($_SESSION['user'])){
                     })
                 }
                 
-                $(document).on('click', '.request', function(e){
-                    e.preventDefault();
-                    var getLink = $(this).attr('href');
-                    var data = $(this).attr('data-id')
-                    var page = $('.page_active').attr('id')
-                    Swal.fire({
-                        title: 'Apakah Anda Yakin?',
-                        text: "pengajuan ini akan diproses",
-                        icon: false,
-                        showCancelButton: true,
-                        confirmButtonColor: '#27AE60',
-                        cancelButtonColor: '#B2BABB',
-                        confirmButtonText: 'Request!'
-                    }).then((result) => {
-                        if (result.value) {
-                            $.ajax({
-                                url:getLink,
-                                method:"GET",
-                                data:{request:data},
-                                success:function(){
-                                    load_data(page)
-                                    getSumary()
-                                    success('Diajukan','data pengajuan dibuat untuk dilanjutkan');
-                                }
-                            })
-                        }
-                    })
-                        
-                });
+                
                 $('#filterGo').on('click', function(){
                     load_data()
-                    getSumary()
                 })
                 $('#cari').on('keyup', function(){
                     load_data()
@@ -709,7 +752,7 @@ if(isset($_SESSION['user'])){
                         method: 'GET',
                         data:{start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,filter:'yes'},		
                         success:function(data){
-                            $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                            $('#sumary').html(data);	
                             
                         }
                     });
@@ -722,7 +765,7 @@ if(isset($_SESSION['user'])){
                         method: 'GET',
                         data: {data:data},		
                         success:function(data){
-                            $('#s_div').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                            $('#s_div').html(data);	
                             
                         }
                     });
@@ -777,13 +820,7 @@ if(isset($_SESSION['user'])){
                     getGroup()
                 })
 
-                $('.requestall').on('click', function(e){
-                    e.preventDefault();
-                    var getLink = 'mass_req.php';
-
-                    document.proses.action = getLink;
-                    document.proses.submit();
-                });
+                
                 
 
             })
@@ -809,122 +846,12 @@ if(isset($_SESSION['user'])){
                     });
                 });
             </script>
-            <script>
-                $(document).ready(function(){
-                    
-                    $(document).on('click', '#allmp', function(){
-                        if(this.checked){
-                            $('.mp').each(function() {
-                                this.checked = true;
-                            })
-                        } else {
-                            $('.mp').each(function() {
-                                this.checked = false;
-                            })
-                        }
-
-                    });
-
-                    $('.mp').on('click', function() {
-                        if($('.mp:checked').length == $('.mp').length){
-                            $('#allmp').prop('checked', true)
-                        } else {
-                            $('#allmp').prop('checked', false)
-                        }
-                    })
-                })
-            </script>
-            <script type="text/javascript">
-                $(document).ready(function(){
-                    $(document).on('click', '.view_data', function(){
-                        var id = $(this).parents("tr").attr("id");
-                        
-                        $.ajax({
-                            url: '../ajax/view.php',	
-                            method: 'post',
-                            data: {id:id},		
-                            success:function(data){
-                                $('#view_data').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                                $('#myView').modal("show");	// menampilkan dialog modal nya
-                            }
-                        });
-                    });
-                    $(document).on('click', '.td', function(){
-                        var id = $(this).parent('tr').attr("id");
-                        
-                        
-                        $.ajax({
-                            url: '../ajax/view.php',	
-                            method: 'post',
-                            data: {id:id},		
-                            success:function(data){
-                                $('#view_data').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                                $('#myView').modal("show");	// menampilkan dialog modal nya
-                            }
-                        });
-                    });
-                });
-                
-            </script>
             
-         <script>
-    //untuk crud masal update department
-        function edit() {
-            document.prosesdept.action = 'dept/edit.php';
-            document.prosesdept.submit();
-        }
-        function hapus() {            
-            var conf = confirm('yakin ingin menghapus data? ');
-            if (conf) {
-                document.prosesdept.action ='dept/delete.php';
-                document.prosesdept.submit();
-            }        
-        }
-    </script>
-    <script>
-    //untuk data tables
-
-        // $(document).ready(function(){
-        //     $('#table_mp').DataTable({
-                
-        //         columnDefs: [
-        //             {
-        //                 "searchable": false,
-        //                 "orderable": false,
-        //                 "targets": [0, ,9, 10]
-        //             }
-        //         ],
-        //         "order": [1,"asc"]
-        //     });
-        // })
+            
+            
+       
     
-    </script>
-    <script>
-		$(document).ready(function() {
-		  $('#searching').on('shown.bs.modal', function() {
-			$('#focusInput').trigger('focus');
-		  });
-		});	
-	</script>
-    <script type="text/javascript">
-        $(document).ready(function(){
-            
-            $('.view_data').click(function(e){
-                e.preventDefault();
-                var id = $(this).attr("id");
-                $.ajax({
-                    url: '../manpower/detail.php',	
-                    method: 'post',
-                    data: {id:id},		
-                    success:function(data){		
-                        $('#view_data').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                        $('#myView').modal("show");	// menampilkan dialog modal nya
-                    }
-                });
-            });
-        });
-        
-    </script>
+   
     
     <!-- <script>
         chartColor = "#FFFFFF";
