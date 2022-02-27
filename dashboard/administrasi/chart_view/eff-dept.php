@@ -170,18 +170,31 @@ include("../../../config/config.php");
                                         datasets: [
                                             {
                                                 label: "Masuk",
+                                                xAxisID: 'A',
                                                 // type: 'horizontalBar',
                                                 backgroundColor: 
                                                     'rgba(32, 174, 255, 0.8)',
                                                 borderColor:
                                                     'rgba(255,99,132,1)',
                                                 borderWidth: 0,
-                                                data: [<?=$total?>],
+                                                data: [],
                                             },
                                             {
                                                 label: "Ijin / Cuti",
+                                                xAxisID: 'A',
                                                 backgroundColor: 
                                                     'rgba(255, 72, 9, 0.8)',
+                                                borderColor:
+                                                    'rgba(255,99,132,1)',
+                                                borderWidth: 0,
+                                                
+                                                data: [<?=$total?>],
+                                            },
+                                            {
+                                                label: "Total MP",
+                                                xAxisID: 'B',
+                                                backgroundColor: 
+                                                    'rgba(246, 242, 242, 0.8)',
                                                 borderColor:
                                                     'rgba(255,99,132,1)',
                                                 borderWidth: 0,
@@ -202,6 +215,7 @@ include("../../../config/config.php");
                                         scales: {
 
                                             yAxes: [{
+                                                
                                                 stacked: true,
                                                 ticks: {
                                                     display: true
@@ -211,14 +225,18 @@ include("../../../config/config.php");
                                                     display: false,
                                                     drawBorder: false,
                                                     color: '#9f9f9f',
+                                                    
                                                 }
 
                                             }],
                                             xAxes: [{
+                                                id: 'A',
+                                                
                                                 stacked: true,
                                                 barPercentage: 0.4,
                                                 barThickness: 10,  // number (pixels) or 'flex'
                                                 maxBarThickness: 15, // number (pixels)
+                                                position: 'top',
                                                 gridLines: {
                                                     zeroLineColor: "white",
                                                     display: false,
@@ -228,7 +246,32 @@ include("../../../config/config.php");
                                                 },
                                                 ticks: {
                                                     beginAtZero: true,
-                                                    display: false
+                                                    display: false,
+                                                    steps: 10,
+                                                    stepValue: 5,
+                                                    max: 100
+                                                },
+                                            },{
+                                                id: 'B',
+                                                stacked: false,
+                                                barPercentage: 0.4,
+                                                barThickness: 10,  // number (pixels) or 'flex'
+                                                maxBarThickness: 15, // number (pixels)
+                                                position: 'bottom',
+                                                type: 'linear',
+                                                gridLines: {
+                                                    zeroLineColor: "white",
+                                                    display: false,
+
+                                                    drawBorder: false,
+                                                    color: 'transparent',
+                                                },
+                                                ticks: {
+                                                    beginAtZero: true,
+                                                    display: false,
+                                                    steps: 10,
+                                                    stepValue: 5,
+                                                    max: 100
                                                 },
                                             }]
                                         }

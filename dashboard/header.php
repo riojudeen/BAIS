@@ -2,7 +2,7 @@
 // error_reporting(0);
 //encode gambar foro profile dari personal site
   $title = (isset($halaman))? "BAIS | ".$halaman : "Body Administration Information System ";
-
+  // $level = 8;
   // include(base_url()'assets/config/function.php');
   $path = "//adm-fs/HRD/HRD-Photo/".$npkUser.".jpg";
   $type = pathinfo($path, PATHINFO_EXTENSION);
@@ -466,7 +466,7 @@
             // }
           ?>         
           <?php 
-          // if($role == "admin" || $role == "mng" || $role == "spv" || $role == "frm" || $role == "user"){
+          if($level > 2 && $level != 5){
             ?>
           <li class="clpse " data-name="mntrg" id="mntrg" data-target="monitoring">
             <a data-toggle="collapse" href="#monitoring" aria-expanded="false">
@@ -483,21 +483,22 @@
                 // }else{
                 
                 ?>
-                <li class="menu " data-name="emp" id="emp">
+                <li class="menu d-none" data-name="emp" id="emp">
                   <a href="<?=base_url()?>/dashboard/pages/manpower.php"><!---link halaman update MP--->
                     <span class="sidebar-mini-icon">EM</span>
                     <span class="sidebar-normal"> Employee Monitoring (exp)</span>
                   </a>
                 </li> 
                 <?php
-                // }         
-                ?>
+                if($level == 3 || $level == 8){
+                  ?> 
                 <li class="menu " data-name="mpu" id="mpu">
                   <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
                     <span class="sidebar-mini-icon">EM</span>
                     <span class="sidebar-normal"> Employee Monitoring  </span>
                   </a>
                 </li>
+                  
                 <li class="menu " data-name="lo" id="lo">
                   <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
                     <span class="sidebar-mini-icon">EM</span>
@@ -510,21 +511,30 @@
                     <span class="sidebar-normal"> Employee Update Request </span>
                   </a>
                 </li>
-
+                <?php
+                  }else if($level >= 6 ){
+                    
+                  ?>
                 <li class="menu " data-name="reinburst" id="reinburst">
                   <a href="">
                     <span class="sidebar-mini-icon">EA</span>
                     <span class="sidebar-normal"> Employee Update Approval </span>
                   </a>
-                </li>    
+                </li>
+                <?php
+                }
+                ?>
               </ul>
             </div>
           </li>
           <?php
-          // }?>
-        
+          }
+          ?>
+
           <?php 
-          // if($role == "admin" || $role == "mng" || $role == "spv" || $role == "frm"){?>                  
+
+          if($level > 2 ){
+          ?>                  
           <li class="clpse " data-name="req" id="req" data-target="requests">
             <a data-toggle="collapse" href="#requests" aria-expanded="false">
               <i class="nc-icon nc-ruler-pencil"></i>
@@ -540,7 +550,10 @@
                     <span class="sidebar-normal"> attendance Monitoring </span>
                   </a>
                 </li>
-                
+                <?php 
+
+                if($level != 5 ){
+                ?> 
                 <li class="menu " data-name="reqabs" id="reqabs">
                   <a href="<?=base_url()?>/dashboard/absensi/req_absensi.php"><!---link halaman pengajuan SUPEM--->
                     <span class="sidebar-mini-icon">LR</span>
@@ -553,26 +566,37 @@
                     <span class="sidebar-normal"> Shift Request </span>
                   </a>
                 </li>
-                
+                <?php
+                }
+                if($level >= 4 && $level != 5){
+                  
+                ?>
                 <li class="menu " data-name="leave" id="leave">
                   <a href="<?=base_url()?>/dashboard/absensi/approval/index.php">
                     <span class="sidebar-mini-icon">LA</span>
                     <span class="sidebar-normal"> Leave Approval </span>
                   </a>
                 </li>
+                <?php
+                }
+                if($level >= 6){
+                ?>
                 <li class="menu " data-name="cico" id="cico">
-                  <a href="<?=base_url()?>/dashboard/setting/cico/index.php">
+                  <a target="blank" href="<?=base_url()?>/dashboard/setting/cico/index.php">
                     <span class="sidebar-mini-icon">MC</span>
                     <span class="sidebar-normal"> Migrasi CiCo </span>
                   </a>
                 </li>
+                <?php
+                }
+                ?>
               </ul>
             </div>
           </li>
           <?php
-            // }
+            }
           ?>         
-          <?php if($role !== "frm" && $role !== "user"){?>
+          <?php if($level >= 2){?>
           <li class="clpse " data-name="ot" id="ot" data-target="overtime">
             <a data-toggle="collapse" href="#overtime" aria-expanded="false"><!---link halaman Kontrol--->
               <i class="nc-icon nc-box"></i>
@@ -589,25 +613,29 @@
                     <span class="sidebar-normal"> Overtime Montoring </span>
                   </a>
                 </li>
-                
+                <?php 
+
+                if($level != 5 ){
+                ?>
                 <li class="menu " data-name="reqot" id="reqot">
                   <a href="<?=base_url()?>/dashboard/overtime/overtime_request.php"><!---link halaman request lembur--->
                     <span class="sidebar-mini-icon">OR</span>
                     <span class="sidebar-normal"> Overtime Request </span>
                   </a>
                 </li>
+                <?php
+                }
+                if($level >= 4 && $level != 5){
+                ?>
                 <li class="menu " data-name="appot" id="appot">
                   <a href="<?=base_url()?>/dashboard/overtime/overtime_approval.php">
                     <span class="sidebar-mini-icon">OA</span>
                     <span class="sidebar-normal"> Overtime Approval </span>
                   </a>
                 </li>
-                <!-- <li class="menu " data-name="internInfo" id="internInfo">
-                  <a href="">
-                    <span class="sidebar-mini-icon">BI</span>
-                    <span class="sidebar-normal"> Blast Info</span>
-                  </a>
-                </li> -->
+                  <?php
+                }
+                ?>
               </ul>
             </div>
           </li>
@@ -615,7 +643,7 @@
           }
           ?> 
           <?php 
-          // if($role !== "frm" && $role !== "user"){?>
+          if($level >= 6 ){?>
           <li class="clpse " data-name="contsettings" id="contsettings" data-target="settings">
             <a data-toggle="collapse" href="#settings" aria-expanded="false"><!---link halaman Kontrol--->
               <i class="nc-icon nc-lock-circle-open"></i>
@@ -626,6 +654,10 @@
             </a>
             <div class="collapse" id="settings">
               <ul class="nav" >
+              <?php
+                if($level >= 7){
+                  
+                ?>
                 <li class="menu " data-name="master" id="master">
                   <a href="<?=base_url()?>/dashboard/setting/master.php">
                     <span class="sidebar-mini-icon">MD</span>
@@ -638,12 +670,18 @@
                     <span class="sidebar-normal"> Leave Allocation</span>
                   </a>
                 </li>
+                
+                <!-- seting waktu dan schedule produksi -->
                 <li class="menu " data-name="workinghours" id="workinghours">
                   <a href="<?=base_url()?>/dashboard/wh">
                     <span class="sidebar-mini-icon">WH</span>
                     <span class="sidebar-normal"> Working Schedule</span>
                   </a>
                 </li>
+                <!-- seting waktu dan schedule produksi -->
+                <?php
+                }
+                ?>
                 <li class="menu " data-name="resource" id="resource">
                   <a href="<?=base_url()?>/dashboard/setting/employee/add_karyawan.php">
                     <span class="sidebar-mini-icon">ED</span>
@@ -669,12 +707,7 @@
                     <span class="sidebar-normal"> Man Power Setting</span>
                   </a>
                 </li>
-                <li class="menu d-none" data-name="geninfo" id="geninfo">
-                  <a href="<?=base_url()?>/dashboard/setting/portBlast.php">
-                    <span class="sidebar-mini-icon">IP</span>
-                    <span class="sidebar-normal"> Blast Info Portal</span>
-                  </a>
-                </li>
+                
                 <li class="menu d-none" data-name="infoport" id="infoport">
                   <a href="<?=base_url()?>/dashboard/setting/portal.php">
                     <span class="sidebar-mini-icon">IP</span>
@@ -697,7 +730,9 @@
             </div>
           </li>
           <?php
-          // }
+          }
+          if($level == 2 || $level == 8 ){
+            
           ?>
            
           <li class="clpse " data-name="costmon" id="costmon" data-target="costMonitoring">
@@ -733,7 +768,10 @@
               </ul>
             </div>
           </li>
+          <?php
           
+        }
+          ?>
           <li class="clpse " data-name="doc" id="doc" data-target="documentation">
             <a data-toggle="collapse" href="#documentation" aria-expanded="false"><!---link halaman Kontrol--->
               <i class="nc-icon nc-book-bookmark"></i>
@@ -767,6 +805,10 @@
               </ul>
             </div>
           </li>
+          <?php
+          if($level >= 7){
+            
+          ?>
           <li class="menu clpse " data-name="chat" id="chat" data-target="chat">
             <a target="blank" href="<?php echo base_url('chat/');?>">
               <i class="nc-icon nc-chat-33"></i>
@@ -780,6 +822,11 @@
             </a>
           </li>
           <li>
+            <?php
+
+            
+          }
+          ?>
         </ul>
       </div>
     </div>
