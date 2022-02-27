@@ -13,7 +13,7 @@ if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         $cek_area = mysqli_query($link, "SELECT cord FROM view_daftar_area WHERE cord = '$npkUser' AND part <> 'pos' ")or die(mysqli_error($link));
         // echo mysqli_num_rows($cek_area);
-        if(mysqli_num_rows($cek_area) == 0){
+        if(mysqli_num_rows($cek_area) > 0){
 
             if(isset($_GET['org'])){
                 // jika akses dari admin

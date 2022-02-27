@@ -88,333 +88,70 @@ if(isset($_SESSION['user'])){
 
 <div class="row ">
     <div class="col-md-4 ">  
-        <div class="jam_analog_malasngoding">
-            <div class="xxx">
-                <div class="jarum jarum_detik"></div>
-                <div class="jarum jarum_menit"></div>
-                <div class="jarum jarum_jam"></div>
-                <div class="lingkaran_tengah"></div>
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card card-plain">
                     <div class="card-body">
+                        <div class="jam_analog_malasngoding">
+                            <div class="xxx">
+                                <div class="jarum jarum_detik"></div>
+                                <div class="jarum jarum_menit"></div>
+                                <div class="jarum jarum_jam"></div>
+                                <div class="lingkaran_tengah"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 " >
+                <div class="card" >
+                    <div class="card-body ">
                         <center>
                             <h5 style="font-size: 50px; font-family: arial;" id="jam"></h5>
                         </center>
-                        <h6 class="title text-uppercase">Tambah Pengaturan</h6>
-                        <form action="">
-                            <div class="form-group">
-                                <input type="text" class="form-control " placeholder="nama" >
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control datepicker" placeholder="start off" data-date-format="HH:mm:ss">
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control datepicker" placeholder="end off" data-date-format="HH:mm:ss">
-                            </div>
-                            <div class="form-group">
-                                <!-- <input type="text" class="form-control datepicker" placeholder="end off" data-date-format="HH:mm:ss"> -->
-                                <select name="" class="form-control" id="">
-                                    <option value="">Type</option>
-                                    <option value="">overtime</option>
-                                    <option value="">attendance</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <!-- <input type="text" class="form-control datepicker" placeholder="end off" data-date-format="HH:mm:ss"> -->
-                                <select name="" class="form-control" id="">
-                                    <option value="">Period</option>
-                                    <option value="">year</option>
-                                    <option value="">day</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="btn btn-sm btn-primary">tambah data</div>
-    </div>
-    <div class="col-md-8">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6  my-0 py-2">
-                                <h5 class="title ">
-                                    System Maintenance
-                                </h5>
-                                <p class="category">System off</p>
-
-                            </div>
-                            <div class="col-md-6 text-right my-0 py-2">
-                            <?php
-                            if(mysqli_num_rows($sm)>0){
-                                $data_sm = mysqli_fetch_assoc($sm);
-                                $active = $data_sm['status'];
-                                $checked = ($data_sm['status'] == 1)?"checked":'';
-                                ?>
-                                <input class="bootstrap-switch " type="checkbox" data-toggle="switch" name="status_sm" <?=$checked?> value="<?=$active?>" data-on-color="warning" data-off-color="warning" data-on-label="ON" data-off-label="OFF">
-                                <?php
-                            }
-                            ?>
-                            </div>
-                        </div>
+                        <?php
                         
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-            
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-6  my-0 py-2">
-                                <h5 class="title ">
-                                    Daily Lock System
-                                </h5>
-                                <p class="category">System off</p>
-    
+                        ?>
+                        <h6 class="title text-uppercase">Tambah Pengaturan</h6>
+                        <form action="" method="POST">
+                            <div class="form-group">
+                                <input name="nama" id="nama_skema" required type="text" class="form-control text-uppercase"  autocomplete="off" placeholder="nama" >
                             </div>
-                            <div class="col-md-6 text-right">
-                                <div class="btn btn-sm btn-success">Update</div>
+                            <div class="form-group">
+                                <input name="start" type="text" id="start_skema" required class="form-control datepicker" placeholder="start off"  autocomplete="off" data-date-format="HH:mm:ss">
                             </div>
-
-                        </div>
-                    </div>
-                    <hr class="my-0">
-                    <div class="card-body">
-                        <form method="get" action="/" class="form-horizontal">
-                        <?php
-                            if(mysqli_num_rows($daily_ot)>0){
-                                
-                                ?>
-                                <div class="table-full-width text-uppercase">
-                                    <table class="table-sm text-nowrap text-truncate" width="100%">
-                                        <thead>
-                                            <tr class="py-1">
-                                                <th></th>
-                                                    <th >Scheme</th>
-                                                    <th >Start</th>
-                                                    <th >End</th>
-                                                    <th colspan="2">Type</th>
-                                                <th ></th>
-                                            </tr>
-                                            
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $no = 1;
-                                            while($data = mysqli_fetch_assoc($daily_ot)){
-                                                $type = ($data['type'] == 'ot')?'overtime':(($data['type'] == 'at')?'attendance':'system');
-                                                ?>
-                                                <tr>
-                                                    <td>#<?=$no++?></td>
-                                                    <td><?=$data['system_name']?></td>
-                                                    
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="hh:mm:ss" value="<?=$data['off_start']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="hh:mm:ss" value="<?=$data['off_end']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                    <?=$type?>
-                                                    </td>
-                                                    
-                                                    <td>
-                                                        <?php
-                                                        
-                                                        $active = $data['status'];
-                                                        $checked = ($data['status'] == 1)?"checked":'';
-                                                        ?>
-                                                        <input class="bootstrap-switch " type="checkbox" data-toggle="switch" name="status_sm" <?=$checked?> value="<?=$active?>" data-on-color="warning" data-off-color="warning" data-on-label="ON" data-off-label="OFF">
-                                                        
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
-                                            ?>
-                                            <?php
-                                            $no = 1;
-                                            while($data = mysqli_fetch_assoc($daily_at)){
-                                                $type = ($data['type'] == 'ot')?'overtime':(($data['type'] == 'at')?'attendance':'system');
-                                                ?>
-                                                <tr>
-                                                    <td>#<?=$no++?></td>
-                                                    <td><?=$data['system_name']?></td>
-                                                    
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="hh:mm:ss" value="<?=$data['off_start']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="hh:mm:ss" value="<?=$data['off_end']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                    <?=$type?>
-                                                    </td>
-                                                    
-                                                    <td>
-                                                        <?php
-                                                            
-                                                        $active = $data['status'];
-                                                        $checked = ($data['status'] == 1)?"checked":'';
-                                                        ?>
-                                                        <input class="bootstrap-switch " type="checkbox" data-toggle="switch" name="status_sm" <?=$checked?> value="<?=$active?>" data-on-color="warning" data-off-color="warning" data-on-label="ON" data-off-label="OFF">
-                                                        
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
-                                            ?>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                                
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-6  my-0 py-2">
-                                <h5 class="title ">
-                                    End Year Close Lock System
-                                </h5>
-                                <p class="category">System off</p>
-
+                            <div class="form-group">
+                                <input  name="end" type="text" id="end_skema" required class="form-control datepicker" placeholder="end off"  autocomplete="off" data-date-format="HH:mm:ss">
                             </div>
-                            <div class="col-md-6 text-right">
-                                <div class="btn btn-sm btn-success">Update</div>
+                            <div class="form-group">
+                                <!-- <input type="text" class="form-control datepicker" placeholder="end off" data-date-format="HH:mm:ss"> -->
+                                <select name="type" id="type_skema" class="form-control text-uppercase" id="">
+                                    <option value="">Type</option>
+                                    <option value="ot">overtime</option>
+                                    <option value="at">attendance</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                    <hr class="my-0">
-                    <div class="card-body">
-                        <form method="get" action="/" class="form-horizontal">
-                        <?php
-                            if(mysqli_num_rows($daily_ot)>0){
-                                
-                                ?>
-                                <div class="table-full-width text-uppercase">
-                                    <table class="table-sm text-nowrap text-truncate" width="100%">
-                                        <thead>
-                                            <tr class="py-1">
-                                                <th></th>
-                                                    <th >Scheme</th>
-                                                    <th >Start</th>
-                                                    <th >End</th>
-                                                    <th colspan="2">Type</th>
-                                                <th ></th>
-                                            </tr>
-                                            
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $no = 1;
-                                            while($data = mysqli_fetch_assoc($y_ot)){
-                                                $type = ($data['type'] == 'ot')?'overtime':(($data['type'] == 'at')?'attendance':'system');
-                                                ?>
-                                                <tr>
-                                                    <td>#<?=$no++?></td>
-                                                    <td><?=$data['system_name']?></td>
-                                                    
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="HH:mm:ss" value="<?=$data['off_start']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="HH:mm:ss" value="<?=$data['off_end']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                    <?=$type?>
-                                                    </td>
-                                                    
-                                                    <td>
-                                                        <?php
-                                                            
-                                                        $active = $data['status'];
-                                                        $checked = ($data['status'] == 1)?"checked":'';
-                                                        ?>
-                                                        <input class="bootstrap-switch " type="checkbox" data-toggle="switch" name="status_sm" <?=$checked?> value="<?=$active?>" data-on-color="warning" data-off-color="warning" data-on-label="ON" data-off-label="OFF">
-                                                        
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
-                                            ?>
-                                            <?php
-                                            $no = 1;
-                                            while($data = mysqli_fetch_assoc($y_at)){
-                                                $type = ($data['type'] == 'ot')?'overtime':(($data['type'] == 'at')?'attendance':'system');
-                                                ?>
-                                                <tr>
-                                                    <td>#<?=$no++?></td>
-                                                    <td><?=$data['system_name']?></td>
-                                                    
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="HH:mm:ss" value="<?=$data['off_start']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-group-sm" auto-complete="off">
-                                                            <input type="text" class="form-control datepicker border-0 bg-transparent px-0" data-date-format="HH:mm:ss" value="<?=$data['off_end']?>">
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                    <?=$type?>
-                                                    </td>
-                                                    
-                                                    <td>
-                                                        <?php
-                                                        
-                                                        $active = $data['status'];
-                                                        $checked = ($data['status'] == 1)?"checked":'';
-                                                        ?>
-                                                        <input class="bootstrap-switch " type="checkbox" data-toggle="switch" name="status_sm" <?=$checked?> value="<?=$active?>" data-on-color="warning" data-off-color="warning" data-on-label="ON" data-off-label="OFF">
-                                                    
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
-                                            ?>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php
-                            }
-                            ?>
-                                
+                            <div class="form-group">
+                                <!-- <input type="text" class="form-control datepicker" placeholder="end off" data-date-format="HH:mm:ss"> -->
+                                <select name="period" id="period_skema" class="form-control text-uppercase" id="">
+                                    <option value="">Period</option>
+                                    <option value="y">year</option>
+                                    <option value="d">day</option>
+                                </select>
+                            </div>
+                            <input  class="btn btn-sm btn-primary" name="add" id="add_setting" type="submit" value="tambah data">
+                            <button  class="btn btn-sm btn-warning" type="reset" >Reset</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+        
+        
+    </div>
+    <div class="col-md-8" id="view_setting">
+        
     </div>
     
     
@@ -427,109 +164,33 @@ if(isset($_SESSION['user'])){
 //footer
 		include_once("../footer.php");
         ?>
-        <script>
-        $(document).ready(function(){
-            // 
-            function load_monitor(){
-                var date = $('#date_').val()
-                var dept = $('#show_dept').val()
-                var shift = $('#shift').val()
-                var get_group = $('#data_total').text();
-                console.log(get_group)
-                $.ajax({
-                    url: 'chart_view/index.php',
-                    method: 'GET',
-                    data: {index:get_group,monitor_date:date,dept_account:dept,shift:shift},
-                    success:function(data){
-                        $('#data-monitor').fadeOut('fast', function(){
-                            $(this).html(data).fadeIn('fast');
-                        });
-                    }
-                })
-            }
-            load_monitor()
-            $('#date_').on('blur', function(){
-                load_monitor()
-            })
-            $('#show_dept').on('change', function(){
-                load_monitor()
-            })
-            $('#shift').on('change', function(){
-                load_monitor()
-                
-            })
-            
-            var autoRefresh;
-            // window.onload = resetTimer;
-            window.onmousemove = resetTimeInterval;
-            window.onmousedown = resetTimeInterval; // catches touchscreen presses
-            window.onclick = resetTimeInterval;     // catches touchpad clicks
-            window.onscroll = resetTimeInterval;    // catches scrolling with arrow keys
-            window.onkeypress = resetTimeInterval;
-    
-            // function refresh() {
-            //     load_monitor()
-            // }
-            
-            // function resetTimeInterval() {
-            //     clearInterval(autoRefresh);
-                
-            //     autoRefresh = setInterval(refresh, 10000);  // time is in milliseconds
-            // }
+        
+<script>
+    $(document).ready(function(){
+    $('.datepicker').datetimepicker();
 
-            
-            var link = document.getElementsByClassName('data_load');
-            var load = 0;
-            var int = 0;
-            var total = Number($('#data_total').attr('data-id'));
+    })
+</script>
+<script type="text/javascript">
+        
+        jam()
+    function jam() {
+    var e = document.getElementById('jam'),
+    d = new Date(), h, m, s;
+    h = d.getHours();
+    m = set(d.getMinutes());
+    s = set(d.getSeconds());
 
-            function resetTimeInterval(){
-                clearInterval(autoRefresh);
+    e.innerHTML = h +':'+ m +':'+ s;
 
-                autoRefresh = setInterval(function ()
-                    {
-                        // console.log(int);
-                        // console.log(total);
-                        int++;
-                        if(int == 10){
-                            // console.log("load data"+load);
-                            int = 0;
-                            load++;
-                            $('#data_total').text(load)
-                            // load_data();
-                            load_monitor()
-                        }
-                        if(load == total){
-                            load = 0;
-                        }
-                    }, 1000 // refresh every 10000 milliseconds
-                );  
+    setTimeout('jam()', 1000);
+    }
 
-                
-            }
-            
-            $(document).on('click', 'td.data-karyawan', function(a){
-                a.preventDefault();
-                loadModal()
-            })
-            function loadModal(){
-                $('#modal_cico').modal('show');
-                var data = $('td.data-karyawan').attr('id');
-                // console.log(data)
-                    $.ajax({
-                        url: 'chart_view/preview.php',
-                        method: 'GET',
-                        data: {data:data},
-                        success:function(data){
-                            $('.modal-body').html(data);
-                        }
-                    
-                });
-            }
-            
-
-        })
-    </script>
+    function set(e) {
+    e = e < 10 ? '0'+ e : e;
+    return e;
+    }
+</script>
     <script type="text/javascript">
         const secondHand = document.querySelector('.jarum_detik');
         const minuteHand = document.querySelector('.jarum_menit');
@@ -558,25 +219,123 @@ if(isset($_SESSION['user'])){
     
         setInterval(setDate, 1000)
     </script>
-    <script type="text/javascript">
-         
-         jam()
-        function jam() {
-        var e = document.getElementById('jam'),
-        d = new Date(), h, m, s;
-        h = d.getHours();
-        m = set(d.getMinutes());
-        s = set(d.getSeconds());
     
-        e.innerHTML = h +':'+ m +':'+ s;
-    
-        setTimeout('jam()', 1000);
-        }
-    
-        function set(e) {
-        e = e < 10 ? '0'+ e : e;
-        return e;
-        }
+    <script>
+        $(document).ready(function(){
+
+            
+            function view_setting(){
+                $.ajax({
+                    url:"view_setting.php",
+                    method:"GET",
+                    data:{},
+                    success:function(data){
+                        $('#view_setting').fadeOut('fast', function(){
+                            $(this).html(data).fadeIn('fast');
+                        });
+                    }
+                })
+            }
+            view_setting()
+            function add_data(){
+                var add = "1";
+                var nama = $('#nama_skema').val();
+                var start = $('#start_skema').val();
+                var end = $('#end_skema').val();
+                var type = $('#type_skema').val();
+                var period = $('#period_skema').val();
+                if(nama == '' || start == '' || end == '' || type == '' || period == ''){
+                    Swal.fire({
+                        title: 'Data Belum Lengkap',
+                        text: "isi seluruh data seting terlebih dahulu !",
+                        timer: 2000,
+                        
+                        icon: 'warning',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        confirmButtonColor: '#00B9FF',
+                        cancelButtonColor: '#B2BABB',
+                        
+                    })
+                }else{
+                    $.ajax({
+                        url:"tambah_setting.php",
+                        method:"POST",
+                        data:{add:add,nama:nama,start:start,end:end,type:type,period:period},
+                        success:function(data){
+                            view_setting()
+                            Swal.fire({
+                                title: 'Suksess',
+                                text: "seting sudah ditambahkan",
+                                timer: 2000,
+                                
+                                icon: 'success',
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })
+                            // console.log(add);
+                        }
+                    })
+                }
+                
+            }
+            $(document).on('click', '#add_setting', function(a){
+                a.preventDefault();
+                add_data();
+            })
+            function update_sm(){
+                var data = $('#status_sm').val()
+                console.log(data)
+                $.ajax({
+                    url:"proses.php",
+                    method:"GET",
+                    data:{data_sm:data},
+                    success:function(data){
+                        view_setting()
+                    }
+                })
+            }
+            $(document).on('click', '#status_sm', function(){
+                update_sm();
+            })
+            function update_daily(){
+                var form = $('#form_daily');
+                $.ajax({
+                    url:"proses.php",
+                    method:"GET",
+                    data: form.serialize(),
+                    success:function(data){
+                        view_setting()
+                        // console.log(data);
+                    }
+                })
+            }
+            function update_yearly(){
+                var form = $('#yearly_update');
+                $.ajax({
+                    url:"proses.php",
+                    method:"GET",
+                    data: form.serialize(),
+                    success:function(data){
+                        view_setting()
+                        // console.log(data);
+                    }
+                })
+            }
+            $(document).on('click', "#update_daily", function(){
+                update_daily()
+            })
+            $(document).on('click', "#update_yearly", function(){
+                update_yearly()
+            })
+            
+        })
+        
+
+        
     </script>
         <?php
 		include_once("../endbody.php");
