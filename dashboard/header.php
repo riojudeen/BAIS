@@ -188,6 +188,7 @@
   <script src="<?=base_url('assets/js/core/jquery.min.js')?>"></script>
   <script src="<?=base_url('assets/ckeditor/ckeditor.js')?>"></script>
   <link href="<?=base_url('assets/css/csscustom.css')?>" rel="stylesheet"/>
+  
   <!-- loading bar -->
   <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/dist/loading-bar.css"/>
   <script type="text/javascript" src="<?=base_url()?>/assets/dist/loading-bar.js"></script>
@@ -873,6 +874,20 @@
         <div class="info-data" data-infodata="<?php if(isset($_SESSION['info'])){ echo $_SESSION['info']; } unset($_SESSION['info']); ?>" ></div>
         <div class="message" data-infodata="<?php if(isset($_SESSION['pesan'])){ echo $_SESSION['pesan']; } unset($_SESSION['pesan']); ?>" ></div>
         
+        <div class="row">
+            <div class="modal fade" id="modal_lock" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered ">
+            
+                <div class="modal-content border" style="border:5px">
+                    <div class="modal-body ">
+                      <h6>Lock</h6>
+                    </div>
+                </div>
+            
+                
+              </div>
+            </div>
 
+        </div>
 
 

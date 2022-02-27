@@ -9,6 +9,7 @@ if(isset($_SESSION['user'])){
     include_once("../header.php");
     $today = date('Y-m-d');
 ?>
+
 <div class="row">
     
     <div class="col-md-4">
@@ -98,6 +99,26 @@ if(isset($_SESSION['user'])){
     </div>
     
 </div>
+<!-- modal -->
+<!-- Modal -->
+<div class="row">
+    <div class="modal fade" id="modal_cico"  data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered ">
+    
+        <div class="modal-content">
+        
+            <div class="modal-body data_kary">
+            </div>
+        
+        </div>
+    
+        
+      </div>
+    </div>
+
+</div>
+<!-- Modal -->
+<!-- modal -->
 
 
 <?php
@@ -138,47 +159,60 @@ if(isset($_SESSION['user'])){
                 
             })
             
-            // var autoRefresh;
-            // // window.onload = resetTimer;
-            // window.onmousemove = resetTimeInterval;
-            // window.onmousedown = resetTimeInterval; // catches touchscreen presses
-            // window.onclick = resetTimeInterval;     // catches touchpad clicks
-            // window.onscroll = resetTimeInterval;    // catches scrolling with arrow keys
-            // window.onkeypress = resetTimeInterval;
+            var autoRefresh;
+            // window.onload = resetTimer;
+            window.onmousemove = resetTimeInterval;
+            window.onmousedown = resetTimeInterval; // catches touchscreen presses
+            window.onclick = resetTimeInterval;     // catches touchpad clicks
+            window.onscroll = resetTimeInterval;    // catches scrolling with arrow keys
+            window.onkeypress = resetTimeInterval;
     
-            // function refresh() {
-            //     load_monitor()
-            // }
-            
-            // function resetTimeInterval() {
-            //     clearInterval(autoRefresh);
-                
-            //     autoRefresh = setInterval(refresh, 10000);  // time is in milliseconds
-            // }
-
-            
             var link = document.getElementsByClassName('data_load');
             var load = 0;
             var int = 0;
             var total = Number($('#data_total').attr('data-id'));
-            var approval_num = setInterval(function ()
-                {
-                    console.log(int);
-                    console.log(total);
-                    int++;
-                    if(int == 10){
-                        // console.log("load data"+load);
-                        int = 0;
-                        load++;
-                        $('#data_total').text(load)
-                        // load_data();
-                        load_monitor()
-                    }
-                    if(load == total){
-                        load = 0;
-                    }
-                }, 1000 // refresh every 10000 milliseconds
-            );  
+
+            function resetTimeInterval(){
+                clearInterval(autoRefresh);
+
+                autoRefresh = setInterval(function ()
+                    {
+                        
+                        int++;
+                        if(int == 10){
+                            int = 0;
+                            load++;
+                            $('#data_total').text(load)
+                            load_monitor()
+                            // $('#modal_lock').modal('show');
+                        }
+                        if(load == total){
+                            load = 0;
+                        }
+                    }, 1000 // refresh every 10000 milliseconds
+                );  
+
+                
+            }
+            
+            $(document).on('click', 'td.data-karyawan', function(a){
+                a.preventDefault();
+                loadModal()
+            })
+            function loadModal(){
+                $('#modal_cico').modal('show');
+                var data = $('td.data-karyawan').attr('id');
+                // console.log(data)
+                    $.ajax({
+                        url: 'chart_view/preview.php',
+                        method: 'GET',
+                        data: {data:data},
+                        success:function(data){
+                            $('.data_kary').html(data);
+                        }
+                    
+                });
+            }
             
 
         })

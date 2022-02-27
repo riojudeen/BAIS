@@ -14,7 +14,7 @@ include("../../../config/config.php");
         // echo $tanggal;
         $dept_account = ($_GET['dept_account'] != '')?" AND org.dept_account = '$_GET[dept_account]' ":'';
         $shift = ($_GET['shift'] != '')?" AND karyawan.shift = '$_GET[shift]'" :'' ;
-
+        echo $dept_account;
         $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
         $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
         $s_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
@@ -51,8 +51,63 @@ include("../../../config/config.php");
                                     $group_mp = array();
                                     $i=0;
                                     while($grp = mysqli_fetch_assoc($s_grp)){
+                                        $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen',
+                                        absensi.check_in AS `check_in`, absensi.ket AS `ket`,
+                                        absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
+                                        JOIN karyawan ON karyawan.npk = absensi.npk
+                                        JOIN org ON karyawan.npk = org.npk
+                                        WHERE absensi.npk = '$grp[cord]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
+                                        $data_absen = mysqli_fetch_assoc($q_cek_absen);
+                                        $check_in = ($data_absen['check_in'] != '')?$data_absen['check_in']:'TA';
+                                        
+                                        if(mysqli_num_rows($q_cek_absen)>0){
+                                            $ket = ($data_absen['ket'] != '')?$data_absen['ket']:'masuk';
+                                            $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'success':'';
+                                            $color_ta = ($data_absen['ket'] == 'M' )?'danger':'';
+                                            $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"info":'';
+                                            $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"warning":'';
+                                            $color = "bg-warning";
+                                        }else{
+                                            $ket = '-';
+                                            $color = "";
+                                            $color_masuk = $color_telat = $color_ta = $color_ijin = '';
+                                        }
+                                        // menapat total karyawan absensi
+                                        $query_karyawan = mysqli_query($link, "SELECT karyawan.npk AS npk FROM karyawan JOIN org ON karyawan.npk = org.npk 
+                                        WHERE org.grp = '$grp[id]' ".$dept_account.$shift)or die(mysqli_error($link));
+                                        $total_karyawan = mysqli_num_rows($query_karyawan);
+                                        // untuk query absensi dari data absensi
+                                        $qry_absensi_hr = "SELECT absensi.npk AS 'npk_absen' FROM absensi 
+                                        JOIN karyawan ON karyawan.npk = absensi.npk
+                                        JOIN org ON karyawan.npk = org.npk 
+                                        LEFT JOIN attendance_code ON attendance_code.kode = absensi.ket
+                                        LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias
+                                        WHERE org.grp = '$grp[id]'";
+                                        // untuk masuk
+                                        $filter_masuk = " AND (attendance_alias.id = '1' OR attendance_alias.id = '2' OR
+                                        attendance_alias.id = '3' OR attendance_code.kode = '' OR attendance_code.kode IS NULL )";
+                                        $filter_telat = " AND (attendance_alias.id = '3' )";
+                                        $filter_ijin = " AND (attendance_alias.id = '4' OR attendance_alias.id = '5' OR attendance_alias.id = '6' OR attendance_alias.id = '7' OR attendance_alias.id = '8' )";
+                                        $filter_mangkir = " AND (attendance_alias.id = '9' )";
+                                        // echo $qry_absensi_hr.$filter_ijin.$tanggal.$dept_account.$shift;
+                                        $query_masuk = mysqli_query($link, $qry_absensi_hr.$filter_masuk.$tanggal.$dept_account.$shift)or die(mysqli_error($link));
+                                        $query_telat = mysqli_query($link, $qry_absensi_hr.$filter_telat.$tanggal.$dept_account.$shift)or die(mysqli_error($link));
+                                        $query_ijin = mysqli_query($link, $qry_absensi_hr.$filter_ijin.$tanggal.$dept_account.$shift)or die(mysqli_error($link));
+                                        $query_mangkir = mysqli_query($link, $qry_absensi_hr.$filter_mangkir.$tanggal.$dept_account.$shift)or die(mysqli_error($link));
+                                            
+                                            $total_masuk = mysqli_num_rows($query_masuk);
+                                            $total_telat = mysqli_num_rows($query_telat);
+                                            $total_ijin = mysqli_num_rows($query_ijin);
+                                            $total_mangkir = mysqli_num_rows($query_mangkir);
+                                        $percent_masuk = ($total_karyawan > 0 )?($total_masuk / $total_karyawan)*100:0;
+                                        $percent_telat = ($total_karyawan > 0 )?($total_telat / $total_karyawan)*100:0;
+                                        $percent_ijin = ($total_karyawan > 0 )?($total_ijin / $total_karyawan)*100:0;
+                                        $percent_mangkir = ($total_karyawan > 0 )?($total_mangkir / $total_karyawan)*100:0;
+                                        $percent_eff = ($total_karyawan > 0 )?round((($total_masuk+$total_telat)/$total_karyawan)*100):0;
+                                        // get team
                                         $q_team = $q_org." WHERE id_parent = '$grp[id]' AND part = 'pos'";
                                         $s_team = mysqli_query($link, $q_team)or die(mysqli_error($link));
+
                                         ?> 
                                         <!-- group -->
                                         
@@ -61,8 +116,8 @@ include("../../../config/config.php");
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <div class="row">
-                                                            <div class="col-md-3">
-                                                                <h6 class="text-uppercase title"><?=$grp['nama_org']?></h6>
+                                                            <div class="col-md-2">
+                                                                <h6 class="text-uppercase title text-nowrap text-truncate"><?=$grp['nama_org']?></h6>
                                                                 <ul class="list-unstyled team-members">
                                                                     <li>
                                                                         <div class="row">
@@ -71,18 +126,25 @@ include("../../../config/config.php");
                                                                             <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-md-7 col-7">
+                                                                        <div class="col-md-10 col-10 text-nowrap text-truncate">
+                                                                            
                                                                                 <?=$grp['nama_cord']?>
                                                                                 <br>
-                                                                            <span class="text-muted"><small><?=$grp['nama_cord']?></small></span>
-                                                                        </div>
-                                                                        <div class="col-md-3 col-3 text-right">
-                                                                            <a href="attendance.php" class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-eye"></i></a>
+                                                                            <span style="background-color:rgba(216, 215, 215); width:100px; z-index:1000" class="text-muted badge badge-pill bg-<?=$color_masuk?><?=$color_telat?><?=$color_ijin?><?=$color_ta?>"><?=$ket?></span>
                                                                         </div>
                                                                         </div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
+                                                            <div class="col-md-1 number bg-secondary rounded-lg my-2  text-center">
+                                                                <span class="card-label mb-0 mt-1">- eff -</span>
+                                                                <hr class="my-0">
+                                                                <h4 class="text-uppercase pt-0 mt-0 mb-0 pb-0"><?=$percent_eff?></h4>
+                                                                <hr class="my-0">
+                                                                %
+                                                                
+                                                            </div>
+                                                            
                                                             <div class="col-md-9">
                                                                 <div class="row">
                                                                     <div class="col-md-3">
@@ -96,12 +158,12 @@ include("../../../config/config.php");
                                                                             <div class="col-9 col-md-9 ">
                                                                                 <div class=" pr-2">
                                                                                     <p class="card-category py-0 my-0 ">Masuk</p>
-                                                                                    <p class="card-title py-0 my-0 text-danger">50 MP<p>
+                                                                                    <p class="card-title py-0 my-0 text-danger"><?=$total_masuk?> <p>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-12">
                                                                                 <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 20%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: <?=$percent_masuk?>%;" aria-valuenow="<?=$percent_masuk?>" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -117,12 +179,12 @@ include("../../../config/config.php");
                                                                             <div class="col-9 col-md-9 ">
                                                                                 <div class=" pr-2">
                                                                                     <p class="card-category py-0 my-0 ">TA Keterangan</p>
-                                                                                    <p class="card-title py-0 my-0 text-danger">50 MP<p>
+                                                                                    <p class="card-title py-0 my-0 text-danger"><?=$total_mangkir?><p>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-12">
                                                                                 <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-danger" role="progressbar" style="width: 20%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-danger" role="progressbar" style="width: <?=$percent_mangkir?>%;" aria-valuenow="<?=$percent_mangkir?>" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -138,12 +200,12 @@ include("../../../config/config.php");
                                                                             <div class="col-9 col-md-9 ">
                                                                                 <div class=" pr-2">
                                                                                     <p class="card-category py-0 my-0 ">Ijin / Sakit</p>
-                                                                                    <p class="card-title py-0 my-0 text-info">50 MP<p>
+                                                                                    <p class="card-title py-0 my-0 text-info"><?=$total_ijin?><p>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-12">
                                                                                 <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-info" role="progressbar" style="width: 20%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-info" role="progressbar" style="width: <?=$percent_ijin?>%;" aria-valuenow="<?=$percent_ijin?>" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -159,12 +221,12 @@ include("../../../config/config.php");
                                                                             <div class="col-9 col-md-9 ">
                                                                                 <div class=" pr-2">
                                                                                     <p class="card-category py-0 my-0 ">Terlambat</p>
-                                                                                    <p class="card-title py-0 my-0 text-warning">50 MP<p>
+                                                                                    <p class="card-title py-0 my-0 text-warning"><?=$total_telat?><p>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-12">
                                                                                 <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-warning" role="progressbar" style="width: 20%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-warning" role="progressbar" style="width: <?=$percent_telat?>%;" aria-valuenow="<?=$percent_telat?>" aria-valuemin="0" aria-valuemax="100"></div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -173,23 +235,24 @@ include("../../../config/config.php");
                                                             </div>
                                                             
                                                         </div>
+                                                        <hr class="mt-0 mb-2">
                                                         <?php
                                                         $q_tm_unregistered = mysqli_query($link, "SELECT karyawan.npk AS `npk`, 
                                                                 karyawan.nama AS `nama`, org.post AS `pos`,
                                                                 org.grp AS `group`, org.dept_account AS `dept_account`
                                                                 FROM org JOIN karyawan ON karyawan.npk = org.npk 
-                                                                WHERE org.grp = '$grp[id]' ")or die(mysqli_error($link));
+                                                                WHERE org.grp = '$grp[id]' ".$dept_account.$shift)or die(mysqli_error($link));
                                                         if(mysqli_num_rows($q_tm_unregistered)>0){
                                                             
                                                             ?>
                                                             <div class="row">
                                                                 <div class="col-md-12 ">
                                                                    
-                                                                    <p class="text-nowrap text-truncate m-0">Unregistered Team</p>
+                                                                    <!-- <p class="text-nowrap text-truncate m-0">Unregistered Team</p> -->
                                                                     <div class=" table-full-width">
-                                                                        <table class=" table-sm text-truncate text-center"  width="100%" style="border-spacing: 20px">
+                                                                        <table class=" table-sm text-truncate text-center"  width="100%" style="border-spacing: 20px;" >
                                                                             <tbody style="border:1px solid white;">
-                                                                                <tr >
+                                                                                <tr>
                                                                                 <?php
                                                                                         $index = 1;
                                                                                         $max = 1;
@@ -214,7 +277,10 @@ include("../../../config/config.php");
                                                                                                     $color_masuk = $color_telat = $color_ta = $color_ijin = '';
                                                                                                 }
                                                                                             ?>
-                                                                                            <td style="max-width:50px;background-color:rgba(216, 215, 215);border-radius:200px 200px 200px 200px;padding:5px" class=" text-truncate <?=$color_masuk?> <?=$color_ta?> <?=$color_ijin?> <?=$color_telat?>" ><?=$data_unregist['nama']?></td>
+                                                                                            <td id="<?=$data_unregist['npk']?>" style="max-width:50px;background-color:rgba(216, 215, 215);border-radius:200px 200px 200px 200px;border:1px solid white;" celpadding="5px" class=" data-karyawan text-truncate <?=$color_masuk?> <?=$color_ta?> <?=$color_ijin?> <?=$color_telat?>" >
+                                                                                                
+                                                                                                <?=$data_unregist['nama']?>
+                                                                                            </td>
                                                                                             <?php
                                                                                             if($max++ == 10 * $index){
                                                                                                 $index++;
@@ -247,9 +313,10 @@ include("../../../config/config.php");
                                         
                                         
                                         <?php
-                                        /*
                                         if(mysqli_num_rows($s_team)>0){
                                             while($team = mysqli_fetch_assoc($s_team)){
+                                                
+
                                                 $q_tm = mysqli_query($link, "SELECT karyawan.npk AS `npk`, 
                                                 karyawan.nama AS `nama`, org.post AS `pos`,
                                                 org.grp AS `group`, org.dept_account AS `dept_account`
@@ -272,14 +339,28 @@ include("../../../config/config.php");
                                                                                 if(mysqli_num_rows($q_tm)>0){
                                                                                     $index = 1;
                                                                                     while($data_mp = mysqli_fetch_assoc($q_tm)){
-                                                                                        $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen', 
-                                                                                        absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
-                                                                                        JOIN karyawan ON karyawan.npk = absensi.npk
-                                                                                        JOIN org ON karyawan.npk = org.npk
-                                                                                        WHERE absensi.npk = '$data_mp[npk_absen]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
+                                                                                        $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen',
+                                                                                                absensi.check_in AS `check_in`, absensi.ket AS `ket`,
+                                                                                                absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
+                                                                                                JOIN karyawan ON karyawan.npk = absensi.npk
+                                                                                                JOIN org ON karyawan.npk = org.npk
+                                                                                                WHERE absensi.npk = '$data_mp[npk]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
+                                                                                                $data_absen = mysqli_fetch_assoc($q_cek_absen);
+                                                                                                $check_in = ($data_absen['check_in'] != '')?$data_absen['check_in']:'TA';
+                                                                                                    
+                                                                                                if(mysqli_num_rows($q_cek_absen)>0){
+                                                                                                    $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'bg-success':'';
+                                                                                                    $color_ta = ($data_absen['ket'] == 'M' )?'bg-danger':'';
+                                                                                                    $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"bg-info":'';
+                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"bg-warning":'';
+                                                                                                    $color = "bg-warning";
+                                                                                                }else{
+                                                                                                    $color = "";
+                                                                                                    $color_masuk = $color_telat = $color_ta = $color_ijin = '';
+                                                                                                }
                                                                                         $index++;
                                                                                         ?>
-                                                                                        <td style="max-width:50px" class=" text-truncate table-success "><?=$data_mp['nama']?></td>
+                                                                                        <td style="max-width:50px" class=" text-truncate table-success stretched-link"><?=$data_mp['nama']?></td>
                                                                                         <?php
                                                                                         if($index == 10){
                                                                                             ?>
@@ -310,7 +391,6 @@ include("../../../config/config.php");
                                         ?>
                                         
                                         <?php
-                                        */
                                     }
                                     
                                 }
