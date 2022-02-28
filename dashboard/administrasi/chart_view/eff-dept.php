@@ -3,6 +3,10 @@ include("../../../config/config.php");
 ?>
     
     <?php
+    $start =  dateToDB($_GET['start']);
+    $end =  dateToDB($_GET['end']);
+    // echo $end;
+    $shift =  ($_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
      $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
      $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
      $s_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
@@ -10,8 +14,50 @@ include("../../../config/config.php");
          while($div = mysqli_fetch_assoc($s_div)){
             $q_dept = $q_org." WHERE id_parent = '$div[id]' AND part = 'dept' ";
      $sql_dept = mysqli_query($link, $q_dept)or die(mysqli_error($link));
+    //  echo "tes";
      if(mysqli_num_rows($sql_dept) > 0){
          while($dept = mysqli_fetch_assoc($sql_dept)){
+            $q_cek_absensi = "SELECT absensi.npk , absensi.check_in, absensi.check_out , absensi.ket, attendance_code.alias
+                FROM absensi LEFT JOIN attendance_code 
+                ON attendance_code.kode = absensi.ket 
+                LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
+                JOIN org ON org.npk = absensi.npk 
+
+                WHERE org.npk = '$dept[cord]' AND absensi.date = '$end' ";
+            $sql_absensi = mysqli_query($link, $q_cek_absensi)or die(mysqli_error($link));
+            if(mysqli_num_rows($sql_absensi)){
+                $data_absensi = mysqli_fetch_assoc($sql_absensi);
+    
+                if($data_absensi['ket'] == '' && $data_absensi['check_in'] == '00:00:00' && $data_absensi['check_in'] == '00:00:00'){
+                    $status = '-';
+                    $ci = '-';
+                    $co = '-';
+                    $color = "";
+    
+                }else if($data_absensi['ket'] == '' && ($data_absensi['check_in'] != '00:00:00' OR $data_absensi['check_in'] != '00:00:00')){
+                    $status = 'MASUK';
+                    $color = "success";
+                    $ci = ($data_absensi['check_in'] != '00:00:00' )?'-':$data_absensi['check_in'];
+                    $co = ($data_absensi['check_out'] != '00:00:00' )?'-':$data_absensi['check_out'];
+                }else{
+                    $status = $data_absensi['ket'];
+                    $ci = ($data_absensi['check_in'] != '00:00:00' )?'-':$data_absensi['check_in'];
+                    $co = ($data_absensi['check_out'] != '00:00:00' )?'-':$data_absensi['check_out'];
+                    
+                    if($data_absensi['alias'] == 3){
+                        $color = "warning";
+                    }else if($data_absensi['alias'] == 4 || $data_absensi['alias'] == 5 || $data_absensi['alias'] == 6 || $data_absensi['alias'] == 7 || $data_absensi['alias'] == 8){
+                        $color = "info";
+                    }else{
+                        $color = "danger";
+                    }
+                }
+            }else{
+                $status = '-';
+                $ci = '-';
+                $co = '-';
+                $color = "";
+            }
              ?>
             <div class="col-md-12">
                 <div class="row">
@@ -36,14 +82,14 @@ include("../../../config/config.php");
                                 <hr>
                                 <div class="button-container">
                                 <div class="row">
-                                    <div class="col-lg-3 col-md-6 col-6 ml-auto bg-warning rounded">
-                                    <h5>12<br><label>status</label></h5>
+                                    <div class="col-md-12 ml-auto bg-<?=$color?> rounded">
+                                    <h5><label><?=$status?></label></h5>
                                     </div>
-                                    <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
-                                    <h5>07:30<br><label>masuk</label></h5>
+                                    <div class="col-md-6 ml-auto mr-auto">
+                                    <h5><?=$ci?><br><label>In</label></h5>
                                     </div>
-                                    <div class="col-lg-3 mr-auto">
-                                    <h5>20:00<br><label>pulang</label></h5>
+                                    <div class="col-md-6 mr-auto">
+                                    <h5><?=$co?><br><label>Out</label></h5>
                                     </div>
                                 </div>
                                 </div>
@@ -64,7 +110,12 @@ include("../../../config/config.php");
                                             $q_grp = $q_org." WHERE id_parent = '$sect[id]' AND part = 'group'";
                                             $s_grp = mysqli_query($link, $q_grp )or die(mysqli_error($link));
                                             $jml = mysqli_num_rows($s_grp);
-                                            $lebar = $jml*40;
+                                            if($jml >= 1 && $jml <= 2){
+                                                $lebar = $jml*80;
+                                            }else{
+                                                $lebar = $jml*60;
+
+                                            }
                                             ?>
                                             <div class="col-md-4 border-bottom my-2 px-4">
                                                 <ul class="list-unstyled team-members">
@@ -136,11 +187,31 @@ include("../../../config/config.php");
                             if(mysqli_num_rows($s_grp)>0){
                                 $group_name = array();
                                 $group_mp = array();
+                                $mp_masuk = array();
+                                $mp_ijin = array();
                                 $i=0;
                                 while($grp = mysqli_fetch_assoc($s_grp)){
                                     $org_query = mysqli_query($link, "SELECT npk FROM org WHERE grp = '$grp[id]' ")or die(mysqli_error($link));
                                     $group_name[$i] = cutName($grp['nama_org']);
                                     $group_mp[$i] = mysqli_num_rows($org_query);
+                                    $data_mp = mysqli_fetch_assoc($org_query);
+                                    $q_cek_absensi ="SELECT absensi.npk FROM absensi LEFT JOIN attendance_code 
+                                        ON attendance_code.kode = absensi.ket 
+                                        LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
+                                        JOIN org ON org.npk = absensi.npk 
+                                        WHERE org.grp = '$grp[id]' AND absensi.date = '$end'  ";
+                                    $q_masuk = " AND ( absensi.ket = '' OR attendance_alias.id = '1' OR attendance_alias.id = '2' 
+                                        OR attendance_alias.id = '3')";
+                                    $q_ijin = " AND ( attendance_alias.id = '4' OR attendance_alias.id = '5' 
+                                        OR attendance_alias.id = '6' OR attendance_alias.id = '7' OR attendance_alias.id = '8' OR attendance_alias.id = '9'  )";
+                                    $sql_masuk = mysqli_query($link, $q_cek_absensi.$q_masuk.$shift)or die(mysqli_error($link));
+                                    $sql_ijin = mysqli_query($link, $q_cek_absensi.$q_ijin.$shift)or die(mysqli_error($link));
+
+                                    $total_masuk = mysqli_num_rows($sql_masuk);
+                                    $total_ijin = mysqli_num_rows($sql_ijin);
+                                    
+                                    $mp_masuk[$i] = $total_masuk;
+                                    $mp_ijin[$i] = $total_ijin;
                                     $i++
                                     ?>
                                     <?php
@@ -153,11 +224,22 @@ include("../../../config/config.php");
                                 foreach($group_mp AS $tot_data){
                                     $total .= "$tot_data,";
                                 }
+                                $masuk = '';
+                                foreach($mp_masuk AS $msk){
+                                    $masuk.= "$msk,";
+                                }
+                                $ijin = '';
+                                foreach($mp_ijin AS $ijn){
+                                    $ijin .= "$ijn,";
+                                    // echo $ijin;
+                                }
                                 
 
                             }
                             $data = substr($data_group, 0, -1);
                             $data_jml = substr($total, 0, -1);
+                            $data_masuk = substr($masuk, 0, -1);
+                            $data_ijin = substr($ijin, 0, -1);
                             ?>
                             <!-- grafik section -->
                             <script>
@@ -177,7 +259,7 @@ include("../../../config/config.php");
                                                 borderColor:
                                                     'rgba(255,99,132,1)',
                                                 borderWidth: 0,
-                                                data: [],
+                                                data: [<?=$data_masuk?>],
                                             },
                                             {
                                                 label: "Ijin / Cuti",
@@ -188,7 +270,7 @@ include("../../../config/config.php");
                                                     'rgba(255,99,132,1)',
                                                 borderWidth: 0,
                                                 
-                                                data: [<?=$total?>],
+                                                data: [<?=$data_ijin?>],
                                             },
                                             {
                                                 label: "Total MP",
@@ -199,7 +281,7 @@ include("../../../config/config.php");
                                                     'rgba(255,99,132,1)',
                                                 borderWidth: 0,
                                                 
-                                                data: [<?=$total?>],
+                                                data: [<?=$data_jml?>],
                                             },
                                             
                                         ], 
@@ -233,7 +315,7 @@ include("../../../config/config.php");
                                                 id: 'A',
                                                 
                                                 stacked: true,
-                                                barPercentage: 0.4,
+                                                barPercentage: 0.6,
                                                 barThickness: 10,  // number (pixels) or 'flex'
                                                 maxBarThickness: 15, // number (pixels)
                                                 position: 'top',
@@ -254,7 +336,7 @@ include("../../../config/config.php");
                                             },{
                                                 id: 'B',
                                                 stacked: false,
-                                                barPercentage: 0.4,
+                                                barPercentage: 0.6,
                                                 barThickness: 10,  // number (pixels) or 'flex'
                                                 maxBarThickness: 15, // number (pixels)
                                                 position: 'bottom',

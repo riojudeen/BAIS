@@ -1,11 +1,110 @@
 <?php
 include("../../../config/config.php"); 
-    $today = date('Y-m-d');
+include("../../../config/schedule_system.php"); 
+include("../../../config/approval_system.php"); 
+    // $today = date('Y-m-d');
+    $today = $selesai = dateToDB($_GET['end']);
+    $mulai = dateToDB($_GET['start']);
+    $data_tanggal = json_decode(get_date($mulai, $selesai));
+    // print_r($data_tanggal);
     $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
     $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
     $q_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
+    $shift =  ($_GET['shift'] != '')?" AND absensi.shift = '$_GET[shift]' ":'';
+    $org_shift =  ($_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
     if(mysqli_num_rows($q_div)> 0){
         while($div = mysqli_fetch_assoc($q_div)){
+          $q_dept_account = $q_org." WHERE id_parent = '$div[id]' AND part = 'deptAcc' ";
+          $sql_dept_account = mysqli_query($link, $q_dept_account)or die(mysqli_error($link));
+          if(mysqli_num_rows($sql_dept_account)>0){
+            $index = 0;
+            $data_dept = array(); //penampung data dept account id
+            $data_masuk = array(); //penampung data jumlah karyawan masuk
+            $data_ijin = array(); //penampung data jumlah karyawan masuk
+            while($data_dept_account = mysqli_fetch_assoc($sql_dept_account)){
+              
+              $index_masuk = 0;
+              $data_dept[$data_dept_account['id']] = array();//jadikan data array department sebagai array penampung
+
+              foreach($data_tanggal AS $tgl ){
+                $q_abs_dept ="SELECT absensi.npk FROM absensi 
+                    LEFT JOIN attendance_code 
+                    ON attendance_code.kode = absensi.ket 
+            
+                    LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
+                    JOIN org ON org.npk = absensi.npk 
+                    WHERE  absensi.date = '$tgl' AND org.division = '$div[id]' AND org.dept_account = '$data_dept_account[id]' ";
+                $q_masuk_dept = " AND ( absensi.ket = '' OR attendance_alias.id = '1' OR attendance_alias.id = '2' 
+                    OR attendance_alias.id = '3')";
+                $q_ijin_dept = " AND ( attendance_alias.id = '4' OR attendance_alias.id = '5' 
+                    OR attendance_alias.id = '6' OR attendance_alias.id = '7' OR attendance_alias.id = '8' OR attendance_alias.id = '9'  )";
+                $sql_masuk_dept = mysqli_query($link, $q_abs_dept.$q_masuk_dept.$shift)or die(mysqli_error($link));
+                $sql_ijin_dept = mysqli_query($link, $q_abs_dept.$q_ijin_dept.$shift)or die(mysqli_error($link));
+                // $sql_absen_dept = mysqli_query($link, $q_abs_dept.$shift)or die(mysqli_error($link));
+                $masuk_dept = mysqli_num_rows($sql_masuk_dept);
+                $ijin_dept = mysqli_num_rows($sql_ijin_dept);
+                // array_push($data_dept[$index], $masuk_dept);
+                // array_push($data_dept[$index], $tgl);
+                $data_masuk[$tgl] = array(
+                  'masuk' => $masuk_dept,
+                  'ijin' => $ijin_dept
+                );
+                
+                 //tampung data masuk ke dalam array assosiatif department
+
+              }
+              array_push($data_dept[$data_dept_account['id']], $data_masuk);
+              $index++;
+
+            }
+          }
+          print_r($data_dept);
+          echo count($data_dept);
+
+        $q_total_karyawan = mysqli_query($link, "SELECT npk FROM view_organization WHERE id_division = '$div[id]' ".$org_shift)or die(mysqli_error($link));
+        $total_karyawan = mysqli_num_rows($q_total_karyawan);
+        $q_cek_absensi ="SELECT absensi.npk FROM absensi 
+            LEFT JOIN attendance_code 
+            ON attendance_code.kode = absensi.ket 
+    
+            LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
+            JOIN org ON org.npk = absensi.npk 
+            WHERE  absensi.date = '$today' AND org.division = '$div[id]' ";
+
+        $q_masuk = " AND ( absensi.ket = '' OR attendance_alias.id = '1' OR attendance_alias.id = '2' 
+            OR attendance_alias.id = '3')";
+        $q_ijin = " AND ( attendance_alias.id = '4' OR attendance_alias.id = '5' 
+            OR attendance_alias.id = '6' OR attendance_alias.id = '7' OR attendance_alias.id = '8' OR attendance_alias.id = '9'  )";
+        $sql_masuk = mysqli_query($link, $q_cek_absensi.$q_masuk.$shift)or die(mysqli_error($link));
+        $sql_ijin = mysqli_query($link, $q_cek_absensi.$q_ijin.$shift)or die(mysqli_error($link));
+    
+        $total_masuk = mysqli_num_rows($sql_masuk);
+        $total_ijin = mysqli_num_rows($sql_ijin);
+        $total_selisih = $total_karyawan - ($total_masuk+$total_ijin);
+
+        // effisiensi masuk 
+        if($total_karyawan > 0){
+          $eff_mp = round(($total_masuk/$total_karyawan)*100);
+        }else{
+          $eff_mp = 0;
+        }
+        // echo $q_cek_absensi.$q_masuk.$shift
+        $percent_masuk = ($total_karyawan>0)?round(($total_masuk/$total_karyawan)*100):0;
+        $percent_ijin = ($total_karyawan>0)?round(($total_ijin/$total_karyawan)*100):0;
+        $percent_gap = ($total_karyawan>0)?round(($total_selisih/$total_karyawan)*100):0;
+        // echo $percent_masuk."<br>";
+        // echo $percent_ijin."<br>";
+        // echo $percent_gap."<br>";
+        // echo $total_karyawan."<br>";
+        if($total_selisih > 0){
+          $label = "'Masuk','Tidak Masuk / Ijin','Gap'";
+          $data = "$percent_masuk,$percent_ijin,$percent_gap";
+        }else{
+          $label = "Masuk,Tidak Masuk / Ijin,Gap";
+          $data = "$percent_masuk,$percent_ijin,$percent_gap";
+        }
+        // echo $data;
+        
             ?>
             <!-- divisi efficiency -->
             <div class="col-md-12">
@@ -16,12 +115,119 @@ include("../../../config/config.php");
                             <div class="col-md-3">
                                 <h5 class="">Body Division</h5>
                                 <p class="card-category"><?=tgl($today)?></p>
-                                <canvas id="chartDonut1" class="ct-chart ct-perfect-fourth"  height="300"></canvas>
+                                <canvas id="chartDonut<?=$div['id']?>" class="ct-chart ct-perfect-fourth"  height="300"></canvas>
                             </div>
+                            <script>
+                                $(document).ready(function(){
+                                    Chart.pluginService.register({
+                                    beforeDraw: function(chart) {
+                                        if (chart.config.options.elements.center) {
+                                        //Get ctx from string
+                                        var ctx = chart.chart.ctx;
+
+                                        //Get options from the center object in options
+                                        var centerConfig = chart.config.options.elements.center;
+                                        var fontStyle = centerConfig.fontStyle || 'Arial';
+                                        var txt = centerConfig.text;
+                                        var color = centerConfig.color || '#000';
+                                        var sidePadding = centerConfig.sidePadding || 20;
+                                        var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
+                                        //Start with a base font of 30px
+                                        ctx.font = "30px " + fontStyle;
+
+                                        //Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+                                        var stringWidth = ctx.measureText(txt).width;
+                                        var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+                                        // Find out how much the font can grow in width.
+                                        var widthRatio = elementWidth / stringWidth;
+                                        var newFontSize = Math.floor(30 * widthRatio);
+                                        var elementHeight = (chart.innerRadius * 2);
+
+                                        // Pick a new font size so it will not be larger than the height of label.
+                                        var fontSizeToUse = Math.min(newFontSize, elementHeight);
+
+                                        //Set font settings to draw it correctly.
+                                        ctx.textAlign = 'center';
+                                        ctx.textBaseline = 'middle';
+                                        var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+                                        var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
+                                        ctx.font = fontSizeToUse + "px " + fontStyle;
+                                        ctx.fillStyle = color;
+
+                                        //Draw text in center
+                                        ctx.fillText(txt, centerX, centerY);
+                                        }
+                                    }
+                                    });
+                                    ctx = document.getElementById('chartDonut<?=$div['id']?>').getContext("2d");
+
+                                    myChart = new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: [<?=$label?>],
+                                        datasets: [{
+                                        label: "Effisiensi Kehadiaran",
+                                        pointRadius: 0,
+                                        pointHoverRadius: 0,
+                                        backgroundColor: ['#4acccd', '#FF5733', '#f4f3ef'],
+                                        borderWidth: 0,
+                                        data: [<?=$data?>]
+                                        }]
+                                    },
+                                    options: {
+                                        elements: {
+                                        center: {
+                                            text: '<?=$eff_mp?>%',
+                                            color: '#66615c', // Default is #000000
+                                            fontStyle: 'Arial', // Default is Arial
+                                            sidePadding: 60 // Defualt is 20 (as a percentage)
+                                        }
+                                        },
+                                        cutoutPercentage: 80,
+                                        legend: {
+
+                                        display: false
+                                        },
+
+                                        tooltips: {
+                                        enabled: true
+                                        },
+
+                                        scales: {
+                                        yAxes: [{
+
+                                            ticks: {
+                                            display: false
+                                            },
+                                            gridLines: {
+                                            drawBorder: true,
+                                            zeroLineColor: "transparent",
+                                            color: 'rgba(255,255,255,0.05)'
+                                            }
+
+                                        }],
+
+                                        xAxes: [{
+                                            barPercentage: 1.6,
+                                            gridLines: {
+                                            drawBorder: false,
+                                            color: 'rgba(255,255,255,0.1)',
+                                            zeroLineColor: "transparent"
+                                            },
+                                            ticks: {
+                                            display: false,
+                                            }
+                                        }]
+                                        },
+                                    }
+                                    });
+                                })
+                            </script>
                             <div class="col-md-9">
                                 <div class="row">
                                     <div class="col-md-7">
-                                        <h5 class="">Man Power Efficiency </h5>
+                                        <h5 class="">Atendance Efficiency </h5>
                                         <p class="card-category">periode : <?=tgl(dateToDB($_GET['start']))?> - <?=tgl(dateToDB($_GET['end']))?></p>
                                     </div>
                                     <div class="col-md-5">
@@ -46,12 +252,14 @@ include("../../../config/config.php");
                                         <canvas id="attendancerate" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
 
             </div>
+            
             
             <div class="col-md-12">
                 <div class="row">
@@ -113,113 +321,7 @@ include("../../../config/config.php");
         }
     }
     ?>
-    <script>
-    $(document).ready(function(){
-        Chart.pluginService.register({
-        beforeDraw: function(chart) {
-            if (chart.config.options.elements.center) {
-            //Get ctx from string
-            var ctx = chart.chart.ctx;
-
-            //Get options from the center object in options
-            var centerConfig = chart.config.options.elements.center;
-            var fontStyle = centerConfig.fontStyle || 'Arial';
-            var txt = centerConfig.text;
-            var color = centerConfig.color || '#000';
-            var sidePadding = centerConfig.sidePadding || 20;
-            var sidePaddingCalculated = (sidePadding / 100) * (chart.innerRadius * 2)
-            //Start with a base font of 30px
-            ctx.font = "30px " + fontStyle;
-
-            //Get the width of the string and also the width of the element minus 10 to give it 5px side padding
-            var stringWidth = ctx.measureText(txt).width;
-            var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
-
-            // Find out how much the font can grow in width.
-            var widthRatio = elementWidth / stringWidth;
-            var newFontSize = Math.floor(30 * widthRatio);
-            var elementHeight = (chart.innerRadius * 2);
-
-            // Pick a new font size so it will not be larger than the height of label.
-            var fontSizeToUse = Math.min(newFontSize, elementHeight);
-
-            //Set font settings to draw it correctly.
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
-            var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2);
-            ctx.font = fontSizeToUse + "px " + fontStyle;
-            ctx.fillStyle = color;
-
-            //Draw text in center
-            ctx.fillText(txt, centerX, centerY);
-            }
-        }
-        });
-        ctx = document.getElementById('chartDonut1').getContext("2d");
-
-        myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: [1, 2, 3],
-            datasets: [{
-            label: "Emails",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            backgroundColor: ['#4acccd', '#f4f3ef', '#FF5733'],
-            borderWidth: 0,
-            data: [60, 30, 10]
-            }]
-        },
-        options: {
-            elements: {
-            center: {
-                text: '95%',
-                color: '#66615c', // Default is #000000
-                fontStyle: 'Arial', // Default is Arial
-                sidePadding: 60 // Defualt is 20 (as a percentage)
-            }
-            },
-            cutoutPercentage: 80,
-            legend: {
-
-            display: false
-            },
-
-            tooltips: {
-            enabled: true
-            },
-
-            scales: {
-            yAxes: [{
-
-                ticks: {
-                display: false
-                },
-                gridLines: {
-                drawBorder: true,
-                zeroLineColor: "transparent",
-                color: 'rgba(255,255,255,0.05)'
-                }
-
-            }],
-
-            xAxes: [{
-                barPercentage: 1.6,
-                gridLines: {
-                drawBorder: false,
-                color: 'rgba(255,255,255,0.1)',
-                zeroLineColor: "transparent"
-                },
-                ticks: {
-                display: false,
-                }
-            }]
-            },
-        }
-        });
-    })
-</script>
+    
 <script>
     // CHARTS
     chartColor = "#FFFFFF";
@@ -245,6 +347,7 @@ include("../../../config/config.php");
           'aug', 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30
         ],
         datasets: [
+          
           {
             label: "Production",
             borderColor: '#fcc468',

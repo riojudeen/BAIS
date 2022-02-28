@@ -78,14 +78,14 @@ include("../../../config/config.php");
                                         $total_karyawan = mysqli_num_rows($query_karyawan);
                                         // untuk query absensi dari data absensi
                                         $qry_absensi_hr = "SELECT absensi.npk AS 'npk_absen' FROM absensi 
-                                        JOIN karyawan ON karyawan.npk = absensi.npk
-                                        JOIN org ON karyawan.npk = org.npk 
-                                        LEFT JOIN attendance_code ON attendance_code.kode = absensi.ket
-                                        LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias
-                                        WHERE org.grp = '$grp[id]'";
+                                            JOIN karyawan ON karyawan.npk = absensi.npk
+                                            JOIN org ON karyawan.npk = org.npk 
+                                            LEFT JOIN attendance_code ON attendance_code.kode = absensi.ket
+                                            LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias
+                                            WHERE org.grp = '$grp[id]'";
                                         // untuk masuk
                                         $filter_masuk = " AND (attendance_alias.id = '1' OR attendance_alias.id = '2' OR
-                                        attendance_alias.id = '3' OR attendance_code.kode = '' OR attendance_code.kode IS NULL )";
+                                            attendance_alias.id = '3' OR attendance_code.kode = '' OR attendance_code.kode IS NULL )";
                                         $filter_telat = " AND (attendance_alias.id = '3' )";
                                         $filter_ijin = " AND (attendance_alias.id = '4' OR attendance_alias.id = '5' OR attendance_alias.id = '6' OR attendance_alias.id = '7' OR attendance_alias.id = '8' )";
                                         $filter_mangkir = " AND (attendance_alias.id = '9' )";
@@ -99,6 +99,7 @@ include("../../../config/config.php");
                                             $total_telat = mysqli_num_rows($query_telat);
                                             $total_ijin = mysqli_num_rows($query_ijin);
                                             $total_mangkir = mysqli_num_rows($query_mangkir);
+                                            
                                         $percent_masuk = ($total_karyawan > 0 )?($total_masuk / $total_karyawan)*100:0;
                                         $percent_telat = ($total_karyawan > 0 )?($total_telat / $total_karyawan)*100:0;
                                         $percent_ijin = ($total_karyawan > 0 )?($total_ijin / $total_karyawan)*100:0;
@@ -250,7 +251,7 @@ include("../../../config/config.php");
                                                                    
                                                                     <!-- <p class="text-nowrap text-truncate m-0">Unregistered Team</p> -->
                                                                     <div class=" table-full-width">
-                                                                        <table class=" table-sm text-truncate text-center"  width="100%" style="border-spacing: 20px;" >
+                                                                        <table class=" table text-truncate text-center"  width="100%" style="border-spacing: 20px;" >
                                                                             <tbody style="border:1px solid white;">
                                                                                 <tr>
                                                                                 <?php

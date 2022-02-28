@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
-$halaman = "Attendance Achievement";
+$halaman = "Attendance Efficiency";
 if(isset($_SESSION['user'])){
     $start_date = date('Y-m-1');
     $end_date = date('Y-m-t');
@@ -11,11 +11,10 @@ if(isset($_SESSION['user'])){
     $end = DBtoForm($end_date);
     include_once("../header.php");
 ?>
-<div class=" row data-eff"></div>
 <div class="row">
-    <div class="col-md-5">  
+    <!-- <div class="col-md-5">  
         <h5 class="title">Department Performance</h5>
-    </div>
+    </div> -->
     <div class="col-md-7 ">
         <div class="row">
             <div class="col-md-7">
@@ -40,6 +39,16 @@ if(isset($_SESSION['user'])){
                         <div class="form-group-sm pr-1">
                             <select name="shift" id="shift" class="form-control">
                                 <option value="">Pilih Shift</option>
+                                <?php
+                                $q_shift = mysqli_query($link, "SELECT * FROM shift ")or die(mysqli_error($link));
+                                if(mysqli_num_rows($q_shift) > 0){
+                                    while($data = mysqli_fetch_assoc($q_shift)){
+                                        ?>
+                                        <option value="<?=$data['id_shift']?>"><?=$data['shift']?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
@@ -55,6 +64,7 @@ if(isset($_SESSION['user'])){
         </div>
     </div>
 </div>
+<div class=" row data-eff"></div>
 <div class="row data-dept-eff"></div>
 <?php
     include_once("../footer.php");
@@ -72,8 +82,9 @@ if(isset($_SESSION['user'])){
                     method: 'get',
                     data: {start:start,end:end,shift:shift},
                     success:function(data){
-                        $('.data-eff').html(data);
-                        
+                        $('.data-eff').fadeOut('fast', function(){
+                            $(this).html(data).fadeIn('fast');
+                        });
                     }
                 })
             }
@@ -87,11 +98,27 @@ if(isset($_SESSION['user'])){
                     method: 'get',
                     data: {start:start,end:end,shift:shift},
                     success:function(data){
-                        $('.data-dept-eff').html(data);
+                        $('.data-dept-eff').fadeOut('fast', function(){
+                            $(this).html(data).fadeIn('fast');
+                        });
+                        
                     }
                 })
             }
             load_data2();
+            $(document).on('blur', '#start_date' , function(){
+                load_data2();
+                load_data();
+            })
+            $(document).on('blur', '#end_date' , function(){
+                load_data2();
+                load_data();
+                console.log("1")
+            })
+            $(document).on('change', '#shift' , function(){
+                load_data2();
+                load_data();
+            })
             var autoRefresh;
             // window.onload = resetTimer;
             window.onmousemove = resetTimeInterval;
