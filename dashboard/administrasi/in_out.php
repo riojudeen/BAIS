@@ -197,11 +197,12 @@ if(isset($_SESSION['user'])){
             
             $(document).on('click', 'td.data-karyawan', function(a){
                 a.preventDefault();
-                loadModal()
+                var data = $(this).attr('id');
+                loadModal(data)
             })
-            function loadModal(){
+            function loadModal(data){
                 $('#modal_cico').modal('show');
-                var data = $('td.data-karyawan').attr('id');
+                
                 // console.log(data)
                     $.ajax({
                         url: 'chart_view/preview.php',
