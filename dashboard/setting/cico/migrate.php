@@ -1,5 +1,6 @@
 <?php
 require_once("../../../config/config.php");
+require_once("../../../config/schedule_system.php");
 require "../../../_assets/vendor/autoload.php";
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
@@ -58,7 +59,12 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             $lastColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\coordinate::columnIndexFromString($lastColumn);
             
 
-
+            $q_replace_absensi =  "REPLACE INTO absensi (`id`,
+                `npk`,`shift`,`date`,`date_in`,`date_out`,
+                `check_in`,`check_out`,`ket`,`requester`) VALUES ";
+            $q_cek_shift = "SELECT npk , shift FROM karyawan ";
+            $q_cek_req = "SELECT `npk`, `keterangan`, `date`, `check_in`, `check_out` FROM req_absensi ";
+            
             foreach($array_tgl AS $date){
                 // looping data karyawan
                 $index_tanggal =( date('d', strtotime($date)) - 1)*3;
@@ -68,7 +74,15 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     $npk = $sheetData[$i]['0'];
                     $nama = $sheetData[$i]['1'];
                     $dept = $sheetData[$i]['2'];
-                    $shift = $sheetData[$i]['3'];
+                    $q_shift = mysqli_query($link, $q_cek_shift." WHERE npk = '$npk' ")or die(mysqli_error($link));
+                    // jika karyawan ada di database pake shift karyawan
+                    if(mysqli_num_rows($q_shift)>0){
+                        $data_shift = mysqli_fetch_assoc($q_shift);
+                        $shift = $data_shift['shift'];
+                    }else{
+                        $shift = shift_ubah($sheetData[$i]['3']);
+                    }
+                    
                     $scope = $sheetData[$i]['4'];
                     // ambil data check ini -out -ket berdasarkan tanggal mulai
                     $index_mulai = 4 + $index_tanggal; //index pertama 5
@@ -76,39 +90,53 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     $out = $index_mulai + 2;
                     $ket = $index_mulai + 3;
 
-                    $checkin = $sheetData[$i][$in];
-                    $checkout = $sheetData[$i][$out];
+                    $checkin = ($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in];
+                    $checkout = ($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out];
                     $ket = $sheetData[$i][$ket];
                     $id= $npk.$date;
 
+                    list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
+                    $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
                     if($scope == 'Absen'){
-                        echo $date."-".$scope."- in : ".$checkin."- out : ".$checkout."<br>";
-                    }else if($scope == 'Lembur'){
-                        echo $date."-".$scope."- in : ".$checkin."- out : ".$checkout."<br>";
+                        // echo $npk."<br>";
+                        
+                        
+                        // echo $iin."-".$iint."-".$iiint."<br>";
+                        $q_replace_absensi .= " ('$id','$npk', '$shift', '$date','$date_mulai','$date_selesai','$checkin','$checkout','$ket','$npkUser'),";
+                        // cek apalkah sudah ada pengajuan atau belum
+                        if(mysqli_num_rows($q_cekAbs)>0){
+                            // jika ada cek pengajuan
+                            $dataReqAbs = mysqli_fetch_assoc($q_cekAbs);
+                            $ket_reqAbs = $dataReqAbs['keterangan'];
+                            $cin_reqAbs = $dataReqAbs['check_in'];
+                            $cout_reqAbs = $dataReqAbs['check_out'];
+                            // jika request SKTA 
+                            if($ket_reqAbs == "SKTA"){
+                                // jika data in dan out sudah sama maka artinya data SKTA sudah diapprove
+                                // jalankan update
+                                $iin = strtotime("$cin_reqAbs");
+                                $iiin = strtotime("$checkin");
+                                $oot = strtotime("$cout_reqAbs");
+                                $ooot = strtotime("$checkout");
+                                if($iin == $iiin && $oot == $ooot){
+                                    mysqli_query($link, "UPDATE req_absensi SET req_status = 'a' , 
+                                    `status` = '100' WHERE id_absensi  = '$id' AND shift_req <> '1' AND keterangan = 'SKTA' 
+                                    ")or die(mysqli_error($link));
+                                }
+                            }else{
+                                // jika supem dan data absensi sudah sama artinya data sudah diapprove HRD
+                                if($ket_reqAbs == $ket){
+                                    // echo "SUPEM sukses";
+                                    mysqli_query($link, "UPDATE req_absensi SET req_status = 'a' , 
+                                    `status` = '100' WHERE id_absensi  = '$id' AND shift_req <> '1' AND keterangan = '$ket' 
+                                    ")or die(mysqli_error($link));
+                                }
+                            }
+                        }
+                        
                     }
-                     /*
-                    selama belum ada perubahan data shift , 
-                    gunakan shift awal
-                    */
-                    // $q_reqAbsensi = mysqli_query($link, "SELECT `shift` FROM req_absensi WHERE npk = '$npk' AND `date` = '$date' AND shift_req = '1' ")or die(mysqli_error($link));
-                    
-    
-    
-                    
-                    // $q_shift = mysqli_query($link, "SELECT shift FROM karyawan WHERE npk = '$npk' ")or die(mysqli_error($link));
-                    // if(mysqli_num_rows($q_reqAbsensi) > 0){
-                    //     $data = mysqli_fetch_assoc($q_reqAbsensi);
-                    //     $shift = $data['shift'];
-                    // }else if(mysqli_num_rows($q_shift) > 0){
-                    //     $data = mysqli_fetch_assoc($q_shift);
-                    //     $shift = $data['shift'];
-                    // }else{
-                    //     // menggunakan shift dari dokumen
-                    //     $shift = shift_ubah($shift);
-                    // }
                     
                     
-                    // $query .= "('$id','$npk','$shift', '$date', '$date','$date','$checkin','$checkout','$ket','$id','$npkUser'),";
                     
                     ?>
                     
@@ -116,10 +144,62 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     
                 }
             }
+            $q_replace_absensi = substr($q_replace_absensi, 0, -1);
+            $sql = mysqli_query($link, $q_replace_absensi)or die(mysqli_error($link));
+            if($sql){
+                ?>
+                    <script>
+                        Swal.fire({
+                            title: 'Sukses',
+                            text: "data absensi tanggal <?=tgl($tgl_pertama)?> sampai <?=tgl($tgl_terakhir)?> berhasil diupload",
+                            timer: 2000,
+                            
+                            icon: 'success',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            confirmButtonColor: '#00B9FF',
+                            cancelButtonColor: '#B2BABB',
+                            
+                        })
+                    </script>
+                <?php
+            }else{
+                ?>
+                    <script>
+                        Swal.fire({
+                            title: 'Galat!',
+                            text: "<?=mysqli_error($link)?>",
+                            timer: 2000,
+                            
+                            icon: 'warning',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            confirmButtonColor: '#00B9FF',
+                            cancelButtonColor: '#B2BABB',
+                            
+                        })
+                    </script>
+                <?php
+            }
 
 
         } else {
-            $base64 = base_url()."/assets/img/img/tm.png";
+            ?>
+                <script>
+                    Swal.fire({
+                        title: 'File Belum Siap!',
+                        text: "data absensi tanggal <?=tgl($tgl_pertama)?> sampai <?=tgl($tgl_terakhir)?> gagal diupload",
+                        timer: 2000,
+                        
+                        icon: 'info',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        confirmButtonColor: '#00B9FF',
+                        cancelButtonColor: '#B2BABB',
+                        
+                    })
+                </script>
+            <?php
             // echo "null";
             // $file = fopen($path, "r");
             // echo "File berhasil dibaca.";

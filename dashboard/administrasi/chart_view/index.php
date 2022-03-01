@@ -124,7 +124,7 @@ include("../../../config/config.php");
                                                                         <div class="row">
                                                                         <div class="col-md-2 col-2">
                                                                             <div class="avatar">
-                                                                            <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                                            <img src="<?=getFoto($grp['cord'])?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-md-10 col-10 text-nowrap text-truncate">

@@ -826,4 +826,19 @@ function cutName($nama){
     $singkatan = substr($nama, 0, 7);
     return $singkatan."...";
 }
+function getFoto($npk){
+    $path = "//adm-fs/HRD/HRD-Photo/".$npk.".jpg";
+    $type = pathinfo($path, PATHINFO_EXTENSION);
+    if (file_exists($path)) {
+        $dataImage = file_get_contents($path);
+        $image = 'data:image/' . $type . ';base64,' . base64_encode($dataImage);
+        $base64 = ($image)? $image : "";
+        // die("File tidak ditemukan");
+    } else {
+        $base64 = base_url()."/assets/img/img/tm.png";
+        // $file = fopen($path, "r");
+        // echo "File berhasil dibaca.";
+    }
+    return $base64;
+}
 ?>

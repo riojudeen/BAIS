@@ -3,7 +3,8 @@ include("../../../config/config.php");
 include("../../../config/schedule_system.php"); 
 include("../../../config/approval_system.php"); 
     // $today = date('Y-m-d');
-    $today = $selesai = dateToDB($_GET['end']);
+    $today = date('Y-m-d');
+    $selesai = dateToDB($_GET['end']);
     $mulai = dateToDB($_GET['start']);
     $data_tanggal = json_decode(get_date($mulai, $selesai));
     // print_r($data_tanggal);
@@ -276,7 +277,7 @@ include("../../../config/approval_system.php");
                       
                               LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
                               JOIN org ON org.npk = absensi.npk 
-                              WHERE  absensi.date = '$tgl' AND org.division = '$div[id]' AND org.dept_account = '$dept[id]' ";
+                              WHERE  absensi.date = '$today' AND org.division = '$div[id]' AND org.dept_account = '$dept[id]' ";
                           $q_masuk_dept = " AND ( absensi.ket = '' OR attendance_alias.id = '1' OR attendance_alias.id = '2' 
                               OR attendance_alias.id = '3')";
                           $q_ijin_dept = " AND ( attendance_alias.id = '4' OR attendance_alias.id = '5' 
@@ -303,17 +304,17 @@ include("../../../config/approval_system.php");
                                     </div>
                                     <div class="col-10 col-md-10 ">
                                         <div class="row">
-                                            <div class="col-md-4 numbers ">
+                                            <div class="col-md-5 numbers ">
                                                 <p class="card-title"><?=$eff?>%<p>
                                             </div>
-                                            <div class="col-md-8 border-left">
+                                            <div class="col-md-7 border-left">
                                                 <h6 class=""><?=$dept['nama_org']?></h6>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <p class="category">Total MP: <p>
+                                                        <p class="category">Total MP: <br> <?=$total?><p>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p class="category">Total Masuk: <p>
+                                                        <p class="category">Masuk: <br> <?=$masukDept?><p>
                                                     </div>
                                                 </div>
                                             </div>

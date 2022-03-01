@@ -4,8 +4,9 @@ include("../../../config/config.php");
     
     <?php
     $start =  dateToDB($_GET['start']);
-    $end =  dateToDB($_GET['end']);
-    // echo $end;
+    $end =  (strtotime(dateToDB($_GET['end'])) >= strtotime(date('Y-m-d')))?date('Y-m-d'):dateToDB($_GET['end']);
+    echo dateToDB($_GET['end'])."-".date('Y-m-d');
+    
     $shift =  ($_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
      $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
      $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
@@ -69,7 +70,7 @@ include("../../../config/config.php");
                             <div class="card-body">
                                 <div class="author">
                                     <a href="#">
-                                        <img class="avatar border-gray" src="../../assets/img/mike.jpg" alt="...">
+                                        <img class="avatar border-gray" src="<?=getFoto($dept['cord'])?>" alt="...">
                                         <h5 class="title"><?=$dept['nama_cord']?></h5>
                                     </a>
                                     <p class="description">
@@ -123,7 +124,7 @@ include("../../../config/config.php");
                                                         <div class="row">
                                                         <div class="col-md-2 col-2">
                                                             <div class="avatar">
-                                                            <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                            <img src="<?=getFoto($sect['cord'])?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-7 col-7">
@@ -259,11 +260,7 @@ include("../../../config/config.php");
                                                 borderColor:
                                                     'rgba(255,99,132,1)',
                                                 borderWidth: 0,
-<<<<<<< HEAD
-                                                data: [],
-=======
                                                 data: [<?=$data_masuk?>],
->>>>>>> 4950053048e383d00bc43dd770839e62e6d17d06
                                             },
                                             {
                                                 label: "Ijin / Cuti",
@@ -287,18 +284,6 @@ include("../../../config/config.php");
                                                 
                                                 data: [<?=$data_jml?>],
                                             },
-                                            {
-                                                label: "Total MP",
-                                                xAxisID: 'B',
-                                                backgroundColor: 
-                                                    'rgba(246, 242, 242, 0.8)',
-                                                borderColor:
-                                                    'rgba(255,99,132,1)',
-                                                borderWidth: 0,
-                                                
-                                                data: [<?=$total?>],
-                                            },
-                                            
                                         ], 
                                         
                                         
@@ -354,33 +339,6 @@ include("../../../config/config.php");
                                                 barPercentage: 0.6,
                                                 barThickness: 10,  // number (pixels) or 'flex'
                                                 maxBarThickness: 15, // number (pixels)
-<<<<<<< HEAD
-                                                position: 'top',
-=======
-                                                position: 'bottom',
-                                                type: 'linear',
->>>>>>> 4950053048e383d00bc43dd770839e62e6d17d06
-                                                gridLines: {
-                                                    zeroLineColor: "white",
-                                                    display: false,
-
-                                                    drawBorder: false,
-                                                    color: 'transparent',
-                                                },
-                                                ticks: {
-                                                    beginAtZero: true,
-                                                    display: false,
-                                                    steps: 10,
-                                                    stepValue: 5,
-                                                    max: 100
-<<<<<<< HEAD
-                                                },
-                                            },{
-                                                id: 'B',
-                                                stacked: false,
-                                                barPercentage: 0.4,
-                                                barThickness: 10,  // number (pixels) or 'flex'
-                                                maxBarThickness: 15, // number (pixels)
                                                 position: 'bottom',
                                                 type: 'linear',
                                                 gridLines: {
@@ -396,8 +354,6 @@ include("../../../config/config.php");
                                                     steps: 10,
                                                     stepValue: 5,
                                                     max: 100
-=======
->>>>>>> 4950053048e383d00bc43dd770839e62e6d17d06
                                                 },
                                             }]
                                         }

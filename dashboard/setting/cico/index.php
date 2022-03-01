@@ -436,11 +436,6 @@ if(isset($_SESSION['user'])){
                 }
             }
 
-
-
-
-
-
             function loadData(page){
                 var div_id = $('#s_div').val();
                 var dept_id = $('#s_dept').val();
@@ -568,7 +563,7 @@ if(isset($_SESSION['user'])){
                         const load10 =  18 * 60 + 0;
                     const load11 = 18 * 60 + 30;
                         const load12 =  19 * 60 + 0;                 
-                    const load13 = 19 * 60 + 48;
+                    const load13 = 19 * 60 + 30;
                         const load14 =  20 * 60 + 0;
                     const load15 = 20 * 60 + 30;
                         const load16 =  21 * 60 + 0;
@@ -617,12 +612,12 @@ if(isset($_SESSION['user'])){
                         load++;
                         triggerLoad(load)
                         
-                        $('#load_trigger').attr('data-id', "1");
-                        $('#load_trigger').text('data-id 1');
+                        // $('#load_trigger').attr('data-id', "1");
+                        // $('#load_trigger').text('data-id 1');
                         
                     }else{
-                        $('#load_trigger').attr('data-id', "0");
-                        $('#load_trigger').text('data-id 0');
+                        // $('#load_trigger').attr('data-id', "0");
+                        // $('#load_trigger').text('data-id 0');
                         // console.log('0')
                         load = 0;
                         

@@ -1,5 +1,44 @@
 <?php
-
+// function untuk dapat data date out
+function DateOut($date, $cin, $cout){
+    if($date != '' && $cin != '' && $cout != ''){
+        $waktuAwal = strtotime("$date $cin");
+        $waktuAkhir = strtotime("$date $cout"); // bisa juga waktu sekarang now()
+        if($waktuAwal > $waktuAkhir){
+            $tglini = ($date);
+            $sesudah = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+        }else{
+            $tglini = $date;
+            $sesudah = $date;
+        }
+        
+    }else{
+        $tglini = '';
+        $sesudah = '';
+    }
+    return array($tglini, $sesudah);
+    
+}
+function DateOut2($link, $shift, $date){
+    $cekWH = mysqli_query($link, "SELECT working_hours.start AS `start`,  working_hours.end AS `end`
+    FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));
+    if(mysqli_num_rows($cekWH)>0){
+        $data = mysqli_fetch_assoc($cekWH);
+        $waktuAwal = strtotime("$date $data[start]");
+        $waktuAkhir = strtotime("$date $data[end]"); // bisa juga waktu sekarang now()
+        if($waktuAwal > $waktuAkhir){
+            $tglini = ($date);
+            $sesudah = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+        }else{
+            $tglini = $date;
+            $sesudah = $date;
+        }
+    }else{
+        $tglini = $date;
+        $sesudah = $date;
+    }
+    return array($tglini, $sesudah);
+}
 // $start = $_POST['start_date'];
 // $end = $_POST['end_date'];
 // $shift_start = $_POST['shift_start'];
