@@ -729,6 +729,36 @@ function orgAccess($level){
     }
     return $access;
 }
+function orgAccess_joinAbsen($level, $table){
+    if($level == 1){
+        // general user
+        $access = $table.".npk";
+    }else if($level == 2){
+        // special user
+        $access = $table.".npk";
+    }else if($level == 3){
+        // foreman
+        $access = $table.".grp";
+    }else if($level == 4){
+        // section head
+        $access = $table.".sect";
+    }else if($level == 5){
+        // manajemen
+        $access = $table.".dept";
+    }else if($level == 6){
+        // admin department
+        $access = $table.".division";
+    }else if($level == 7){
+        // admin divisi
+        $access = $table.".division";
+    }else if($level == 8){
+        // admin system
+        $access = $table.".division";
+    }else{
+        $access = $table.".function argumen level user tidak ada";
+    }
+    return $access;
+}
 function dataOrg($link, $npk){
     $query_org = mysqli_query($link, "SELECT npk, sub_post, post, grp, sect, dept, dept_account, division, plant FROM org WHERE npk = '$npk' ")or die(mysqli_error($link));
     if(mysqli_num_rows($query_org) > 0){
@@ -940,6 +970,44 @@ function filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $de
     }
     if($cari != ''){
         $addFilterCari = " AND  ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )";
+    }else{
+        $addFilterCari = '';
+    }
+    $gabung = $addFilter.$addFilterDeptAcc.$addFilterShift.$addFilterCari;
+    return $gabung;
+
+}
+function filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari,$table){
+    if($div_filter != ''){
+        if($dept_filter != ''){
+            if($sect_filter != ''){
+                if($group_filter != ''){
+                    $addFilter = " AND $table.division = '$div_filter' AND $table.dept = '$dept_filter' AND $table.sect = '$sect_filter' AND $table.grp = '$group_filter'";
+                }else{
+                    $addFilter = " AND $table.division = '$div_filter' AND $table.dept = '$dept_filter' AND $table.sect = '$sect_filter' ";
+                }
+            }else{
+                $addFilter = " AND $table.division = '$div_filter' AND $table.dept = '$dept_filter' ";
+            }
+        }else{
+            $addFilter = " AND $table.division = '$div_filter' ";
+        }
+    }else{
+        $addFilter = "";
+    }
+    // echo $addFilter;
+    if($deptAcc_filter != ''){
+        $addFilterDeptAcc =" AND $table.dept_account = '$deptAcc_filter'";
+    }else{
+        $addFilterDeptAcc ="";
+    }
+    if($shift != ''){
+        $addFilterShift = " AND $table.employee_shift = '$shift'";
+    }else{
+        $addFilterShift = "";
+    }
+    if($cari != ''){
+        $addFilterCari = " AND  ( view_organization.npk LIKE '%$cari%' OR view_organization.nama LIKE '%$cari%' )";
     }else{
         $addFilterCari = '';
     }

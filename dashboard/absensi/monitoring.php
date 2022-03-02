@@ -16,7 +16,70 @@
             <hr>
             <div class="card-body " >
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group no-border">
+                                    <select class="form-control" name="div" id="s_div">
+                                        <option value="">Pilih Divisi</option>
+                                    </select>
+                                    <select class="form-control" name="dept" id="s_dept">
+                                        <option value="">Pilih Department</option>
+                                        <option value="" disabled>Pilih Division Terlebih Dahulu</option>
+                                    </select>
+                                    <select class="form-control" name="section" id="s_section">
+                                        <option value="">Pilih Section</option>
+                                        <option value="" disabled>Pilih Department Terlebih Dahulu</option>
+                                    </select>
+                                    <select class="form-control" name="groupfrm" id="s_goupfrm">
+                                        <option value="">Pilih Group</option>
+                                        <option value="" disabled>Pilih Section Terlebih Dahulu</option>
+                                    </select>
+                                    <select class="form-control" name="shift" id="s_shift">
+                                        <option value="">Pilih Shift</option>
+                                        <?php
+                                            $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
+                                            if(mysqli_num_rows($query_shift)>0){
+                                                while($data = mysqli_fetch_assoc($query_shift)){
+                                                    ?>
+                                                    <option value="<?=$data['id_shift']?>"><?=$data['shift']?></option>
+                                                    <?php
+                                                }
+                                            }else{
+                                                ?>
+                                                <option value="">Belum Ada Data Shift</option>
+                                                <?php
+                                            }
+                                        ?>
+                                    </select>
+                                    <select class="form-control" name="deptacc" id="s_deptAcc">
+                                        <option value="">Pilih Department Administratif</option>
+                                        <?php
+                                            $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
+                                            if(mysqli_num_rows($q_div) > 0){
+                                                while($data = mysqli_fetch_assoc($q_div)){
+                                                ?>
+                                                <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
+                                                <?php
+                                                }
+                                            }else{
+                                                ?>
+                                                <option value="">Belum Ada Data Department Administratif</option>
+                                                <?php
+                                            }
+                                        ?>
+                                        </select>
+                                    <div class="input-group-append ">
+                                        <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12" id="monitor"></div>
+                        </div>
+                        <?php
+                        /*
                         <div class="table-responsive" >
                             <table class="table table-striped">
                                 <thead>
@@ -73,6 +136,8 @@
                                 </tfoot>
                             </table>
                         </div>
+                        */
+                        ?>
                     </div>
 
                 </div>
