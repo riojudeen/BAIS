@@ -94,7 +94,7 @@ if(isset($_SESSION['user'])){
         $add_filter_absen = filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari,"view_absen_hr");
         $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal_filter;
         
-       echo $add_filter_absen ;
+    //    echo $queryAbsen ;
 
        $sql_jml = mysqli_query($link, $queryAbsen)or die(mysqli_error($link));
        $total_records= mysqli_num_rows($sql_jml);
@@ -124,7 +124,7 @@ if(isset($_SESSION['user'])){
             <div class="col-md-12">
 
                 <div class="table-responsive text-nowrap" >
-                    <table class="table-sm table-striped text-uppercase" style="width:100%">
+                    <table class="table-sm table-striped text-uppercase" id="tb_absensi" style="width:100%">
                         <thead class="table-info">
                             <tr>
                                 <th>#</th>
@@ -543,7 +543,7 @@ if(isset($_SESSION['user'])){
         $mulai = dateToDB($_GET['start']);
         $selesai = dateToDB($_GET['end']);
         $data_tanggal = json_decode(get_date($mulai, $selesai));
-        print_r($data_tanggal);
+        // print_r($data_tanggal);
 
         $_GET['prog'] = '';
         // $_GET['cari'] = '';
@@ -611,10 +611,11 @@ if(isset($_SESSION['user'])){
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
         // filter data absensi
+        $tanggal = " AND work_date BETWEEN '$start' AND '$end' ";
         $access_org_abs = orgAccess($level);
         $add_filter_absen = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen;
-       
+        $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal;
+       echo $queryAbsen;
         // pagination
         $sql_jml = mysqli_query($link, $queryMP)or die(mysqli_error($link));
         $total_records= mysqli_num_rows($sql_jml);
@@ -636,12 +637,12 @@ if(isset($_SESSION['user'])){
         $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
         $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
        
-        echo $queryMP;
+        // echo $queryMP;
     
         ?>
 
         <div class="table-responsive table-bordered" >
-            <table class="table table-hover  text-uppercase"  style="border: #C6C7C8;width:100%">
+            <table class="table table-hover  text-uppercase" id="tb_absensi" style="border: #C6C7C8;width:100%">
             
                 <thead class="text-white  table-info" style="border: #C6C7C8">
                     <tr >
@@ -732,8 +733,8 @@ if(isset($_SESSION['user'])){
                                 $sqlAbsen = mysqli_query($link, $qry_absen)or die(mysqli_error($link));
                                 $dataAbsen = mysqli_fetch_assoc($sqlAbsen);
     
-                                $check_in = ($dataAbsen['check_in'] == "00:00:00")?"":$dataAbsen['check_in'];
-                                $check_out = ($dataAbsen['check_out'] == "00:00:00")?"":$dataAbsen['check_out'];
+                                $check_in = ($dataAbsen['check_in'] == "00:00:00")?"":jam($dataAbsen['check_in']);
+                                $check_out = ($dataAbsen['check_out'] == "00:00:00")?"":jam($dataAbsen['check_out']);
                                 $hari = hari_singkat($tgl_);
                                 $color = ($hari == "Sab" || $hari == "Min" ) ? "background: rgba(228, 227, 227, 0.5)" : "";
     
@@ -777,49 +778,48 @@ if(isset($_SESSION['user'])){
                                 
                                 ?>
                                 
-                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=jam($check_in)?></td>
-                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=jam($check_out)?></td>
+                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=$check_in?></td>
+                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=$check_out?></td>
                                 <td style="min-width:50px ;max-width:50px" class="bg- text-"  ><?=$dataAbsen['CODE']?></td>
                                 <?php
                                 flush();
                             }
-                            // $qry_absen = $queryAbsen." AND absensi.npk = '$data_mon[npk]'";
-                            // $qry_M = $qry_absen." AND CODE = 'M' ";
-                            // $qry_TL = $qry_absen." AND CODE = 'TL' ";
-                            // $qry_C1 = $qry_absen." AND CODE = 'C1' ";
-                            // $qry_C2 = $qry_absen." AND CODE = 'C2' ";
-                            // $qry_S1 = $qry_absen." AND CODE = 'S1' ";
-                            // $qry_S2 = $qry_absen." AND CODE = 'S2' ";
-                            // $qry_T1 = $qry_absen." AND CODE = 'T1' ";
-                            // $qry_T2 = $qry_absen." AND CODE = 'T2' ";
-                            // $qry_T3 = $qry_absen." AND CODE = 'T3' ";
-                            // $qry_Oth = $qry_absen." AND CODE <> '' ";
+                            $qry_absen = $queryAbsen." AND npk = '$data_mon[npk]'";
+                            $qry_M = $qry_absen." AND CODE = 'M' ";
+                            $qry_TL = $qry_absen." AND CODE = 'TL' ";
+                            $qry_C1 = $qry_absen." AND CODE = 'C1' ";
+                            $qry_C2 = $qry_absen." AND CODE = 'C2' ";
+                            $qry_S1 = $qry_absen." AND CODE = 'S1' ";
+                            $qry_S2 = $qry_absen." AND CODE = 'S2' ";
+                            $qry_T1 = $qry_absen." AND CODE = 'T1' ";
+                            $qry_T2 = $qry_absen." AND CODE = 'T2' ";
+                            $qry_T3 = $qry_absen." AND CODE = 'T3' ";
+                            $qry_Oth = $qry_absen." AND CODE <> '' ";
     
-                            // $total_M = mysqli_num_rows(mysqli_query($link, $qry_M));
-                            // $total_C1 = mysqli_num_rows(mysqli_query($link, $qry_C1));
-                            // $total_C2 = mysqli_num_rows(mysqli_query($link, $qry_C2));
-                            // $total_S1 = mysqli_num_rows(mysqli_query($link, $qry_S1));
-                            // $total_S2 = mysqli_num_rows(mysqli_query($link, $qry_S2));
-                            // $total_T1 = mysqli_num_rows(mysqli_query($link, $qry_T1));
-                            // $total_T2 = mysqli_num_rows(mysqli_query($link, $qry_T2));
-                            // $total_T3 = mysqli_num_rows(mysqli_query($link, $qry_T3));
-                            // $total_TL = mysqli_num_rows(mysqli_query($link, $qry_TL));
-                            // $total_Oth = mysqli_num_rows(mysqli_query($link, $qry_Oth));
-                            // $other = $total_Oth - ($total_M + $total_C1 + $total_C2 +$total_S1 +$total_S2+$total_T1+$total_T2+$total_T3+$total_TL);
+                            $total_M = mysqli_num_rows(mysqli_query($link, $qry_M));
+                            $total_C1 = mysqli_num_rows(mysqli_query($link, $qry_C1));
+                            $total_C2 = mysqli_num_rows(mysqli_query($link, $qry_C2));
+                            $total_S1 = mysqli_num_rows(mysqli_query($link, $qry_S1));
+                            $total_S2 = mysqli_num_rows(mysqli_query($link, $qry_S2));
+                            $total_T1 = mysqli_num_rows(mysqli_query($link, $qry_T1));
+                            $total_T2 = mysqli_num_rows(mysqli_query($link, $qry_T2));
+                            $total_T3 = mysqli_num_rows(mysqli_query($link, $qry_T3));
+                            $total_TL = mysqli_num_rows(mysqli_query($link, $qry_TL));
+                            $total_Oth = mysqli_num_rows(mysqli_query($link, $qry_Oth));
+                            $other = $total_Oth - ($total_M + $total_C1 + $total_C2 +$total_S1 +$total_S2+$total_T1+$total_T2+$total_T3+$total_TL);
     
     
                             ?>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            <td rowspan=""></td>
-                            
+                            <td rowspan=""><?=$total_S1?></td>
+                            <td rowspan=""><?=$total_S2?></td>
+                            <td rowspan=""><?=$total_T1?></td>
+                            <td rowspan=""><?=$total_T2?></td>
+                            <td rowspan=""><?=$total_T3?></td>
+                            <td rowspan=""><?=$total_TL?></td>
+                            <td rowspan=""><?=$total_M?></td>
+                            <td rowspan=""><?=$total_C1?></td>
+                            <td rowspan=""><?=$total_C2?></td>
+                            <td rowspan=""><?=$other?></td>
                             
                             <?php
                                     

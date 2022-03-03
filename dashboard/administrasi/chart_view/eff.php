@@ -416,10 +416,12 @@ include("../../../config/approval_system.php");
               echo 
               "{ 
                 label: \"$dept\",
+                type: 'bar',
                 borderColor: '#fcc468',
                 fill: true,
                 backgroundColor: gradientFill$no,
                 hoverBorderColor: '#fcc468',
+                order: $no,
                 borderWidth: 0,
                 data: [
                   $masuk
@@ -522,32 +524,27 @@ include("../../../config/approval_system.php");
         scales: {
 
           yAxes: [{
-            stacked: false,
             ticks: {
-              fontColor: "#9f9f9f",
-              fontStyle: "bold",
-              beginAtZero: true,
-              maxTicksLimit: 5,
-              padding: 20,
-              steps: 10,
-              stepValue: 5,
-              max: 100
-            },
-            gridLines: {
-              zeroLineColor: "transparent",
-              display: false,
-              drawBorder: false,
-              color: '#9f9f9f',
-            }
+            fontColor: "#9f9f9f",
+            fontStyle: "bold",
+            beginAtZero: false,
+            maxTicksLimit: 5,
+            
+            padding: 20
+          },
+          gridLines: {
+            zeroLineColor: "transparent",
+            display: true,
+            drawBorder: false,
+            color: '#9f9f9f',
+          }
 
           }],
           xAxes: [{
-            stacked: true,
-            barPercentage: 0.4,
-            barThickness: 10,  // number (pixels) or 'flex'
-            maxBarThickness: 15, // number (pixels)
+            barPercentage: 0.9,
             gridLines: {
               zeroLineColor: "white",
+              
               display: false,
 
               drawBorder: false,
@@ -555,8 +552,11 @@ include("../../../config/approval_system.php");
             },
             ticks: {
               padding: 20,
+              
               fontColor: "#9f9f9f",
-              fontStyle: "bold"
+              fontStyle: "bold",
+              
+              
             }
           }]
         }

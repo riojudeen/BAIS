@@ -13,13 +13,14 @@ if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         $cek_area = mysqli_query($link, "SELECT cord FROM view_daftar_area WHERE cord = '$npkUser' AND part <> 'pos' ")or die(mysqli_error($link));
         // echo mysqli_num_rows($cek_area);
-        if(mysqli_num_rows($cek_area) > 0){
+        // if(mysqli_num_rows($cek_area) > 0){
 
             if(isset($_GET['org'])){
                 // jika akses dari admin
                 $q_area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$_GET[part]' AND id = '$_GET[org]' ")or die(mysqli_error($link));
                 $data_area = mysqli_fetch_assoc($q_area_cord);
                 // $npk = $data_area['cord'];
+                // Echo $npk;
                 $npk = $data_area['cord'];
                 $q_user_level = mysqli_query($link, "SELECT user_role.role_name AS 'name', user_role.level AS 'level' FROM data_user JOIN user_role ON user_role.id_role = data_user.level WHERE data_user.npk = '$npk' ")or die(mysqli_error($link));
                 $datalevel = mysqli_fetch_assoc($q_user_level);
@@ -27,6 +28,7 @@ if(isset($_SESSION['user'])){
                 $part = $_GET['part'];
                 $data_access = $_GET['org'];
                 $npkCord = $data_area['cord'];
+
                 $sect_filter = ($part == 'section')?" AND id_sect = '$data_access' ":'';
                 $group_filter = ($part == 'group')?" AND id_grp = '$data_access'":'';
                 
@@ -71,7 +73,7 @@ if(isset($_SESSION['user'])){
                 $edit = 1;
             }else{
                 $disabled = "disabled";
-                $mes = "anda bukan koordinator area";
+                $mes = "koordinator area";
                 $edit = 0;
             }
            
@@ -662,9 +664,9 @@ if(isset($_SESSION['user'])){
                 </div>
             </div>
             <?php
-            }else{
-                include_once ("../no_access.php");
-            }
+            // }else{
+            //     include_once ("../no_access.php");
+            // }
         }else{
             include_once ("../no_access.php");
         }

@@ -5,11 +5,17 @@
     <div class="col-md-12" id="dataijin">
         <div class="card " >
             <div class="card-header ">
-                
-                <div class="pull-left ">
-                   
-                    <h4 class="card-title " >Absensi Karyawan</h4>
-                    <p class="card-category ">Periode : <?=tgl($tanggalAwal)." s.d. ".tgl($tanggalAkhir)?></p>
+                <div class="row">
+                    <div class="col-md-6 ">
+                       
+                        <h4 class="card-title " >Absensi Karyawan</h4>
+                        <p class="card-category ">Periode : <?=tgl($tanggalAwal)." s.d. ".tgl($tanggalAkhir)?></p>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <button class="btn btn-sm btn-primary tb_absensi">
+                            Export to Excel
+                        </button>
+                    </div>
                 </div>
             </div>
            

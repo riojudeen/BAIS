@@ -126,6 +126,19 @@ if(isset($_SESSION['user'])){
     </script>
     <script type="text/javascript">
     $(document).ready(function(){
+        $(document).on('click', '.tb_absensi', function(){
+            
+            $("#tb_absensi").table2excel({
+                // exclude: ".noExl",
+                name: "data",
+                filename: "Data Absensi",
+                fileext: ".xls",
+                exclude_img: true,
+                exclude_links: true,
+                exclude_inputs: true,
+                preserveColors: true //tampilan
+            })
+        })
         $(document).on('click', '.vw', function(){
             var page = $('.page_active').attr('id');
             $('.vw').removeClass('vw-active')
