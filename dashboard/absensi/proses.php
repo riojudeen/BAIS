@@ -321,7 +321,79 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
            }
        }
-    }else if(isset($_POST['req_SUPEM'])){
+    }else if(isset($_POST['shift'])){
+        //proses approve oleh admin
+        
+        if($_POST['shift'] == $_POST['shift_tujuan']){
+            $_SESSION['info'] = 'Gagal Disimpan';
+            $_SESSION['pesan'] = "( shift asal dan tujuan sama )";
+            echo "<script>document.location.href='shift_request.php'</script>";
+        }else{
+            
+            $requester = $npkUser;
+            $npk = $_POST['shift'];
+            $ket = 'SHIFT';
+            $shift_asal = $_POST['shift_asal'];
+            $mulai = $_POST['start'];
+            $selesai = $_POST['end'];
+            $shift_tujuan = $_POST['shift_tujuan'];
+            $status = authApprove($level, "status", "request");
+            $req_status = authApprove($level, "request", "request");
+            // echo $status.$req_status;
+            $tanggal =  json_decode(get_date($mulai, $selesai));
+            
+            // print_r($tanggal);
+            $or_date = '';
+            $or_id = '';
+            foreach($tanggal AS $date){
+                $id_or = $npk.$date;
+                $or_id .= " `id` = '$id_or' OR";
+                $or_date .= " `date` = '$date' OR";
+            }
+            $or_id = substr($or_id, 0, -2);
+            $or_date = substr($or_date, 0, -2);
+
+            $add_id = ($or_id != '')?" AND ($or_id)":'';
+            $add_date = ($or_date != '')?" AND ($or_date)":'';
+            $req_date = date('Y-m-d');
+            $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` BETWEEN '$mulai' AND '$selesai' ";
+            // echo $q_cek;
+            $cek_request = mysqli_query($link, $q_cek);
+            // echo mysqli_num_rows($cek_request);
+            if(mysqli_num_rows($cek_request)>0){
+                // echo $q_cek;
+                $_SESSION['info'] = 'Gagal Disimpan';
+                $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
+                echo "<script>document.location.href='shift_request.php'</script>";
+            }else{
+                $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES";
+                foreach($tanggal AS $date){
+                    $id = $npk.$date;
+                    $query .= " ('$id', '$npk', '$shift_tujuan', '$date', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1'),";
+                }
+                $query = substr($query, 0, -1);
+                $sql = mysqli_query($link, $query);
+                if($sql){
+                    $_SESSION['info'] = 'Request';
+                    $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
+                    echo "<script>document.location.href='shift_request.php'</script>";
+                    // echo $q_cek;
+                }else{
+                    $_SESSION['info'] = 'Request';
+                    $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                    echo "<script>document.location.href='shift_request.php'</script>";
+                }
+
+            }
+        }
+        // echo $query;// if(count($_POST['checked']) > 0){
+        
+        //     foreach($_POST['checked'] AS $data){
+        //       list($id, $ket, $req_shift) = pecahID($data);
+        //         mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
+        //     }
+        // }
+     }else if(isset($_POST['req_SUPEM'])){
         // echo "SUPEM";
         count($_POST['sd']);
         // echo "SUKET";

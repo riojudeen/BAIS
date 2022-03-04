@@ -76,7 +76,7 @@ if(isset($_SESSION['user'])){
             $tanggal_filter .= " work_date = '$tgl' OR";
         }
         $tanggal_filter = (substr($tanggal_filter, 0, -2) != '')?" AND (".substr($tanggal_filter, 0, -2).") ":'';
-        echo $tanggal_filter;
+        // echo $tanggal_filter;
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -240,8 +240,10 @@ if(isset($_SESSION['user'])){
         $_GET['prog'] = '';
         // $_GET['cari'] = '';
         $_GET['att_type'] = '';
+        
         $start = dateToDB($_GET['start']);
         $end = dateToDB($_GET['end']);
+        $today = (strtotime($end) >= strtotime(date('Y-m-d')))?date('Y-m-d'):$end;
         // echo $start;
         $div_filter = $_GET['div'];
         // echo $div;
@@ -288,7 +290,7 @@ if(isset($_SESSION['user'])){
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg;
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$filterProg;
         // echo $query_req_absensi;
         $addWFO = " AND att_alias = '1' ";
         $addTL = " AND att_alias = '2' ";
@@ -336,7 +338,7 @@ if(isset($_SESSION['user'])){
                                     <p class="card-category text-white">Masuk Tepat Waktu</p>
                                     <p class="card-title"><?=$totalWFO?> MP
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="masuk" ></a> 
+                                    <a class="stretched-link view_data text-white" id="1" ></a> 
                                 </div>
                             </div>
                         </div>
@@ -357,7 +359,7 @@ if(isset($_SESSION['user'])){
                                     <p class="card-category text-white">Absen Tidak lengkap</p>
                                     <p class="card-title"><?=$totalTL?> MP
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="absen tidak lengkap" ></a> 
+                                    <a class="stretched-link view_data text-white" id="2" ></a> 
                                 </div>
                             </div>
                         </div>
@@ -378,7 +380,7 @@ if(isset($_SESSION['user'])){
                                     <p class="card-category text-white">Terlambat</p>
                                     <p class="card-title"><?=$totalT?> MP
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="telat" ></a> 
+                                    <a class="stretched-link view_data text-white" id="3" ></a> 
                                 </div>
                             </div>
                         </div>
@@ -403,7 +405,7 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti</p>
                                         <p class="card-title"><?=$totalC?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="ijin" ></a> 
+                                        <a class="stretched-link view_data text-white" id="4" ></a> 
                                     </div>
                                 </div>
                             </div>
@@ -424,7 +426,7 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti Lain-Lain</p>
                                         <p class="card-title"><?=$totalCL?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="ijin" ></a> 
+                                        <a class="stretched-link view_data text-white" id="5" ></a> 
                                     </div>
                                 </div>
                             </div>
@@ -446,7 +448,7 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti Dokter & Dirawat</p>
                                         <p class="card-title text-white"><?=$totalS?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="sakit" ></a>
+                                        <a class="stretched-link view_data text-white" id="6" ></a>
                                     </div>
                                 </div>
                             </div>
@@ -467,7 +469,7 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Ijin Keluar Perusahaan</p>
                                         <p class="card-title"><?=$totalP?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="ijin" ></a> 
+                                        <a class="stretched-link view_data text-white" id="7" ></a> 
                                     </div>
                                 </div>
                             </div>
@@ -488,7 +490,7 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">WFH</p>
                                         <p class="card-title"><?=$totalWFH?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="ijin" ></a> 
+                                        <a class="stretched-link view_data text-white" id="8" ></a> 
                                     </div>
                                 </div>
                             </div>
@@ -509,7 +511,7 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Mangkir</p>
                                         <p class="card-title"><?=$totalM?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="mangkir" ></a> 
+                                        <a class="stretched-link view_data text-white" id="9" ></a> 
                                     </div>
                                 </div>
                             </div>
@@ -538,6 +540,202 @@ if(isset($_SESSION['user'])){
                 })
             });
         </script>
+        <?php
+    }else if($_GET['id'] == 'modal'){
+        $_GET['prog'] = '';
+        $data_filter = ($_GET['data'] != '')?" AND att_alias = '$_GET[data]' ":'';
+        // $_GET['cari'] = '';
+        $_GET['att_type'] = '';
+        $start = dateToDB($_GET['start']);
+        $end = dateToDB($_GET['end']);
+        $today = (strtotime($end) >= strtotime(date('Y-m-d')))?date('Y-m-d'):$end;
+
+        $query_attAlias = mysqli_query($link, "SELECT `name` FROM attendance_alias WHERE id = '$_GET[data]' ")or die(mysqli_error($link));
+        $nama_ = mysqli_fetch_assoc($query_attAlias);
+        $nama = $nama_['name'];
+        
+        // echo $start;
+        $div_filter = $_GET['div'];
+        // echo $div;
+        $dept_filter = $_GET['dept'];
+        // echo $dept_filter;
+        $sect_filter = $_GET['sect'];
+        // echo $sect_filter;
+        $group_filter = $_GET['group'];
+        // echo $group_filter;
+        $deptAcc_filter = $_GET['deptAcc'];
+        // echo $deptAcc_filter;
+        $shift = $_GET['shift'];
+        // echo $shift;
+        $cari = (isset($_GET['cari']))?$_GET['cari']:'';
+        // echo $cari;
+        $level = $level;
+        $npk = $npkUser;
+        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+        $origin_query = "SELECT view_absen_hr.id_absensi,
+            view_absen_hr.npk,
+            view_absen_hr.nama,
+            view_absen_hr.employee_shift,
+            view_absen_hr.grp,
+            view_absen_hr.dept_account,
+            view_absen_hr.work_date,
+            view_absen_hr.check_in,
+            view_absen_hr.check_out,
+            view_absen_hr.CODE,
+            view_absen_hr.att_alias
+            FROM view_absen_hr ";
+        $access_org = orgAccess($level);
+        $data_access = generateAccess($link,$level,$npk);
+        $table = partAccess($level, "table");
+        $field_request = partAccess($level, "field_request");
+        $table_field1 = partAccess($level, "table_field1");
+        $table_field2 = partAccess($level, "table_field2");
+        $part = partAccess($level, "part");
+        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        
+        // view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL OR view_absen_hr.att_alias = '9'
+        $filter_cari = ($add_filter != '')?"( $add_filter)":'';
+        // echo $filter_cari;
+        $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$data_filter;
+        
+
+        $sql_jml = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
+        $total_records= mysqli_num_rows($sql_jml);
+        // echo $total_records;
+ 
+        $page = (isset($_GET['page']))? $_GET['page'] : 1;
+        // echo $page;
+        $limit = 100; 
+        $limit_start = ($page - 1) * $limit;
+        $no = $limit_start + 1;
+        // echo $limit_start;
+        $addOrder = " ORDER BY view_absen_hr.work_date DESC ";
+        $addLimit = " LIMIT $limit_start, $limit";
+        // $no = 1*$page;
+ 
+        // pagin
+        $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
+        
+        $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+        $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
+        $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
+        
+        $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
+        ?>
+            <!-- Modal -->
+                    <div class="modal-header">
+                        <h5 class="modal-title pull-left" id="staticBackdropLabel"><?=$nama?></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body border px-0" data-id="<?=$_GET['data']?>" >
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="table-full-width">
+                                    <table class="table-sm table-striped text-uppercase" id="tb_absensi" style="width:100%">
+                                        <thead class="table-info">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>NPK</th>
+                                                <th>Nama</th>
+                                                <th>Shift</th>
+                                                <th>Group</th>
+                                                <th>Administratif</th>
+                                                <th>Tanggal</th>
+                                                <th>in</th>
+                                                <th>out</th>
+                                                <th>Ket</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-uppercase text-nowrap">
+                                        
+                                        <?php
+                                        if(mysqli_num_rows($sql) > 0){
+        
+                                            while($dataAbsen = mysqli_fetch_assoc($sql)){
+                                                $checkIn = ($dataAbsen['check_in'] == '00:00:00')?'':jam($dataAbsen['check_in']);
+                                                $checkOut = ($dataAbsen['check_out'] == '00:00:00')?'':jam($dataAbsen['check_out']);
+                                                ?>
+                                                    <tr id="<?=$dataAbsen['id_absensi']?>" >
+                                                    <td class="td"><?=$no++?></td>
+                                                    <td class="td"><?=$dataAbsen['npk']?></td>
+                                                    <td style="max-width:200px" class="text-truncate td"><?=$dataAbsen['nama']?></td>
+                                                    <td class="td"><?=$dataAbsen['employee_shift']?></td>
+                                                    <td style="max-width:100px" class="text-truncate"><?=getOrgName($link,  $dataAbsen['grp'], "group")?></td>
+                                                    <td class="td"><?=getOrgName($link, $dataAbsen['dept_account'], "deptAcc")?></td>
+                                                    <td class="td"><?=tgl($dataAbsen['work_date'])?></td>
+                                                    <td class="td"><?=$checkIn?></td>
+                                                    <td class="td"><?=$checkOut?></td>
+                                                    <td class="td"><?=$dataAbsen['CODE']?></td>
+                                                </tr>
+        
+                                                <?php
+                                            }
+                                        }else{
+                                            ?>
+                                            <tr>
+                                                <td colspan="14" class="text-center"><?=noData()?></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 pull-rigt">
+                                <ul class="pagination ">
+                                <?php
+                                // echo $page."<br>";
+                                // echo $jumlah_page."<br>";
+                                // echo $jumlah_number."<br>";
+                                // echo $start_number."<br>";
+                                // echo $end_number."<br>";
+                                if($page == 1){
+                                    echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
+                                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
+                                } else {
+                                    $link_prev = ($page > 1)? $page - 1 : 1;
+                                    echo '<li class="page-item halaman_modal" id="1" data-id="'.$_GET['data'].'"><a class="page-link" >First</a></li>';
+                                    echo '<li class="page-item halaman_modal" id="'.$link_prev.'"data-id="'.$_GET['data'].'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
+                                }
+
+                                for($i = $start_number; $i <= $end_number; $i++){
+                                    $link_active = ($page == $i)? ' active page_modal_active' : '';
+                                    echo '<li class="page-item halaman_modal '.$link_active.'" id="'.$i.'" data-id="'.$_GET['data'].'"><a class="page-link" >'.$i.'</a></li>';
+                                }
+
+                                if($page == $jumlah_page){
+                                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                                    echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
+                                } else {
+                                    $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
+                                    echo '<li class="page-item halaman_modal" id="'.$link_next.'" data-id="'.$_GET['data'].'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                                    echo '<li class="page-item halaman_modal" id="'.$jumlah_page.'" data-id="'.$_GET['data'].'"><a class="page-link" >Last</a></li>';
+                                }
+                                ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        
+                    </div>
+
+                
+    
+  
+
+<!-- Modal -->
+
+        </div>
+        
         <?php
     }else if($_GET['id'] == 'callendar_view'){
         $mulai = dateToDB($_GET['start']);
@@ -615,7 +813,7 @@ if(isset($_SESSION['user'])){
         $access_org_abs = orgAccess($level);
         $add_filter_absen = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal;
-       echo $queryAbsen;
+    //    echo $queryAbsen;
         // pagination
         $sql_jml = mysqli_query($link, $queryMP)or die(mysqli_error($link));
         $total_records= mysqli_num_rows($sql_jml);

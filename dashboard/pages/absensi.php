@@ -38,11 +38,19 @@ if(isset($_SESSION['user'])){
     
 
 ?>
-<form action="proses.php" method="POST">
-   
-    <div id="view_data"></div>
+
+  
+<div class="row" >
+    <div class="modal fade"  id="myView" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl  modal-dialog-scrollable" >
+            <div class="modal-content px-0" id="view_data">
+                <h5>please wait</h5>
+            </div>
+        </div>
+    </div>
+</div>
            
-</form>
+
 <div class="row">
     <div class="col-md-12" id="summary"></div>
 </div>
@@ -103,23 +111,46 @@ if(isset($_SESSION['user'])){
 </div>
 <?php
     include_once('../absensi/monitoring.php');
-   
     include_once("../footer.php");
     ?>
     
     <script type="text/javascript">
         $(document).ready(function(){
-            $('.view_data').click(function(e){
-                var id = $(this).attr("id");
+            function modalActive(data,page){
+                var id = 'modal';
+                var div_id = $('#s_div').val();
+                var dept_id = $('#s_dept').val();
+                var section_id = $('#s_section').val();
+                var group_id = $('#s_goupfrm').val();
+                var deptAcc_id = $('#s_deptAcc').val();
+                var shift = $('#s_shift').val();
+                var start = $('#start_date').val();
+                var end = $('#end_date').val();
+                var cari = $('#cari').val();
+                
+                // console.log(page);
                 $.ajax({
-                    url: '../absensi/modal_monitoring.php',	
-                    method: 'post',
-                    data: {id:id},		
+                    url: '../absensi/ajax/monitoring-absen.php',	
+                    method: 'GET',
+                    data: {page:page, data:data,cari:cari,id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},		
                     success:function(data){		
+                        	// menampilkan dialog modal nya
                         $('#view_data').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                        $('#myView').modal("show");	// menampilkan dialog modal nya
+                        $('#myView').modal("show");
                     }
                 });
+            }
+            $(document).on('click','.view_data',function(e){
+                var data = $(this).attr("id");
+                modalActive(data,'1')
+                
+            });
+            $(document).on('click', '.halaman_modal', function(){
+                var page = $(this).attr("id");
+                var data = $(this).attr('data-id');
+                console.log(data);
+                modalActive(data,page)
+                // console.log(hal)
             });
         });
 
@@ -166,14 +197,17 @@ if(isset($_SESSION['user'])){
             var end = $('#end_date').val();
             var cari = $('#cari').val();
             var id = $('.vw-active').attr('id');
-            console.log(page);
+            
+            // console.log(page);
             $.ajax({
                 url:"../absensi/ajax/monitoring-absen.php",
                 method:"GET",
                 data:{page:page,cari:cari,id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
+                beforeSend:function(){$(".spinner_load").css("display","block").fadeIn('slow');},
                 success:function(data){
-                    console.log('success')
+                    // console.log('success')
                     $('#monitor').fadeOut('fast', function(){
+                        $(".spinner_load").css("display","none")
                         $(this).html(data).fadeIn('fast');
                     });
                     // $('#data-monitoring').html(data)
@@ -222,13 +256,12 @@ if(isset($_SESSION['user'])){
         }
         get_notifData()
         
-        
-        
         $(document).on('click', '.halaman', function(){
             var page = $(this).attr("id");
             dataActive(page)
             // console.log(hal)
         });
+       
         // getSumary()
         function getDiv(){
             var data = $('#s_div').val()

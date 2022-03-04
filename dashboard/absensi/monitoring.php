@@ -22,6 +22,18 @@
             <hr>
             <div class="card-body " >
                 <div class="row">
+                    <div class="col-md-12 spinner_load " style="display:none">
+                        <div class="card shadow-none">
+                            <div class="card-body " style="background-image: linear-gradient(to right, rgb(255,255,255) ,rgb(244,243,239) ,  rgb(255,255,255));">
+                                <div class="text-center" >
+                                    <img id="img-spinner" src="../../assets/img/loading/load.gif" style="height:50px">
+                                    <label class="label">please wait downloading resources...</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-12">
