@@ -10,10 +10,12 @@ if(isset($_SESSION['user'])){
 	if(isset($_GET['profile'])){
 		$npkUser = ($_GET['profile'] == 'me')?$npkUser:$_GET['profile'];
 	}
+	
+	
 		include("../header.php");
 		$date = date('Y-m-d');
 		// echo $data_value."<br>";
-		echo $npkUser;
+		// echo $npkUser;
 		$npk_user = $_SESSION['user'];
 		$sql_profile = mysqli_query($link, "SELECT * FROM view_organization
 		WHERE npk = '$npk_user'")or die(mysqli_error($link));
@@ -194,7 +196,7 @@ if(isset($_SESSION['user'])){
 						<div class="col-md-4 pr-1">
 							<div class="form-group">
 								<label>Division</label>
-								<input type="text" id="data_npk" class="form-control" disabled="true" value="<?=$npkUser?>">
+								<input type="hidden" id="data_npk" class="form-control" disabled="true" value="<?=$npkUser?>">
 								<input type="text" class="form-control" disabled="true" value="<?=$data_profile['division']?>">
 							</div>
 						</div>
@@ -273,11 +275,11 @@ if(isset($_SESSION['user'])){
 						
 						
 					</div>
-					<div class="row">
+					<div class="row d-none" >
 						<div class="col-md-6">
 						<label>Tanggal Lahir</label>
 							<div class="form-group">
-								<input type="text" class="form-control" placeholder="">
+								<input type="text" class="form-control datepicker" placeholder="">
 							</div>
 						</div>
 						<div class="col-md-6">
@@ -321,7 +323,8 @@ if(isset($_SESSION['user'])){
 							</div>
 						</div>
 					</div> -->
-					<div class="row">
+
+					<div class="row d-none">
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>Alamat Domisili</label>

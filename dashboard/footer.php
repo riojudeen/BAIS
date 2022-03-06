@@ -1,3 +1,10 @@
+<?php
+$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+$link_exception = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/cico/index.php";
+
+?>
+
+
 </div>
 <footer class="footer footer-black  footer-white ">
     <div class="container-fluid">
@@ -335,35 +342,42 @@ $(document).ready(function(){
         });
     });
 </script>
-<script>
-var autoLockTimer;
-        // window.onload = resetTimer;
-        window.onmousemove = resetTimer;
-        window.onmousedown = resetTimer; // catches touchscreen presses
-        window.onclick = resetTimer;     // catches touchpad clicks
-        window.onscroll = resetTimer;    // catches scrolling with arrow keys
-        window.onkeypress = resetTimer;
- 
-        function lockScreen() {
-            <?php
-            $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-            $_SESSION['link'] = $actual_link;
-            $_npk1 = $npkUser;
-            $_npk = sha1($npkUser);
-            $_SESSION['lock'] = $_npk1;
-            $_SESSION['npk_lock'] = $_npk;
-            
-            ?>
-            localStorage.setItem('page', '<?=$actual_link?>');
-            window.location.href = ' <?=base_url('auth/lock.php?')?>u=<?=$_SESSION['npk_lock']?>';
-        }
- 
-        function resetTimer() {
-            clearTimeout(autoLockTimer);
-            autoLockTimer = setTimeout(lockScreen, 900000);  // time is in milliseconds
-        }
+<?php
+if($actual_link != $link_exception){
+    ?>
+    <script>
+    var autoLockTimer;
+    // window.onload = resetTimer;
+    window.onmousemove = resetTimer;
+    window.onmousedown = resetTimer; // catches touchscreen presses
+    window.onclick = resetTimer;     // catches touchpad clicks
+    window.onscroll = resetTimer;    // catches scrolling with arrow keys
+    window.onkeypress = resetTimer;
+
+    function lockScreen() {
+        <?php
+        $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $_SESSION['link'] = $actual_link;
+        $_npk1 = $npkUser;
+        $_npk = sha1($npkUser);
+        $_SESSION['lock'] = $_npk1;
+        $_SESSION['npk_lock'] = $_npk;
+        
+        ?>
+        localStorage.setItem('page', '<?=$actual_link?>');
+        window.location.href = ' <?=base_url('auth/lock.php?')?>u=<?=$_SESSION['npk_lock']?>';
+    }
+
+    function resetTimer() {
+        clearTimeout(autoLockTimer);
+        autoLockTimer = setTimeout(lockScreen, 900000);  // time is in milliseconds
+    }
 
 </script>
+    <?php
+}
+?>
+
 <script>
     $('.menu').click(function(){
         if(typeof(Storage) !== "undefined") {
