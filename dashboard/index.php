@@ -7,7 +7,8 @@ include("../config/cost/index.php");
 $halaman = "Dashboard";
 if(isset($_SESSION['user'])){
   
-echo "<script>window.location='".base_url('dashboard/cost/index.php?dept=5')."';</script>";
+// echo "<script>window.location='".base_url('dashboard/cost/index.php?dept=5')."';</script>";
+echo "<script>window.location='".base_url('dashboard/profile/index.php?profile=me')."';</script>";
 ?>
 
 <?php

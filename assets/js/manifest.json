@@ -1,0 +1,16 @@
+{
+    "name": "Body Administration Information System",
+    "short_name": "BAIS",
+    "description": "Bring Administrative Work Easy & Simple",
+    "icons": [
+        {
+            "src": "../img/img/logo-mini-01.png",
+            "sizes": "200x200",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/BAIS/dashboard/profile/index.php",
+    "display": "fullscreen",
+    "theme_color": "#66615B",
+    "background_color": "#66615B"
+}

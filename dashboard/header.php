@@ -30,6 +30,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../img/logo.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <link rel="icon" href="<?=base_url()?>/assets/img/img/logo.png" type="image/png">
+  <link rel="manifest" href="<?=base_url()?>/assets/js/manifest.json">
   <style>
     
     @font-face {
@@ -604,10 +605,16 @@
               </p>
               </p>
             </a>
-            <div class="cllpse collapse" id="overtime" data-name="overtime">
+            <div class="cllpse collapse " id="overtime" data-name="overtime">
               <ul class="nav">
-                <li class="menu " data-name="ovrtime" id="ovrtime">
+                <li class="menu d-none" data-name="ovrtime" id="ovrtime">
                   <a href="<?=base_url()?>/dashboard/pages/overtime.php">
+                    <span class="sidebar-mini-icon">OM</span>
+                    <span class="sidebar-normal"> Overtime Montoring </span>
+                  </a>
+                </li>
+                <li class="menu " data-name="ovrtime2" id="ovrtime2">
+                  <a href="<?=base_url()?>/dashboard/ot/req_overtime.php">
                     <span class="sidebar-mini-icon">OM</span>
                     <span class="sidebar-normal"> Overtime Montoring </span>
                   </a>

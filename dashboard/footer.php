@@ -90,6 +90,7 @@ $link_exception = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/ci
 <script src="<?=base_url('assets/js/approvalsistem.js')?>"></script>
 <script src="<?=base_url('assets/js/jquery.idle-master/jquery.idle.js')?>"></script>
 <script src="<?=base_url('assets/jquery-table2excel-master/dist/jquery.table2excel.min.js')?>"></script>
+<script src="<?=base_url('assets/js/register.js')?>"></script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/sticksy/dist/sticksy.min.js"></script>

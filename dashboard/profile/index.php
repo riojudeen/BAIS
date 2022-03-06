@@ -10,13 +10,13 @@ if(isset($_SESSION['user'])){
 	if(isset($_GET['profile'])){
 		$npkUser = ($_GET['profile'] == 'me')?$npkUser:$_GET['profile'];
 	}
-	
-	
 		include("../header.php");
 		$date = date('Y-m-d');
+		$startDate = date('Y-m-01', strtotime($date));
+		$endDate = date('Y-m-t', strtotime($date));
 		// echo $data_value."<br>";
 		// echo $npkUser;
-		$npk_user = $_SESSION['user'];
+		$npk_user = $npkUser;
 		$sql_profile = mysqli_query($link, "SELECT * FROM view_organization
 		WHERE npk = '$npk_user'")or die(mysqli_error($link));
 
@@ -67,10 +67,10 @@ if(isset($_SESSION['user'])){
 						$check_in = ($ci == "00:00:00")?"-":jam($ci);
 						$check_out = ($co == "00:00:00")?"-":jam($co);
 						?>
-						<div class="col-lg-6 col-sm-12 col-md-6 ml-auto mr-auto">
+						<div class="col-lg-6 d-none col-sm-12 col-md-6 ml-auto mr-auto">
 							<h5><?=$check_in?><br><small>Check In</small></h5>
 						</div>
-						<div class="col-lg-6 col-sm-12 col-md-6  ml-auto mr-auto">
+						<div class="col-lg-6 d-none  col-sm-12 col-md-6  ml-auto mr-auto">
 							<h5><?=$check_out?><br><small>Check Out</small></h5>
 						</div>
 					</div>
@@ -102,87 +102,7 @@ if(isset($_SESSION['user'])){
 		
 	</div>
 	<div class="col-md-8">
-		<div class="row">
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="card card-stats">
-					<div class="card-body ">
-						<div class="row">
-						<div class="col-5 col-md-4">
-							<div class="icon-big text-center icon-warning">
-							<i class="nc-icon nc-globe text-warning"></i>
-							</div>
-						</div>
-						<div class="col-7 col-md-8">
-							<div class="numbers">
-							<p class="card-category">TUL</p>
-							<p class="card-title">-<p>
-							</div>
-							
-						</div>
-						</div>
-					</div>
-					<div class="card-footer ">
-						<hr>
-						<div class="stats">
-						<i class="fa fa-refresh"></i>
-						- hari kerja
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="card card-stats">
-					<div class="card-body ">
-						<div class="row">
-						<div class="col-5 col-md-4">
-							<div class="icon-big text-center icon-warning">
-							<i class="nc-icon nc-globe text-warning"></i>
-							</div>
-						</div>
-						<div class="col-7 col-md-8">
-							<div class="numbers">
-							<p class="card-category">Masuk</p>
-							<p class="card-title">-<p>
-							</div>
-						</div>
-						</div>
-					</div>
-					<div class="card-footer ">
-						<hr>
-						<div class="stats">
-						<i class="fa fa-refresh"></i>
-						- hari kerja
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-4 col-md-6 col-sm-6">
-				<div class="card card-stats">
-					<div class="card-body ">
-						<div class="row">
-						<div class="col-5 col-md-4">
-							<div class="icon-big text-center icon-warning">
-							<i class="nc-icon nc-globe text-warning"></i>
-							</div>
-						</div>
-						<div class="col-7 col-md-8">
-							<div class="numbers">
-							<p class="card-category">Overtime</p>
-							<p class="card-title">-<p>
-							</div>
-						</div>
-						</div>
-					</div>
-					<div class="card-footer ">
-						<hr>
-						<div class="stats">
-						<i class="fa fa-refresh"></i>
-						- hari kerja
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		
 		<div class="card">
 			<div class="card-header">
 				<h5 class="title">Profile Karyawan</h5>
@@ -233,7 +153,7 @@ if(isset($_SESSION['user'])){
 						<div class="col-md-3 pl-1">
 							<div class="form-group">
 								<label for="exampleInputEmail1">Shift</label>
-								<input type="text" class="form-control" disabled="true"  value="<?=$data_profile['shift']?>">
+								<input type="text" class="form-control" id="d_shift" disabled="true"  value="<?=$data_profile['shift']?>">
 							</div>
 						</div>
 					</div>
@@ -332,7 +252,7 @@ if(isset($_SESSION['user'])){
 							</div>
 						</div>
 					</div>
-					<div class="row">
+					<div class="row d-none">
 						<div class="col-md-12 text-right">
 							<div class="btn btn-sm btn-primary">update</div>
 
@@ -343,6 +263,9 @@ if(isset($_SESSION['user'])){
 				</form>
 			</div>
 		</div>
+		<div class="row" id="sumary">
+			
+		</div>
 		<div class="row">
 			<div class="col-md-12 " >
 				<div class="card " id="contoh2">
@@ -350,78 +273,21 @@ if(isset($_SESSION['user'])){
 						<h5 class="card-title">Monitoring Absensi</h5>
 						<p class="card-category"></p>
 					</div>
-					<div class="card-body ">
-					<div class="box pull-left">
-						<form class="form-inline" action="" method="post">
-						
-							<div class="border-1 input-group">
-								<div class="input-group-prepend">
-									<span class="input-group-text text-white pr-2 bg-secondary"><i class="nc-icon nc-calendar-60"></i></span>
-									
+					<div class="card-body " >
+						<div class="row">
+							<div class="col-md-12">
+								<div class="input-group no-border">
+									<input type="date" class="form-control" name="start_date" id="start_date" value="<?=$startDate?>">
+									<label for="" class="form-control text-center col-md-1">to</label>
+									<input type="date" class="form-control form-col-4" name="end_date" id="end_date" value="<?=$endDate?>">
+									<div class="input-group-append ">
+										<span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+									</div>
 								</div>
-								<input style="background: #EAECEE;" type="text" name="awal" class="form-control border-right-0 datepicker" data-date-format="DD/MM/YYYY" placeholder="tanggal mulai" date-format="yyyy-mm-dd" id="datetimepicker6" value="<">
-								<div class="input-group-prepend" style="margin-left: -3px">
-									<span type="text" class="input-group-text px-3" style="font-size: 12px">to</span>
-								</div>
-								<input style="background: #EAECEE;" type="text" name="akhir" class="form-control datepicker" data-date-format="DD/MM/YYYY" placeholder="tanggal akhir" date-format="yyyy-mm-dd" id="datetimepicker7" value="">
-								
 							</div>
-							
-							<div class="input-group ">
-								<button type="submit" class="btn btn-danger " aria-hidden="true">SORT</button>
-							</div>
-							
-							
-						</form>
-					</div>
-					
-					
-							
-							
-						<div class="table-responsive" style="height:200">
-							<table class="table  table-hover" >
-								<thead>
-									<tr>
-										<th scope="col">No</th>
-										<th scope="col">Hari</th>
-										<th scope="col">Tanggal</th>                  
-										<th scope="col" colspan="2">Check In</th>
-										<th scope="col" colspan="2">Check Out</th>
-										<th scope="col">KET</th>
-										
-										
-									</tr>
-								</thead>
-								<tbody class="text-nowrap">
-									<?php
-									$lembur = mysqli_query($link, "SELECT * FROM absensi WHERE npk = '$npk_user'")or die(mysqli_error($link));
-									$no = 1;
-									
-
-									while($data_spl = mysqli_fetch_assoc($lembur)){
-										$hari = hari($data_spl['date_in']);
-										
-										?>                        
-
-									
-									<tr>
-									
-										<td><?=$no++?></td>
-										<td><?=$hari?></td>
-										<td><?=tgl_indo($data_spl['date_in'])?></td>
-										<td><?=$data_spl['date_in']?></td>
-										<td><?=$data_spl['check_in']?></td>
-										<td><?=$data_spl['date_out']?></td>
-										<td><?=$data_spl['check_out']?></td>
-										<td><?=$data_spl['ket']?></td>
-										<td></td>                                							
-									</tr>
-									
-									<?php
-									}
-									?>
-								</tbody>
-							</table>
+						</div>
+						<div class="row">
+							<div class="col-md-12" id="data-administratif"></div>
 						</div>
 					</div>
 					
@@ -441,6 +307,46 @@ if(isset($_SESSION['user'])){
 <script>
 	
 	$(document).ready(function(){
+		$(document).on('click', '#filterGo', function(){
+			dataAbsen()
+			dataSumary();
+		})
+		dataAbsen()
+		function dataAbsen(){
+			var id = 'data-absen';
+			var shift = $('#d_shift').val();
+			var npk = $('#data_npk').val();
+			var start = $('#start_date').val();
+			var end = $('#end_date').val();
+			$.ajax({
+				url:"data-administratif.php",
+				method:"GET",
+				data:{shift:shift,id:id,npk:npk,start:start,end:end},
+				success:function(data){
+					$('#data-administratif').fadeOut('fast', function(){
+						$(this).html(data).fadeIn('fast');
+					});
+				}
+			})
+		}
+		dataSumary();
+		function dataSumary(){
+			var id = 'sumary';
+			var shift = $('#d_shift').val();
+			var npk = $('#data_npk').val();
+			var start = $('#start_date').val();
+			var end = $('#end_date').val();
+			$.ajax({
+				url:"data-administratif.php",
+				method:"GET",
+				data:{shift:shift,id:id,npk:npk,start:start,end:end},
+				success:function(data){
+					$('#sumary').fadeOut('fast', function(){
+						$(this).html(data).fadeIn('fast');
+					});
+				}
+			})
+		}
 		formAccount();
 		function formAccount(){
 			var npk = $('#data_npk').val();
