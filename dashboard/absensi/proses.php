@@ -321,17 +321,17 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
            }
        }
-    }else if(isset($_POST['shift'])){
+    }else if(isset($_POST['shift_req'])){
         //proses approve oleh admin
         
-        if($_POST['shift'] == $_POST['shift_tujuan']){
+        if($_POST['shift_req'] == $_POST['shift_tujuan']){
             $_SESSION['info'] = 'Gagal Disimpan';
             $_SESSION['pesan'] = "( shift asal dan tujuan sama )";
             echo "<script>document.location.href='shift_request.php'</script>";
         }else{
             
             $requester = $npkUser;
-            $npk = $_POST['shift'];
+            $npk = $_POST['shift_req'];
             $ket = 'SHIFT';
             $shift_asal = $_POST['shift_asal'];
             $mulai = $_POST['start'];
@@ -379,7 +379,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                     echo "<script>document.location.href='shift_request.php'</script>";
                     // echo $q_cek;
                 }else{
-                    $_SESSION['info'] = 'Request';
+                    $_SESSION['info'] = 'Gagal Request';
                     $_SESSION['pesan'] = "(".mysqli_error($link).")";
                     echo "<script>document.location.href='shift_request.php'</script>";
                 }
@@ -477,7 +477,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $i++;
         }
         $query = substr($query, 0, -1);
-        // echo $query;
+        echo $query;
         $sql = mysqli_query($link, $query);
         if($sql){
             $_SESSION['info'] = 'Disimpan';
@@ -534,6 +534,62 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                     
                 }
                 return $text;
+            }
+        }
+     }else if(isset($_GET['shift_delete_multiple'])){
+        //proses approve oleh admin
+        if(count($_POST['checked']) > 0){
+            foreach($_POST['checked'] AS $data){
+                list($id, $ket, $req_shift) = pecahID($data);
+                $query_check = mysqli_query($link, "SELECT CONCAT(`status`, `req_status`) AS `stats` FROM req_absensi WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ")or die(mysqli_error($link));
+                $sql = mysqli_fetch_assoc($query_check);
+                $code = $sql['stats'];
+                // echo $data."<br>";
+                if($code == ""){
+                    
+                }else if($code == "25a"){
+                    if(mysqli_num_rows($query_check) > 0){
+                        mysqli_query($link, "DELETE FROM req_absensi  WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+                    }
+                }else if($code == "50a"){
+                    if(mysqli_num_rows($query_check) > 0){
+                        mysqli_query($link, "DELETE FROM req_absensi  WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+                    }
+                }else if($code == "75a"){
+                    if(mysqli_num_rows($query_check) > 0){
+                        mysqli_query($link, "DELETE FROM req_absensi  WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+                    }
+                }else if($code == "100a"){
+                    // tidak boleh delete
+                }else if($code == "100b"){
+                    if(mysqli_num_rows($query_check) > 0){
+                        mysqli_query($link, "DELETE FROM req_absensi  WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+                    }
+                }else if($code == "100c"){
+                    if(mysqli_num_rows($query_check) > 0){
+                        mysqli_query($link, "DELETE FROM req_absensi  WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+                    }
+                }else if($code == "100d"){
+                    if(mysqli_num_rows($query_check) > 0){
+                        mysqli_query($link, "DELETE FROM req_absensi  WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+                    }
+                }else if($code == "100e"){
+                    // tidak boleh delete
+                }else if($code == "100f"){
+                    // tidak boleh delete
+                }else{
+                    
+                }
+            }
+        }
+     }else if(isset($_GET['shift_close_multiple'])){
+        //proses approve oleh admin
+        $status = '100';
+        $req_status = 'a';
+        if(count($_POST['checked']) > 0){
+            foreach($_POST['checked'] AS $data){
+              list($id, $ket, $req_shift) = pecahID($data);
+                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
             }
         }
      }else{

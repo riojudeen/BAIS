@@ -2,11 +2,14 @@
 
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
+include("../../config/approval_system.php"); 
 
 //redirect ke halaman dashboard index jika sudah ada session
 $halaman = "My Profile";
 if(isset($_SESSION['user'])){
-
+	if(isset($_GET['profile'])){
+		$npkUser = ($_GET['profile'] == 'me')?$npkUser:$_GET['profile'];
+	}
 		include("../header.php");
 		$date = date('Y-m-d');
 		// echo $data_value."<br>";
@@ -32,7 +35,6 @@ if(isset($_SESSION['user'])){
 		$data_userLevel = mysqli_fetch_assoc($user_levQuery);
 
 ?>
-
 <div class="row ">
 	<div class="col-md-4" id="sticker" >
 		<div class="card card-user " id="">
@@ -73,7 +75,7 @@ if(isset($_SESSION['user'])){
 				</div>
 			</div>
 		</div>
-		<div class="card">
+		<div class="card d-none">
 			<div class="card-body">
 				<h5 class="text-uppercase">Sisa Cuti Tahunan</h5>
 				<p class="description">
@@ -81,7 +83,7 @@ if(isset($_SESSION['user'])){
 				</p>
 			</div>
 		</div>
-		<div class="card">
+		<div class="card d-none">
 			<div class="card-body">
 				<h5 class="text-uppercase">Sisa Cuti panjang</h5>
 				<p class="description">
@@ -90,71 +92,11 @@ if(isset($_SESSION['user'])){
 			</div>
 		</div>
 		
-		<div class="card">
-			<div class="card-header">
-				<h5 class="text-uppercase">account info</h5>
-				<p class="card-category"><?=md5($data_akun['username'])?></p>
-			</div>
-			<hr>
-			<form class="card-body" action="" method="POST">
-				<div class="col-md-12 px-1">
-				<label>NPK</label>
-					<div class="input-group no-border">
-						<div class="input-group-prepend">
-							<span class="input-group-text  px-2" id="npkUser">
-								<i class="nc-icon nc-single-02"></i>
-							</span>
-						</div>
-						<input type="number" readonly class="form-control" placeholder="8788344xxxx" value="<?=$data_akun['npk']?>">
-					</div>
-				</div>
-				<div class="col-md-12 px-1">
-				<div class="col-md-12 px-1">
-					<label>User Level</label>
-					<div class="input-group no-border">
-						<div class="input-group-prepend">
-							<span class="input-group-text  px-2" id="basic-addon1">
-								<i class="nc-icon nc-single-02"></i>
-							</span>
-						</div>
-						<input type="text" readonly class="form-control" value="<?=$data_userLevel['role_name']?>">
-					</div>
-				</div>
-
-				<label>Password</label>
-					<div class="input-group ">
-						<div class="input-group-prepend ">
-							<span class="input-group-text px-2" id="pass">
-								<i class="nc-icon nc-lock-circle-open"></i>
-							</span>
-						</div>
-						<input type="password"  class="form-control" placeholder="password baru" value="" autocomplete="off">
-					</div>
-				</div>
-				<div class="col-md-12 px-1">
-
-				<label>Password Lama</label>
-					<div class="input-group ">
-						<div class="input-group-prepend ">
-							<span class="input-group-text px-2" id="basic-addon1">
-								<i class="nc-icon nc-lock-circle-open"></i>
-							</span>
-						</div>
-						<input type="password"  class="form-control" placeholder="password Lama">
-					</div>
-					<p class="category">konfirmasi password lamu untuk ubah password</p>
-				</div>
-				<div class="row">
-					<div class="col-md-12 text-right">
-						<button type="reset" class="btn btn-sm btn-warning">reset</button>
-						<button type="submit" class="btn btn-sm btn-primary">change</button>
-
-					</div>
-
-				</div>
-			</form>
-
-		</div>
+		<div class="row">
+            <div class="col-md-12" id="form_account">
+                
+            </div>
+        </div>
 		
 	</div>
 	<div class="col-md-8">
@@ -252,6 +194,7 @@ if(isset($_SESSION['user'])){
 						<div class="col-md-4 pr-1">
 							<div class="form-group">
 								<label>Division</label>
+								<input type="text" id="data_npk" class="form-control" disabled="true" value="<?=$npkUser?>">
 								<input type="text" class="form-control" disabled="true" value="<?=$data_profile['division']?>">
 							</div>
 						</div>
@@ -482,47 +425,76 @@ if(isset($_SESSION['user'])){
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<div class="card">
-					<div class="card-body">
-						
-						<h5 class="text-uppercase">Koordinator</h5>
-						<?php
-						foreach($array_area_kordinator As $part){
-							$query = mysqli_query($link,"SELECT `nama_org`,`id` FROM view_cord_area WHERE cord = '$npkUser' AND part = '$part' ")or die(mysqli_error($link));
-							
-							if($part)
-							?>
-							<p class="description">
-								<?=partCode($part, "nama")?>
-								</br>
-								<?php
-								while($data = mysqli_fetch_assoc($query)){
-									?>
-									<?=$data['nama_org']?>
-									</br>
-									<?php
-								}
-
-								?>
-							</p>
-							<?php
-						}
-						?>
-						
-					</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
+<div class="info_"></div>
 
 			
 			
 <?php
 //footer
-		include_once("../footer.php");
+	include_once("../footer.php");
+	?>
+<script>
+	
+	$(document).ready(function(){
+		formAccount();
+		function formAccount(){
+			var npk = $('#data_npk').val();
+			$.ajax({
+				url:"form-account.php",
+				method:"GET",
+				data:{npk:npk},
+				success:function(data){
+					$('#form_account').fadeOut('fast', function(){
+						$(this).html(data).fadeIn('fast');
+					});
+				}
+			})
+		}
+		function submitAccount(submit){
+			var old_pass = $('#old_pass').val()
+			var new_pass = $('#new_pass').val()
+			var update = $('#new_pass').val()
+			var npk = $('#data_npk').val();
+			if(old_pass == ''|| new_pass == ''){
+				success('Data Kosong','Pastikan Semua Form telah diisi','')
+			}else{
+				// console.log(old_pass)
+				$.ajax({
+				url:"proses.php",
+				method:"GET",
+				data:{submit:submit,old_pass:old_pass,new_pass:new_pass,npk:npk},
+				success:function(data){
+					$('.info_').html(data);
+				}
+			})
+			}
+		}
+		function success(data1,data2,icon){
+            Swal.fire({
+                title: data1,
+                text: data2,
+                timer: 2000,
+                
+                icon: icon,
+                showCancelButton: false,
+                showConfirmButton: false,
+                confirmButtonColor: '#00B9FF',
+                cancelButtonColor: '#B2BABB',
+            })
+        }
+		$(document).on('click', '#submit_account', function(a){
+			a.preventDefault();
+			var data = $(this).attr('id');
+			submitAccount(data)
+		})
+	})
+</script>
+
+<?php
+	include_once("../endbody.php");
+
 
 } else{
 		echo "<script>window.location='".base_url('auth/login.php')."';</script>";

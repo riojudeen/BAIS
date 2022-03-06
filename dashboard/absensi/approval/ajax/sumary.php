@@ -6,8 +6,25 @@ include("../../../../config/config.php");
 if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         require_once("../../../../config/approval_system.php");
-        $start = dateToDB($_GET['start']);
-        $end = dateToDB($_GET['end']);
+        if($_GET['id'] == 'leave' OR $_GET['id'] == 'req_leave' ){
+            $req = " AND shift_req = '0' ";
+            if($_GET['id'] == 'leave'){
+                $start = dateToDB($_GET['start']);
+                $end = dateToDB($_GET['end']);
+            }else{
+                $start = $_GET['start'];
+                $end = $_GET['end'];
+            }
+        }else if($_GET['id'] == 'shift' OR $_GET['id'] == 'req_shift'){
+            $req = " AND shift_req = '1' ";
+            if($_GET['id'] == 'shift'){
+                $start = dateToDB($_GET['start']);
+                $end = dateToDB($_GET['end']);
+            }else{
+                $start = $_GET['start'];
+                $end = $_GET['end'];
+            }
+        }
         // echo $start;s
         $filter = $_GET['filter'];
         $div_filter = $_GET['div'];
@@ -22,7 +39,7 @@ if(isset($_SESSION['user'])){
         // echo $deptAcc_filter;
         $shift = $_GET['shift'];
         // echo $shift;
-        $cari = $_GET['cari'];
+        $cari = (isset($_GET['cari']))?$_GET['cari']:'';
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
@@ -48,12 +65,13 @@ if(isset($_SESSION['user'])){
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $exception = " AND `status` <> '100e' AND req_date IS NOT NULL ";
-        $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND req_work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType;
         
-        $_SESSION['startD'] = (isset($_GET['start']))? dateToDB($_GET['start']) : date('Y-m-01');
-        $_SESSION['endD'] = (isset($_GET['end']))? dateToDB($_GET['end']) : date('Y-m-d');
+        $exception = " AND `status` <> '100e' AND req_date IS NOT NULL ";
+        $filterType = (isset($_GET['att_type']) && $_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND req_work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$req;
+        
+        $_SESSION['startD'] = (isset($_GET['start']))? $start : date('Y-m-01');
+        $_SESSION['endD'] = (isset($_GET['end']))? $end : date('Y-m-d');
 
         $sD = $_SESSION['startD'];
         $eD = $_SESSION['endD'];
@@ -118,10 +136,6 @@ if(isset($_SESSION['user'])){
         $q_onl = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '100f' ";
         $s_onl = mysqli_query($link, $q_onl)or die(mysqli_error($link));
         $onl = mysqli_num_rows($s_onl);
-
-
-
-
         ?>
 
         <div class="row">

@@ -376,6 +376,7 @@ if(isset($_SESSION['user'])){
         })
             
         function getSumary(){
+            var id = 'leave';
             var div_id = $('#s_div').val();
             var dept_id = $('#s_dept').val();
             var section_id = $('#s_section').val();
@@ -390,7 +391,7 @@ if(isset($_SESSION['user'])){
             $.ajax({
                 url: 'ajax/sumary.php',	
                 method: 'GET',
-                data:{start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
+                data:{id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
                 success:function(data){
                     $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
                     

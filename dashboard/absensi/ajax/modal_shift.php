@@ -76,7 +76,7 @@ $q_shift = mysqli_query($link, "SELECT * FROM shift")or die(mysqli_error($link))
             <div class="col-md-10 pr-1 mb-0">
                 <label>Nama :</label>
                 <h5 class="title text-uppercase"><?=$nama?> - <?=$npk?></h6>
-                <input name="shift" value="<?=$npk?>" type="hidden">
+                <input name="shift_req" value="<?=$npk?>" type="hidden">
             </div>
         </div>
         <div class="row">

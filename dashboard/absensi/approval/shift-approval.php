@@ -148,65 +148,8 @@ if(isset($_SESSION['user'])){
                 
             })
         }
-        $(document).on('click', '.approve', function(e){
-            e.preventDefault();
-            var getLink = $(this).attr('href');
-            var data = $(this).attr('data-id')
-            var page = $('.page_active').attr('id')
-            Swal.fire({
-                title: 'Apakah Anda Yakin?',
-                text: "pengajuan ini akan disetujui",
-                icon: false,
-                showCancelButton: true,
-                confirmButtonColor: '#2980B9',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Approve!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url:getLink,
-                        method:"GET",
-                        data:{approve:data},
-                        success:function(){
-                            load_data(page)
-                            getSumary()
-                            success('Diproses', 'data pengajuan telah disetujui untuk diproses');                     
-                        }
-                    })
-                }
-            })
-                
-        });
-        $(document).on('click', '.reject', function(e){
-            e.preventDefault();
-            var getLink = $(this).attr('href');
-            var data = $(this).attr('data-id')
-            var page = $('.page_active').attr('id')
-            Swal.fire({
-                title: 'Apakah Anda Yakin?',
-                text: "pengajuan ini akan diproses",
-                
-                icon: false,
-                showCancelButton: true,
-                confirmButtonColor: '#922B21',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Reject!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url:getLink,
-                        method:"GET",
-                        data:{reject:data},
-                        success:function(){
-                            load_data(page);
-                            getSumary()
-                            success('Ditolak','data pengajuan telah dihentikan');
-                        }
-                    })
-                }
-            })
-                
-        });
+        
+        
         $(document).on('click', '.proses', function(e){
             e.preventDefault();
             var getLink = $(this).attr('href');
@@ -324,35 +267,6 @@ if(isset($_SESSION['user'])){
             })
                 
         });
-        $(document).on('click', '.request', function(e){
-            e.preventDefault();
-            var getLink = $(this).attr('href');
-            var data = $(this).attr('data-id')
-            var page = $('.page_active').attr('id')
-            Swal.fire({
-                title: 'Apakah Anda Yakin?',
-                text: "pengajuan ini akan diproses",
-                icon: false,
-                showCancelButton: true,
-                confirmButtonColor: '#27AE60',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Request!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url:getLink,
-                        method:"GET",
-                        data:{request:data},
-                        success:function(){
-                            load_data(page)
-                            getSumary()
-                            success('Diajukan','data pengajuan dibuat untuk dilanjutkan');
-                        }
-                    })
-                }
-            })
-                
-        });
         $('#filterGo').on('click', function(){
             load_data()
             getSumary()
@@ -371,6 +285,7 @@ if(isset($_SESSION['user'])){
         })
             
         function getSumary(){
+            var id ='shift';
             var div_id = $('#s_div').val();
             var dept_id = $('#s_dept').val();
             var section_id = $('#s_section').val();
@@ -385,7 +300,7 @@ if(isset($_SESSION['user'])){
             $.ajax({
                 url: 'ajax/sumary.php',	
                 method: 'GET',
-                data:{start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
+                data:{id:id, start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
                 success:function(data){
                     $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
                     
@@ -413,7 +328,6 @@ if(isset($_SESSION['user'])){
                 data: {data:data},		
                 success:function(data){
                     $('#s_dept').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                    
                 }
             });
         }
@@ -647,126 +561,10 @@ if(isset($_SESSION['user'])){
             })
             
         });
-        // approve SPV
-        $(document).on('click','.approveAll', function(){
-            var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?approve_multiple=';
-                
-                Swal.fire({
-                title: 'Setujui Pengajuan ?',
-                text: "Semua data yang dicheck / centang akan disetujui untuk diproses admin",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#FF5733',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
-            }).then((result) => {
-                if (result.value) {
-                    if(totalCheck('.mp:checked') > 0){
-                        var form = $("#formAbsensi").serialize()
-                        $.ajax({
-                            
-                            url:getLink,
-                            method:"POST",
-                            data:form,
-                            success:function(data){
-                                load_data(page)
-                                getSumary()
-                                Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil diproses",
-                                    timer: 2000,
-                                    
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    showConfirmButton: false,
-                                    confirmButtonColor: '#00B9FF',
-                                    cancelButtonColor: '#B2BABB',
-                                    
-                                })
-                            }
-                        })
-                        
-                    }else{
-                        Swal.fire({
-                            title: "Gagal",
-                            text: "tidak ada data yang dipilih",
-                            // icon: "danger",
-                            timer: 2000,
-                            showCancelButton: false,
-                            showConfirmButton: false,
-                            confirmButtonColor: '#00B9FF',
-                            cancelButtonColor: '#B2BABB',
-                            
-                        })
-                    }
-                
-                }
-            })
-            
-        });
-        // reject SPV
-        $(document).on('click','.rejectAll', function(){
-            var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?reject_multiple=';
-                
-                Swal.fire({
-                title: 'Tolak Pengajuan ?',
-                text: "Semua data yang dicheck / centang akan ditolak dan tidak akan diteruskan ke admin untuk diproses serta pengajuan yang sama tidak dapat dibuat kembali",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#FF5733',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
-            }).then((result) => {
-                if (result.value) {
-                    if(totalCheck('.mp:checked') > 0){
-                        var form = $("#formAbsensi").serialize()
-                        $.ajax({
-                            
-                            url:getLink,
-                            method:"POST",
-                            data:form,
-                            success:function(data){
-                                load_data(page)
-                                getSumary()
-                                Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil ditolak",
-                                    timer: 2000,
-                                    
-                                    icon: 'success',
-                                    showCancelButton: false,
-                                    showConfirmButton: false,
-                                    confirmButtonColor: '#00B9FF',
-                                    cancelButtonColor: '#B2BABB',
-                                    
-                                })
-                            }
-                        })
-                        
-                    }else{
-                        Swal.fire({
-                            title: "Gagal",
-                            text: "tidak ada data yang dipilih",
-                            // icon: "danger",
-                            timer: 2000,
-                            showCancelButton: false,
-                            showConfirmButton: false,
-                            confirmButtonColor: '#00B9FF',
-                            cancelButtonColor: '#B2BABB',
-                            
-                        })
-                    }
-                
-                }
-            })
-            
-        });
-        // reject SPV
+        
         $(document).on('click','.deleteAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?delete_multiple=';
+            var getLink = '../proses.php?shift_delete_multiple=';
                 
                 Swal.fire({
                 title: 'Delete Data Pengajuan?',
@@ -780,6 +578,8 @@ if(isset($_SESSION['user'])){
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
                         var form = $("#formAbsensi").serialize()
+                        // document.proses.action = getLink;
+                        // document.proses.submit();
                         $.ajax({
                             
                             url:getLink,
@@ -791,6 +591,65 @@ if(isset($_SESSION['user'])){
                                 Swal.fire({
                                     title: "Sukses",
                                     text: "data berhasil didelete",
+                                    timer: 2000,
+                                    
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    showConfirmButton: false,
+                                    confirmButtonColor: '#00B9FF',
+                                    cancelButtonColor: '#B2BABB',
+                                    
+                                })
+                            }
+                        })
+                        
+                    }else{
+                        Swal.fire({
+                            title: "Gagal",
+                            text: "tidak ada data yang dipilih",
+                            // icon: "danger",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            confirmButtonColor: '#00B9FF',
+                            cancelButtonColor: '#B2BABB',
+                            
+                        })
+                    }
+                
+                }
+            })
+            
+        });
+        $(document).on('click','.closeAll', function(){
+            var page = $('.page_active').attr('id')
+            var getLink = '../proses.php?shift_close_multiple=';
+                
+                Swal.fire({
+                title: 'Closee Pengajuan?',
+                text: "Semua data yang dicheck / centang akan diproses untuk menutup pengajuan",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#FF5733',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Yes, proses!'
+            }).then((result) => {
+                if (result.value) {
+                    if(totalCheck('.mp:checked') > 0){
+                        var form = $("#formAbsensi").serialize()
+                        // document.proses.action = getLink;
+                        // document.proses.submit();
+                        $.ajax({
+                            
+                            url:getLink,
+                            method:"POST",
+                            data:form,
+                            success:function(data){
+                                load_data(page)
+                                getSumary()
+                                Swal.fire({
+                                    title: "Sukses",
+                                    text: "data berhasil ditutup",
                                     timer: 2000,
                                     
                                     icon: 'success',

@@ -48,6 +48,11 @@ if(isset($_SESSION['user'])){
 
         
     ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="sumary"></div>
+        </div>
+    </div>
     <form class="row" action="proses.php" method="POST">
         <div class="modal fade bd-example-modal-lg"  data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="myView">
             <div class="modal-dialog modal-lg" role="document">
@@ -120,23 +125,7 @@ if(isset($_SESSION['user'])){
                             <input class="btn btn-icon btn-round" name="sort" value="go">
                         </div> -->
                     </div>
-                    <div class="col-md-7 border-2 ">
-                        <p class="box float-right order-1">
-                            <button class="btn btn-icon btn-round btn-default" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                            <i class="nc-icon nc-simple-add "></i>
-                            </button>
-                        </p>
-                        <p class="float-right mr-2">
-                            <button data-toggle="modal" data-id="" id="" data-target="#modal" class="btn btn-icon btn-info btn-outline-info btn-round" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                                <i class="nc-icon nc-calendar-60 "> </i>
-                            </button>
-                        </p>
-                        
-                        
-                        <!-- <div class="col-4">
-                            <input class="btn btn-icon btn-round" name="sort" value="go">
-                        </div> -->
-                    </div>
+                    
                 </div>
                     
                 </div>
@@ -238,7 +227,7 @@ if(isset($_SESSION['user'])){
                                             <a class="btn btn-sm btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="shift_proccess" href="#proccess" role="tab" aria-expanded="true">Monitoring Request</a>
                                         </li>
                                         <li class="nav-item ">
-                                            <a class="btn btn-sm btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="shift_approve" href="#proccess" role="tab" aria-expanded="true">Approval Shift Request</a>
+                                            <a class="btn btn-sm btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="shift_success" href="#proccess" role="tab" aria-expanded="true">Close Request</a>
                                         </li>
                                         
                                     </ul>
@@ -271,6 +260,30 @@ if(isset($_SESSION['user'])){
     ?>
     <script type="text/javascript">
     $(document).ready(function(){
+        function getSumary(){
+            var id = 'req_shift';
+            var div_id = $('#s_div').val();
+            var dept_id = $('#s_dept').val();
+            var section_id = $('#s_section').val();
+            var group_id = $('#s_goupfrm').val();
+            var deptAcc_id = $('#s_deptAcc').val();
+            var shift = $('#s_shift').val();
+            var cari = $('#cari').val();
+            var start = $('#startDate').val();
+            var end = $('#endDate').val();
+            var att_type = $('#att_type').val();
+            var prog = $('#att_progress').val();
+            $.ajax({
+                url: 'approval/ajax/sumary.php',	
+                method: 'GET',
+                data:{id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
+                success:function(data){
+                    $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    
+                }
+            });
+        }
+        getSumary()
         dataActive()
         function dataActive(page){
             if($(".data-active")[0]){
@@ -462,7 +475,7 @@ if(isset($_SESSION['user'])){
             // dataActive(page)
             $.ajax({
                             
-                url:"ajax/index.php?page="+page+"&id="+id+"&start="+start+"&end="+end+"&div="+div_id+"&dept="+dept_id+"&sect="+section_id+"&group="+group_id+"&deptAcc="+deptAcc_id+"&shift="+shift+"&filter=yes",
+                url:"ajax/SHIFT.php?page="+page+"&id="+id+"&start="+start+"&end="+end+"&div="+div_id+"&dept="+dept_id+"&sect="+section_id+"&group="+group_id+"&deptAcc="+deptAcc_id+"&shift="+shift+"&filter=yes",
                 method:"GET",
                 data:sort,
                 success:function(data){
@@ -499,7 +512,7 @@ if(isset($_SESSION['user'])){
                         method:"GET",
                         data:{del:data},
                         success:function(){
-                            load_data(page);
+                            dataActive(page);
                             getSumary()
                             success('Dihapus','data pengajuan telah dihapus, silakan ajukan kembali');
                         }
@@ -508,6 +521,20 @@ if(isset($_SESSION['user'])){
             })
                 
         });
+        function success(data1,data2){
+            Swal.fire({
+                title: data1,
+                text: data2,
+                timer: 2000,
+                
+                icon: 'success',
+                showCancelButton: false,
+                showConfirmButton: false,
+                confirmButtonColor: '#00B9FF',
+                cancelButtonColor: '#B2BABB',
+                
+            })
+        }
     })
     </script>
     <script>

@@ -215,385 +215,173 @@ if(isset($_SESSION['user'])){
     
             ?>
             
-            <div class="jumbotron jumbotron-fluid bg-white" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 80%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
+            <div class="jumbotron jumbotron-fluid bg-white d-none" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 50%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
                 <div class="container " >
                     <input type="hidden" name="npk" id="npk" value="<?=$npk?>">
                     <input type="hidden" name="level" id="level" value="<?=$level?>">
                 </div>
             </div>
-            <div class="row" style="margin-top:-200px">
-                <div class="col-md-4" >
-                    <div class="row" style="margin-top:115px">
-                        <div class="col-md-12 pl-5">
-                            <div class="card card-user " >
-                                <div class="card-body">
-                                    <div class="author">
-                                        <a href="#">
-                                            <img class="avatar border-gray" src="<?=$base64?>" alt="...">
-                                            <h5 class="title text-uppercase"><?=$namaUser?></h5>
-                                        </a>
-                                        <p class="description text-uppercase">
-                                            <?=$mes?>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row rounded flex-row flex-nowrap overflow-auto img_holder" id="b">
-    
-                        <div class="col-md-12 col-sm-12 pl-5">
-                            <div class="card card-stats bg-info">
-                                <div class="card-body "id="4">
+            <div class="row ">
+                <div class="col-md-12 ">
+                    
+                    <div class="owl-carousel ">
+                        
+                        <!-- </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
+                            <div class="card card-stats  text-white" style="background:#57E4FA">
+                                <div class="card-body ">
                                     <div class="row">
                                         <div class="col-5 col-md-4">
-                                            <div class="icon-big text-center icon-white">
-                                                <span class="fa-stack" >
-                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                                <i class="fa fa-info fa-stack-1x fa-inverse mt-1"></i>
-                                                </span>
+                                            <div class="icon-big text-center icon-warning border-right">
+                                                <i class="fa fa-foreman"> </i>
                                             </div>
                                         </div>
                                         <div class="col-7 col-md-8">
-                                            <div class="numbers ">
-                                                <p class="card-title text-white " id="sumary" >-<p>
-                                                <p class="card-category text-right text-white mb-3">MP Layoff</p>
+                                            <div class="numbers">
+                                                <p class="card-category text-white">Foreman</p>
+                                                <p class="card-title"> <?=$jm_FRM?>
+                                                <p>
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="<?=base_url()?>/dashboard/manpower/layoff.php" class="stretched-link card-category text-right text-white mb-3"></a>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="" class="stretched-link view_data" id="fr"></a>
                                 </div>
                             </div>
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-                <div class="col-md-8 ">
-                    <div class="row ">
-                        <div class="col-md-12 pr-5">
-                            
-                            <div class="row ">
-                                <div class="col-md-12 ">
-                                    
-                                    <div class="owl-carousel ">
-                                        
-                                        <!-- </div>
-                                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                            <div class="card card-stats  text-white" style="background:#57E4FA">
-                                                <div class="card-body ">
-                                                    <div class="row">
-                                                        <div class="col-5 col-md-4">
-                                                            <div class="icon-big text-center icon-warning border-right">
-                                                                <i class="fa fa-foreman"> </i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 col-md-8">
-                                                            <div class="numbers">
-                                                                <p class="card-category text-white">Foreman</p>
-                                                                <p class="card-title"> <?=$jm_FRM?>
-                                                                <p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="fr"></a>
-                                                </div>
+                        <!-- </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
+                            <div class="card card-stats text-white" style="background:#F1DB68">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5 col-md-4">
+                                            <div class="icon-big text-center icon-white border-right">
+                                            <i class="fa fa-leader"></i>
                                             </div>
-                                        <!-- </div>
-                                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                            <div class="card card-stats text-white" style="background:#F1DB68">
-                                                <div class="card-body ">
-                                                    <div class="row">
-                                                        <div class="col-5 col-md-4">
-                                                            <div class="icon-big text-center icon-white border-right">
-                                                            <i class="fa fa-leader"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 col-md-8">
-                                                            <div class="numbers">
-                                                                <p class="card-category text-white">Team leader</p>
-                                                                <p class="card-title"> <?=$jm_TL?>
-                                                                <p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="tl"></a>
-                                                </div>
+                                        </div>
+                                        <div class="col-7 col-md-8">
+                                            <div class="numbers">
+                                                <p class="card-category text-white">Team leader</p>
+                                                <p class="card-title"> <?=$jm_TL?>
+                                                <p>
                                             </div>
-                                        <!-- </div>
-                                        <div class="col-md-4 "> -->
-                                            <div class="card card-stats bg-danger text-white ">
-                                                <div class="card-body ">
-                                                    <div class="row">
-                                                        <div class="col-5 col-md-4">
-                                                            <div class="icon-big text-center icon-white border-right">
-                                                                <i class="fa fa-permanent"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 col-md-8">
-                                                            <div class="numbers">
-                                                                <p class="card-category text-white">Permanent</p>
-                                                                <p class="card-title"> <?=$jm_permanen?>
-                                                                <p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="p"></a>
-                                                </div>
-                                            </div>
-                                        <!-- </div>
-                                        <div class="col-lg-4 col-md-6 col-sm-6 "> -->
-                                            <div class="card card-stats text-white bg-primary" >
-                                                <div class="card-body ">
-                                                    <div class="row">
-                                                        <div class="col-5 col-md-4">
-                                                            <div class="icon-big text-center icon-white border-right">
-                                                                <i class="fa fa-kontrak2"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 col-md-8">
-                                                            <div class="numbers">
-                                                                <p class="card-category text-white">Kontrak 2</p>
-                                                                <p class="card-title"> <?=$jm_kontrak2?>
-                                                                <p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="k2"></a>
-                                                </div>
-                                            </div>
-                                        <!-- </div>
-                                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                                            <div class="card card-stats bg-success text-white">
-                                                <div class="card-body ">
-                                                    <div class="row">
-                                                        <div class="col-5 col-md-4">
-                                                            <div class="icon-big text-center icon-white border-right">
-                                                                <i class="fa fa-kontrak1"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-7 col-md-8">
-                                                            <div class="numbers">
-                                                                <p class="card-category text-white">Kontrak 1</p>
-                                                                <p class="card-title"> <?=$jm_kontrak1?>
-                                                                <p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="k1"></a>
-                                                </div>
-                                            </div>
-                                        <!-- </div> -->
-    
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="" class="stretched-link view_data" id="tl"></a>
                                 </div>
                             </div>
-                            <div class="row mt-0">
-    
-                                <div class="col-md-12 mt-0">
-                                    <div class="card ">
-                                        <div class="card-body">
-                                        <p class="card-category mb-0">Hi, <?=$nick?> , <?=$selamat?>!</p>
+                        <!-- </div>
+                        <div class="col-md-4 "> -->
+                            <div class="card card-stats bg-danger text-white ">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5 col-md-4">
+                                            <div class="icon-big text-center icon-white border-right">
+                                                <i class="fa fa-permanent"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 col-md-8">
+                                            <div class="numbers">
+                                                <p class="card-category text-white">Permanent</p>
+                                                <p class="card-title"> <?=$jm_permanen?>
+                                                <p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h4 class="text-uppercase title "><?=$part.$headerGroup?></h4>
-                                                </div>
-                                                
-                                                <?php
-                                                if($edit == 1){
-                                                    ?>
-                                                    <form action="../setting/organization/proses/add.php" method="POST" class="col-md-6 text-right pt-4 mb-0">
-                                                        <input type="hidden" name="part" value="<?=$sub_part?>">
-                                                        <input type="hidden" name="id_parent" value="<?=$data_access?>">
-                                                        <input type="hidden" name="count" value="1">
-                                                        <input type="hidden" name="frm" value="1">
-                                                        <input type="submit" class="btn btn-sm btn-success mb-0" value="Register Organisasi">
-                                                    </form>
-                                                    <?php
-                                                }else{
-                                                    ?>
-                                                    <div class="col-md-6 text-right pt-4 mb-0">
-                                                        <a  href="../setting/organization/" class="btn btn-sm mb-0"> Kembali </a>
-                                                    </div>
-                                                    <?php
-                                                }
-                                                ?>
+                                <div class="card-footer">
+                                    <a href="" class="stretched-link view_data" id="p"></a>
+                                </div>
+                            </div>
+                        <!-- </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 "> -->
+                            <div class="card card-stats text-white bg-primary" >
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5 col-md-4">
+                                            <div class="icon-big text-center icon-white border-right">
+                                                <i class="fa fa-kontrak2"></i>
                                             </div>
-                                            
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="table-full-width no-border text-uppercase">
-                                                    <table class="table">
-                                                        <?php
-                                                        $q_newArea = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE cord = '$npkUser' AND part = '$part'  ")or die(mysqli_error($link));
-                                                        if(mysqli_num_rows($q_newArea)> 0){
-                                                            $no=1;
-                                                            while($dataNewArea = mysqli_fetch_assoc($q_newArea)){
-                                                                // echo $sub_part;
-                                                                $q_cekPos = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = '$sub_part' AND id_parent = '$dataNewArea[id]' ")or die(mysqli_error($link));
-                                                                if(mysqli_num_rows($q_cekPos)>0){
-                                                                    while($dataPos = mysqli_fetch_assoc($q_cekPos)){
-                                                                        $query_total = mysqli_query($link, $queryMP.$add_filter." AND $sub = '$dataPos[id]' ")or die(mysqli_error($link));
-                                                                        if(mysqli_num_rows($query_total) == 0){
-                                                                            ?>
-                                                                            <tr class="table-danger">
-                                                                                
-                                                                                
-                                                                                <td class="text-danger pl-4 title">
-                                                                                    <div class="title">
-                                                                                        <?=$dataPos['nama_org']?>
+                                        <div class="col-7 col-md-8">
+                                            <div class="numbers">
+                                                <p class="card-category text-white">Kontrak 2</p>
+                                                <p class="card-title"> <?=$jm_kontrak2?>
+                                                <p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="" class="stretched-link view_data" id="k2"></a>
+                                </div>
+                            </div>
+                        <!-- </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6"> -->
+                            <div class="card card-stats bg-success text-white">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5 col-md-4">
+                                            <div class="icon-big text-center icon-white border-right">
+                                                <i class="fa fa-kontrak1"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 col-md-8">
+                                            <div class="numbers">
+                                                <p class="card-category text-white">Kontrak 1</p>
+                                                <p class="card-title"> <?=$jm_kontrak1?>
+                                                <p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="" class="stretched-link view_data" id="k1"></a>
+                                </div>
+                            </div>
+                        <!-- </div> -->
 
-                                                                                    </div>
-                                                                                    <div class="badge badge-pill">Data Karyawan belum diposting</div>
-                                                                                </td>
-                                                                                <td class="text-right pr-4">
-                                                                                    <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-round btn-outline-danger btn-success">Update</a>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <?php
-                                                                        }
-                                                                        
-                                                                    }
-                                                                }
-                                                                
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-full-width table-responsive text-uppercase" style="max-height: 200px">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Area</th>
-                                                            <th>Jml Emp</th>
-                                                            <th>FRM</th>
-                                                            <th>TL</th>
-                                                            <th>TM</th>
-                                                            <th class="table-warning">TM K1</th>
-                                                            <th class="table-warning">TM K2</th>
-                                                            <th class="table-warning">TM P</th>
-                                                            <th class="text-right">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        if(mysqli_num_rows($sql_group)>0){
-                                                            $no = 1;
-                                                            while($data = mysqli_fetch_assoc($sql_group)){
-                                                                $part = $part;
-                                                                $color = ($data[$sub] == '')?"text-danger ":"";
-                                                                $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
-                                                                $addSub = " AND $sub $filter_sub";
-                                                                $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
-                                                                $total = mysqli_num_rows($query_total);
-                                                                // echo $addSub;
-                                                                // if($no == 1){
-                                                                //     echo $queryMP.$addPermanent.$addSub;
-                                                                // }
-                                                                $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
-                                                                $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
-                                                                $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
-                                                                $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
-                                                                $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
-                                                                $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
-                                                                $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
-                                                                
-                                                                $jm_permanen = mysqli_num_rows($permanent);
-                                                                $jm_kontrak1 = mysqli_num_rows($kontrak1);
-                                                                $jm_kontrak2 = mysqli_num_rows($kontrak2);
-                                                                $jm_TM = mysqli_num_rows($TM);
-                                                                $jm_TL = mysqli_num_rows($TL);
-                                                                $jm_FRM = mysqli_num_rows($FRM);
-                                                                // echo $queryMP.$addMng;
-                                                                ?>
-                                                                <tr class="<?=$color?>">
-                                                                    <td><?=$no++?></td>
-                                                                    <td><?=$nama_area?></td>
-                                                                    <td><?=$total?></td>
-                                                                   
-                                                                    <td><?=$jm_FRM?></td>
-                                                                    <td><?=$jm_TL?></td>
-                                                                    <td><?=$jm_TM?></td>
-                                                                    <td class="table-warning"><?=$jm_kontrak1?></td>
-                                                                    <td class="table-warning"><?=$jm_kontrak2?></td>
-                                                                    <td class="table-warning"><?=$jm_permanen?></td>
-                                                                    <td class="text-right">
-                                                                        <?php
-                                                                        if($data[$sub] != ''){
-                                                                            ?>
-                                                                            <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                    </td>
-                                                                </tr>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                        
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
                     </div>
-                    
                 </div>
-                
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <h5 class="title col-md-6">Daftar Man Power</h5>
-                                <div class="col-md-6 ">
-                                    <div class="my-2 mr-2 float-right order-3">
-                                        <div class="input-group bg-transparent">
-                                            <input type="text" name="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." id="cari">
-                                            <div class="input-group-append bg-transparent">
-                                                <div class="input-group-text bg-transparent">
-                                                    <i class="nc-icon nc-zoom-split"></i>
-                                                </div>
+                                <div class="col-md-6 text-left mt-3">
+                                    <h5 class="title ">Daftar Man Power</h5>
+                                    <p class="category">data karyawan sedang masa evaluasi akan otomatis muncul disini</p>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <a href="../pages/mp_update.php" class="btn">Kembali</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <select name="eval" class="form-control" id="eval">
+                                        <option value=""> Pilih Status Evaluasi</option>
+                                        <option value="C1"> Kontrak 1 </option>
+                                        <option value="C2"> Kontrak 2 </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3  ">
+                                    <div class="input-group bg-transparent">
+                                        <input type="text" name="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." id="cari">
+                                        <div class="input-group-append bg-transparent">
+                                            <div class="input-group-text bg-transparent">
+                                                <i class="nc-icon nc-zoom-split"></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-    
                             </div>
                         </div>
-                        <hr>
+                        <hr class="my-0">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
@@ -706,34 +494,9 @@ if(isset($_SESSION['user'])){
         <script>
             $(document).ready(function(){
                 load_data();
-                getSumary()
-                function getSumary(){
-                    var eval = $('#eval').val();
-                    var id = 'sum_layoff';
-                    var div_id = $('#s_div').val();
-                    var dept_id = $('#s_dept').val();
-                    var section_id = $('#s_section').val();
-                    var group_id = $('#s_goupfrm').val();
-                    var deptAcc_id = $('#s_deptAcc').val();
-                    var shift = $('#s_shift').val();
-                    var cari = $('#cari').val();
-                    var start = $('#start_date').val();
-                    var end = $('#end_date').val();
-                    var att_type = $('#att_type').val();
-                    var level = $('#level').val();
-                    var npk = $('#npk').val();
-                    $.ajax({
-                        url: '../manpower/ajax/index.php',	
-                        method: 'GET',
-                        data:{level:level,npk:npk,id:id,eval:eval,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,filter:'yes'},		
-                        success:function(data){
-                            $('#sumary').html(data);	
-                            console.log('success')
-                        }
-                    });
-                }
                 function load_data(page){
-                    var id = 'mp';
+                    var id = 'layoff';
+                    var eval = $('#eval').val();
                     var div_id = $('#s_div').val();
                     var dept_id = $('#s_dept').val();
                     var section_id = $('#s_section').val();
@@ -749,7 +512,7 @@ if(isset($_SESSION['user'])){
                     $.ajax({
                         url:"../manpower/ajax/index.php",
                         method:"GET",
-                        data:{id:id,level:level,npk:npk,page:page,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,filter:'yes'},
+                        data:{eval:eval,id:id,level:level,npk:npk,page:page,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,filter:'yes'},
                         success:function(data){
                             $('#data-monitoring').fadeOut('fast', function(){
                                 $(this).html(data).fadeIn('fast');
@@ -784,16 +547,40 @@ if(isset($_SESSION['user'])){
                 })
                 $('#cari').on('keyup', function(){
                     load_data()
-                    getSumary()
                 
                 });
                 $('#att_type').on('change', function(){
                     load_data()
-                    getSumary()
                 });
+                $('#eval').on('change', function(){
+                    load_data()
+                })
             
                     
-                
+                function getSumary(){
+                    var eval = $('#eval').val();
+                    var id = 'sum_layoff';
+                    var div_id = $('#s_div').val();
+                    var dept_id = $('#s_dept').val();
+                    var section_id = $('#s_section').val();
+                    var group_id = $('#s_goupfrm').val();
+                    var deptAcc_id = $('#s_deptAcc').val();
+                    var shift = $('#s_shift').val();
+                    var cari = $('#cari').val();
+                    var start = $('#start_date').val();
+                    var end = $('#end_date').val();
+                    var att_type = $('#att_type').val();
+                    $.ajax({
+                        url: '../manpower/ajax/index.php',	
+                        method: 'GET',
+                        data:{eval:eval,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,filter:'yes'},		
+                        success:function(data){
+                            $('#sumary').html(data);	
+                            
+                        }
+                    });
+                }
+                getSumary()
                 function getDiv(){
                     var data = $('#s_div').val()
                     $.ajax({
@@ -848,6 +635,7 @@ if(isset($_SESSION['user'])){
                     getSect()
                     getGroup()
                 })
+                
                 $('#s_dept').on('change', function(){
                     getSect()
                     getGroup()

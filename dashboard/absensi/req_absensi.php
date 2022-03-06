@@ -48,359 +48,12 @@ if(isset($_SESSION['user'])){
 
 
         
-        $t = "org.".$org_access;
-        if($level < 4){
-            
-            //konfirmasi absen
-            $qryAbsenHr = "SELECT absensi.id AS id_absen,
-            absensi.npk AS npk_absen, 
-            absensi.shift AS shift_absen,
-            absensi.date AS tanggal,
-            absensi.check_in AS check_in,
-            absensi.check_out AS check_out,
-            absensi.ket AS ket,
-            
-            attendance_code.kode AS kode_absen,
-            attendance_code.keterangan AS ket_kode_absen,
-            attendance_code.type AS tipe_kode_absen,
-
-            groupfrm.id_group AS idGroup,
-            groupfrm.nama_group AS groupfrm,
-            groupfrm.npk_cord AS group_cord,
-            groupfrm.id_section AS id_sect,
-
-            dept_account.id_dept_account AS idDeptAcc,
-            dept_account.department_account AS deptAcc,
-            dept_account.npk_dept AS mg, 
-            dept_account.id_div AS id_div,
-
-            org.npk AS npk_org,
-            org.sub_post AS sub_post,
-            org.post AS post,
-            org.grp AS grp,
-            org.sect AS sect,
-            org.dept AS dept,
-            org.dept_account AS dept_account,
-            org.division AS division,
-            org.plant AS plant,
-
-            karyawan.npk AS npk_,
-            karyawan.nama AS nama_,
-            karyawan.shift AS shift_,
-            karyawan.id_area AS id_area_,
-            karyawan.department AS department_
-
-            FROM absensi
-            JOIN karyawan ON karyawan.npk = absensi.npk
-            JOIN attendance_code ON attendance_code.kode = absensi.ket 
-            JOIN org ON org.npk = karyawan.npk
-
-            JOIN groupfrm ON groupfrm.id_group = org.grp
-            JOIN dept_account ON dept_account.id_dept_account = org.dept_account
-        
-            
-            WHERE attendance_code.type = 'REMARK' AND  absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir' AND $t = '$access_' ";
-
-
-            //request absensi
-            $qryData = "SELECT req_absensi.id AS id_absen,
-            req_absensi.npk AS npk_absen, 
-            req_absensi.shift AS shift_absen,
-            req_absensi.date AS tanggal,
-            req_absensi.date_in AS tanggal_masuk,
-            req_absensi.date_out AS tanggal_keluar,
-            req_absensi.check_in AS check_in,
-            req_absensi.check_out AS check_out,
-            req_absensi.keterangan AS keterangan,
-            req_absensi.requester AS requester,
-            req_absensi.status AS status_absen,
-            req_absensi.req_status AS req_status,
-            req_absensi.req_date AS req_date,
-
-            groupfrm.id_group AS idGroup,
-            groupfrm.nama_group AS groupfrm,
-            groupfrm.npk_cord AS group_cord,
-            groupfrm.id_section AS id_sect,
-
-            org.npk AS npk_org,
-            org.sub_post AS sub_post,
-            org.post AS post,
-            org.grp AS grp,
-            org.sect AS sect,
-            org.dept AS dept,
-            org.dept_account AS dept_account,
-            org.division AS division,
-            org.plant AS plant,
-
-            dept_account.id_dept_account AS idDeptAcc,
-            dept_account.department_account AS deptAcc,
-            dept_account.npk_dept AS mg, 
-            dept_account.id_div AS id_div,
-
-            karyawan.npk AS npk_,
-            karyawan.nama AS nama_,
-            karyawan.shift AS shift_,
-            karyawan.id_area AS id_area_,
-            karyawan.department AS department_
-
-            FROM req_absensi
-            JOIN karyawan ON karyawan.npk = req_absensi.npk
-            JOIN org ON org.npk = karyawan.npk
-
-            
-            JOIN dept_account ON dept_account.id_dept_account = org.dept_account
-            JOIN groupfrm ON groupfrm.id_group = org.grp
-            -- JOIN pos_leader ON pos_leader.id_post = org.post
-
-            WHERE req_absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir' AND $t = '$access_' ";
-        }else{
-            //konfirmasi absen
-            $qryAbsenHr = "SELECT absensi.id AS id_absen,
-            absensi.npk AS npk_absen, 
-            absensi.shift AS shift_absen,
-            absensi.date AS tanggal,
-            absensi.check_in AS check_in,
-            absensi.check_out AS check_out,
-            absensi.ket AS ket,
-            
-            attendance_code.kode AS kode_absen,
-            attendance_code.keterangan AS ket_kode_absen,
-            attendance_code.type AS tipe_kode_absen,
-
-            org.npk AS npk_org,
-            org.sub_post AS sub_post,
-            org.post AS post,
-            org.grp AS grp,
-            org.sect AS sect,
-            org.dept AS dept,
-            org.dept_account AS dept_account,
-            org.division AS division,
-            org.plant AS plant,
-            
-            dept_account.id_dept_account AS idDeptAcc,
-            dept_account.department_account AS deptAcc,
-            dept_account.npk_dept AS mg, 
-            dept_account.id_div AS id_div,
-
-            groupfrm.id_group AS idGroup,
-            groupfrm.nama_group AS groupfrm,
-            groupfrm.npk_cord AS group_cord,
-            groupfrm.id_section AS id_sect,
-            
-            karyawan.npk AS npk_,
-            karyawan.nama AS nama_,
-            karyawan.shift AS shift_,
-            karyawan.id_area AS id_area_,
-            karyawan.department AS department_
-
-            FROM karyawan
-            JOIN absensi ON karyawan.npk = absensi.npk
-            LEFT JOIN attendance_code ON attendance_code.kode = absensi.ket 
-            LEFT JOIN org ON org.npk = karyawan.npk
-
-            LEFT JOIN dept_account ON dept_account.id_dept_account = org.dept_account
-            LEFT JOIN groupfrm ON groupfrm.id_group = org.grp
-
-            WHERE attendance_code.type = 'REMARK' AND  absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir' AND $t = '$access_' ";
-
-            //request absensi
-            $qryData = "SELECT req_absensi.id AS id_absen,
-            req_absensi.npk AS npk_absen, 
-            req_absensi.shift AS shift_absen,
-            req_absensi.date AS tanggal,
-            req_absensi.date_in AS tanggal_masuk,
-            req_absensi.date_out AS tanggal_keluar,
-            req_absensi.check_in AS check_in,
-            req_absensi.check_out AS check_out,
-            req_absensi.keterangan AS keterangan,
-            req_absensi.requester AS requester,
-            req_absensi.status AS status_absen,
-            req_absensi.req_status AS req_status,
-            req_absensi.req_date AS req_date,
-
-            dept_account.id_dept_account AS idDeptAcc,
-            dept_account.department_account AS deptAcc,
-            dept_account.npk_dept AS mg, 
-            dept_account.id_div AS id_div,
-
-            groupfrm.id_group AS idGroup,
-            groupfrm.nama_group AS groupfrm,
-            groupfrm.npk_cord AS group_cord,
-            groupfrm.id_section AS id_sect,
-
-            org.npk AS npk_org,
-            org.sub_post AS sub_post,
-            org.post AS post,
-            org.grp AS grp,
-            org.sect AS sect,
-            org.dept AS dept,
-            org.dept_account AS dept_account,
-            org.division AS division,
-            org.plant AS plant,
-
-            karyawan.npk AS npk_,
-            karyawan.nama AS nama_,
-            karyawan.shift AS shift_,
-            karyawan.id_area AS id_area_,
-            karyawan.department AS department_
-
-            FROM karyawan
-            LEFT JOIN req_absensi ON karyawan.npk = req_absensi.npk
-            LEFT JOIN org ON org.npk = karyawan.npk
-
-        
-            LEFT JOIN dept_account ON dept_account.id_dept_account = org.dept_account
-            LEFT JOIN groupfrm ON groupfrm.id_group = org.grp
-            
-            WHERE req_absensi.date BETWEEN '$tanggalAwal' AND '$tanggalAkhir' AND $t = '$access_' ";
-        }
-        //monitor progress
-        $select_join = $qryData." ORDER BY req_absensi.status, req_absensi.date ASC";
-        
-    ?>
-        <form action="proses.php" method="GET">
-            <div class="modal fade bd-example-modal-lg"  data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="myView">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div id="view_data"></div>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <div class="row">
-            <?php
-            $q_draft = $qryData." AND req_absensi.status = '0'";
-            $s_draft = mysqli_query($link, $q_draft)or die(mysqli_error($link));
-            $j_draft = mysqli_num_rows($s_draft);
-            if($j_draft > 0){
-                $draft = $j_draft." draft";
-            }else{
-                $draft = '';
-            }
-
-            $q_reject = $qryData." AND req_absensi.status = '50' AND req_absensi.req_status = 'b' ";
-            $s_reject = mysqli_query($link, $q_reject)or die(mysqli_error($link));
-            $j_reject = mysqli_num_rows($s_reject);
-            if($j_reject  > 0){
-                $reject = $j_reject ." ditolak";
-            }else{
-                $reject = '';
-            }
-
-            $q_confirm = $qryData." AND req_absensi.status = '75' AND req_absensi.req_status = 'b' ";
-            $s_confirm = mysqli_query($link, $q_reject)or die(mysqli_error($link));
-            $j_confirm = mysqli_num_rows($s_reject);
-            if($j_confirm  > 0){
-                $confirm = $j_confirm ." need confirm";
-            }else{
-                $confirm = '';
-            }
-
-            $q_reqs = $qryData." AND req_absensi.status <> '0'";
-            $s_reqs = mysqli_query($link, $q_reqs)or die(mysqli_error($link));
-            $j_reqs = mysqli_num_rows($s_reqs);
-
-            $q_apprv = $qryData." AND req_absensi.status BETWEEN '25' AND '50' " ;
-            $s_apprv = mysqli_query($link, $q_apprv)or die(mysqli_error($link));
-            $j_apprv = mysqli_num_rows($s_apprv);
-
-            $q_prcss = $qryData." AND req_absensi.status = '75' ";
-            $s_prcss = mysqli_query($link, $q_prcss)or die(mysqli_error($link));
-            $j_prcss = mysqli_num_rows($s_prcss);
-
-            $q_scss = $qryData." AND req_absensi.status = '100' ";
-            $s_scss = mysqli_query($link, $q_scss)or die(mysqli_error($link));
-            $j_scss = mysqli_num_rows($s_scss);
-        //
         ?>
-        <div class="col-xl-12">
-            <div class="row">
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                    <div class="card-plain card-stats bg-transparent h-100 my-0 border-right border-left">
-                        <div class="card-body ">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-warning ">
-                                    <i class="nc-icon nc-ruler-pencil text-warning "></i>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="numbers ">
-                                        <p class="card-category">Pengajuan</p>
-                                        <p class="card-title"><?=$j_reqs?></p>
-                                    </div>
-                                    <span class="badge badge-pill badge-info pull-right"><?=$draft?></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                    <div class="card-plain card-stats bg-transparent h-100 my-0 border-right">
-                        <div class="card-body ">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-warning ">
-                                    <i class="nc-icon nc-paper text-danger "></i>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="numbers ">
-                                        <p class="card-category">In Approval</p>
-                                        <p class="card-title"><?=$j_apprv?><p>
-                                    </div>
-                                    <span class="badge badge-pill badge-danger pull-right"><?=$reject?></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                    <div class="card-plain card-stats bg-transparent h-100 my-0 border-right">
-                        <div class="card-body ">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-warning ">
-                                    <i class="nc-icon nc-single-copy-04 text-primary "></i>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="numbers ">
-                                        <p class="card-category">In Process</p>
-                                        <p class="card-title"><?=$j_prcss?><p>
-                                    </div>
-                                    <span class="badge badge-pill badge-primary pull-right"><?=$confirm?></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
-                    <div class="card-plain card-stats bg-transparent h-100 my-0 border-right">
-                        <div class="card-body ">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-warning ">
-                                    <i class="nc-icon nc-check-2 text-success "></i>
-                                    </div>
-                                </div>
-                                <div class="col-7">
-                                    <div class="numbers ">
-                                        <p class="card-category">Success</p>
-                                        <p class="card-title"><?=$j_scss?><p>
-                                    </div>
-                                    <span class="badge badge-pill badge-primary pull-right"><?=$confirm?></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>  
+    <div class="row">
+        <div class="col-md-12">
+            <div id="sumary"></div>
+        </div>
     </div>
-
-        
-    <br>
     <form method="GET">
     <div class="row">
         <div class="col-md-12" >
@@ -619,6 +272,30 @@ if(isset($_SESSION['user'])){
     ?>
     <script type="text/javascript">
     $(document).ready(function(){
+        function getSumary(){
+            var id ='req_leave';
+            var div_id = $('#s_div').val();
+            var dept_id = $('#s_dept').val();
+            var section_id = $('#s_section').val();
+            var group_id = $('#s_goupfrm').val();
+            var deptAcc_id = $('#s_deptAcc').val();
+            var shift = $('#s_shift').val();
+            var cari = $('#cari').val();
+            var start = $('#startDate').val();
+            var end = $('#endDate').val();
+            var att_type = $('#att_type').val();
+            var prog = $('#att_progress').val();
+            $.ajax({
+                url: 'approval/ajax/sumary.php',	
+                method: 'GET',
+                data:{id:id, start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
+                success:function(data){
+                    $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    
+                }
+            });
+        }
+        getSumary()
         dataActive()
         function dataActive(page){
             if($(".data-active")[0]){
@@ -628,8 +305,8 @@ if(isset($_SESSION['user'])){
                 var group_id = $('#s_goupfrm').val();
                 var deptAcc_id = $('#s_deptAcc').val();
                 var shift = $('#s_shift').val();
-                var start = $('#start_date').val();
-                var end = $('#end_date').val();
+                // var start = $('#start_date').val();
+                // var end = $('#end_date').val();
                 var cari = $('#cari').val();
 
                 var id = $('.data-active').attr('data-id');
@@ -847,15 +524,29 @@ if(isset($_SESSION['user'])){
                         method:"GET",
                         data:{del:data},
                         success:function(){
-                            load_data(page);
-                            getSumary()
+                            dataActive(page)
+                            // getSumary()
                             success('Dihapus','data pengajuan telah dihapus, silakan ajukan kembali');
                         }
                     })
                 }
             })
-                
+        
         });
+        function success(data1,data2){
+            Swal.fire({
+                title: data1,
+                text: data2,
+                timer: 2000,
+                
+                icon: 'success',
+                showCancelButton: false,
+                showConfirmButton: false,
+                confirmButtonColor: '#00B9FF',
+                cancelButtonColor: '#B2BABB',
+                
+            })
+        }
     })
     </script>
     <script>

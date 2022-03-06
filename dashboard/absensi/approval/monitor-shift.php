@@ -31,7 +31,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                     <select class="form-control" name="att_type" id="att_type">
                                         <option value="">Pilih Tipe Pengajuan</option>
                                         <?php
-                                        $q_attType = mysqli_query($link, "SELECT * FROM attendance_type")or die(mysqli_error($link));
+                                        $q_attType = mysqli_query($link, "SELECT * FROM attendance_type WHERE id = 'SHIFT' ")or die(mysqli_error($link));
                                         if(mysqli_num_rows($q_attType)){
                                             $collect = array();
                                             while($data = mysqli_fetch_assoc($q_attType)){
@@ -40,13 +40,8 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                                 <?php
                                                 $collect[] = $data['id'];
                                             }
-                                            $data_collect = "";
-                                            foreach($collect AS $collect){
-                                                $data_collect .= $collect." + ";
-                                            }
-                                            $data_collect=substr($data_collect, 0, -2);
+                                            
                                             ?>
-                                            <option value=""><?=$data_collect?></option>
                                             <?php
                                         }
                                         ?>
@@ -99,11 +94,16 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                             data-toggle="tooltip" data-placement="bottom" title="Kembalikan">
                             <i class="fa fa-undo"></i> Kembalikan
                         </button>
+                        <button class="btn btn-sm btn-info closeAll" type="button"
+                            data-toggle="tooltip" data-placement="bottom" title="Closing Request">
+                            <i class="nc-icon nc-check-2"></i> Close
+                        </button> 
                         <button class="btn btn-sm btn-danger deleteAll" type="button"
                             data-toggle="tooltip" data-placement="bottom" title="Kembalikan">
                             <i class="fas fa-trash-alt"></i> Delete
                         </button> 
-                        <div id="print" class="btn btn-sm btn-link btn-primary shift_req"><i class="fa fa-print"></i>  Print</div>                   
+                        <button id="close" class="btn btn-sm btn-link btn-primary shift_req printAll" ><i class="fa fa-print"></i>  Print</button>                   
+                                  
                     </div>
                 </div>
                 

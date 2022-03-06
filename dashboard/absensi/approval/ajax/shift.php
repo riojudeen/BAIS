@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../../../config/config.php");
 if(isset($_SESSION['user'])){
+    
     if($level >=6 && $level <=8){
         
         require_once("../../../../config/approval_system.php");
@@ -52,12 +53,12 @@ if(isset($_SESSION['user'])){
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $exception = " AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' AND req_date IS NOT NULL  AND shift_req = '1' ";
-        $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
+        $filterType = ($_GET['att_type'] != '' )?" AND req_code = '$_GET[att_type]'":"";
         list($status, $req_status) = pecahProg("$_GET[prog]");
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
         $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND req_work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$filterProg.$exception;
         // echo $_GET['att_type'];
-        // echo $generate;
+        // echo $query_req_absensi;
         
         // echo $addFilterDeptAcc;
         // echo $addFilterShift;
@@ -72,6 +73,7 @@ if(isset($_SESSION['user'])){
         $req_status = authApprove($level, "request", "approved");
         // echo $status.$req_status;
         ?>
+        
         <form class="table-responsive" name="proses" method="POST" id="formAbsensi">
             <table class="table table-hover">
                 <thead class="table-warning">
