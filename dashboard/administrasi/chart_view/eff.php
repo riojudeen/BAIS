@@ -13,15 +13,18 @@ include("../../../config/approval_system.php");
     $q_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
     $shift =  ($_GET['shift'] != '')?" AND absensi.shift = '$_GET[shift]' ":'';
     $org_shift =  ($_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
+    // echo mysqli_num_rows($q_div);
+    $data_dept = array(); //penampung data dept account id
+    $data_masuk = array(); //penampung data jumlah karyawan masuk
+    $data_ijin = array(); //penampung data jumlah karyawan masuk
     if(mysqli_num_rows($q_div)> 0){
         while($div = mysqli_fetch_assoc($q_div)){
           $q_dept_account = $q_org." WHERE id_parent = '$div[id]' AND part = 'deptAcc' ";
           $sql_dept_account = mysqli_query($link, $q_dept_account)or die(mysqli_error($link));
+          echo mysqli_num_rows($sql_dept_account);
           if(mysqli_num_rows($sql_dept_account)>0){
             $index = 0;
-            $data_dept = array(); //penampung data dept account id
-            $data_masuk = array(); //penampung data jumlah karyawan masuk
-            $data_ijin = array(); //penampung data jumlah karyawan masuk
+            
             while($data_dept_account = mysqli_fetch_assoc($sql_dept_account)){
               
               $index_masuk = 0;

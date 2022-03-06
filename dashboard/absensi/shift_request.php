@@ -154,7 +154,7 @@ if(isset($_SESSION['user'])){
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-6">
-                            <h5 class="title " id="mainpage"> Pengajuan Absensi</h5>
+                            <h5 class="title " id="mainpage"> Pengajuan Shift</h5>
                             <p class="card-category ">Periode : <?=tgl($tanggalAwal)." s.d. ".tgl($tanggalAkhir)?></p>
                             <input type="hidden" id="startDate" value="<?=$tanggalAwal?>">
                             <input type="hidden" id="endDate" value="<?=$tanggalAkhir?>">
@@ -236,6 +236,9 @@ if(isset($_SESSION['user'])){
                                         </li>
                                         <li class="nav-item ">
                                             <a class="btn btn-sm btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="shift_proccess" href="#proccess" role="tab" aria-expanded="true">Monitoring Request</a>
+                                        </li>
+                                        <li class="nav-item ">
+                                            <a class="btn btn-sm btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="shift_approve" href="#proccess" role="tab" aria-expanded="true">Approval Shift Request</a>
                                         </li>
                                         
                                     </ul>

@@ -577,6 +577,12 @@
                     <span class="sidebar-normal"> Leave Approval </span>
                   </a>
                 </li>
+                <li class="menu " data-name="shiftapprove" id="shiftapprove">
+                  <a href="<?=base_url()?>/dashboard/absensi/approval/shift-approval.php">
+                    <span class="sidebar-mini-icon">SA</span>
+                    <span class="sidebar-normal"> Shift Approval </span>
+                  </a>
+                </li>
                 <?php
                 }
                 if($level >= 6){
