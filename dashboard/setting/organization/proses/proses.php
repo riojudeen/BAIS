@@ -27,7 +27,6 @@ if(isset($_SESSION['user'])){
                 // echo $urutan."<br>";
                 $kode = $id_parent."-".sprintf("%03s", $urutan);
                 $id = $kode;
-                // echo $id."<br>";
                 $qry_pos .= " ('$id', '$nama', '$cord', '$id_parent', '$part'),";
             }
             $qry_pos = substr($qry_pos, 0, -1);

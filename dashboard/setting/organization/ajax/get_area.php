@@ -15,6 +15,8 @@ if(isset($_SESSION['user'])){
         $subpart = 'pos';
     }else if($part == 'deptacc'){
         $subpart = 'deptacc';
+    }else if($part == 'deptacc'){
+        $subpart = 'npk';
     }
     // echo $data;
     $area = getOrgName($link, $data, $part);

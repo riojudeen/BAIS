@@ -278,7 +278,7 @@ if(isset($_SESSION['user'])){
                             <td><?=$dOrg['name']?></td>
                             <td>
                                 <?php
-                                if($id != 'deptacc'){
+                                if($id != 'deptacc' && $id != 'pos'){
                                     if($sub == ''){
                                         ?>
                                         <a href="" id="preview_sub" data-toggle="modal" data-target="#data_sub" data-id="<?=$dOrg['id']?>" data-name="<?=$id?>"  class="badge badge-pill badge-warning"><i class="nc-icon nc-simple-add"></i> sub org</a>
