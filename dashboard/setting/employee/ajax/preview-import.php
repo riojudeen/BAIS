@@ -134,7 +134,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         }
         $spreadsheet = $reader->load($_FILES['file-excel']['tmp_name']);
         $sheetData = $spreadsheet->getActiveSheet()->toArray();
-
+        $total_update = (isset($_GET['total_update']) && $_GET['total_update'] == 1)?1:0;
         
 
         $role_user = ($_GET['role'] != '')?$_GET['role']:'';
@@ -145,6 +145,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         
         // echo count($sheetData);
         ?>
+        <input type="text" name="total_update" value="<?=$total_update?>">
         <div class="table-responsive text-left ">
             <table class="table table-hover text-uppercase">
                 <thead class="table-info">
@@ -221,15 +222,16 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 <td class="text-nowrap sticky-col third-col col-md-3">
                 <?=$npk?>
                     
-                    <input type="hidden" name="npk[]" value="<?=$npk?>">
-                    <input type="hidden" name="name[]" value="<?=$nama?>">
-                    <input type="hidden" name="tgl_masuk[]" value="<?=$tglMasuk?>">
-                    <input type="hidden" name="jabatan[]" value="<?=$jab?>">
-                    <input type="hidden" name="status[]" value="<?=$stats?>">
-                    <input type="hidden" name="shift[]" value="<?=$shift?>">
-                    <input type="hidden" name="role[]" value="<?=$role_user?>">
-                    <input type="hidden" name="pass[]" value="<?=$pass?>">
-                    <input type="hidden" name="username[]" value="<?=$username?>">
+                    <input type="text" name="npk-<?=$no?>" value="<?=$npk?>">
+                    <input type="text" name="name-<?=$no?>" value="<?=$nama?>">
+                    <input type="text" name="tgl_masuk-<?=$no?>" value="<?=$tglMasuk?>">
+                    <input type="text" name="jabatan-<?=$no?>" value="<?=$jab?>">
+                    <input type="text" name="status-<?=$no?>" value="<?=$stats?>">
+                    <input type="text" name="shift-<?=$no?>" value="<?=$shift?>">
+                    <input type="text" name="role-<?=$no?>" value="<?=$role_user?>">
+                    <input type="text" name="pass-<?=$no?>" value="<?=$pass?>">
+                    <input type="text" name="username-<?=$no?>" value="<?=$username?>">
+                    
                 </td>
                 <td class="text-nowrap sticky-col fourth-col"><?=$nama?></td>
                 <td class="text-nowrap"><?=tgl($tglMasuk)?></td>

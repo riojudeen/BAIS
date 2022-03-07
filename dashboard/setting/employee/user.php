@@ -14,11 +14,11 @@ if(isset($_SESSION['user'])){
             <div class="card-header row">
                 <h5 class="col-md-6 title">User Setting</h5>
                 <div class="col-md-6">
-                    <a href="add_karyawan.php" class="btn btn-sm btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
+                    <a href="proses/export.php?export=dataUser" class="btn btn-sm btn-success pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
                         <span class="btn-label">
-                            <i class="fa fa-plus"></i>
+                            <i class="far fa-file-excel"></i>
                         </span>
-                        Resource Data
+                        Export
                     </a>
 
                 </div>

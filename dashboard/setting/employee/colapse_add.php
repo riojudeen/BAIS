@@ -174,11 +174,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input all" type="checkbox" name="doccek" id="documentcek" value="1">
-                                <span class="form-check-sign">gunakan data organisasi dari dokumen upload</span>
-                            </label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input all" type="checkbox" name="doccek" id="documentcek" value="1">
+                                        <span class="form-check-sign">gunakan data karyawan dari dokumen upload</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input all" type="checkbox" name="total_update" id="total_update" value="1">
+                                        <span class="form-check-sign">Update Total Karyawan</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         
                         <a  class="btn btn-sm btn-danger  btn-link closecol" data-toggle="collapse" href=".collapse-view" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="nc-icon nc-simple-remove"></i></a>

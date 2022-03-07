@@ -106,7 +106,7 @@ if(isset($_SESSION['user'])){
                             </button>
                             <div class="dropdown-menu dropdown-menu-right shadow-lg">
                                 <div class="dropdown-header">Menu</div>
-                                <a class="dropdown-item" href="proses/export.php?export=organization">Export Data</a>
+                                <a class="dropdown-item" href="../employee/proses/export.php?export=organization">Export Data</a>
                                 <!-- <a class="dropdown-item" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Import Data</a> -->
                                 <a class="dropdown-item" data-toggle="modal" data-target="#generate" >Tambah Data</a>
                             </div>

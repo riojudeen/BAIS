@@ -459,60 +459,6 @@ if(isset($_SESSION['user'])){
 
         })
     </script>
-    <!-- upload ajax -->
-    <!-- <script>
-        $(document).ready(function(){
-            $('.load-data').on('click', function() {
-                var file_data = $('#file_export').prop('files')[0];   
-                var form_data = new FormData();
-                var groupshift = $('#groupshift').val();
-                var jab = $('#jabatan').val();
-                var stats = $('#status').val();
-                var deptacc = $('#deptacc').val();
-                var roleuser = $('#roleuser').val();
-                var pass = $('#password').val();
-                var d_pass =[];
-                $('#defaultpass').each(function(){
-                    if($(this).is(":checked")){
-						d_pass.push($(this).val());
-					}
-                });
-                var dept = $('#department').val();
-                var sect = $('#section').val();
-                var group = $('#group').val();
-                var posleader = $('#posleader').val();
-                var doc_cek = [];
-                $('#documentcek').each(function(){
-                    if($(this).is(":checked")){
-						doc_cek.push($(this).val());
-					}
-                });
-                form_data.append('file-excel', file_data);
-                // alert(form_data);                             
-                $.ajax({
-                    url: 'ajax/import.php?groupshift='+groupshift+'&jab='+jab+'&stats='+stats+'&deptacc='+deptacc+'&role='+roleuser+'&pass='+pass+'&dpass='+d_pass+'&dept='+dept+'&sect='+sect+'&group='+group+'&pos='+posleader+'&doccek='+doc_cek, // <-- point to server-side PHP script 
-                    dataType: 'text',  // <-- what to expect back from the PHP script, if anything
-                    // encode: 'true',  // <-- what to expect back from the PHP script, if anything
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: form_data,
-                    type: 'post',
-                    success: function(resp){
-                        
-                        // var cek = Object.keys(file_data).length
-                        // console.log(file_data)
-                        if(file_data !== undefined){
-                            $('#datapreview').modal('show');
-                            $(".data_load").html(resp);
-                        }else{
-                            Swal.fire('Dokumen Belum dipilih')
-                        }
-                    }
-                });
-            });
-        })
-    </script> -->
     <script>
         $(document).ready(function(){
             $('.load-data').on('click', function() {
@@ -536,20 +482,17 @@ if(isset($_SESSION['user'])){
 						doc_cek.push($(this).val());
 					}
                 });
-                var url = 'ajax/preview-import.php?groupshift='+groupshift+'&jab='+jab+'&stats='+stats+'&role='+roleuser+'&pass='+pass+'&dpass='+d_pass+'&dok='+doc_cek;
-                // console.log(file_data);
+                var total_update = [];
+                $('#total_update').each(function(){
+                    if($(this).is(":checked")){
+						total_update.push($(this).val());
+					}
+                });
+                var url = 'ajax/preview-import.php?groupshift='+groupshift+'&jab='+jab+'&stats='+stats+'&role='+roleuser+'&pass='+pass+'&dpass='+d_pass+'&dok='+doc_cek+'&total_update='+total_update;
                 
-                // console.log(groupshift);
-                // console.log(jab);
-                // console.log(stats);
-                // console.log(roleuser);
-                // console.log(pass);
-                // console.log(d_pass);
-                // console.log(url);
                 
                 form_data.append('file-excel', file_data);
-                // console.log(form_data);
-                // alert(form_data);                             
+                                   
                 $.ajax({
                     url: url, // <-- point to server-side PHP script 
                     dataType: 'text',  // <-- what to expect back from the PHP script, if anything

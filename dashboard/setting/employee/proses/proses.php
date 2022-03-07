@@ -12,62 +12,119 @@ if(isset($_SESSION['user'])){
         if(isset($_POST['index'])){
             // echo count($_POST['index']);
             $total = count($_POST['index']);
-            for($i = 0 ; $i < $total ;$i++){
-                $npk = $_POST['npk'];
-                // $nama = $_POST['name'];
-                $tgl_masuk = ($_POST['tgl_masuk']);
-                $index =$_POST['index'][$i];
-                $npk = $_POST['npk'][$i];
-                $nama = preg_replace("[']", "", $_POST['name'][$i]);
-                $nick = nick("$nama");
-                $tgl_masuk = $_POST['tgl_masuk'][$i];
-                $status = $_POST['status'][$i];
-                $jabatan = $_POST['jabatan'][$i];
-                $shift = $_POST['shift'][$i];
-                
-                // organization data
-                // $pos = $_POST['pos'][$i];
-                // $group = $_POST['group'][$i];
-                // $section = $_POST['section'][$i];
-                // $dept = $_POST['dept'][$i];
-                // $division = $_POST['division'][$i];
-                // $plant = $_POST['plant'][$i];
-                // user data
-                // cek user data 
-                
-                $username = $_POST['username'][$i];
-                $pass = $_POST['pass'][$i];
-                $levelUser = $_POST['role'][$i];
-                
-                $query .= "('$npk','$nama', '$nick', '$tgl_masuk', '$jabatan','$shift','$status'),";
-                $q_cekMp  = mysqli_query($link, "SELECT npk FROM karyawan WHERE npk = '$npk' ")or die(mysqli_errno($link));
-                $q_cekUser  = mysqli_query($link, "SELECT npk FROM data_user WHERE npk = '$npk' ")or die(mysqli_errno($link));
-                $q_cekOrg  = mysqli_query($link, "SELECT npk FROM org WHERE npk = '$npk' ")or die(mysqli_errno($link));
-                if(mysqli_num_rows($q_cekUser) <= 0 ){
-                    $q_User = mysqli_query($link, "INSERT INTO data_user (`username`,`npk`,`pass`,`level`) VALUES ('$username', '$npk', '$pass','$levelUser')");
+            
+            if($_POST['total_update'] > 0){
+                echo $total;
+                echo $_POST['total_update'];
+                mysqli_query($link, "DELETE FROM karyawan ")or die(mysqli_error($link));
+
+                for($i = 0 ; $i < $total ;$i++){
+                    // $npk = $_POST['npk'];
+                    // $nama = $_POST['name'];
+                    $index =$_POST['index'][$i];
+                    $npk = $_POST['npk-'.$index];
+                    $nama = preg_replace("[']", "", $_POST['name-'.$index]);
+                    $nick = nick("$nama");
+                    $tgl_masuk = $_POST['tgl_masuk-'.$index];
+                    $status = $_POST['status-'.$index];
+                    $jabatan = $_POST['jabatan-'.$index];
+                    $shift = $_POST['shift-'.$index];
+                    
+                    $username = $_POST['username-'.$index];
+                    $pass = $_POST['pass-'.$index];
+                    $levelUser = $_POST['role-'.$index];
+                    
+                    $query .= "('$npk','$nama', '$nick', '$tgl_masuk', '$jabatan','$shift','$status'),";
+
+
+                    // $q_cekMp  = mysqli_query($link, "SELECT npk FROM karyawan WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                    $q_cekUser  = mysqli_query($link, "SELECT npk FROM data_user WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                    $q_cekOrg  = mysqli_query($link, "SELECT npk FROM org WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                    
+                    if(mysqli_num_rows($q_cekUser) <= 0 ){
+                        $q_User = mysqli_query($link, "INSERT INTO data_user (`username`,`npk`,`pass`,`level`) VALUES ('$username', '$npk', '$pass','$levelUser')");
+                    }
+
+                    if(mysqli_num_rows($q_cekOrg) <= 0 ){
+                        $q_Org = mysqli_query($link, "INSERT INTO org (`npk`,`plant`) VALUES ('$npk','1')");
+                    }
+                    
                 }
-                if(mysqli_num_rows($q_cekOrg) <= 0 ){
-                    $q_Org = mysqli_query($link, "INSERT INTO org (`npk`,`plant`) VALUES ('$npk','1')");
-                }
+                $sql = substr($query, 0 , -1); //untuk trim koma terakhir
                 
+                echo $sql;
+                $s_karyawan = mysqli_query($link, $sql);
+                // if($s_karyawan){
+                //     echo "berhasil update";
+                //     $query_delete_user = "DELETE data_user
+                //         FROM data_user
+                //         LEFT OUTER JOIN karyawan ON karyawan.npk = data_user.npk WHERE karyawan.npk IS NULL";
+                //     mysqli_query($link, $query_delete_user)or die(mysqli_error($link));
+                //     // $_SESSION['info'] = 'Disimpan';
+                //     // $_SESSION['pesan'] = 'Seluruh Data Karyawan, Organisasi & User Berhasil Dibuat';
+                //     // echo "<script>document.location.href='../add_karyawan.php'</script>";
+
+                // }else{
+                //     // $_SESSION['info'] = 'Gagal Disimpan';
+                //     // $_SESSION['pesan'] = 'Data';
+                //     // echo "<script>document.location.href='../add_karyawan.php'</script>";
+
+                // }
+                
+            }else{
+                echo "bukan total";
+                for($i = 0 ; $i < $total ;$i++){
+                    // $npk = $_POST['npk'];
+                    // $nama = $_POST['name'];
+                    $tgl_masuk = ($_POST['tgl_masuk']);
+                    $index =$_POST['index'][$i];
+                    $npk = $_POST['npk-'.$index];
+                    $nama = preg_replace("[']", "", $_POST['name-'.$index]);
+                    $nick = nick("$nama");
+                    $tgl_masuk = $_POST['tgl_masuk-'.$index];
+                    $status = $_POST['status-'.$index];
+                    $jabatan = $_POST['jabatan-'.$index];
+                    $shift = $_POST['shift-'.$index];
+                    
+                    $username = $_POST['username-'.$index];
+                    $pass = $_POST['pass-'.$index];
+                    $levelUser = $_POST['role-'.$index];
+                    
+                    
+                    $query .= "('$npk','$nama', '$nick', '$tgl_masuk', '$jabatan','$shift','$status'),";
+
+
+                    $q_cekMp  = mysqli_query($link, "SELECT npk FROM karyawan WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                    $q_cekUser  = mysqli_query($link, "SELECT npk FROM data_user WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                    $q_cekOrg  = mysqli_query($link, "SELECT npk FROM org WHERE npk = '$npk' ")or die(mysqli_errno($link));
+                    
+                    if(mysqli_num_rows($q_cekUser) <= 0 ){
+                        $q_User = mysqli_query($link, "INSERT INTO data_user (`username`,`npk`,`pass`,`level`) VALUES ('$username', '$npk', '$pass','$levelUser')");
+                    }
+
+                    if(mysqli_num_rows($q_cekOrg) <= 0 ){
+                        $q_Org = mysqli_query($link, "INSERT INTO org (`npk`,`plant`) VALUES ('$npk','1')");
+                    }
+                    
+                }
+                $sql = substr($query, 0 , -1); //untuk trim koma terakhir
+                
+                $s_karyawan = mysqli_query($link, $sql);
+                echo $sql;
+                if($s_karyawan){
+                    $_SESSION['info'] = 'Disimpan';
+                    $_SESSION['pesan'] = 'Seluruh Data Karyawan, Organisasi & User Berhasil Dibuat';
+                    echo "<script>document.location.href='../add_karyawan.php'</script>";
+
+                }else{
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = 'Data';
+                    echo "<script>document.location.href='../add_karyawan.php'</script>";
+
+                }
             }
             
-            $sql = substr($query, 0 , -1); //untuk trim koma terakhir
-            // $sqlUser = (isset($q_User))?substr($q_User.$queryUser, 0 , -1):''; //untuk trim koma terakhir
-            // $sqlOrg = (isset($q_Org))?substr($queryOrg, 0 , -1):''; //untuk trim koma terakhir
-            $s_karyawan = mysqli_query($link, $sql);
-            echo $sql;
-            if($s_karyawan){
-                $_SESSION['info'] = 'Disimpan';
-                $_SESSION['pesan'] = 'Seluruh Data Karyawan, Organisasi & User Berhasil Dibuat';
-                echo "<script>document.location.href='../add_karyawan.php'</script>";
-
-            }else{
-                $_SESSION['info'] = 'Gagal Disimpan';
-                $_SESSION['pesan'] = 'Data';
-                echo "<script>document.location.href='../add_karyawan.php'</script>";
-
-            }
+            
         }else{
                 $_SESSION['info'] = "Kosong";
                 echo "<script>document.location.href='../add_karyawan.php'</script>";
