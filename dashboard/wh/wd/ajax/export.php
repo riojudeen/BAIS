@@ -153,7 +153,7 @@ if(isset($_SESSION['user'])){
         //membuat file name
         $date = date('d-m-y-'.substr((string)microtime(), 1, 8));
         $date = str_replace(".", "", $date);
-        $filename = "Data_Working_Days".$date.".xlsx";
+        $filename = "Data-Working-Days_".$date.".xlsx";
 
         //savng file
         $writer = new Xlsx($spreadsheet);

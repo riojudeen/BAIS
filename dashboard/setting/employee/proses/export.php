@@ -109,10 +109,9 @@ if(isset($_SESSION['user'])){
             $writer = new Xlsx($spreadsheet);
             $writer->save($filename);
             $content = file_get_contents($filename);
-
+            // echo $content;
             //redirect dan download file
             header("Content-Disposition: attachment; filename=".$filename);
-            
             unlink($filename);
             exit($content);
     }else if($_GET['export'] == "dataUser" ){

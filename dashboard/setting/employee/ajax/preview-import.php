@@ -222,15 +222,15 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 <td class="text-nowrap sticky-col third-col col-md-3">
                 <?=$npk?>
                     
-                    <input type="text" name="npk-<?=$no?>" value="<?=$npk?>">
-                    <input type="text" name="name-<?=$no?>" value="<?=$nama?>">
-                    <input type="text" name="tgl_masuk-<?=$no?>" value="<?=$tglMasuk?>">
-                    <input type="text" name="jabatan-<?=$no?>" value="<?=$jab?>">
-                    <input type="text" name="status-<?=$no?>" value="<?=$stats?>">
-                    <input type="text" name="shift-<?=$no?>" value="<?=$shift?>">
-                    <input type="text" name="role-<?=$no?>" value="<?=$role_user?>">
-                    <input type="text" name="pass-<?=$no?>" value="<?=$pass?>">
-                    <input type="text" name="username-<?=$no?>" value="<?=$username?>">
+                    <input type="hidden" name="npk-<?=$no?>" value="<?=$npk?>">
+                    <input type="hidden" name="name-<?=$no?>" value="<?=$nama?>">
+                    <input type="hidden" name="tgl_masuk-<?=$no?>" value="<?=$tglMasuk?>">
+                    <input type="hidden" name="jabatan-<?=$no?>" value="<?=$jab?>">
+                    <input type="hidden" name="status-<?=$no?>" value="<?=$stats?>">
+                    <input type="hidden" name="shift-<?=$no?>" value="<?=$shift?>">
+                    <input type="hidden" name="role-<?=$no?>" value="<?=$role_user?>">
+                    <input type="hidden" name="pass-<?=$no?>" value="<?=$pass?>">
+                    <input type="hidden" name="username-<?=$no?>" value="<?=$username?>">
                     
                 </td>
                 <td class="text-nowrap sticky-col fourth-col"><?=$nama?></td>

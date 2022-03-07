@@ -14,8 +14,8 @@ if(isset($_SESSION['user'])){
             $total = count($_POST['index']);
             
             if($_POST['total_update'] > 0){
-                echo $total;
-                echo $_POST['total_update'];
+                // echo $total;
+                // echo $_POST['total_update'];
                 mysqli_query($link, "DELETE FROM karyawan ")or die(mysqli_error($link));
 
                 for($i = 0 ; $i < $total ;$i++){
@@ -52,24 +52,26 @@ if(isset($_SESSION['user'])){
                 }
                 $sql = substr($query, 0 , -1); //untuk trim koma terakhir
                 
-                echo $sql;
+                // echo $sql;
                 $s_karyawan = mysqli_query($link, $sql);
-                // if($s_karyawan){
-                //     echo "berhasil update";
-                //     $query_delete_user = "DELETE data_user
-                //         FROM data_user
-                //         LEFT OUTER JOIN karyawan ON karyawan.npk = data_user.npk WHERE karyawan.npk IS NULL";
-                //     mysqli_query($link, $query_delete_user)or die(mysqli_error($link));
-                //     // $_SESSION['info'] = 'Disimpan';
-                //     // $_SESSION['pesan'] = 'Seluruh Data Karyawan, Organisasi & User Berhasil Dibuat';
-                //     // echo "<script>document.location.href='../add_karyawan.php'</script>";
+                if($s_karyawan){
+                    echo "berhasil update";
+                    $query_delete_user = "DELETE data_user
+                        FROM data_user
+                        LEFT OUTER JOIN karyawan ON karyawan.npk = data_user.npk WHERE karyawan.npk IS NULL";
+                    $query_delete_org = "DELETE org
+                        FROM org
+                        LEFT OUTER JOIN karyawan ON karyawan.npk = org.npk WHERE karyawan.npk IS NULL";
+                    mysqli_query($link, $query_delete_org)or die(mysqli_error($link));
+                    $_SESSION['info'] = 'Disimpan';
+                    $_SESSION['pesan'] = 'Seluruh Data Karyawan, Organisasi & User Berhasil Dibuat';
+                    echo "<script>document.location.href='../add_karyawan.php'</script>";
 
-                // }else{
-                //     // $_SESSION['info'] = 'Gagal Disimpan';
-                //     // $_SESSION['pesan'] = 'Data';
-                //     // echo "<script>document.location.href='../add_karyawan.php'</script>";
-
-                // }
+                }else{
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = 'Data';
+                    echo "<script>document.location.href='../add_karyawan.php'</script>";
+                }
                 
             }else{
                 echo "bukan total";
