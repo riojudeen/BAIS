@@ -841,4 +841,11 @@ function getFoto($npk){
     }
     return $base64;
 }
+// table view yang sering error 
+"SELECT division.id_div AS id , division.nama_divisi AS nama_org , division.npk_cord AS cord , division.id_company AS id_parent , division.part AS part FROM division
+UNION ALL SELECT department.id_dept AS id , department.dept AS nama_org , department.npk_cord AS cord , department.id_div AS id_parent, department.part AS part   FROM department
+    UNION ALL SELECT dept_account.id_dept_account AS id , dept_account.department_account AS nama_org , dept_account.npk_dept AS cord , dept_account.id_div AS id_parent, dept_account.part AS part FROM dept_account 
+    UNION ALL SELECT section.id_section AS id , section.section AS nama_org , section.npk_cord AS cord , section.id_dept AS id_parent, section.part AS part  FROM section 
+    UNION ALL SELECT groupfrm.id_group AS id , groupfrm.nama_group AS nama_org , groupfrm.npk_cord AS cord , groupfrm.id_section AS id_parent, groupfrm.part AS part  FROM groupfrm 
+    UNION ALL SELECT pos_leader.id_post AS id , pos_leader.nama_pos AS nama_org , pos_leader.npk_cord AS cord , pos_leader.id_group AS id_parent, pos_leader.part AS part  FROM pos_leader"
 ?>

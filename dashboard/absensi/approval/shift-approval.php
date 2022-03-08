@@ -113,7 +113,7 @@ if(isset($_SESSION['user'])){
                 text: "Semua data yang dicheck / centang akan dicetak sebagai laporan / memo",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#FF5733',
+                confirmButtonColor: '#1DA9EA',
                 cancelButtonColor: '#B2BABB',
                 confirmButtonText: 'Yes, proses!'
             }).then((result) => {
