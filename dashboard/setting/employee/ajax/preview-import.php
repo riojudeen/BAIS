@@ -145,8 +145,8 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         
         // echo count($sheetData);
         ?>
-        <input type="text" name="total_update" value="<?=$total_update?>">
-        <div class="table-responsive text-left ">
+        <input type="hidden" name="total_update" value="<?=$total_update?>">
+        <div class="text-left table-responsive mx-0" style="height:500px">
             <table class="table table-hover text-uppercase">
                 <thead class="table-info">
                     <th class="text-left first-top-col first-col sticky-col ">
@@ -169,7 +169,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             <tbody>
         <?php
         $no = 1;
-        echo $_GET['dok'];
+        // echo $_GET['dok'];
         for($i = 2;$i < count($sheetData);$i++){
             if((isset($_GET['dok'])) && $_GET['dok'] == ''){
                 $shift = ($_GET['groupshift'])?$_GET['groupshift']:'';
@@ -200,12 +200,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             $q_status = mysqli_query($link, "SELECT status_mp FROM status_mp WHERE id = '$stats'")or die(mysqli_error($link));
             $sql_stats = mysqli_fetch_assoc($q_status);
             $status = $sql_stats['status_mp'];
-            // echo $no++." - ";
-            // echo $nama." - ";
-            // echo $npk." - ";
-            // echo $stats." - ";
-            // echo $jab." - ";
-            // echo $tglMasuk." <br> ";
             ?>
            <tr class="">
                 <td class="sticky-col first-col">

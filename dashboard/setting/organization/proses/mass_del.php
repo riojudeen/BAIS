@@ -46,6 +46,7 @@ if(isset($_SESSION['user'])){
             $sql = mysqli_query($link, $qry)or die(mysqli_error($link));
         }
     }
+    // echo $qry;
     if($sql){
         
         $_SESSION['info'] = "Dihapus";

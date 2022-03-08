@@ -48,7 +48,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 $hari = hari_singkat($tgl);
                 $array_tgl[$i++] = $tgl;
             }
-            print_r($array_tgl);
+            // print_r($array_tgl);
             
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
             $spreadsheet = $reader->load($path);
@@ -70,35 +70,34 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 $index_tanggal =( date('d', strtotime($date)) - 1)*3;
                 
                 for($i = 3;$i < count($sheetData);$i++){
-                    
-                    $npk = $sheetData[$i]['0'];
-                    $nama = $sheetData[$i]['1'];
-                    $dept = $sheetData[$i]['2'];
-                    $q_shift = mysqli_query($link, $q_cek_shift." WHERE npk = '$npk' ")or die(mysqli_error($link));
-                    // jika karyawan ada di database pake shift karyawan
-                    if(mysqli_num_rows($q_shift)>0){
-                        $data_shift = mysqli_fetch_assoc($q_shift);
-                        $shift = $data_shift['shift'];
-                    }else{
-                        $shift = shift_ubah($sheetData[$i]['3']);
-                    }
-                    
+                    // menangkap nilai data apakah absen atau lembur
                     $scope = $sheetData[$i]['4'];
-                    // ambil data check ini -out -ket berdasarkan tanggal mulai
-                    $index_mulai = 4 + $index_tanggal; //index pertama 5
-                    $in = $index_mulai + 1;
-                    $out = $index_mulai + 2;
-                    $ket = $index_mulai + 3;
-
-                    $checkin = ($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in];
-                    $checkout = ($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out];
-                    $ket = $sheetData[$i][$ket];
-                    $id= $npk.$date;
-
-                    list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
-                    $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
+                    
                     if($scope == 'Absen'){
-                        // echo $npk."<br>";
+                        $npk = $sheetData[$i]['0'];
+                        $nama = $sheetData[$i]['1'];
+                        $dept = $sheetData[$i]['2'];
+                        $q_shift = mysqli_query($link, $q_cek_shift." WHERE npk = '$npk' ")or die(mysqli_error($link));
+                        // jika karyawan ada di database pake shift karyawan
+                        if(mysqli_num_rows($q_shift)>0){
+                            $data_shift = mysqli_fetch_assoc($q_shift);
+                            $shift = $data_shift['shift'];
+                        }else{
+                            $shift = shift_ubah($sheetData[$i]['3']);
+                        }
+                        // ambil data check ini -out -ket berdasarkan tanggal mulai
+                        $index_mulai = 4 + $index_tanggal; //index pertama 5
+                        $in = $index_mulai + 1;
+                        $out = $index_mulai + 2;
+                        $ket = $index_mulai + 3;
+
+                        $checkin = ($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in];
+                        $checkout = ($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out];
+                        $ket = $sheetData[$i][$ket];
+                        $id= $npk.$date;
+
+                        list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
+                        $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
                         
                         
                         // echo $iin."-".$iint."-".$iiint."<br>";

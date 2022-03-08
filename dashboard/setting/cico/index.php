@@ -39,25 +39,18 @@ if(isset($_SESSION['user'])){
     <div class="row ">
         <div class="col-md-12">
             
-            <div class="card card-plain" style="border: 1px #CACACA solid;  border-radius: 15px 15px 15px 15px">
-                <div class="card-header">
-                    <h5 class="card-title pull-left">Import Data Absensi</h5>
-                    <div class="pull-right"> 
-                        
-                    </div>
-                </div>
-                <hr>
+            <div class="card " style="border: 5px #CACACA solid;  border-radius: 15px 15px 15px 15px">
                 
                 <div class="card-body px-3" >
                     <div class="row " id="tes">
                          
-                        <div class="col-lg-12 col-md-12 col-sm-12 border-left">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="row">
                                 <div class="col-md-12 ">
                                     <div class="row">
                                         <h6 class="title col-md-6">Progress</h6>
                                         <div class="col-md-12" id="process_upload" style="display:block;">
-                                            <div class="progress" style="height: 20px;">
+                                            <div class="progress" style="height: 20px;" style="width: 0%; border-radius: 50px">
                                                 <div class="progress-bar bg-success text-info progress-bar-animated progress-bar-striped active persen " role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%; border-radius: 50px"  >
                                                 </div>
                                                 
@@ -72,7 +65,7 @@ if(isset($_SESSION['user'])){
                                     <div class="row">
                                         <div class="col-lg-12 col-md-4 col-sm-12 ">
                                             <form method="POST" id="upload_data" enctype="multipart/form-data" action="proses/import_absensi.php">
-                                                <h6 class="title">Input Data</h6>
+                                                
                                                 
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -83,32 +76,6 @@ if(isset($_SESSION['user'])){
                                         </div> 
 
                                     </div>
-                                    
-                                    <form method="post" name="proses" action="" id="form_absensi">
-                                        <div class="data_preview " >
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <table class=" table table-xs table-bordered " width="500px">
-                                                        <tbody class="py-0">
-                                                            <tr class="py-0">
-                                                                <th colspan="3" scope="row">Total Hari</th>
-                                                                <td>0</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3" scope="row">Total Baris Data</th>
-                                                                <td>0</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="3" scope="row">Total Karyawan</th>
-                                                                <td>0</td>
-                                                                
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
                                 </div>
                                 
                             </div>
@@ -330,12 +297,14 @@ if(isset($_SESSION['user'])){
                 var trigger = 1;
                 if(val == trigger){
                     upload_data();
+                    loadData()
                 }
             }
             
             $('.data_load').on('click', function(e) {
                 e.preventDefault(); 
                 upload_data();
+                loadData()
             });
             $('.reset').click(function(){
                 $('#upload_data')[0].reset();
