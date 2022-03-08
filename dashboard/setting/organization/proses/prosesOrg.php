@@ -78,6 +78,7 @@ if(isset($_SESSION['user'])){
         }
         
     }else if(isset($_POST['id_area_posting'])){
+
         $part_area =  $_POST['part_area_posting'];
         $id_area = $_POST['id_area_posting'];
         list($pos,$group,$section,$dept,$division,$plant,$dept_account)=strukturOrg($link, $part_area, $id_area);
@@ -96,18 +97,23 @@ if(isset($_SESSION['user'])){
         }
         // print_r($_POST['checked']);
         $no = 1;
-        foreach($_POST['checked'] AS $npk ){
-            $query_update = $query." WHERE npk = '$npk' ";
-            // echo $query_update." - $no<br>";
-            $no++;
-            $sql = mysqli_query($link, $query_update);
-        }
-        if($sql){
-            $_SESSION['info'] = "Disimpan";
-            echo "<script>window.location='../data-update.php?id=$id_area&part=$part_area';</script>";
+        if(isset($_POST['checked'])){
+            foreach($_POST['checked'] AS $npk ){
+                $query_update = $query." WHERE npk = '$npk' ";
+                // echo $query_update." - $no<br>";
+                $no++;
+                $sql = mysqli_query($link, $query_update);
+            }
+            if($sql){
+                $_SESSION['info'] = "Disimpan";
+                echo "<script>window.location='../data-update.php?id=$id_area&part=$part_area';</script>";
+            }else{
+                $_SESSION['info'] = "Gagal Disimpan";
+                echo "<script>window.location='../data-update.php?id=$id_area&part=$part_area';</script>";
+            }
         }else{
-            $_SESSION['info'] = "Gagal Disimpan";
-            echo "<script>window.location='../data-update.php?id=$id_area&part=$part_area';</script>";
+            $_SESSION['info'] = "Kosong";
+            header("location:../data-update.php?id=$id_area&part=$part_area");
         }
     }else{
         $_SESSION['info'] = "Kosong";

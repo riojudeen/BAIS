@@ -112,7 +112,8 @@ if(isset($_SESSION['user'])){
                     <div class="card-header ">
                         <h4 class="card-title pull-left">Register <?=$namaOrg?></h4>
                         <?php
-                        if(isset($_POST['frm'])){
+                        
+                        if($level >= '1' && $level <= '6'){
                             ?>
                             <div class=" box pull-right">
                                 <a href="../../../pages/mp_update.php" class="btn btn-default "><i

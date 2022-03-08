@@ -712,10 +712,11 @@ if(isset($_SESSION['user'])){
     <script type="text/javascript">
         $(document).ready(function(){
             $(document).on('click', '.view_data', function(){
+                
                 var id = $(this).parents("tr").attr("id");
                 
                 $.ajax({
-                    url: '../ajax/view.php',	
+                    url: '../ajax/view.php',
                     method: 'post',
                     data: {id:id},		
                     success:function(data){
@@ -726,12 +727,12 @@ if(isset($_SESSION['user'])){
             });
             $(document).on('click', '.td', function(){
                 var id = $(this).parent('tr').attr("id");
-                
+                var type = 'SHIFT'
                 
                 $.ajax({
                     url: '../ajax/view.php',	
                     method: 'post',
-                    data: {id:id},		
+                    data: {type_data:type, id:id},		
                     success:function(data){
                         $('#view_data').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
                         $('#myView').modal("show");	// menampilkan dialog modal nya

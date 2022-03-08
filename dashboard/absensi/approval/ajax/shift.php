@@ -89,7 +89,6 @@ if(isset($_SESSION['user'])){
                         <th>Tanggal Pindah</th>
                         <th>Tanggal Pengajuan</th>
                         <th colspan="2">Progress</th>
-                        <th class="text-right">Action</th>
                         <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
                             <div class="form-check">
                                 <label class="form-check-label">
@@ -158,9 +157,6 @@ if(isset($_SESSION['user'])){
                                     </div>
                                 </td>
                                 <td class="td"><?=$stt?></td>
-                                <td class="text-right">
-                                    <div id="<?=$data['npk']?>" class="btn btn-sm btn-link btn-primary shift_req"><i class="fa fa-print"></i>  Print</div>
-                                </td>
                                 <td>
                                     <div class="form-check text-right">
                                         <label class="form-check-label ">

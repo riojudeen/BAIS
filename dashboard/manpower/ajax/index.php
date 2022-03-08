@@ -49,10 +49,10 @@ if(isset($_SESSION['user'])){
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        
+        // echo $group_filter;
         
         $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
-        
+        // echo $queryMP;
         // echo $access_org."<br>";
         // echo $data_access."<br>";
         // echo $field_request."<br>";

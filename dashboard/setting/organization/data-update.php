@@ -18,7 +18,7 @@ if(isset($_SESSION['user'])){
                     <div class="row">
                         <h5 class="title pull-left col-md-6" id="mainpage">Update Organization</h5>
                         <?php
-                        if(isset($_GET['frm'])){
+                        if($level >= 3 && $level <= 5){
                             ?>
                             <div class="col-md-6 text-right">
                                 <a href="../../pages/mp_update.php" class="btn">Kembali</a>
@@ -63,7 +63,7 @@ if(isset($_SESSION['user'])){
 
                     list($pos,$group,$section,$dept,$division,$plant,$dept_account)=strukturOrg($link, $part_area, $id_area);
 
-                    echo $group;
+                    // echo $group;
                     // echo $id_area;
                     // echo  $pos." - ".$group." - ".$section." - ".$dept." - ".$division." - ".$plant."<br>";
                     $pos_name = (getOrgName($link, $pos, 'pos')!= '')?getOrgName($link, $pos, 'pos'):'-';

@@ -1,3 +1,4 @@
+
 <?php
 
 //////////////////////////////////////////////////////////////////////
@@ -59,10 +60,10 @@ if(isset($_SESSION['user'])){
                 $sect_filter = '';
                 $group_filter = '';
                 
-                // echo count($area);
+                
                 $headerGroup = '';
-                foreach($area AS $area){
-                    $headerGroup .= " ".getOrgName($link, $area, $part)." & ";
+                foreach($area AS $dataarea){
+                    $headerGroup .= " ".getOrgName($link, $dataarea, $part)." & ";
                 }
                 $headerGroup = substr($headerGroup, 0, -2);
             }
@@ -76,6 +77,7 @@ if(isset($_SESSION['user'])){
                 $mes = "koordinator area";
                 $edit = 0;
             }
+            
            
             ?>
             <form action="proses.php" method="GET">
@@ -194,6 +196,7 @@ if(isset($_SESSION['user'])){
 
             $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
             // echo $queryMP;
+            // echo $add_filter;
             $sql_group = mysqli_query($link, $queryMP.$add_filter.$addGroup." ORDER by $sub ASC")or die(mysqli_error($link));
             $sql_total_mp = mysqli_query($link, $queryMP.$add_filter)or die(mysqli_error($link));
            
@@ -212,18 +215,78 @@ if(isset($_SESSION['user'])){
             $jm_FRM = mysqli_num_rows($FRM);
     
             // echo "$jm_permanen";
-    
+            if($edit == 1){
             ?>
             
-            <div class="jumbotron jumbotron-fluid bg-white" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 80%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="modal fade" id="regist" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content mx-1 px-1">
+                                <form action="../setting/organization/proses/add.php" method="POST" id="RangeValidation">
+                                    <div class="modal-header justify-content-center">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <i class="nc-icon nc-simple-remove"></i>
+                                        </button>
+                                        <h5 class="title title-up">Sub Area </h5>
+                                    </div>
+
+                                    <div class="modal-body px-2">
+                                        <div class="form-group-sm ">
+                                            <input type="hidden" name="part" value="<?=$sub_part?>">
+                                        </div>
+                                        
+                                        <div class="form-group-sm ">
+                                            <select required class="form-control selectpicker part text-center"data-size="7" name="id_parent" data-style="btn btn-warning bg-white btn-link border" title="Pilih Area" data-width="100%" data-id="" required>
+                                                
+                                                <option class="text-center" disabled>Data Area</option>
+                                                <?php
+                                                    if(isset($area)){
+                                                        foreach($area AS $data_area){
+                                                            ?>
+                                                            <option class="text-center" value="<?=$data_area?>" ><?=getOrgName($link, $data_area, $part)?></option>
+                                                            <?php
+                                                        }
+                                                    }
+                                                ?>
+                                                
+                                            </select>
+                                        </div>
+                                        <hr class="my-0">
+                                        <div class="form-group">
+                                            <input type="number" name="count" class="form-control text-center gen" min="1" id="inputgenerate" placeholder="input record set" autofocus required>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="left-side">
+                                            <button type="button" class="btn btn-default btn-link" data-dismiss="modal">Cancel</button>
+                                        </div>
+                                        <div class="divider"></div>
+                                        <div class="right-side">
+                                            <button type="submit" class="btn btn-danger btn-link">Generate</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+            }
+            ?>
+            
+            
+            <div class="jumbotron jumbotron-fluid bg-white pattern" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 80%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
                 <div class="container " >
+                   
                     <input type="hidden" name="npk" id="npk" value="<?=$npk?>">
                     <input type="hidden" name="level" id="level" value="<?=$level?>">
                 </div>
             </div>
-            <div class="row" style="margin-top:-200px">
+            <div class="row" style="margin-top:-100px">
                 <div class="col-md-4" >
-                    <div class="row" style="margin-top:115px">
+                    <div class="row">
                         <div class="col-md-12 pl-5">
                             <div class="card card-user " >
                                 <div class="card-body">
@@ -410,160 +473,7 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <h4 class="text-uppercase title "><?=$part.$headerGroup?></h4>
-                                                </div>
-                                                
-                                                <?php
-                                                if($edit == 1){
-                                                    ?>
-                                                    <form action="../setting/organization/proses/add.php" method="POST" class="col-md-6 text-right pt-4 mb-0">
-                                                        <input type="hidden" name="part" value="<?=$sub_part?>">
-                                                        <input type="hidden" name="id_parent" value="<?=$data_access?>">
-                                                        <input type="hidden" name="count" value="1">
-                                                        <input type="hidden" name="frm" value="1">
-                                                        <input type="submit" class="btn btn-sm btn-success mb-0" value="Register Organisasi">
-                                                    </form>
-                                                    <?php
-                                                }else{
-                                                    ?>
-                                                    <div class="col-md-6 text-right pt-4 mb-0">
-                                                        <a  href="../setting/organization/" class="btn btn-sm mb-0"> Kembali </a>
-                                                    </div>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="table-full-width no-border text-uppercase">
-                                                    <table class="table">
-                                                        <?php
-                                                        $q_newArea = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE cord = '$npkUser' AND part = '$part'  ")or die(mysqli_error($link));
-                                                        if(mysqli_num_rows($q_newArea)> 0){
-                                                            $no=1;
-                                                            while($dataNewArea = mysqli_fetch_assoc($q_newArea)){
-                                                                // echo $sub_part;
-                                                                $q_cekPos = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = '$sub_part' AND id_parent = '$dataNewArea[id]' ")or die(mysqli_error($link));
-                                                                if(mysqli_num_rows($q_cekPos)>0){
-                                                                    while($dataPos = mysqli_fetch_assoc($q_cekPos)){
-                                                                        $query_total = mysqli_query($link, $queryMP.$add_filter." AND $sub = '$dataPos[id]' ")or die(mysqli_error($link));
-                                                                        if(mysqli_num_rows($query_total) == 0){
-                                                                            ?>
-                                                                            <tr class="table-danger">
-                                                                                
-                                                                                
-                                                                                <td class="text-danger pl-4 title">
-                                                                                    <div class="title">
-                                                                                        <?=$dataPos['nama_org']?>
-
-                                                                                    </div>
-                                                                                    <div class="badge badge-pill">Data Karyawan belum diposting</div>
-                                                                                </td>
-                                                                                <td class="text-right pr-4">
-                                                                                    <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-round btn-outline-danger btn-success">Update</a>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <?php
-                                                                        }
-                                                                        
-                                                                    }
-                                                                }
-                                                                
-                                                            }
-                                                        }
-                                                        ?>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="table-full-width table-responsive text-uppercase" style="max-height: 200px">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Area</th>
-                                                            <th>Jml Emp</th>
-                                                            <th>FRM</th>
-                                                            <th>TL</th>
-                                                            <th>TM</th>
-                                                            <th class="table-warning">TM K1</th>
-                                                            <th class="table-warning">TM K2</th>
-                                                            <th class="table-warning">TM P</th>
-                                                            <th class="text-right">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        if(mysqli_num_rows($sql_group)>0){
-                                                            $no = 1;
-                                                            while($data = mysqli_fetch_assoc($sql_group)){
-                                                                $part = $part;
-                                                                $color = ($data[$sub] == '')?"text-danger ":"";
-                                                                $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
-                                                                $addSub = " AND $sub $filter_sub";
-                                                                $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
-                                                                $total = mysqli_num_rows($query_total);
-                                                                // echo $addSub;
-                                                                // if($no == 1){
-                                                                //     echo $queryMP.$addPermanent.$addSub;
-                                                                // }
-                                                                $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
-                                                                $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
-                                                                $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
-                                                                $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
-                                                                $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
-                                                                $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
-                                                                $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
-                                                                
-                                                                $jm_permanen = mysqli_num_rows($permanent);
-                                                                $jm_kontrak1 = mysqli_num_rows($kontrak1);
-                                                                $jm_kontrak2 = mysqli_num_rows($kontrak2);
-                                                                $jm_TM = mysqli_num_rows($TM);
-                                                                $jm_TL = mysqli_num_rows($TL);
-                                                                $jm_FRM = mysqli_num_rows($FRM);
-                                                                // echo $queryMP.$addMng;
-                                                                ?>
-                                                                <tr class="<?=$color?>">
-                                                                    <td><?=$no++?></td>
-                                                                    <td><?=$nama_area?></td>
-                                                                    <td><?=$total?></td>
-                                                                   
-                                                                    <td><?=$jm_FRM?></td>
-                                                                    <td><?=$jm_TL?></td>
-                                                                    <td><?=$jm_TM?></td>
-                                                                    <td class="table-warning"><?=$jm_kontrak1?></td>
-                                                                    <td class="table-warning"><?=$jm_kontrak2?></td>
-                                                                    <td class="table-warning"><?=$jm_permanen?></td>
-                                                                    <td class="text-right">
-                                                                        <?php
-                                                                        if($data[$sub] != ''){
-                                                                            ?>
-                                                                            <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
-                                                                            <?php
-                                                                        }
-                                                                        ?>
-                                                                    </td>
-                                                                </tr>
-                                                                <?php
-                                                            }
-                                                        }
-                                                        ?>
-                                                        
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                         
@@ -572,12 +482,161 @@ if(isset($_SESSION['user'])){
                 </div>
                 
             </div>
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
                             <div class="row">
-                                <h5 class="title col-md-6">Daftar Man Power</h5>
+                                <div class="col-md-6">
+                                    <h4 class="text-uppercase title "><?=$part.$headerGroup?></h4>
+                                </div>
+                                
+                                <?php
+                                if($edit == 1){
+                                    ?>
+                                    <form name="regist" action="../setting/organization/proses/add.php" method="POST" class="col-md-6 text-right pt-4 mb-0">
+                                        
+                                        <input type="hidden" name="count" value="1">
+                                        <input type="hidden" name="frm" value="1">
+                                        <input type="submit" class="btn btn-sm btn-success mb-0 register" value="Register Organisasi">
+                                    </form>
+                                    <?php
+                                }else{
+                                    ?>
+                                    <div class="col-md-6 text-right pt-4 mb-0">
+                                        <a  href="../setting/organization/" class="btn btn-sm mb-0"> Kembali </a>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-full-width no-border text-uppercase">
+                                        <table class="table">
+                                            <?php
+                                            $q_newArea = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE cord = '$npkUser' AND part = '$part'  ")or die(mysqli_error($link));
+                                            if(mysqli_num_rows($q_newArea)> 0){
+                                                $no=1;
+                                                while($dataNewArea = mysqli_fetch_assoc($q_newArea)){
+                                                    // echo $sub_part;
+                                                    $q_cekPos = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = '$sub_part' AND id_parent = '$dataNewArea[id]' ")or die(mysqli_error($link));
+                                                    if(mysqli_num_rows($q_cekPos)>0){
+                                                        while($dataPos = mysqli_fetch_assoc($q_cekPos)){
+                                                            $query_total = mysqli_query($link, $queryMP.$add_filter." AND $sub = '$dataPos[id]' ")or die(mysqli_error($link));
+                                                            if(mysqli_num_rows($query_total) == 0){
+                                                                ?>
+                                                                <tr class="table-danger">
+                                                                    
+                                                                    
+                                                                    <td class="text-danger pl-4 title">
+                                                                        <div class="title">
+                                                                            <?=$dataPos['nama_org']?>
+        
+                                                                        </div>
+                                                                        <div class="badge badge-pill">Data Karyawan belum diposting</div>
+                                                                    </td>
+                                                                    <td class="text-right pr-4">
+                                                                        <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-round btn-outline-danger btn-success">Update</a>
+                                                                    </td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                            
+                                                        }
+                                                    }
+                                                    
+                                                }
+                                            }
+                                            ?>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class=" table-striped table-full-width text-uppercase" >
+                                <table class="table-sm" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Area</th>
+                                            <th>Jml Emp</th>
+                                            <th>FRM</th>
+                                            <th>TL</th>
+                                            <th>TM</th>
+                                            <th class="table-warning">TM K1</th>
+                                            <th class="table-warning">TM K2</th>
+                                            <th class="table-warning">TM P</th>
+                                            <th class="text-right">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if(mysqli_num_rows($sql_group)>0){
+                                            $no = 1;
+                                            while($data = mysqli_fetch_assoc($sql_group)){
+                                                $part = $part;
+                                                $color = ($data[$sub] == '')?"text-danger ":"";
+                                                $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
+                                                $addSub = " AND $sub $filter_sub";
+                                                $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
+                                                $total = mysqli_num_rows($query_total);
+                                                // echo $addSub;
+                                                // if($no == 1){
+                                                //     echo $queryMP.$addPermanent.$addSub;
+                                                // }
+                                                $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
+                                                $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
+                                                $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
+                                                $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
+                                                $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
+                                                $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
+                                                $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
+                                                
+                                                $jm_permanen = mysqli_num_rows($permanent);
+                                                $jm_kontrak1 = mysqli_num_rows($kontrak1);
+                                                $jm_kontrak2 = mysqli_num_rows($kontrak2);
+                                                $jm_TM = mysqli_num_rows($TM);
+                                                $jm_TL = mysqli_num_rows($TL);
+                                                $jm_FRM = mysqli_num_rows($FRM);
+                                                // echo $queryMP.$addMng;
+                                                ?>
+                                                <tr class="<?=$color?>">
+                                                    <td><?=$no++?></td>
+                                                    <td><?=$nama_area?></td>
+                                                    <td><?=$total?></td>
+                                                    
+                                                    <td><?=$jm_FRM?></td>
+                                                    <td><?=$jm_TL?></td>
+                                                    <td><?=$jm_TM?></td>
+                                                    <td class="table-warning"><?=$jm_kontrak1?></td>
+                                                    <td class="table-warning"><?=$jm_kontrak2?></td>
+                                                    <td class="table-warning"><?=$jm_permanen?></td>
+                                                    <td class="text-right">
+                                                        <?php
+                                                        if($data[$sub] != ''){
+                                                            ?>
+                                                            <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
+                                                            <?php
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                        <hr class="my-0">
+                        <div class="card-body">
+                            <div class="row">
+                                <h5 class="title col-md-6"></h5>
                                 <div class="col-md-6 ">
                                     <div class="my-2 mr-2 float-right order-3">
                                         <div class="input-group bg-transparent">
@@ -592,9 +651,6 @@ if(isset($_SESSION['user'])){
                                 </div>
     
                             </div>
-                        </div>
-                        <hr>
-                        <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group no-border">
@@ -880,110 +936,12 @@ if(isset($_SESSION['user'])){
                         }
                         e.preventDefault();
                     });
+                    $(document).on('click', '.register', function(a){
+                        a.preventDefault();
+                        $('#regist').modal('show');
+                    })
                 });
             </script>
-            
-            
-            
-       
-    
-   
-    
-    <!-- <script>
-        chartColor = "#FFFFFF";
-        ctx = document.getElementById('chartareaorg').getContext("2d");
-
-        gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
-        gradientStroke.addColorStop(0, '#80b6f4');
-        gradientStroke.addColorStop(1, chartColor);
-
-        gradientFill = ctx.createLinearGradient(0, 170, 0, 50);
-        gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
-        gradientFill.addColorStop(1, "rgba(249, 99, 59, 0.40)");
-
-        myChart = new Chart(ctx, {
-            type: 'horizontalBar',
-            data: {
-            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-            datasets: [
-
-                {
-                label: "Data",
-                borderColor: '#fcc468',
-                fill: true,
-                backgroundColor: '#fcc468',
-                hoverBorderColor: '#fcc468',
-                borderWidth: 5,
-                data: [100, 120, 80, 100, 90, 130, 110, 100, 80, 110, 130, 140, 130, 120, 130, 80, 100, 90, 120, 130],
-                }
-            ]
-            },
-            options: {
-                indexAxis: 'y',
-                elements: {
-                    bar: {
-                        borderWidth: 2,
-                    }
-                },
-                responsive: true,
-            tooltips: {
-                tooltipFillColor: "rgba(0,0,0,0.5)",
-                tooltipFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-                tooltipFontSize: 14,
-                tooltipFontStyle: "normal",
-                tooltipFontColor: "#fff",
-                tooltipTitleFontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-                tooltipTitleFontSize: 14,
-                tooltipTitleFontStyle: "bold",
-                tooltipTitleFontColor: "#fff",
-                tooltipYPadding: 6,
-                tooltipXPadding: 6,
-                tooltipCaretSize: 8,
-                tooltipCornerRadius: 6,
-                tooltipXOffset: 10,
-            },
-
-
-            legend: {
-                display: false
-            },
-            scales: {
-
-                yAxes: [{
-                ticks: {
-                    fontColor: "#9f9f9f",
-                    fontStyle: "bold",
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    padding: 20
-                },
-                gridLines: {
-                    zeroLineColor: "transparent",
-                    display: true,
-                    drawBorder: false,
-                    color: '#9f9f9f',
-                }
-
-                }],
-                xAxes: [{
-                barPercentage: 0.4,
-                gridLines: {
-                    zeroLineColor: "white",
-                    display: false,
-
-                    drawBorder: false,
-                    color: 'transparent',
-                },
-                ticks: {
-                    padding: 20,
-                    fontColor: "#9f9f9f",
-                    fontStyle: "bold"
-                }
-                }]
-            }
-            }
-        });
-    </script> -->
 
     <?php
     include_once("../endbody.php");

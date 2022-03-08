@@ -76,15 +76,6 @@ if(isset($_SESSION['user'])){
                             <th scope="col">Section</th>
                             <th scope="col">Dept</th>
                             <th scope="col">Dept Adm</th>
-                            <th scope="col">Action</th>
-                            <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" id="allmp">
-                                    <span class="form-check-sign"></span>
-                                    </label>
-                                </div>
-                            </th>
                         </tr>
                     </thead>
                     <tbody class="text-uppercase text-nowrap">
@@ -133,32 +124,6 @@ if(isset($_SESSION['user'])){
                                     <td class="td"><?=$data['section']?></td>
                                     <td class="td"><?=$data['dept']?></td>
                                     <td class="td"><?=$data['dept_account']?></td>
-                                    
-                                    <td class="text-right">
-                                        
-                                            
-                                            <?php
-                                        
-                                        ?>
-                                        <span class="dropleft text-center">
-                                            <button class="btn btn-sm  btn-info  btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right shadow-lg text-center ">
-                                                <!-- <div class="dropdown-header">Menu</div> -->
-                                                
-                                                
-                                            </div>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="form-check ">
-                                            <label class="form-check-label ">
-                                                <input class="form-check-input mp" name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>">
-                                                <span class="form-check-sign"></span>
-                                            </label>
-                                        </div>
-                                    </td>
                                 </tr>
     
                                 <?php
@@ -235,6 +200,38 @@ if(isset($_SESSION['user'])){
                 $q_deptAccount = mysqli_query($link, "SELECT department_account AS `name` FROM dept_account WHERE id_dept_account = '$dept_account' ")or die(mysqli_error($link));
                 $data_dept_account = mysqli_fetch_assoc($q_deptAccount);
                 $deptAcc_name = (isset($data_dept_account['name']))?$data_dept_account['name']:'';
+                
+                $origin_query = "SELECT 
+                                                view_organization.npk,
+                                                view_organization.nama,
+                                                view_organization.tgl_masuk,
+                                                view_organization.jabatan,
+                                                view_organization.shift,
+                                                view_organization.subpos,
+                                                view_organization.status,
+                                                view_organization.pos,
+                                                view_organization.groupfrm,
+                                                view_organization.section,
+                                                view_organization.dept,
+                                                view_organization.subpos,
+                                                view_organization.division,
+                                                view_organization.dept_account
+                                                
+                                                FROM view_organization";
+                $access_org = orgAccessOrg($level);
+                                                // $data_access = generateAccess($link,$level,$npk);
+                                                // $table = partAccess($level, "table");
+                                                // $field_request = partAccess($level, "field_request");
+                                                // $table_field1 = partAccess($level, "table_field1");
+                                                // $table_field2 = partAccess($level, "table_field2");
+                                                // $part = partAccess($level, "part");
+                                                // $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+                                                // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+                                                // // echo $group_filter;
+                                                
+                                                $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
+                                                echo $queryMP;
+                
                 if(count($data_npk)>0){
                     // print_r($data_npk);
                     ?>
@@ -272,25 +269,12 @@ if(isset($_SESSION['user'])){
                                     if($data_npk[0] != ''){
                                         $no = 1;
                                         foreach($data_npk AS $npk){
-                                            $origin_query = "SELECT 
-                                                view_organization.npk,
-                                                view_organization.nama,
-                                                view_organization.tgl_masuk,
-                                                view_organization.jabatan,
-                                                view_organization.shift,
-                                                view_organization.subpos,
-                                                view_organization.status,
-                                                view_organization.pos,
-                                                view_organization.groupfrm,
-                                                view_organization.section,
-                                                view_organization.dept,
-                                                view_organization.subpos,
-                                                view_organization.division,
-                                                view_organization.dept_account
-                                                
-                                                FROM view_organization WHERE npk = '$npk'";
-                                            $query = mysqli_query($link, $origin_query)or die(mysqli_error($link));
+                                            // $div_filter = $_GET['div'];
+
+                                            $queryMP .= " AND npk = '$npk'";
+                                            $query = mysqli_query($link, $queryMP)or die(mysqli_error($link));
                                             $jml = mysqli_num_rows($query);
+
                                             // $checked = ($jml > 0)?'disabled':'';
                                             // $checked_class = ($jml > 0)?'':'check';
                                             
@@ -311,6 +295,7 @@ if(isset($_SESSION['user'])){
                                             $data_dept_account = (isset($sql['dept_account']))?$sql['dept_account']:'';
                                             $data_division = (isset($sql['division']))?$sql['division']:'';
                                             // echo $data_section;
+
                                             if($part_area == 'pos'){
                                                 $check = ($data_pos != '')?'':'checked';
                                                 $check_class = ($data_pos != '')?'':'check';
@@ -333,32 +318,40 @@ if(isset($_SESSION['user'])){
                                                 $check = 'disabled';
                                                 $check_class = '';
                                             }
-                                            ?>
-                                            <tr>
-                                                <td><?=$no?></td>
-                                                <td><?=$data_npk?></td>
-                                                <td><?=$data_nama?></td>
-                                                <td><?=$data_status?></td>
-                                                <td><?=$data_jabatan?></td>
-                                                <td><?=$tgl_masuk?></td>
-                                                <td><?=$data_shift?></td>
-                                                <td><?=$data_pos?></td>
-                                                <td><?=$pos_name?></td>
-                                                <td><?=$group_name?></td>
-                                                <td><?=$section_name?></td>
-                                                <td><?=$dept_name?></td>
-                                                <td><?=$deptAcc_name?></td>
-                                                <td><?=$div_name?></td>
-                                                <td class="text-right">
-                                                    <div class="form-check text-right">
-                                                        <label class="form-check-label">
-                                                            <input class="form-check-input <?=$check_class?>" <?=$check?> name="checked[]" value="<?=$data_npk?>" type="checkbox" data="<?=$no?>">
-                                                        <span class="form-check-sign"></span>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php
+                                            if($jml > 0){
+                                                ?>
+                                                <tr>
+                                                    <td><?=$no?></td>
+                                                    <td><?=$data_npk?></td>
+                                                    <td><?=$data_nama?></td>
+                                                    <td><?=$data_status?></td>
+                                                    <td><?=$data_jabatan?></td>
+                                                    <td><?=$tgl_masuk?></td>
+                                                    <td><?=$data_shift?></td>
+                                                    <td><?=$data_pos?></td>
+                                                    <td><?=$pos_name?></td>
+                                                    <td><?=$group_name?></td>
+                                                    <td><?=$section_name?></td>
+                                                    <td><?=$dept_name?></td>
+                                                    <td><?=$deptAcc_name?></td>
+                                                    <td><?=$div_name?></td>
+                                                    <td class="text-right">
+                                                        <div class="form-check text-right">
+                                                            <label class="form-check-label">
+                                                                <input class="form-check-input <?=$check_class?>" <?=$check?> name="checked[]" value="<?=$data_npk?>" type="checkbox" data="<?=$no?>">
+                                                            <span class="form-check-sign"></span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }else{
+                                                ?>
+                                                    <tr>
+                                                        <td colspan="15" class="text-center"> Data Belum Ada atau tidak tersedia untuk area anda</td>
+                                                    </tr>
+                                                <?php
+                                            }
                                             $no++;
                                         }
                                     }else{
