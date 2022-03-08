@@ -104,6 +104,69 @@ if(isset($_SESSION['user'])){
 
     <script>
     $(document).ready(function(){
+        $(document).on('click','.printAll', function(){
+            var page = $('.page_active').attr('id')
+            var getLink = 'ajax/print-memo.php';
+                
+                Swal.fire({
+                title: 'Print Pengajuan?',
+                text: "Semua data yang dicheck / centang akan dicetak sebagai laporan / memo",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#FF5733',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Yes, proses!'
+            }).then((result) => {
+                if (result.value) {
+                    if(totalCheck('.mp:checked') > 0){
+                        // var form = $("#formAbsensi").serialize()
+                        // console.log(form);
+                        document.proses.action = getLink;
+                        document.proses.submit();
+                        // $.ajax({
+                            
+                        //     url:getLink,
+                        //     method:"POST",
+                        //     data:form,
+                        //     success:function(data){
+                                
+                        //         load_data(page)
+                        //         getSumary()
+                                
+                                
+                        //         Swal.fire({
+                        //             title: "Sukses",
+                        //             text: "data berhasil diproses",
+                        //             timer: 2000,
+                                    
+                        //             icon: 'success',
+                        //             showCancelButton: false,
+                        //             showConfirmButton: false,
+                        //             confirmButtonColor: '#00B9FF',
+                        //             cancelButtonColor: '#B2BABB',
+                                    
+                        //         })
+                        //     }
+                        // })
+                        
+                    }else{
+                        Swal.fire({
+                            title: "Gagal",
+                            text: "tidak ada data yang dipilih",
+                            // icon: "danger",
+                            timer: 2000,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            confirmButtonColor: '#00B9FF',
+                            cancelButtonColor: '#B2BABB',
+                            
+                        })
+                    }
+                
+                }
+            })
+            
+        });
         load_data();
         function load_data(page){
             var div_id = $('#s_div').val();
