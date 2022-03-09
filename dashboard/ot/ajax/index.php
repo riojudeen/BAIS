@@ -96,6 +96,8 @@ if(isset($_GET['id'])){
         // echo $cari;
         $level = $level;
         $npk = $npkUser;
+
+        // $query = "SELECT "
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
         $origin_query = "SELECT view_absen_hr.id_absensi,
             view_absen_hr.npk,
@@ -156,43 +158,33 @@ if(isset($_GET['id'])){
                                                     <input type="date" name="tanggal" value="<?=$hari_ini?>" class="datepicker form-control no-border" id="tanggal_mulai" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 pl-1 pr-1">
+                                            <div class="col-md-3 pl-1">
                                                 <div class="form-group">
-                                                    <label for="">NPK Karyawan</label>
-                                                    <input name="npk" type="number" class="form-control no-border data-npk" id="npk_karyawan" required>
+                                                    <label for="">Waktu Mulai</label>
+                                                    <input type="time" name="tanggal" value="" class="datepicker form-control no-border" id="tanggal_mulai" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 pl-1">
+                                            <div class="col-md-3 pr-1">
                                                 <div class="form-group">
-                                                    <label for="">Nama Karyawan</label>
-                                                    <input type="text" readonly class="form-control no-border data-nama" >
+                                                    <label for="">Tanggal Selesai</label>
+                                                    <?php
+                                                    $hari_ini = date('Y-m-d');
+                                                    ?>
+                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class="datepicker form-control no-border" id="tanggal_mulai" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 pl-1">
                                                 <div class="form-group">
-                                                    <label for="">Jabatan</label>
-                                                    <input type="text" readonly class="form-control no-border data-jabatan" required>
+                                                    <label for="">Waktu Selesai</label>
+                                                    <input type="time" name="tanggal" value="" class="datepicker form-control no-border" id="tanggal_mulai" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 pr-1">
-                                                <div class="form-group">
-                                                    <label for="">Jenis Pengajuan</label>
-                                                    <select name="jenis" type="number" id="attendance_type" class="form-control no-border" required>
-                                                        <option value="">Pilih Jenis Pengajuan</option>
-                                                        <?php
-                                                        $query_attendance_type = mysqli_query($link, "SELECT * FROM attendance_type WHERE `name` <> '' ")or die(mysqli_error($link));
-                                                        while($data_attendance_type = mysqli_fetch_assoc($query_attendance_type)){
-                                                            ?>
-                                                            <option value="<?=$data_attendance_type['id']?>"><?=$data_attendance_type['name']?></option>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                        
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5 pl-1 pr-1">
-                                                <label for="">Pilih Pengajuan</label>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            
+                                            <div class="col-md-5  ">
+                                                 <label for="">Jenis Activity</label>
                                                 <div class="input-group">
                                                     <select name="att_code" type="number" class="form-control no-border" id="attendance_code" required>
                                                         <option value="-">Pengajuan Belum Dipilih</option>
@@ -216,7 +208,6 @@ if(isset($_GET['id'])){
                                                 </div>
                                             </div>
                                         </div>
-                                        
                                         <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
                                         <button type="submit" name="add_request" disabled id="prosesrequest"  class="d-none btn btn-sm btn-primary load-data pull-right" >Proses</button>
                                         <div class="row">
@@ -257,9 +248,8 @@ if(isset($_GET['id'])){
                                 <th>Shift</th>
                                 <th>Group</th>
                                 <th>Administratif</th>
-                                <th>Tanggal</th>
-                                <th>in</th>
-                                <th>out</th>
+                                <th colspan="2">Mulai</th>
+                                <th colspan="2">Selesai</th>
                                 <th>Ket</th>
                                 <th>Batas</th>
                                 <th class="text-right">Action</th>
