@@ -164,7 +164,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     <th class="text-nowrap">Jabatan</th>
                     <th class="text-nowrap">Status</th>
                     <th class="text-nowrap">Shift</th>
-                    
                 </thead>
             <tbody>
         <?php
