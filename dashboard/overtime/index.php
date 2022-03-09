@@ -376,7 +376,84 @@ require_once("../../config/calculation/calc_progressReq.php");
                             <tbody>
                                 <?php
                                     $no = 1;
-                                    
+                                    "SELECT
+                                    `bais_db`.`absensi`.`id` AS `id_absensi`,
+                                    `bais_db`.`absensi`.`npk` AS `npk`,
+                                    `bais_db`.`karyawan`.`nama` AS `nama`,
+                                    `bais_db`.`karyawan`.`shift` AS `employee_shift`,
+                                    `bais_db`.`org`.`sub_post` AS `sub_post`,
+                                    `bais_db`.`org`.`post` AS `post`,
+                                    `bais_db`.`org`.`grp` AS `grp`,
+                                    `bais_db`.`org`.`sect` AS `sect`,
+                                    `bais_db`.`org`.`dept` AS `dept`,
+                                    `bais_db`.`org`.`dept_account` AS `dept_account`,
+                                    `bais_db`.`org`.`division` AS `division`,
+                                    `bais_db`.`org`.`plant` AS `plant`,
+                                    `bais_db`.`absensi`.`shift` AS `att_shift`,
+                                    `bais_db`.`absensi`.`date` AS `work_date`,
+                                    `bais_db`.`absensi`.`check_in` AS `check_in`,
+                                    `bais_db`.`absensi`.`check_out` AS `check_out`,
+                                    `bais_db`.`absensi`.`ket` AS `CODE`,
+                                    `bais_db`.`attendance_code`.`keterangan` AS `keterangan`,
+                                    `bais_db`.`attendance_code`.`type` AS `att_type`,
+                                    `bais_db`.`attendance_code`.`alias` AS `att_alias`
+                                FROM
+                                    (
+                                        (
+                                            (
+                                                `bais_db`.`absensi`
+                                            JOIN `bais_db`.`org` ON
+                                                (
+                                                    `bais_db`.`absensi`.`npk` = `bais_db`.`org`.`npk`
+                                                )
+                                            )
+                                        LEFT JOIN `bais_db`.`karyawan` ON
+                                            (
+                                                `bais_db`.`org`.`npk` = `bais_db`.`karyawan`.`npk`
+                                            )
+                                        )
+                                    LEFT JOIN `bais_db`.`attendance_code` ON
+                                        (
+                                            `bais_db`.`attendance_code`.`kode` = `bais_db`.`absensi`.`ket`
+                                        )
+                                    )";
+                                    "SELECT 
+                                    lembur._id AS id_ot,
+                                    lembur.kode_lembur AS ot_code, 
+                                    lembur.requester AS requester,
+                                    lembur.in_date AS in_date, 
+                                    lembur.work_date AS work_date, 
+                                    lembur.in_lembur AS `start`, 
+                                    lembur.out_date AS out_date, 
+                                    lembur.out_lembur AS `end`,
+                                    lembur.kode_job AS job_code,
+                                    lembur.aktifitas AS activity, 
+                                    lembur.status_approve AS status_approve, 
+                                    lembur.status AS status_progress,
+
+                                    -- hr_lembur.date AS id_ot_hr,
+                                    -- hr_lembur.in_date AS in_date_hr,
+                                    -- hr_lembur.out_date AS out_date_hr,
+                                    -- hr_lembur.start AS start_hr,
+                                    -- hr_lembur.end AS end_hr,
+
+                                    org.sub_post AS sub_post,
+                                    org.post AS post,
+                                    org.grp AS grp,
+                                    org.sect AS sect,
+                                    org.dept AS dept,
+                                    org.dept_account AS dept_account,
+                                    org.division AS division,
+                                    org.plant AS plant,
+
+                                    karyawan.npk AS npk_,
+                                    karyawan.nama AS nama_,
+                                    karyawan.shift AS shift_
+
+                                    FROM lembur
+                                    JOIN org ON org.npk = lembur.npk
+                                    JOIN karyawan ON karyawan.npk = lembur.npk";
+
                                     $qry_ = "SELECT 
                                         lembur._id AS id_lembur,
                                         lembur.kode_lembur AS kode_lembur, 

@@ -99,17 +99,29 @@ if(isset($_GET['id'])){
 
         // $query = "SELECT "
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_absen_hr.id_absensi,
-            view_absen_hr.npk,
-            view_absen_hr.nama,
-            view_absen_hr.employee_shift,
-            view_absen_hr.grp,
-            view_absen_hr.dept_account,
-            view_absen_hr.work_date,
-            view_absen_hr.check_in,
-            view_absen_hr.check_out,
-            view_absen_hr.CODE
-            FROM view_absen_hr ";
+        $origin_query = "SELECT view_req_ot.id_ot,
+            view_req_ot.npk,
+            view_req_ot.nama,
+            view_req_ot.shift,
+            view_req_ot.ot_code,
+            view_req_ot.requester,
+            view_req_ot.in_date,
+            view_req_ot.work_date,
+            view_req_ot.start,
+            view_req_ot.out_date,
+            view_req_ot.end,
+            view_req_ot.job_code,
+            view_req_ot.activity,
+            view_req_ot.status_approve,
+            view_req_ot.status_progress,
+            view_req_ot.post,
+            view_req_ot.grp,
+            view_req_ot.sect,
+            view_req_ot.dept,
+            view_req_ot.dept_account,
+            view_req_ot.division,
+            view_req_ot.plant
+            FROM view_req_ot ";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -119,14 +131,12 @@ if(isset($_GET['id'])){
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $exception = " AND view_absen_hr.CODE  <> '' AND (view_absen_hr.CODE = 'M' OR view_absen_hr.CODE = 'TL' ) ";
-        // view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL OR view_absen_hr.att_alias = '9'
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$exception;
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg;
         
         echo $query_req_absensi;
 
@@ -135,95 +145,7 @@ if(isset($_GET['id'])){
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
-                    <h6 class="col-md-6">Pengajuan Overtime</h6>
-                    
-                </div>
-                <div class="collapse show collapse-view" id="tambah">
-                    <div class="row">
-                        <div class="col-md-12">
-                            
-                            <div class="card shadow-none border  " style="background:rgba(201, 201, 201, 0.2)" >
-
-                                <div class="card-body  mt-2">
-                                
-                                    <form method="get" action="schedule.php">
-                                        
-                                        <div class="row">
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label for="">Tanggal Mulai</label>
-                                                    <?php
-                                                    $hari_ini = date('Y-m-d');
-                                                    ?>
-                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class="datepicker form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pl-1">
-                                                <div class="form-group">
-                                                    <label for="">Waktu Mulai</label>
-                                                    <input type="time" name="tanggal" value="" class="datepicker form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label for="">Tanggal Selesai</label>
-                                                    <?php
-                                                    $hari_ini = date('Y-m-d');
-                                                    ?>
-                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class="datepicker form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pl-1">
-                                                <div class="form-group">
-                                                    <label for="">Waktu Selesai</label>
-                                                    <input type="time" name="tanggal" value="" class="datepicker form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="row">
-                                            
-                                            <div class="col-md-5  ">
-                                                 <label for="">Jenis Activity</label>
-                                                <div class="input-group">
-                                                    <select name="att_code" type="number" class="form-control no-border" id="attendance_code" required>
-                                                        <option value="-">Pengajuan Belum Dipilih</option>
-                                                    </select>
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text px-2 py-0" id="att_code">
-                                                            Kode
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label for="">Jumlah Hari</label>
-                                                <div class="input-group">
-                                                    <input type="number" name="count" min="1" class="form-control no-border" id="jumlah_hari" value="1" required>
-                                                    <div class="input-group-append ">
-                                                        <span class="input-group-text px-3 py-0">
-                                                            Hari
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
-                                        <button type="submit" name="add_request" disabled id="prosesrequest"  class="d-none btn btn-sm btn-primary load-data pull-right" >Proses</button>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="notification"></div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-                <div class="row">
-                    <h6 class="col-md-6 float-left mt-2">Pengajuan Lembur</h6>
+                    <h6 class="col-md-6 float-left mt-2"></h6>
                     <div class="col-md-6">
                         <div class="mr-2 float-right order-3">
                             <div class="input-group bg-transparent">
@@ -248,11 +170,12 @@ if(isset($_GET['id'])){
                                 <th>Shift</th>
                                 <th>Group</th>
                                 <th>Administratif</th>
+                                <th>Tgl Kerja</th>
                                 <th colspan="2">Mulai</th>
                                 <th colspan="2">Selesai</th>
-                                <th>Ket</th>
-                                <th>Batas</th>
-                                <th class="text-right">Action</th>
+                                <th>Activity</th>
+                                <th>Kode Job</th>
+                                <th>Document No</th>
                                 
                             </tr>
                         </thead>
@@ -290,8 +213,8 @@ if(isset($_GET['id'])){
                                 $deptAcc = mysqli_fetch_assoc($query_deptAcc);
                                 $group = $group_['nama_org'];
                                 $dept_acc = $deptAcc['nama_org'];
-                                $checkIn = ($data['check_in'] == '00:00:00')? "-" : jam($data['check_in']);
-                                $checkOut = ($data['check_out'] == '00:00:00')? "-" : jam($data['check_out']);
+                                $start = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
+                                $end = ($data['start'] == '00:00:00')? "-" : jam($data['end']);
                                 $work_date = $data['work_date'];
                                 $limit_date = tgl(date('Y-m-t', strtotime($data['work_date'])));
                                 $str_date = strtotime($work_date);
@@ -299,56 +222,29 @@ if(isset($_GET['id'])){
                                 $today = date('Y-m-d');//harus diganti tanggal out kerja
                                 $str_today = strtotime($today);
                                 
-
-                                $q_cekReq = mysqli_query($link, "SELECT check_in , check_out, keterangan, requester FROM req_absensi WHERE shift_req <> 1 AND id_absensi = '$data[id_absensi]' ")or die(mysqli_error($link));
-                                
-                                if(mysqli_num_rows($q_cekReq) <= 0 ){
-                                    ?>
-                                    <tr id="<?=$data['id_absensi']?>" >
-                                        <td class="td"><?=$no++?></td>
-                                        <td class="td"><?=$data['npk']?></td>
-                                        <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
-                                        <td class="td"><?=$data['employee_shift']?></td>
-                                        <td style="max-width:100px" class="text-truncate"><?=$group?></td>
-                                        <td class="td"><?=$dept_acc ?></td>
-                                        <td class="td"><?=tgl($data['work_date'])?></td>
-                                        <td class="td"><?=$checkIn?></td>
-                                        <td class="td"><?=$checkOut?></td>
-                                        <td class="td"><?=$data['CODE']?></td>
-                                        <td class="td">
-                                            <span class="badge badge-sm badge-warning">
-                                                <?=tgl(date('Y-m-t', strtotime($data['work_date'])))?>
-
-                                            </span>
-                                        </td>
-                                        <td class="text-right">
-                                            <?php
-                                                if($str_today > $str_limit){
-
-                                                    ?>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUKET" class="  btn btn-info  btn-sm">SKTA</a>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUPEM" class="  btn btn-primary btn-sm">SUPEM</a>
-                                        
-                                                    <?php
-                                                }else{
-                                                    if($level == 8 || $level == 7 || $level == 6 || $level == 5){
-                                                        ?>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUKET" class="  btn btn-info  btn-sm">SKTA</a>
-                                                        <a  href="add.php?id=<?=$data['id_absensi']?>&req=SUPEM" class="  btn btn-primary btn-sm">SUPEM</a>
-                                                        <?php
-                                                    }else{
-                                                        ?>
-                                                        <span class="badge badge-sm badge-danger">expired</span>
-                                                        <?php
-                                                    }
-                                                }
-                                            ?>
-                                        </td>
+                                ?>
+                                <td class="td"><?=$no++?></td>
+                                    <td class="td"><?=$data['npk']?></td>
+                                    <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
+                                    <td class="td"><?=$data['shift']?></td>
+                                    <td style="max-width:100px" class="text-truncate"><?=$group?></td>
+                                    <td class="td"><?=$dept_acc ?></td>
+                                    <td class="td"><?=tgl($data['work_date'])?></td>
+                                    <td class="td"><?=tgl($data['in_date'])?></td>
+                                    <td class="td"><?=$start?></td>
+                                    <td class="td"><?=$data['out_date']?></td>
+                                    <td class="td"><?=$end?></td>
+                                    <td class="td text-truncate" style="max-width:200px"><?=$data['activity']?></td>
+                                    <td class="td"><?=$data['job_code']?></td>
+                                    <td class="td"><?=$data['ot_code']?></td>
+                                    <td class="td">
+                                       
+                                    </td>
                                     
-                                    </tr>
+                                
+                                </tr>
 
-                                    <?php
-                                }
+                                <?php
                             }
                         }else{
                             ?>
@@ -1129,7 +1025,7 @@ if(isset($_GET['id'])){
                         
                     </tbody>
                         <tfoot>
-
+                            
                         </tfoot>
                     </table>
                 </div>
@@ -1177,6 +1073,7 @@ if(isset($_GET['id'])){
 
 <script>
 $(document).ready(function(){
+   
     $('.checkAll').on('click', function(){
         if(this.checked){
             $('.checkOne').each(function() {

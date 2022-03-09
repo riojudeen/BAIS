@@ -788,23 +788,35 @@
             </a>
             <div class="collapse" id="documentation">
               <ul class="nav">
-                <li class="menu " data-name="UG" id="UG">
+                <li class="menu d-none" data-name="UG" id="UG">
                   <a href="<?=base_url()?>/dashboard/documentation/index.php">
                     <span class="sidebar-mini-icon">UG</span>
                     <span class="sidebar-normal"> User Guidance </span>
                   </a>
                 </li>
                 
-                <li class="menu " data-name="doc" id="doc">
+                <li class="menu d-none" data-name="doc" id="doc">
                   <a href="<?=base_url()?>/dashboard/documentation/system.php">
                     <span class="sidebar-mini-icon">DO</span>
                     <span class="sidebar-normal"> System Docs </span>
                   </a>
                 </li>
-                <li class="menu " data-name="doc" id="doc">
+                <li class="menu d-none" data-name="doc" id="doc">
                   <a href="<?=base_url()?>/dashboard/document/">
                     <span class="sidebar-mini-icon">FM</span>
                     <span class="sidebar-normal"> Forms </span>
+                  </a>
+                </li>
+                <li class="menu " data-name="exportmp" id="exportmp">
+                  <a href="<?=base_url()?>/dashboard/setting/employee/proses/export.php?export=mp">
+                    <span class="sidebar-mini-icon">EX</span>
+                    <span class="sidebar-normal"> Export Employee Data </span>
+                  </a>
+                </li>
+                <li class="menu " data-name="exportmp" id="exportmp">
+                  <a href="<?=base_url()?>/dashboard/setting/employee/proses/export.php?export=organization">
+                    <span class="sidebar-mini-icon">EO</span>
+                    <span class="sidebar-normal"> Export Org Data </span>
                   </a>
                 </li>
                 
