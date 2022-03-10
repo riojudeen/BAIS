@@ -62,82 +62,78 @@ if(isset($_SESSION['user'])){
         <div class="col-md-12" >
             <div class="card bg-transparent" >
                 <div class="card-body bg-transparent">
-                <div class="row">
-                <div class="col-md-5 border-2">
-                        <div class="input-group border-2 bg-transparent no-border">
-                            <div class="input-group-prepend ">
-                                <div class="input-group-text bg-transparent">
-                                    <i class="nc-icon nc-calendar-60"></i>
+                    <div class="row">
+                        <div class="col-md-5 border-2">
+                            <div class="input-group border-2 bg-transparent no-border">
+                                <div class="input-group-prepend ">
+                                    <div class="input-group-text bg-transparent">
+                                        <i class="nc-icon nc-calendar-60"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- <input  type="text" name="tahun" class=" form-control datepicker" data-date-format="MM-YYYY"> -->
-                            <select type="date" name="start" class="form-control bg-transparent" >
-                                <option Disabled>Pilih Bulan</option>
-                                <?php
-                                
-                                $i =0;
-                                foreach($bln AS $namaBln){
-                                    $i++;
-                                    $selectBln = ($i == $sM)?"selected":"";
+                                <!-- <input  type="text" name="tahun" class=" form-control datepicker" data-date-format="MM-YYYY"> -->
+                                <select type="date" name="start" class="form-control bg-transparent" >
+                                    <option Disabled>Pilih Bulan</option>
+                                    <?php
                                     
-                                    echo "<option  $selectBln value=\"$i\">$namaBln</option>";
+                                    $i =0;
+                                    foreach($bln AS $namaBln){
+                                        $i++;
+                                        $selectBln = ($i == $sM)?"selected":"";
+                                        
+                                        echo "<option  $selectBln value=\"$i\">$namaBln</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <div class="input-group-prepend ml-0 bg-transparent">
+                                    <div class="input-group-text px-2 bg-transparent">
+                                        <i>to</i>
+                                    </div>
+                                </div>
+                                <select type="date" name="end" class="form-control bg-transparent" >
+                                    <option Disabled>Pilih Bulan</option>
+                                    <?php
+                                    
+                                    $i =0;
+                                    foreach($bln AS $namaBln){
+                                        $i++;
+                                        $selectBln = ($i == $eM)?"selected":"";
+                                        
+                                        echo "<option  $selectBln value=\"$i\">$namaBln</option>";
+                                    }
+                                    ?>
+                                </select>
+                                <select type="text" name="tahun" class=" form-control bg-transparent">
+                                <option Disabled>Tahun</option>
+                                <?php
+                                $thnPertama = 2021;
+                                for($i=date("Y"); $i>=$thnPertama; $i--){
+                                    $selectThn = ($i == $tahun)?"selected":"";
+                                    echo "<option $selectThn value=\"$i\">$i</option>";
                                 }
                                 ?>
-                            </select>
-                            <div class="input-group-prepend ml-0 bg-transparent">
-                                <div class="input-group-text px-2 bg-transparent">
-                                    <i>to</i>
-                                </div>
-                            </div>
-                            <select type="date" name="end" class="form-control bg-transparent" >
-                                <option Disabled>Pilih Bulan</option>
-                                <?php
+                                </select>
+                                <input type="submit" name="sort" class="btn-icon btn btn-round p-0 ml-2 my-auto " value="go" >
                                 
-                                $i =0;
-                                foreach($bln AS $namaBln){
-                                    $i++;
-                                    $selectBln = ($i == $eM)?"selected":"";
-                                    
-                                    echo "<option  $selectBln value=\"$i\">$namaBln</option>";
-                                }
-                                ?>
-                            </select>
-                            <select type="text" name="tahun" class=" form-control bg-transparent">
-                            <option Disabled>Tahun</option>
-                            <?php
-                            $thnPertama = 2021;
-                            for($i=date("Y"); $i>=$thnPertama; $i--){
-                                $selectThn = ($i == $tahun)?"selected":"";
-                                echo "<option $selectThn value=\"$i\">$i</option>";
-                            }
-                            ?>
-                            </select>
-                            <input type="submit" name="sort" class="btn-icon btn btn-round p-0 ml-2 my-auto " value="go" >
-                            
+                            </div>
                         </div>
-                        
-                        <!-- <div class="col-4">
-                            <input class="btn btn-icon btn-round" name="sort" value="go">
-                        </div> -->
+                        <div class="col-md-7 border-2 ">
+                            <p class="box float-right order-1">
+                                <button class="btn btn-icon btn-round btn-default" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
+                                <i class="nc-icon nc-simple-add "></i>
+                                </button>
+                            </p>
+                            <p class="float-right mr-2">
+                                <button data-toggle="modal" data-id="" id="" data-target="#modal" class="btn btn-icon btn-info btn-outline-info btn-round" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
+                                    <i class="nc-icon nc-calendar-60 "> </i>
+                                </button>
+                            </p>
+                            
+                            
+                            <!-- <div class="col-4">
+                                <input class="btn btn-icon btn-round" name="sort" value="go">
+                            </div> -->
+                        </div>
                     </div>
-                    <div class="col-md-7 border-2 ">
-                        <p class="box float-right order-1">
-                            <button class="btn btn-icon btn-round btn-default" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                            <i class="nc-icon nc-simple-add "></i>
-                            </button>
-                        </p>
-                        <p class="float-right mr-2">
-                            <button data-toggle="modal" data-id="" id="" data-target="#modal" class="btn btn-icon btn-info btn-outline-info btn-round" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                                <i class="nc-icon nc-calendar-60 "> </i>
-                            </button>
-                        </p>
-                        
-                        
-                        <!-- <div class="col-4">
-                            <input class="btn btn-icon btn-round" name="sort" value="go">
-                        </div> -->
-                    </div>
-                </div>
                     
                 </div>
             </div>
@@ -264,6 +260,41 @@ if(isset($_SESSION['user'])){
         </div>
     </div>
     <!-- modal tambah data -->
+    
+    <div class="modal fade" id="modal_input_npk" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered ">
+
+            <form  class="modal-content" action="proses/proses.php" method="POST" id="RangeValidation">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </button>
+                <h5 class="title text-left">Input Karyawan</h5>
+            </div>
+            <div class="modal-body px-0 mx-0">
+                
+            <div class="data_npk  col-md-12 px-0 mx-0"></div>
+                
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-12">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-info btn-link" name="update">Update</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+            
+        </div>
+    </div>
     <form method="GET" action="schedule.php">
         <div class="modal fade" id="modal_add" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered ">
@@ -387,6 +418,62 @@ if(isset($_SESSION['user'])){
                 })
             }
         }
+        
+        function inputNpk(page){
+            var div_id = $('#s_div').val();
+            var dept_id = $('#s_dept').val();
+            var section_id = $('#s_section').val();
+            var group_id = $('#s_goupfrm').val();
+            var deptAcc_id = $('#s_deptAcc').val();
+            var shift = $('#s_shift').val();
+            var id = $('.data-active').attr('data-id');
+            var start = $('#startDate').val();
+            var end = $('#endDate').val();
+            // ot data
+            var kode_ot = $('#ot_code').val();
+            var start_time = $('#start_time').val();
+            var end_time = $('#end_time').val();
+            var in_date = $('#date_in_ot').val();
+            var out_date = $('#date_out_ot').val();
+            var activity = $('#ot_activity').val();
+            var work_date = $('#work_date').val();
+            var type = $('#ot_type').val();
+           
+            $.ajax({
+                url:"ajax/data-karyawan.php",
+                method:"GET",
+                data:{
+                    page:page,
+                    id:id,start:
+                    start,end:end,
+                    div:div_id,
+                    dept:dept_id,
+                    sect:section_id,
+                    group:group_id,
+                    deptAcc:deptAcc_id,
+                    shift:shift,
+                    filter:'yes',
+                    // ot setup
+                    kode_ot : kode_ot,
+                    start_time : start_time,
+                    end_time : end_time,
+                    in_date : in_date,
+                    out_date:out_date,
+                    activity:activity,
+                    work_date:work_date,
+                    type:type
+                },
+                success:function(data){
+                    $('.data_npk').fadeOut('fast', function(){
+                        $(this).html(data).fadeIn('fast');
+                    });
+                }
+            })
+        }
+        $('#modal_input_npk').on('show.bs.modal', function (event) {
+            // do something...inputNpk()
+            inputNpk()
+        })
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
             $(this).addClass('data-active');
@@ -395,6 +482,11 @@ if(isset($_SESSION['user'])){
         $(document).on('click', '.halaman', function(){
             var page = $(this).attr("id");
             dataActive(page)
+            // console.log(hal)
+        });
+        $(document).on('click', '.halaman_modal', function(){
+            var page = $(this).attr("id");
+            inputNpk(page)
             // console.log(hal)
         });
         // getSumary()
@@ -450,6 +542,9 @@ if(isset($_SESSION['user'])){
             getDept()
             getSect()
             getGroup()
+        })
+        $('#s_shift').on('change', function(){
+            dataActive()
         })
         $('#s_dept').on('change', function(){
             getSect()

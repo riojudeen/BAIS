@@ -977,6 +977,45 @@ function filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $de
     return $gabung;
 
 }
+function filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari){
+    if($div_filter != ''){
+        if($dept_filter != ''){
+            if($sect_filter != ''){
+                if($group_filter != ''){
+                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' AND grp = '$group_filter'";
+                }else{
+                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' ";
+                }
+            }else{
+                $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' ";
+            }
+        }else{
+            $addFilter = " AND division = '$div_filter' ";
+        }
+    }else{
+        $addFilter = "";
+    }
+    // echo $addFilter;
+    if($deptAcc_filter != ''){
+        $addFilterDeptAcc =" AND dept_account = '$deptAcc_filter'";
+    }else{
+        $addFilterDeptAcc ="";
+    }
+    if($shift != ''){
+        $addFilterShift = " AND shift = '$shift'";
+    }else{
+        $addFilterShift = "";
+    }
+    if($cari != ''){
+        $addFilterCari = " AND  ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )";
+    }else{
+        $addFilterCari = '';
+    }
+    $gabung = $addFilter.$addFilterDeptAcc.$addFilterShift.$addFilterCari;
+    return $gabung;
+
+}
+
 function filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari,$table){
     if($div_filter != ''){
         if($dept_filter != ''){
