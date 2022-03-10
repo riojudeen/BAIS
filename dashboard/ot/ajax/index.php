@@ -166,7 +166,7 @@ if(isset($_GET['id'])){
         
         $shift_order = " GROUP BY shift ORDER BY shift ASC ";
         $q_group_shift = $queryMP.$shift_order;
-        echo $q_group_shift;
+        // echo $q_group_shift;
         $sql_shift = mysqli_query($link, $q_group_shift)or die(mysqli_error($link));
 
         $today = date('Y-m-d');
@@ -183,7 +183,7 @@ if(isset($_GET['id'])){
 
                                 <div class="card-body  mt-2">
                                 
-                                    <form method="get" action="schedule.php">
+                                    <form method="get" action="">
                                         
                                         <div class="row">
                                             <div class="col-md-3 pr-1">
@@ -1256,6 +1256,9 @@ $(document).ready(function(){
             })
         }
         $('#shift_request').on('change', function(){
+            filterInput()
+        })
+        $('#ot_type').on('change', function(){
             filterInput()
         })
         filterInput()

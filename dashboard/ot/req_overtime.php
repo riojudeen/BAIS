@@ -150,11 +150,20 @@ if(isset($_SESSION['user'])){
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-6">
-                            <h5 class="title " id="mainpage"> Pengajuan Absensi</h5>
+                            <h5 class="title " id="mainpage"> Pengajuan Overtime</h5>
                             <p class="card-category ">Periode : <?=tgl($tanggalAwal)." s.d. ".tgl($tanggalAkhir)?></p>
                             <input type="hidden" id="startDate" value="<?=$tanggalAwal?>">
                             <input type="hidden" id="endDate" value="<?=$tanggalAkhir?>">
                         </div>
+                        <div class="col-md-6">
+                        <a href="download-karyawan.php?export=mp" class="btn btn-sm btn-success pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
+                            <span class="btn-label">
+                                <i class="far fa-file-excel"></i>
+                            </span>
+                            Export
+                        </a>
+                        </div>
+                        
                         
                     </div>
                     <div class="row">
@@ -264,7 +273,7 @@ if(isset($_SESSION['user'])){
     <div class="modal fade" id="modal_input_npk" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered ">
 
-            <form  class="modal-content" action="proses/proses.php" method="POST" id="RangeValidation">
+            <form  class="modal-content" action="" method="POST" id="formInputData">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="nc-icon nc-simple-remove"></i>
@@ -284,7 +293,7 @@ if(isset($_SESSION['user'])){
                             <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
                         </div>
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-info btn-link" name="update">Update</button>
+                            <button type="submit" class="btn btn-info btn-link" id="create_ot" name="create_ot">Create</button>
                         </div>
                     </div>
 
@@ -349,6 +358,7 @@ if(isset($_SESSION['user'])){
             </div>
         </div>
     </form>
+    <div class="notifikasi"></div>
     <?php
     include_once('../comp/btn.php');
     }else{
@@ -435,10 +445,10 @@ if(isset($_SESSION['user'])){
             var end_time = $('#end_time').val();
             var in_date = $('#date_in_ot').val();
             var out_date = $('#date_out_ot').val();
-            var activity = $('#ot_activity').val();
             var work_date = $('#work_date').val();
             var type = $('#ot_type').val();
-           
+            var text_area = $('textarea#text_input').val()
+            var shift_req = $('#shift_request').val()
             $.ajax({
                 url:"ajax/data-karyawan.php",
                 method:"GET",
@@ -459,9 +469,10 @@ if(isset($_SESSION['user'])){
                     end_time : end_time,
                     in_date : in_date,
                     out_date:out_date,
-                    activity:activity,
                     work_date:work_date,
-                    type:type
+                    type:type,
+                    npk:text_area,
+                    shift_req:shift_req
                 },
                 success:function(data){
                     $('.data_npk').fadeOut('fast', function(){
@@ -470,10 +481,42 @@ if(isset($_SESSION['user'])){
                 }
             })
         }
+        $(document).on('click', '#inputActivity', function(a){
+            a.preventDefault()
+            $('#modal_input_npk').modal('show');
+        })
+
+        $(document).on('keyup', '#ot_activity', function(){
+            var data = $(this).val()
+            $('.ot_activity').text(data)
+        })
         $('#modal_input_npk').on('show.bs.modal', function (event) {
-            // do something...inputNpk()
+                // do something...inputNpk()
             inputNpk()
         })
+        
+
+
+
+        $(document).on('click','#create_ot', function(event){
+            event.preventDefault();
+            var form = $('#formInputData').serialize();
+            console.log(form);
+            $.ajax({
+                url: 'proses.php',
+                method: 'POST',
+                data: form,		
+                success:function(data){
+                    $('.notifikasi').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    
+                }
+            });
+        });
+
+
+
+
+
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
             $(this).addClass('data-active');
@@ -627,8 +670,7 @@ if(isset($_SESSION['user'])){
             $(document).on('change', '#ot_code', function(){
                 ot_code();
             })
-            $(document).on('click')
-            $('#allmp').on('click', function() {
+            $(document).on('click', '#allmp', function() {
                 if(this.checked){
                     $('.mp').each(function() {
                         this.checked = true;
@@ -639,7 +681,8 @@ if(isset($_SESSION['user'])){
                     })
                 }
 
-            });
+            })
+            $()
 
             $('.mp').on('click', function() {
                 if($('.mp:checked').length == $('.mp').length){
