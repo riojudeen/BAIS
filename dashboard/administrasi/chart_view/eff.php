@@ -21,7 +21,7 @@ include("../../../config/approval_system.php");
         while($div = mysqli_fetch_assoc($q_div)){
           $q_dept_account = $q_org." WHERE id_parent = '$div[id]' AND part = 'deptAcc' ";
           $sql_dept_account = mysqli_query($link, $q_dept_account)or die(mysqli_error($link));
-          echo mysqli_num_rows($sql_dept_account);
+          // echo mysqli_num_rows($sql_dept_account);
           if(mysqli_num_rows($sql_dept_account)>0){
             $index = 0;
             

@@ -5,7 +5,7 @@ include("../../../config/config.php");
     <?php
     $start =  dateToDB($_GET['start']);
     $end =  (strtotime(dateToDB($_GET['end'])) >= strtotime(date('Y-m-d')))?date('Y-m-d'):dateToDB($_GET['end']);
-    echo dateToDB($_GET['end'])."-".date('Y-m-d');
+    // echo dateToDB($_GET['end'])."-".date('Y-m-d');
     
     $shift =  ($_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
      $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
@@ -112,9 +112,9 @@ include("../../../config/config.php");
                                             $s_grp = mysqli_query($link, $q_grp )or die(mysqli_error($link));
                                             $jml = mysqli_num_rows($s_grp);
                                             if($jml >= 1 && $jml <= 2){
-                                                $lebar = $jml*80;
+                                                $lebar = $jml*30;
                                             }else{
-                                                $lebar = $jml*60;
+                                                $lebar = $jml*50;
 
                                             }
                                             ?>

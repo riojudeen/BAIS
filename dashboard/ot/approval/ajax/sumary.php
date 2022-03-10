@@ -6,25 +6,9 @@ include("../../../../config/config.php");
 if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         require_once("../../../../config/approval_system.php");
-        if($_GET['id'] == 'leave' OR $_GET['id'] == 'req_leave' ){
-            $req = " AND shift_req = '0' ";
-            if($_GET['id'] == 'leave'){
-                $start = dateToDB($_GET['start']);
-                $end = dateToDB($_GET['end']);
-            }else{
-                $start = $_GET['start'];
-                $end = $_GET['end'];
-            }
-        }else if($_GET['id'] == 'shift' OR $_GET['id'] == 'req_shift'){
-            $req = " AND shift_req = '1' ";
-            if($_GET['id'] == 'shift'){
-                $start = dateToDB($_GET['start']);
-                $end = dateToDB($_GET['end']);
-            }else{
-                $start = $_GET['start'];
-                $end = $_GET['end'];
-            }
-        }
+        
+        $start = $_GET['start'];
+        $end = $_GET['end'];
         // echo $start;s
         $filter = $_GET['filter'];
         $div_filter = $_GET['div'];
@@ -43,19 +27,29 @@ if(isset($_SESSION['user'])){
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_absen_req.id_absensi,
-            view_absen_req.npk,
-            view_absen_req.nama,
-            view_absen_req.employee_shift, 
-            view_absen_req.grp,
-            view_absen_req.dept_account,
-            view_absen_req.req_work_date,
-            view_absen_req.req_date_in,
-            view_absen_req.req_date_out,
-            view_absen_req.req_in,
-            view_absen_req.req_out,
-            view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
-            FROM view_absen_req ";
+        $origin_query = "SELECT view_req_ot.id_ot,
+            view_req_ot.npk,
+            view_req_ot.nama,
+            view_req_ot.shift,
+            view_req_ot.ot_code,
+            view_req_ot.requester,
+            view_req_ot.in_date,
+            view_req_ot.work_date,
+            view_req_ot.start,
+            view_req_ot.out_date,
+            view_req_ot.end,
+            view_req_ot.job_code,
+            view_req_ot.activity,
+            view_req_ot.status_approve,
+            view_req_ot.status_progress,
+            view_req_ot.post,
+            view_req_ot.grp,
+            view_req_ot.sect,
+            view_req_ot.dept,
+            view_req_ot.dept_account,
+            view_req_ot.division,
+            view_req_ot.plant, CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) AS `status`
+            FROM view_req_ot ";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -66,9 +60,7 @@ if(isset($_SESSION['user'])){
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
-        $exception = " AND `status` <> '100e' AND req_date IS NOT NULL ";
-        $filterType = (isset($_GET['att_type']) && $_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND req_work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$req;
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter;
         
         $_SESSION['startD'] = (isset($_GET['start']))? $start : date('Y-m-01');
         $_SESSION['endD'] = (isset($_GET['end']))? $end : date('Y-m-d');
@@ -97,43 +89,43 @@ if(isset($_SESSION['user'])){
         $t = "org.".$org_access;
         
         //monitor progress
-        $qryData = $query_req_absensi;
+        $qryData = $query_req_overtime;
         // echo $qryData;
        
         // total pengajuan , tidak terhitung data yang dari upload migrasi
-        $q_reqs = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' ";
+        $q_reqs = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' ";
         $s_reqs = mysqli_query($link, $q_reqs)or die(mysqli_error($link));
         $reqs = mysqli_num_rows($s_reqs);
         // pengajuan yang belum diproses spv
-        $q_wait = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '25a' ";
+        $q_wait = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '25a' ";
         $s_wait = mysqli_query($link, $q_wait)or die(mysqli_error($link));
         $wait = mysqli_num_rows($s_wait);
         // pengajuan yang diapprove spv
-        $q_apprv = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '50a' " ;
+        $q_apprv = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '50a' " ;
         $s_apprv = mysqli_query($link, $q_apprv)or die(mysqli_error($link));
         $apprv = mysqli_num_rows($s_apprv);
         // pengajuan yang diproses admin
-        $q_prcss = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '75a' ";
+        $q_prcss = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '75a' ";
         $s_prcss = mysqli_query($link, $q_prcss)or die(mysqli_error($link));
         $prcss = mysqli_num_rows($s_prcss);
         // pengajuan yang sudah selesai
-        $q_scss = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '100a' ";
+        $q_scss = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '100a' ";
         $s_scss = mysqli_query($link, $q_scss)or die(mysqli_error($link));
         $scss = mysqli_num_rows($s_scss);
         // pengajuan yang ditolak spv
-        $q_reject = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '100b'";
+        $q_reject = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '100b'";
         $s_reject = mysqli_query($link, $q_reject)or die(mysqli_error($link));
         $reject = mysqli_num_rows($s_reject);
         // pengajuan yang dihentikan admin, misal jml pengajuan habis
-        $q_stop = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '100c'";
+        $q_stop = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '100c'";
         $s_stop = mysqli_query($link, $q_stop)or die(mysqli_error($link));
         $stop = mysqli_num_rows($s_stop);
         // pengajuan yang dikembalikan admin untuk dikonfirmasi tolak atau dihapus foreman
-        $q_confirm = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '100d' ";
+        $q_confirm = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '100d' ";
         $s_confirm = mysqli_query($link, $q_confirm)or die(mysqli_error($link));
         $confirm = mysqli_num_rows($s_confirm);
         // pengajuan yang masih dalam status approval online oleh dept head
-        $q_onl = $qryData." AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '100f' ";
+        $q_onl = $qryData." AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '100f' ";
         $s_onl = mysqli_query($link, $q_onl)or die(mysqli_error($link));
         $onl = mysqli_num_rows($s_onl);
         ?>

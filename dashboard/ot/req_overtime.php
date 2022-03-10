@@ -1,3 +1,4 @@
+
 <?php
 
 //////////////////////////////////////////////////////////////////////
@@ -54,6 +55,8 @@ if(isset($_SESSION['user'])){
             <div id="sumary"></div>
         </div>
     </div>
+    
+    
     <form method="GET">
     <div class="row">
         <div class="col-md-12" >
@@ -241,7 +244,6 @@ if(isset($_SESSION['user'])){
                                         <li class="nav-item ">
                                             <a class="btn btn-sm btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="success" href="#success" role="tab" aria-expanded="true">Close/Succesed Monitoring</a>
                                         </li>
-                                        
                                     </ul>
                                 </div>
                             </div>
@@ -251,7 +253,6 @@ if(isset($_SESSION['user'])){
                                 <div class="tab-pane active " id="request" role="tabpanel" aria-expanded="true">
                                     
                                     <div id="monitor">
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -262,18 +263,77 @@ if(isset($_SESSION['user'])){
             </div>
         </div>
     </div>
+    <!-- modal tambah data -->
+    <form method="GET" action="schedule.php">
+        <div class="modal fade" id="modal_add" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
 
+                <div class="modal-content">
+                
+                    <div class="modal-header">
+                        <h5 class="modal-title pull-left" id="staticBackdropLabel">Leave Schedule</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body border">
+                    <div class="form-group">
+                        <label for="">Dari Tanggal : </label>
+                    <input type="text" name="tanggal" class="form-control datepicker" data-date-format="DD/MM/YYYY" id="schedule">
+                    </div>
+                        <label for="">NPK : </label>
+                        <select data-size="5" name="npk" id="" class="form-control selectpicker" data-live-search="true" data-header="input npk">
+                        <?php
+                        $tb = "org.".$org_access;
+                        $sqlkry = mysqli_query($link, "SELECT karyawan.npk AS npk,
+                        karyawan.nama AS nama, 
+                        org.post AS post,
+                        org.grp AS grp,
+                        org.sect AS sect,
+                        org.dept AS dept,
+                        org.dept_account AS dept_acc,
+                        org.division AS division,
+                        org.plant AS plant FROM karyawan
+                        LEFT JOIN org ON org.npk = karyawan.npk
+                        WHERE $tb = '$access_' ")or die(mysqli_error($link));
+                        if(mysqli_num_rows($sqlkry) > 0){
+                            while($datakry = mysqli_fetch_assoc($sqlkry)){
+                                ?>
+                                <option value="<?=$datakry['npk']?>"><?=$datakry['nama']." - ".$datakry['npk']?></option>
+                                <?php
+                            }
+                        }
+                        ?>
+                        </select>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" name="add" value="Next"/>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>
+                    </div>
+                
+                </div>
+
+                
+            </div>
+        </div>
+    </form>
     <?php
-    // include_once('hr_absensi.php');
+    include_once('../comp/btn.php');
     }else{
         include_once ("../../no_access.php");
     }
     include_once("../footer.php");
     ?>
+    
     <script type="text/javascript">
     $(document).ready(function(){
+        
+        $(document).on('click', '#myBtn', function(){
+            $('#modal_add').modal('show')
+        })
         function getSumary(){
-            var id ='req_leave';
+            var id ='req_ot';
             var div_id = $('#s_div').val();
             var dept_id = $('#s_dept').val();
             var section_id = $('#s_section').val();
@@ -308,7 +368,6 @@ if(isset($_SESSION['user'])){
                 // var start = $('#start_date').val();
                 // var end = $('#end_date').val();
                 var cari = $('#cari').val();
-
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
@@ -328,66 +387,6 @@ if(isset($_SESSION['user'])){
                 })
             }
         }
-        
-        function get_notifData(){
-            var data = $('#notification_result').attr('data-id');
-            // console.log(data)
-            if(data == '1'){
-                $('#prosesrequest').prop('disabled', false )
-            }else if(data == '0'){
-                $('#prosesrequest').prop('disabled', true )
-            }else{
-                $('#prosesrequest').prop('disabled', true )
-            }
-            
-        }
-        get_notifData()
-        
-        function get_cek(){
-            
-            var npk = $('#npk_karyawan').val();
-            var mulai = $('#tanggal_mulai').val();
-            var jumlah_hari = $('#jumlah_hari').val();
-            var code = $('#attendance_code').val();
-
-            // console.log("ok");
-            $.ajax({
-                url:"ajax/notification.php",
-                method:"GET",
-                data:{npk:npk,mulai:mulai,total:jumlah_hari,code:code},
-                success:function(data){
-                    $('.notification').fadeOut('fast', function(){
-                        $(this).html(data).fadeIn('fast');
-                        get_notifData()
-                    });
-                    // $('#data-monitoring').html(data)
-                }
-            })
-            // $('.notification').html()
-        }
-        $(document).on('click', '.cek_data', function(e){
-            e.preventDefault();
-            get_cek();
-        })
-        $(document).on('blur', '.data-npk',function(){
-            get_cek();
-        })
-        $(document).on('change', '#attendance_code', function(){
-            get_cek();
-        })
-        $(document).on('change', '#attendance_type', function(){
-            get_cek();
-        })
-        $(document).on('change', '#tanggal_mulai', function(){
-            get_cek();
-        })
-        $(document).on('change', '#jumlah_hari', function(){
-            get_cek();
-        })
-        $(document).on('click', '.reset', function(){
-            $('.data-npk').val('');
-            get_cek();
-        })
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
             $(this).addClass('data-active');
@@ -466,37 +465,10 @@ if(isset($_SESSION['user'])){
         });
         $('#filterGo').on('click', function(){
             dataActive();
+            getSumary()
         })
         
-        $(document).on('click', '.sort', function(){
-            var div_id = $('#s_div').val();
-            var dept_id = $('#s_dept').val();
-            var section_id = $('#s_section').val();
-            var group_id = $('#s_goupfrm').val();
-            var deptAcc_id = $('#s_deptAcc').val();
-            var shift = $('#s_shift').val();
-            var start = $('#start_date').val();
-            var end = $('#end_date').val();
-
-            var id = $('.data-active').attr('data-id');
-            var start = $('#startDate').val();
-            var end = $('#endDate').val();
-            var sort = $("#dataSort").serialize()
-            var page = $('.page_active').attr('id');
-            console.log(sort);
-            // dataActive(page)
-            $.ajax({
-                            
-                url:"ajax/index.php?page="+page+"&id="+id+"&start="+start+"&end="+end+"&div="+div_id+"&dept="+dept_id+"&sect="+section_id+"&group="+group_id+"&deptAcc="+deptAcc_id+"&shift="+shift+"&filter=yes",
-                method:"GET",
-                data:sort,
-                success:function(data){
-                    $('#monitor').fadeOut('fast', function(){
-                        $(this).html(data).fadeIn('fast');
-                    });
-                }
-            })
-        })
+        
         $('.checkOne').on('click', function() {
             if($('.checkOne:checked').length == $('.checkOne').length){
                 $('.checkAll').prop('checked', true)
@@ -551,6 +523,16 @@ if(isset($_SESSION['user'])){
     </script>
     <script>
         $(document).ready(function(){
+            function ot_code(){
+                var code = $('#ot_code').val();
+                $('#ot_code_display').text(code);
+                // console.log(code)
+            }
+            ot_code()
+            $(document).on('change', '#ot_code', function(){
+                ot_code();
+            })
+            $(document).on('click')
             $('#allmp').on('click', function() {
                 if(this.checked){
                     $('.mp').each(function() {
