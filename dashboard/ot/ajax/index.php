@@ -130,16 +130,46 @@ if(isset($_GET['id'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg;
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg;
         
-        // echo $query_req_absensi;
 
+        // data mp
+        $origin_queryMp = "SELECT 
+            view_organization.npk,
+            view_organization.nama,
+            view_organization.tgl_masuk,
+            view_organization.jabatan,
+            view_organization.shift,
+            view_organization.pos,
+            view_organization.status,
+            view_organization.pos,
+            view_organization.groupfrm,
+            view_organization.section,
+            view_organization.dept,
+            view_organization.subpos,
+            view_organization.division,
+            view_organization.dept_account
+            
+            FROM view_organization ";
+        $access_org = orgAccessOrg($level);
+       
+        $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        // echo $group_filter;
+        $queryMP = filtergenerator($link, $level, $generate, $origin_queryMp, $access_org).$add_filter;
+        
+        
+        $shift_order = " GROUP BY shift ORDER BY shift ASC ";
+        $q_group_shift = $queryMP.$shift_order;
+        // echo $q_group_shift;
+        $sql_shift = mysqli_query($link, $q_group_shift)or die(mysqli_error($link));
+
+        $today = date('Y-m-d');
         ?>
     
         <div class="row">
@@ -153,25 +183,50 @@ if(isset($_GET['id'])){
 
                                 <div class="card-body  mt-2">
                                 
-                                    <form method="get" action="schedule.php">
+                                    <form method="get" action="">
                                         
                                         <div class="row">
                                             <div class="col-md-3 pr-1">
                                                 <div class="form-group">
                                                     <label for="">Tanggal Kerja</label>
-                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class=" form-control no-border" id="tanggal_mulai" required>
+                                                    <input type="date" name="tanggal_kerja" value="<?=$today?>" class=" form-control no-border" id="work_date" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-9 pb-0">
+                                            <div class="col-md-6 pb-0">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <label for="">Jenis Overtime</label>
                                                         <div class="form-group">
                                                             <select name="ot_type" type="number" class="form-control no-border" id="ot_type" required>
-                                                                <option value="">Pilih Overtime Type</option>
-                                                                <option value="EO">Early Overtime</option>
+                                                                <option disabled value="">Pilih Overtime Type</option>
                                                                 <option value="PO" selescted>Post Overtime</option>
+                                                                <option value="EO">Early Overtime</option>
                                                                 
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 pb-0">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="">Shift Karyawan</label>
+                                                        <div class="form-group">
+                                                            <select name="shift_request" class="form-control no-border" id="shift_request" required>
+                                                                <?php
+                                                                    
+                                                                    if(mysqli_num_rows($sql_shift)>0){
+                                                                        while($data = mysqli_fetch_assoc($sql_shift)){
+                                                                            ?>
+                                                                            <option value="<?=$data['shift']?>"><?=$data['shift']?></option>
+                                                                            <?php
+                                                                        }
+                                                                    }else{
+                                                                        ?>
+                                                                        <option value="">Belum Ada data Karyawan untuk shift <?=$shift?></option>
+                                                                        <?php
+                                                                    }
+                                                                ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -179,92 +234,8 @@ if(isset($_GET['id'])){
                                             </div>
                                             
                                         </div>
-                                        <div class="row">
-                                            
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label for="">Tanggal Mulai</label>
-                                                    <?php
-                                                    $hari_ini = date('Y-m-d');
-                                                    ?>
-                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class="form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pls-1">
-                                                <div class="form-group">
-                                                    <label for="">Waktu Mulai</label>
-                                                    <input type="time" name="tanggal" value="" class="form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pr-1">
-                                                <div class="form-group">
-                                                    <label for="">Tanggal Selesai</label>
-                                                    <?php
-                                                    $hari_ini = date('Y-m-d');
-                                                    ?>
-                                                    <input type="date" name="tanggal" value="<?=$hari_ini?>" class=" form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 pl-1">
-                                                <div class="form-group">
-                                                    <label for="">Waktu Selesai</label>
-                                                    <input type="time" name="tanggal" value="" class="form-control no-border" id="tanggal_mulai" required>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="row">
-                                            
-                                            <div class="col-md-5  ">
-                                                <label for="">Jenis Activity</label>
-                                                <div class="input-group">
-                                                    <select name="ot_code" type="number" class="form-control no-border" id="ot_code" required>
-                                                        <option value="">Kode Overtime</option>
-                                                        <?php
-                                                        
-                                                            $query = mysqli_query($link, "SELECT * FROM kode_lembur")or die(mysqli_error($link));
-                                                            if(mysqli_num_rows($query)){
-                                                                while($data=mysqli_fetch_assoc($query)){
-                                                                    ?>
-                                                                    <option value="<?=$data['kode_lembur']?>"><?=$data['nama']?></option>
-                                                                    <?php
-                                                                }
-                                                            }
-                                                        ?>
-                                                    </select>
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text px-2 py-0" id="ot_code_display">
-                                                            Kode
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-7  pl-1">
-                                                <label for="">Activity</label>
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" >
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="collapse " id="collapsePlot">
-                                            <div class="row ">
-                                                <div class="col-md-12">
-                                                    <label for="">Input NPK</label>
-                                                    <div class="form-group">
-                                                        <textarea class="form-control " name="" id="text_input" cols="30" rows="10"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
-                                        <button type="button" class="btn btn-sm btn-info reset" data-toggle="collapse" data-target="#collapsePlot" aria-expanded="false" aria-controls="collapsePlot">Add Request</button>
-                                        <button type="submit" name="add_request" disabled id="prosesrequest"  class=" btn btn-sm btn-primary load-data pull-right" >Proses</button>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="notification"></div>
-                                            </div>
-                                        </div>
+                                        <div id="filter-input"></div>
+                                        
                                     </form>
                                 </div>
                             </div>
@@ -288,6 +259,7 @@ if(isset($_GET['id'])){
                         </div>
                     </div>
                 </div>
+                
                 <div class="table-responsive text-nowrap" >
                     <table class="table table-striped">
                         <thead>
@@ -309,7 +281,7 @@ if(isset($_GET['id'])){
                         </thead>
                         <tbody class="text-uppercase text-nowrap">
                         <?php
-                        $sql_jml = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
+                        $sql_jml = mysqli_query($link, $query_req_overtime)or die(mysqli_error($link));
                         $total_records= mysqli_num_rows($sql_jml);
                         // echo $total_records;
 
@@ -331,7 +303,7 @@ if(isset($_GET['id'])){
                         $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
                         
                     
-                        $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
+                        $sql = mysqli_query($link, $query_req_overtime.$addOrder.$addLimit)or die(mysqli_error($link));
                         
                         if(mysqli_num_rows($sql)>0){
                             while($data = mysqli_fetch_assoc($sql)){
@@ -1266,24 +1238,31 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function(){
-        function att_code(){
-            var att_code = $('#attendance_code').val();
-            $('#att_code').text(att_code)
-        }
-        att_code();
-        att_type();
-        function att_type(){
-            var id = $('#attendance_type').val();
-            $('#attendance_code').load("ajax/attendance_code.php?id="+id, function(){
-                att_code();
+        function filterInput(){
+            var work_date = $('#work_date').val();
+            var type = $('#ot_type').val();
+            var shift = $('#shift_request').val()
+            $.ajax({
+                url:"ajax/filter-input.php",
+                method:"GET",
+                data:{
+                    shift : shift,
+                    work_date:work_date,
+                    type:type
+                },
+                success:function(data){
+                    $('#filter-input').html(data)
+                }
             })
         }
+        $('#shift_request').on('change', function(){
+            filterInput()
+        })
+        $('#ot_type').on('change', function(){
+            filterInput()
+        })
+        filterInput()
         
-        $('#attendance_type').change(function() {
-            att_type();
-        });
-        $('#attendance_code').change(function() {
-            att_code();
-        });
+        
     })
 </script>

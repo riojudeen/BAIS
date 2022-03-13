@@ -1,5 +1,6 @@
 <?php
 include_once('config.php');
+
 function strukturOrg($link, $part, $id_area){
     if($id_area != ''){
         if($part == 'pos'){
@@ -977,6 +978,45 @@ function filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $de
     return $gabung;
 
 }
+function filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari){
+    if($div_filter != ''){
+        if($dept_filter != ''){
+            if($sect_filter != ''){
+                if($group_filter != ''){
+                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' AND grp = '$group_filter'";
+                }else{
+                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' ";
+                }
+            }else{
+                $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' ";
+            }
+        }else{
+            $addFilter = " AND division = '$div_filter' ";
+        }
+    }else{
+        $addFilter = "";
+    }
+    // echo $addFilter;
+    if($deptAcc_filter != ''){
+        $addFilterDeptAcc =" AND dept_account = '$deptAcc_filter'";
+    }else{
+        $addFilterDeptAcc ="";
+    }
+    if($shift != ''){
+        $addFilterShift = " AND shift = '$shift'";
+    }else{
+        $addFilterShift = "";
+    }
+    if($cari != ''){
+        $addFilterCari = " AND  ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )";
+    }else{
+        $addFilterCari = '';
+    }
+    $gabung = $addFilter.$addFilterDeptAcc.$addFilterShift.$addFilterCari;
+    return $gabung;
+
+}
+
 function filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari,$table){
     if($div_filter != ''){
         if($dept_filter != ''){
@@ -2313,4 +2353,46 @@ $generate = queryGenerator($level, $table, $field_request, $table_field1, $table
 // echo $id."<br>";
 // echo $ket."<br>";
 // echo $req_shift."<br>";
+// list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npkUser);
+// $access_org = orgAccessOrg($level);
+//     $data_access = generateAccess($link,$level,$npk);
+//     $table = partAccess($level, "table");
+//     $field_request = partAccess($level, "field_request");
+//     $table_field1 = partAccess($level, "table_field1");
+//     $table_field2 = partAccess($level, "table_field2");
+//     $part = partAccess($level, "part");
+//     // echo $access_org."<br>";
+//     // echo $part."<br>";
+//     // echo $data_access."<br>";
+//     $ognName = getOrgName($link, $data_access, $part);
+    
+//     // echo initial($ognName);
+//     $group = initial(getOrgName($link, $group, 'group'));
+//     $div = initial(getOrgName($link, $div, 'division'));
+//     $tanggal = "2022-03-10";
+function docOt($tanggal, $data_access, $group, $div){
+    $initial = ($group == '')?'-':$group;
+    $group = ($group == '')?'-':$group;
+    $pecah_tanggal= explode("-", $tanggal);
+    $kode_tahun = $pecah_tanggal[0];
+    $kode_hari = $pecah_tanggal[2];
+    $bln = $pecah_tanggal[1];
+        $mList = array(
+        '01' => 'I',
+        '02' => 'II',
+        '03' => 'III',
+        '04' => 'IV',
+        '05' => 'V',
+        '06' => 'VI',
+        '07' => 'VII',
+        '08' => 'VIII',
+        '09' => 'IX',
+        '10' => 'X',
+        '11' => 'XI',
+        '12' => 'XII');
+    $bln_romawi = $mList[$bln];
+    $kode = $div."/OT/$kode_tahun/$bln_romawi/$initial/$data_access/$kode_hari";
+    return $kode;
+}
+// echo docOt($tanggal, $data_access, $group, $div);
 ?>
