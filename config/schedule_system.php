@@ -19,6 +19,31 @@ function DateOut($date, $cin, $cout){
     return array($tglini, $sesudah);
     
 }
+
+function whwithket($link, $shift, $date){
+    $cekWH = mysqli_query($link, "SELECT working_days.ket AS `ket`, working_days.break_id AS `break_id`, working_hours.id, working_hours.start AS `start`,  working_hours.end AS `end`
+        FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));
+    if(mysqli_num_rows($cekWH)>0){
+        $data = mysqli_fetch_assoc($cekWH);
+        $waktuAwal = strtotime("$date $data[start]");
+        $waktuAkhir = strtotime("$date $data[end]"); // bisa juga waktu sekarang now()
+        $wb = $data['break_id']; //
+        $ket = $data['ket']; // 
+        $start_time = $data['start'];
+        $end_time = $data['end'];
+        if($waktuAwal > $waktuAkhir){
+            $tglini = ($date);
+            $sesudah = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+        }else{
+            $tglini = $date;
+            $sesudah = $date;
+        }
+    }else{
+        $tglini = $date;
+        $sesudah = $date;
+    }
+    return array($tglini, $sesudah, $start_time, $end_time, $ket, $wb);
+}
 function workingHours($link, $shift, $date){
     $cekWH = mysqli_query($link, "SELECT working_hours.id, working_hours.start AS `start`,  working_hours.end AS `end`
     FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));

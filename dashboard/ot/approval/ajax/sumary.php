@@ -6,9 +6,15 @@ include("../../../../config/config.php");
 if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         require_once("../../../../config/approval_system.php");
-        
-        $start = $_GET['start'];
-        $end = $_GET['end'];
+        if(isset($_GET['summary_approval'])){
+            $start = dateToDB($_GET['start']);
+            $end = dateToDB($_GET['end']);
+            
+        }else{
+            $start =$_GET['start'];
+            $end = $_GET['end'];
+
+        }
         // echo $start;s
         $filter = $_GET['filter'];
         $div_filter = $_GET['div'];
@@ -58,7 +64,7 @@ if(isset($_SESSION['user'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter;
         

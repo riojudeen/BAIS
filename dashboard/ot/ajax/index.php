@@ -135,8 +135,9 @@ if(isset($_GET['id'])){
         // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg;
+        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL ";
+        $filterProg = "";
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
         
 
         // data mp
@@ -158,7 +159,6 @@ if(isset($_GET['id'])){
             
             FROM view_organization ";
         $access_org = orgAccessOrg($level);
-       
         $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         // echo $group_filter;
         $queryMP = filtergenerator($link, $level, $generate, $origin_queryMp, $access_org).$add_filter;
@@ -170,6 +170,7 @@ if(isset($_GET['id'])){
         $sql_shift = mysqli_query($link, $q_group_shift)or die(mysqli_error($link));
 
         $today = date('Y-m-d');
+        // echo  $query_req_overtime;
         ?>
     
         <div class="row">
@@ -244,7 +245,7 @@ if(isset($_GET['id'])){
                     
                 </div>
                 <div class="row">
-                    <h6 class="col-md-6">Pengajuan Overtime</h6>
+                    <h6 class="col-md-6 title">Pengajuan Overtime</h6>
                     <div class="col-md-6">
                         <div class="mr-2 float-right order-3">
                             <div class="input-group bg-transparent">
@@ -260,7 +261,7 @@ if(isset($_GET['id'])){
                     </div>
                 </div>
                 
-                <div class="table-responsive text-nowrap" >
+                <form class="table-responsive text-nowrap" method="POST" id="form_request">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -275,8 +276,14 @@ if(isset($_GET['id'])){
                                 <th colspan="2">Selesai</th>
                                 <th>Activity</th>
                                 <th>Kode Job</th>
-                                <th>Document No</th>
-                                
+                                <th>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="allreq">
+                                        <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="text-uppercase text-nowrap">
@@ -336,9 +343,13 @@ if(isset($_GET['id'])){
                                     <td class="td"><?=$end?></td>
                                     <td class="td text-truncate" style="max-width:200px"><?=$data['activity']?></td>
                                     <td class="td"><?=$data['job_code']?></td>
-                                    <td class="td"><?=$data['ot_code']?></td>
                                     <td class="td">
-                                       
+                                        <div class="form-check text-right">
+                                            <label class="form-check-label ">
+                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
                                     </td>
                                     
                                 
@@ -349,7 +360,7 @@ if(isset($_GET['id'])){
                         }else{
                             ?>
                             <tr>
-                                <td colspan="14" class="text-center"><?=noData()?></td>
+                                <td colspan="14" class="text-center">Semua Berkas Telah Diajukan</td>
                             </tr>
                             <?php
                         }
@@ -358,14 +369,14 @@ if(isset($_GET['id'])){
                         
                     </tbody>
                         <tfoot>
-
+                           
                         </tfoot>
                     </table>
-                </div>
+                </form>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 pull-rigt">
+            <div class="col-md-6">
                 <ul class="pagination ">
                 <?php
                 // echo $page."<br>";
@@ -398,12 +409,16 @@ if(isset($_GET['id'])){
                 ?>
                 </ul>
             </div>
+            <div class="col-md-6 text-right">
+                <div class="btn btn-sm btn-primary request_ot">Request</div>
+                <div class="btn btn-sm btn-danger del_ot">Delete</div>
+            </div>
         </div>
         <?php
     }else if($_GET['id'] == 'approve'){
         
         $_GET['prog'] = '';
-        $_GET['cari'] = '';
+        // $_GET['cari'] = '';
         $_GET['att_type'] = '';
         $start = $_GET['start'];
         $end = $_GET['end'];
@@ -675,7 +690,7 @@ if(isset($_GET['id'])){
     }else if($_GET['id'] == 'proccess'){
        
         $_GET['prog'] = '';
-        $_GET['cari'] = '';
+        // $_GET['cari'] = '';
         $_GET['att_type'] = '';
         $start = $_GET['start'];
         $end = $_GET['end'];
@@ -947,7 +962,7 @@ if(isset($_GET['id'])){
     }else if($_GET['id'] == 'success'){
         
         $_GET['prog'] = '';
-        $_GET['cari'] = '';
+        // $_GET['cari'] = '';
         $_GET['att_type'] = '';
         $start = $_GET['start'];
         $end = $_GET['end'];

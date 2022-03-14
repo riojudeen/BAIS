@@ -6,24 +6,44 @@ $shift = $_GET['shift'];
 $work_date = $_GET['work_date'];
 $type = $_GET['type'];
 
+
 if($shift != '' && $work_date != '' && $type != ''){
-    list($tglini, $sesudah, $start_time, $end_time) = workingHours($link, $shift, $work_date);
+    list($tglini, $sesudah, $start_time, $end_time, $ket, $wb) = whwithket($link, $shift, $work_date);
+    // echo $start_time;
+    // echo $end_time;
     if($type == "PO"){
+        if($ket == "DOP"){
+            $disabled_time_start = 'readonly';
+            $disabled_time_end = '';
+        }else{
+            $disabled_time_start = '';
+            $disabled_time_end = '';
+        }
         $start_date = $sesudah;
         $end_date = $sesudah;
         $start_time = $end_time;
-        $end_time = '';
-        $disabled_time_start = 'readonly';
-        $disabled_time_end = '';
-    }else{
+        $end_time = '00:00';
+
+    //     echo $start_time;
+    // echo $end_time;
+        
+    }else if($type == "EO"){
+        if($ket == "DOP"){
+            $disabled_time_start = '';
+            $disabled_time_end = 'readonly';
+        }else{
+            $disabled_time_start = '';
+            $disabled_time_end = '';
+        }
         $start_date = $tglini;
         $end_date = $tglini;
-        $start_time = '';
         $end_time = $start_time;
-        $disabled_time_start = '';
-        $disabled_time_end = 'readonly';
+        $start_time = '00:00';
+    //     echo $start_time;
+    // echo $end_time;
     }
     $sidabled_date = 'readonly';
+    
 ?>
 <div class="row">                          
     <div class="col-md-3 pr-1">

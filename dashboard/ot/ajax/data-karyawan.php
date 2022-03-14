@@ -70,18 +70,14 @@ if(isset($_SESSION['user'])){
             view_req_ot.start,
             view_req_ot.end,
             view_req_ot.job_code,
-            (SELECT view_req_ot.activity AS npk_req 
-                FROM view_req_ot WHERE view_req_ot.in_date = '$in_date' 
-                AND view_req_ot.out_date = '$out_date' 
-                AND  view_req_ot.work_date = '$work_date' 
-                AND view_req_ot.npk = view_req_ot.work_date) AS activity,
-            (SELECT view_req_ot.job_code AS npk_req 
-                FROM view_req_ot WHERE view_req_ot.in_date = '$in_date' 
-                AND view_req_ot.out_date = '$out_date' 
-                AND  view_req_ot.work_date = '$work_date' 
-                AND view_req_ot.npk = view_req_ot.work_date) AS job_code
+            view_req_ot.activity
 
-            FROM view_organization LEFT JOIN view_req_ot ON  view_organization.npk = ( SELECT view_req_ot.npk AS npk_req FROM view_req_ot WHERE view_req_ot.in_date = '$in_date' AND view_req_ot.out_date = '$out_date' AND  view_req_ot.work_date = '$work_date' AND view_req_ot.npk = view_req_ot.work_date )";
+            FROM view_organization LEFT JOIN 
+                (SELECT view_req_ot.npk, view_req_ot.work_date, view_req_ot.in_date,  view_req_ot.out_date, view_req_ot.start, view_req_ot.end, view_req_ot.job_code, view_req_ot.activity FROM view_req_ot 
+                WHERE view_req_ot.in_date = '$in_date' 
+                AND view_req_ot.out_date = '$out_date' 
+                AND  view_req_ot.work_date = '$work_date' AND view_req_ot.id_ot = '$type' ) AS view_req_ot 
+                ON  view_organization.npk = view_req_ot.npk";
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -89,6 +85,7 @@ if(isset($_SESSION['user'])){
         $table_field1 = partAccess($level, "table_field1");
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
+        // $filterJoin = " ";
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         // echo $group_filter;
@@ -353,15 +350,11 @@ if(isset($_SESSION['user'])){
                     $addOrder = " ORDER BY id_division, id_dept_account, id_dept, id_sect, id_grp, id_post_leader DESC ";
                     $addLimit = " LIMIT $limit_start, $limit";
                     
-                    // echo $addOrder."<br>";
-                    // echo $addLimit."<br>";
-                    // pagin
                     $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
                     
                     $jumlah_number = 1; //jumlah halaman_modal ke kanan dan kiri dari halaman yang aktif
                     $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
                     $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
-                    // echo $jumlah_page."<br>";s
                 
                     $sql = mysqli_query($link, $queryMP.$addOrder.$addLimit)or die(mysqli_error($link));
                     
@@ -369,19 +362,24 @@ if(isset($_SESSION['user'])){
                         while($data = mysqli_fetch_assoc($sql)){
                             $disabled = ($data['job_code'] != '')?"disabled":"";
                             $mp = ($data['job_code'] != '')?"":"mp";
+                            $activity = ($data['activity'] != '')?$data['activity']:"";
+                            $job_code = ($data['job_code'] != '')?$data['job_code']:"";
+                            $text_activity = ($data['job_code'] != '')?'':"ot_activity";
+                            $start = ($data['start'] != '')?jam($data['start']):$start_time;
+                            $end = ($data['end'] != '')?jam($data['end']):$end_time;
                             
                             ?>
                             <tr id="<?=$data['npk']?>" >
                                 <td class="td"><?=$no++?></td>
                                 <td class="td"><?=$data['npk']?></td>
                                 <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
-                                <td style="max-width:100px" class="text-truncate"><?=$work_date?></td>
-                                <td  class="text-truncate"><?=$in_date?></td>
-                                <td  class="text-truncate"><?=$start_time?></td>
-                                <td  class="text-truncate"><?=$out_date?></td>
-                                <td  class="text-truncate "><?=$end_time?></td>
-                                <td  class="text-truncate ot_activity" style="width:300px"><?=$data['job_code']?></td>
-                                <td  class="text-truncate text-right"><?=$kode_ot?><?=$data['job_code']?></td>
+                                <td style="max-width:100px" class="text-truncate"><?=tgl($work_date)?></td>
+                                <td  class="text-truncate"><?=tgl($in_date)?></td>
+                                <td  class="text-truncate"><?=$start?></td>
+                                <td  class="text-truncate"><?=tgl($out_date)?></td>
+                                <td  class="text-truncate "><?=$end?></td>
+                                <td  class="text-truncate <?=$text_activity?>" style="width:300px"><?=$activity?></td>
+                                <td  class="text-truncate text-right"><?=$job_code?></td>
                                 <td>
                                     <div class="form-check text-right <?=$disabled?>">
                                         <label class="form-check-label ">

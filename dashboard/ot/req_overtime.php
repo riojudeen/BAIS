@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
-$halaman = "Monitor Request Absensi";
+$halaman = "Overtime Request";
 if(isset($_SESSION['user'])){
 
     include_once("../header.php");
@@ -79,7 +79,6 @@ if(isset($_SESSION['user'])){
                                     foreach($bln AS $namaBln){
                                         $i++;
                                         $selectBln = ($i == $sM)?"selected":"";
-                                        
                                         echo "<option  $selectBln value=\"$i\">$namaBln</option>";
                                     }
                                     ?>
@@ -117,21 +116,7 @@ if(isset($_SESSION['user'])){
                             </div>
                         </div>
                         <div class="col-md-7 border-2 ">
-                            <p class="box float-right order-1">
-                                <button class="btn btn-icon btn-round btn-default" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                                <i class="nc-icon nc-simple-add "></i>
-                                </button>
-                            </p>
-                            <p class="float-right mr-2">
-                                <button data-toggle="modal" data-id="" id="" data-target="#modal" class="btn btn-icon btn-info btn-outline-info btn-round" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                                    <i class="nc-icon nc-calendar-60 "> </i>
-                                </button>
-                            </p>
                             
-                            
-                            <!-- <div class="col-4">
-                                <input class="btn btn-icon btn-round" name="sort" value="go">
-                            </div> -->
                         </div>
                     </div>
                     
@@ -160,7 +145,7 @@ if(isset($_SESSION['user'])){
                             <span class="btn-label">
                                 <i class="far fa-file-excel"></i>
                             </span>
-                            Export
+                            Download Employee Data
                         </a>
                         </div>
                         
@@ -360,7 +345,7 @@ if(isset($_SESSION['user'])){
     </form>
     <div class="notifikasi"></div>
     <?php
-    include_once('../comp/btn.php');
+    // include_once('../comp/btn.php');
     }else{
         include_once ("../../no_access.php");
     }
@@ -392,7 +377,6 @@ if(isset($_SESSION['user'])){
                 data:{id:id, start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
                 success:function(data){
                     $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                    
                 }
             });
         }
@@ -406,14 +390,11 @@ if(isset($_SESSION['user'])){
                 var group_id = $('#s_goupfrm').val();
                 var deptAcc_id = $('#s_deptAcc').val();
                 var shift = $('#s_shift').val();
-                // var start = $('#start_date').val();
-                // var end = $('#end_date').val();
+
                 var cari = $('#cari').val();
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
-                // console.log(cari);
-                // $('#monitor').load("ajax/index.php?id="+id+"&start="+start+"&end="+end);
                
                 $.ajax({
                     url:"ajax/index.php",
@@ -494,6 +475,9 @@ if(isset($_SESSION['user'])){
                 // do something...inputNpk()
             inputNpk()
         })
+        $('#modal_input_npk').on('hidden.bs.modal', function (event) {
+            dataActive()
+        })
         
 
 
@@ -508,7 +492,8 @@ if(isset($_SESSION['user'])){
                 data: form,		
                 success:function(data){
                     $('.notifikasi').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
-                    
+                    var page = $(this).attr("id");
+                    inputNpk(page)
                 }
             });
         });
@@ -596,7 +581,8 @@ if(isset($_SESSION['user'])){
         $('#s_section').on('change', function(){
             getGroup()
         })
-        $(document).on('blur', '#cari', function(){
+        $(document).on('blur', '#cari', function(eventform){
+            eventform.preventDefault()
             // var cari = $(this).val()
             dataActive()
             // console.log(cari);
@@ -643,6 +629,66 @@ if(isset($_SESSION['user'])){
             })
         
         });
+        // hapus SPL
+        $(document).on('click', '.del_ot', function(e){
+            e.preventDefault();
+            var getLink = 'proses-req.php?del_req=1';
+            var form = $('#form_request').serialize()
+            var page = $('.page_active').attr('id')
+            Swal.fire({
+                title: 'Apakah Anda Yakin?',
+                text: "draft pengajuan akan dihapus dan batal diajukan",
+                icon: false,
+                showCancelButton: true,
+                confirmButtonColor: '#CB4335',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Delete!'
+            }).then((result) => {
+                if (result.value) {
+                    // console.log(form)
+                   
+                    $.ajax({
+                        url:getLink,
+                        method:"POST",
+                        data:form,
+                        success:function(data){
+                            $('.notifikasi').html(data);
+                            dataActive(page)
+                        }
+                    })
+                }
+            })
+        
+        });
+        $(document).on('click', '.request_ot', function(e){
+            e.preventDefault();
+            var getLink = 'proses-req.php?ot_req=1';
+            var form = $('#form_request').serialize()
+            var page = $('.page_active').attr('id')
+            Swal.fire({
+                title: 'Apakah Anda Yakin?',
+                text: "draft pengajuan akan diajukan untuk disetujui dan diproses",
+                icon: false,
+                showCancelButton: true,
+                confirmButtonColor: '#CB4335',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Delete!'
+            }).then((result) => {
+                if (result.value) {
+                   
+                    $.ajax({
+                        url:getLink,
+                        method:"POST",
+                        data:form,
+                        success:function(data){
+                            $('.notifikasi').html(data);
+                            dataActive(page)
+                        }
+                    })
+                }
+            })
+        
+        });
         function success(data1,data2){
             Swal.fire({
                 title: data1,
@@ -682,13 +728,34 @@ if(isset($_SESSION['user'])){
                 }
 
             })
-            $()
 
-            $('.mp').on('click', function() {
+
+            $(document).on('click', '.mp', function() {
                 if($('.mp:checked').length == $('.mp').length){
                     $('#allmp').prop('checked', true)
                 } else {
                     $('#allmp').prop('checked', false)
+                }
+            })
+            $(document).on('click', '#allreq', function() {
+                if(this.checked){
+                    $('.mp_req').each(function() {
+                        this.checked = true;
+                    })
+                } else {
+                    $('.mp_req').each(function() {
+                        this.checked = false;
+                    })
+                }
+
+            })
+
+
+            $(document).on('click', '.mp_req', function() {
+                if($('.mp_req:checked').length == $('.mp_req').length){
+                    $('#allreq').prop('checked', true)
+                } else {
+                    $('#allreq').prop('checked', false)
                 }
             })
         })

@@ -26,20 +26,29 @@ if(isset($_SESSION['user'])){
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_absen_req.id_absensi,
-            view_absen_req.npk,
-            view_absen_req.nama,
-            view_absen_req.employee_shift, 
-            view_absen_req.grp,
-            view_absen_req.dept_account,
-            view_absen_req.req_work_date,
-            view_absen_req.req_date_in,
-            view_absen_req.req_date_out,
-            view_absen_req.req_in,
-            view_absen_req.req_out,
-            view_absen_req.shift_req,
-            view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
-            FROM view_absen_req ";
+        $origin_query = "SELECT view_req_ot.id_ot,
+            view_req_ot.npk,
+            view_req_ot.nama,
+            view_req_ot.shift,
+            view_req_ot.ot_code,
+            view_req_ot.requester,
+            view_req_ot.in_date,
+            view_req_ot.work_date,
+            view_req_ot.start,
+            view_req_ot.out_date,
+            view_req_ot.end,
+            view_req_ot.job_code,
+            view_req_ot.activity,
+            view_req_ot.status_approve,
+            view_req_ot.status_progress,
+            view_req_ot.post,
+            view_req_ot.grp,
+            view_req_ot.sect,
+            view_req_ot.dept,
+            view_req_ot.dept_account,
+            view_req_ot.division,
+            view_req_ot.plant, CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) AS `status`
+            FROM view_req_ot ";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -48,24 +57,24 @@ if(isset($_SESSION['user'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $exception = " AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' AND req_date IS NOT NULL  AND shift_req = '0' ";
-        $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $exception = " AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> ''  ";
+        $filterType = ($_GET['att_type'] != '' )?" AND id_ot = '$_GET[att_type]'":"";
         list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND req_work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$filterProg.$exception;
+        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '$_GET[prog]' ":"";
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$filterProg.$exception;
         // echo $_GET['att_type'];
         // echo $generate;
         
         // echo $addFilterDeptAcc;
         // echo $addFilterShift;
         // if($filter == "yes"){
-        //     $query_req_absensi = $origin_query." WHERE req_work_date BETWEEN '$start' AND '$end' ".$add_filter;
+        //     $query_req_overtime = $origin_query." WHERE work_date BETWEEN '$start' AND '$end' ".$add_filter;
         // }else{
-        //     $query_req_absensi = $query_req_absensi;
+        //     $query_req_overtime = $query_req_overtime;
         // }
         // echo $filter;
-        // echo $query_req_absensi;
+        // echo $query_req_overtime;
         $status = authApprove($level, "status", "approved");
         $req_status = authApprove($level, "request", "approved");
         // echo $status.$req_status;
@@ -82,9 +91,10 @@ if(isset($_SESSION['user'])){
                         <th>Dept</th>
                         
                         <th>Tanggal</th>
-                        <th>in</th>
-                        <th>out</th>
-                        <th>Ket</th>
+                        <th>Mulai</th>
+                        <th>Selesai</th>
+                        <th>Activity</th>
+                        <th>Job Code</th>
                         <th colspan="2">Progress</th>
                         <th class="text-right">Action</th>
                         <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
@@ -99,7 +109,7 @@ if(isset($_SESSION['user'])){
                 </thead>
                 <tbody class="text-uppercase text-nowrap">
                     <?php
-                    $sql_jml = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
+                    $sql_jml = mysqli_query($link, $query_req_overtime)or die(mysqli_error($link));
                     $total_records= mysqli_num_rows($sql_jml);
                     // echo $total_records;
 
@@ -121,7 +131,7 @@ if(isset($_SESSION['user'])){
                     $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
                     
                 
-                    $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
+                    $sql = mysqli_query($link, $query_req_overtime.$addOrder.$addLimit)or die(mysqli_error($link));
                     
                     if(mysqli_num_rows($sql)>0){
                         while($data = mysqli_fetch_assoc($sql)){
@@ -131,23 +141,24 @@ if(isset($_SESSION['user'])){
                             $deptAcc = mysqli_fetch_assoc($query_deptAcc);
                             $group = $group_['nama_org'];
                             $dept_acc = $deptAcc['nama_org'];
-                            $clr = authColor($data['req_status']);
+                            $clr = authColor($data['status_progress']);
                             $stt = authText($data['status']);
-                            $prs = $data['req_status_absen'];
-                            $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
-                            $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
+                            $prs = $data['status_approve'];
+                            $checkIn = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
+                            $checkOut = ($data['end'] == '00:00:00')? "-" : jam($data['end']);
                             ?>
                             <tr id="<?=$data['id_absensi']?>" >
                                 <td class="td"><?=$no++?></td>
                                 <td class="td"><?=$data['npk']?></td>
                                 <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
-                                <td class="td"><?=$data['employee_shift']?></td>
+                                <td class="td"><?=$data['shift']?></td>
                                 <td style="max-width:100px" class="text-truncate"><?=$group?></td>
                                 <td class="td"><?=$dept_acc ?></td>
-                                <td class="td"><?=tgl_indo($data['req_work_date'])?></td>
+                                <td class="td"><?=tgl_indo($data['work_date'])?></td>
                                 <td class="td"><?=$checkIn?></td>
                                 <td class="td"><?=$checkOut?></td>
-                                <td class="td"><?=$data['req_code']?></td>
+                                <td style="max-width:300px" class="text-truncate td"><?=$data['activity']?></td>
+                                <td class="td"><?=$data['job_code']?></td>
                                 <td class="td">
                                     <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
                                         <div class="progress-bar progress-bar-animated progress-bar-<?=$clr?> progress-bar-striped" role="progressbar" style="width: <?=$prs?>%" aria-valuenow="<?=$prs?>" aria-valuemin="0" aria-valuemax="100"></div>
@@ -177,56 +188,56 @@ if(isset($_SESSION['user'])){
                                                 <?php
                                                 if($request_ == 1){
                                                     ?>
-                                                    <a <?=$request?> href="../proses.php" class="btn btn-sm btn-link btn-icon btn-outline-success btn-round btn-success  request" type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="diajukan" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a <?=$request?> href="../proses-approval.php" class="btn btn-sm btn-link btn-icon btn-outline-success btn-round btn-success  request" type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="diajukan" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="nc-icon nc-send "></i>
                                                     </a>
                                                     <?php
                                                 }
                                                 if($proses_ == 1){
                                                     ?>
-                                                    <a <?=$proses?> href="../proses.php" class="btn btn-sm btn-link btn-icon btn-outline-primary btn-round btn-primary  proses" type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="diproses" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a <?=$proses?> href="../proses-approval.php" class="btn btn-sm btn-link btn-icon btn-outline-primary btn-round btn-primary  proses" type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="diproses" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="fa fa-check-circle"></i>
                                                     </a>
                                                     <?php
                                                 }
                                                 if($return_ == 1){
                                                     ?>
-                                                    <a <?=$return?> href="../proses.php" class="btn btn-sm btn-icon btn-outline-warning btn-link btn-round  btn-warning return" type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="dikembalikan" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a <?=$return?> href="../proses-approval.php" class="btn btn-sm btn-icon btn-outline-warning btn-link btn-round  btn-warning return" type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="dikembalikan" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="fa fa-undo"></i>
                                                     </a>
                                                     <?php
                                                 }
                                                 if($stop_ == 1){
                                                     ?>
-                                                    <a <?=$stop?> href="../proses.php" class="btn btn-sm btn-icon btn-outline-danger btn-link btn-round  btn-danger stop" type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="dihentikan" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a <?=$stop?> href="../proses-approval.php" class="btn btn-sm btn-icon btn-outline-danger btn-link btn-round  btn-danger stop" type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="dihentikan" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="fa fa-ban"></i>
                                                     </a>
                                                     <?php
                                                 }
                                                 if($approve_ == 1){
                                                     ?>
-                                                    <a <?=$approve?>  href="../proses.php" class="btn btn-sm btn-link btn-icon btn-outline-primary btn-round btn-primary  approve" type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="disetujui" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a <?=$approve?>  href="../proses-approval.php" class="btn btn-sm btn-link btn-icon btn-outline-primary btn-round btn-primary  approve" type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="disetujui" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="fa fa-check-circle"></i>
                                                     </a>
                                                     <?php
                                                 }
                                                 if($reject_ == 1){
                                                     ?>
-                                                    <a  <?=$reject?> href="../proses.php" class="btn btn-sm btn-icon btn-outline-danger btn-link btn-round  btn-danger reject" type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="ditolak" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a  <?=$reject?> href="../proses-approval.php" class="btn btn-sm btn-icon btn-outline-danger btn-link btn-round  btn-danger reject" type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="ditolak" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="fa fa-ban"></i>
                                                     </a>
                                                     <?php
                                                 }
                                                 if($delete_ == 1){
                                                     ?>
-                                                    <a <?=$delete?> href="../proses.php" class="btn btn-sm btn-icon btn-danger btn-round   remove " type="button" 
-                                                        data-toggle="tooltip" data-placement="bottom" title="delete" data-id="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                                    <a <?=$delete?> href="../proses-approval.php" class="btn btn-sm btn-icon btn-danger btn-round   remove " type="button" 
+                                                        data-toggle="tooltip" data-placement="bottom" title="delete" data-id="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </a>
                                                     <?php
@@ -240,7 +251,7 @@ if(isset($_SESSION['user'])){
                                 <td>
                                     <div class="form-check text-right">
                                         <label class="form-check-label ">
-                                            <input class="form-check-input mp " name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                            <input class="form-check-input mp " name="checked[]" type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                             <span class="form-check-sign"></span>
                                         </label>
                                     </div>
@@ -252,7 +263,7 @@ if(isset($_SESSION['user'])){
                     }else{
                         ?>
                         <tr>
-                            <td colspan="14" class="text-center"><?=noData()?></td>
+                            <td colspan="15" class="text-center"><?=noData()?></td>
                         </tr>
                         <?php
                     }

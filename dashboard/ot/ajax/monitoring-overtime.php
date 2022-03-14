@@ -30,73 +30,44 @@ if(isset($_SESSION['user'])){
         $data_tanggal = json_decode(get_date($start, $end));
         
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        // $origin_query = "SELECT view_absen_hr.id_absensi,
-        //     view_absen_hr.npk,
-        //     view_absen_hr.nama,
-        //     view_absen_hr.employee_shift,
-        //     view_absen_hr.grp,
-        //     view_absen_hr.dept_account,
-        //     view_absen_hr.work_date,
-        //     view_absen_hr.check_in,
-        //     view_absen_hr.check_out,
-        //     view_absen_hr.CODE
-        //     FROM view_absen_hr ";
-        $origin_query = "SELECT 
-            view_organization.npk,
-            view_organization.nama,
-            view_organization.tgl_masuk,
-            view_organization.jabatan,
-            view_organization.shift,
-            view_organization.pos,
-            view_organization.status,
-            view_organization.pos,
-            view_organization.groupfrm,
-            view_organization.section,
-            view_organization.dept,
-            view_organization.subpos,
-            view_organization.division,
-            view_organization.dept_account
-            
-            FROM view_organization ";
-
-        $origin_query_absen = "SELECT view_absen_hr.id_absensi,
-                        view_organization.npk,
-                        view_organization.groupfrm,
-                        view_organization.nama,
-                        view_absen_hr.employee_shift,
-                        view_absen_hr.grp,
-                        view_absen_hr.dept_account,
-                        view_absen_hr.work_date,
-                        view_absen_hr.check_in,
-                        view_absen_hr.check_out,
-                        view_absen_hr.CODE 
-                        FROM view_organization LEFT JOIN view_absen_hr ON view_organization.npk = view_absen_hr.npk";
-        $tanggal_filter = '';
-        foreach($data_tanggal AS $tgl){
-            $tanggal_filter .= " work_date = '$tgl' OR";
-        }
-        $tanggal_filter = (substr($tanggal_filter, 0, -2) != '')?" AND (".substr($tanggal_filter, 0, -2).") ":'';
+        
+        $origin_query = "SELECT `id_ot`,
+        `npk`,
+        `nama`,
+        `shift`,
+        `sub_post`,
+        `post`,
+        `grp`,
+        `sect`,
+        `dept`,
+        `dept_account`,
+        `division`,
+        `plant`,
+        `work_date`,
+        `in_date`,
+        `out_date`,
+        `start`,
+        `end` FROM `view_hr_ot`
+        ";
+        $tanggal_filter = " AND work_date BETWEEN '$start' AND '$end' ";
+       
         // echo $tanggal_filter;
-        $access_org = orgAccessOrg($level);
+        $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
         $field_request = partAccess($level, "field_request");
         $table_field1 = partAccess($level, "table_field1");
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
-        // $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        // filter data organisasi
-        $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter;
-        // filter data absensi
-        $access_org_abs = orgAccess_joinAbsen($level, "view_absen_hr");
-        $add_filter_absen = filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari,"view_absen_hr");
-        $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal_filter;
-        
-    //    echo $queryAbsen ;
 
-       $sql_jml = mysqli_query($link, $queryAbsen)or die(mysqli_error($link));
+
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+        $queryOT = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$tanggal_filter;
+        
+    //    echo $queryOT ;
+
+       $sql_jml = mysqli_query($link, $queryOT)or die(mysqli_error($link));
        $total_records= mysqli_num_rows($sql_jml);
        // echo $total_records;
 
@@ -106,7 +77,7 @@ if(isset($_SESSION['user'])){
        $limit_start = ($page - 1) * $limit;
        $no = $limit_start + 1;
        // echo $limit_start;
-       $addOrder = " ORDER BY view_absen_hr.work_date DESC ";
+       $addOrder = " ORDER BY view_hr_ot.work_date DESC ";
        $addLimit = " LIMIT $limit_start, $limit";
        // $no = 1*$page;
 
@@ -134,9 +105,8 @@ if(isset($_SESSION['user'])){
                                 <th>Group</th>
                                 <th>Administratif</th>
                                 <th>Tanggal</th>
-                                <th>in</th>
-                                <th>out</th>
-                                <th>Ket</th>
+                                <th>Mulai</th>
+                                <th>Selesai</th>
                                 
                             </tr>
                         </thead>
@@ -144,35 +114,31 @@ if(isset($_SESSION['user'])){
                         <?php
                         
                     
-                        $sql = mysqli_query($link, $queryAbsen.$addOrder.$addLimit)or die(mysqli_error($link));
+                        $sql = mysqli_query($link, $queryOT.$addOrder.$addLimit)or die(mysqli_error($link));
                         
                         if(mysqli_num_rows($sql)>0){
                             
-                            while($dataAbsen = mysqli_fetch_assoc($sql)){
-                                // foreach($data_tanggal AS $date){
-
-                                //     $sql_absen = mysqli_query($link, $queryAbsen." AND npk = '$data[npk]' AND work_date = '$date' ")or die(mysqli_error($link));
-                                //     $dataAbsen = mysqli_fetch_assoc($sql_absen);
-                                $checkIn = ($dataAbsen['check_in'] == '00:00:00')? "-" : jam($dataAbsen['check_in']);
-                                $checkOut = ($dataAbsen['check_out'] == '00:00:00')? "-" : jam($dataAbsen['check_out']);
-                                $work_date = $dataAbsen['work_date'];
-                                $limit_date = tgl(date('Y-m-t', strtotime($dataAbsen['work_date'])));
+                            while($dataOT = mysqli_fetch_assoc($sql)){
+                                
+                                $checkIn = ($dataOT['start'] == '00:00:00')? "-" : jam($dataOT['start']);
+                                $checkOut = ($dataOT['end'] == '00:00:00')? "-" : jam($dataOT['end']);
+                                $work_date = $dataOT['work_date'];
+                                $limit_date = tgl(date('Y-m-t', strtotime($dataOT['work_date'])));
                                 $str_date = strtotime($work_date);
                                 $str_limit = strtotime($limit_date);
                                 $today = date('Y-m-d');//harus diganti tanggal out kerja
                                 $str_today = strtotime($today);
                                 ?>
-                                <tr id="<?=$dataAbsen['id_absensi']?>" >
+                                <tr id="<?=$dataOT['id_absensi']?>" >
                                     <td class="td"><?=$no?></td>
-                                    <td class="td"><?=$dataAbsen['npk']?></td>
-                                    <td style="max-width:200px" class="text-truncate td"><?=$dataAbsen['nama']?></td>
-                                    <td class="td"><?=$dataAbsen['employee_shift']?></td>
-                                    <td style="max-width:100px" class="text-truncate"><?=getOrgName($link,  $dataAbsen['grp'], "group")?></td>
-                                    <td class="td"><?=getOrgName($link, $dataAbsen['dept_account'], "deptAcc")?></td>
-                                    <td class="td"><?=$dataAbsen['work_date']?></td>
+                                    <td class="td"><?=$dataOT['npk']?></td>
+                                    <td style="max-width:200px" class="text-truncate td"><?=$dataOT['nama']?></td>
+                                    <td class="td"><?=$dataOT['shift']?></td>
+                                    <td style="max-width:100px" class="text-truncate"><?=getOrgName($link,  $dataOT['grp'], "group")?></td>
+                                    <td class="td"><?=getOrgName($link, $dataOT['dept_account'], "deptAcc")?></td>
+                                    <td class="td"><?=$dataOT['work_date']?></td>
                                     <td class="td"><?=$checkIn?></td>
                                     <td class="td"><?=$checkOut?></td>
-                                    <td class="td"><?=$dataAbsen['CODE']?></td>
                                 </tr>
     
                                 <?php
@@ -335,7 +301,7 @@ if(isset($_SESSION['user'])){
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category text-white">Masuk Tepat Waktu</p>
+                                    <p class="card-category text-white">Total Overtime</p>
                                     <p class="card-title"><?=$totalWFO?> MP
                                     <p>
                                     <a class="stretched-link view_data text-white" id="1" ></a> 
@@ -356,7 +322,7 @@ if(isset($_SESSION['user'])){
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category text-white">Absen Tidak lengkap</p>
+                                    <p class="card-category text-white">Overtime Produksi</p>
                                     <p class="card-title"><?=$totalTL?> MP
                                     <p>
                                     <a class="stretched-link view_data text-white" id="2" ></a> 
@@ -377,7 +343,7 @@ if(isset($_SESSION['user'])){
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category text-white">Terlambat</p>
+                                    <p class="card-category text-white">Overtime Non Produksi</p>
                                     <p class="card-title"><?=$totalT?> MP
                                     <p>
                                     <a class="stretched-link view_data text-white" id="3" ></a> 
@@ -388,158 +354,7 @@ if(isset($_SESSION['user'])){
                 </div>
             </div>
         </div>
-        <hr class="mt-0">
-        <div class="row">
-            <div class="col-md-12 owl-carousel ">
-                <!-- <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                    <div class="card card-stats text-white" style="background:#81A3FF">
-                        <div class="card-body py-2 my-2">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-white">
-                                        <i class="fas fa-suitcase-rolling"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-md-8">
-                                    <div class="numbers">
-                                        <p class="card-category text-white">Cuti</p>
-                                        <p class="card-title"><?=$totalC?> MP
-                                        <p>
-                                        <a class="stretched-link view_data text-white" id="4" ></a> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- </div>
-                <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                    <div class="card card-stats  text-white" style="background:#A582F5">
-                        <div class="card-body py-2 my-2">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-white">
-                                        <i class="fa fa-quote-left text-white"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-md-8">
-                                    <div class="numbers">
-                                        <p class="card-category text-white">Cuti Lain-Lain</p>
-                                        <p class="card-title"><?=$totalCL?> MP
-                                        <p>
-                                        <a class="stretched-link view_data text-white" id="5" ></a> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- </div>
-                
-                <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                    <div class="card card-stats bg-primary">
-                        <div class="card-body py-2 my-2">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-warning">
-                                        <i class="fa fa-bed text-white"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-md-8">
-                                    <div class="numbers">
-                                        <p class="card-category text-white">Cuti Dokter & Dirawat</p>
-                                        <p class="card-title text-white"><?=$totalS?> MP
-                                        <p>
-                                        <a class="stretched-link view_data text-white" id="6" ></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- </div>
-                <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                    <div class="card card-stats  text-white" style="background:#F5828E">
-                        <div class="card-body py-2 my-2">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-white">
-                                        <i class="fas fa-door-open"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-md-8">
-                                    <div class="numbers">
-                                        <p class="card-category text-white">Ijin Keluar Perusahaan</p>
-                                        <p class="card-title"><?=$totalP?> MP
-                                        <p>
-                                        <a class="stretched-link view_data text-white" id="7" ></a> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- </div>
-                <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                    <div class="card card-stats bg-info text-white">
-                        <div class="card-body py-2 my-2">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-white">
-                                        <i class="fas fa-laptop-house"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-md-8">
-                                    <div class="numbers">
-                                        <p class="card-category text-white">WFH</p>
-                                        <p class="card-title"><?=$totalWFH?> MP
-                                        <p>
-                                        <a class="stretched-link view_data text-white" id="8" ></a> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- </div>
-                <div class="col-lg-4 col-md-6 col-sm-6"> -->
-                    <div class="card card-stats bg-danger text-white">
-                        <div class="card-body py-2 my-2">
-                            <div class="row">
-                                <div class="col-5 col-md-4">
-                                    <div class="icon-big text-center icon-white">
-                                        <i class="fa fa-bell-slash text-white"></i>
-                                    </div>
-                                </div>
-                                <div class="col-7 col-md-8">
-                                    <div class="numbers">
-                                        <p class="card-category text-white">Mangkir</p>
-                                        <p class="card-title"><?=$totalM?> MP
-                                        <p>
-                                        <a class="stretched-link view_data text-white" id="9" ></a> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <!-- </div> -->
-            </div>
-
-        </div>
-        <script>
-            $(document).ready(function(){
-                var owl = $('.owl-carousel');
-                owl.owlCarousel({
-                    items:3,
-                    loop:true,
-                    margin:30,
-                    autoplay:true,
-                    autoplayTimeout:3000,
-                    autoplayHoverPause:true
-                });
-                $('.play').on('click',function(){
-                    owl.trigger('play.owl.autoplay',[1000])
-                })
-                $('.stop').on('click',function(){
-                    owl.trigger('stop.owl.autoplay')
-                })
-            });
-        </script>
+        
         <?php
     }else if($_GET['id'] == 'modal'){
         $_GET['prog'] = '';
@@ -656,21 +471,21 @@ if(isset($_SESSION['user'])){
                                         <?php
                                         if(mysqli_num_rows($sql) > 0){
         
-                                            while($dataAbsen = mysqli_fetch_assoc($sql)){
-                                                $checkIn = ($dataAbsen['check_in'] == '00:00:00')?'':jam($dataAbsen['check_in']);
-                                                $checkOut = ($dataAbsen['check_out'] == '00:00:00')?'':jam($dataAbsen['check_out']);
+                                            while($dataOT = mysqli_fetch_assoc($sql)){
+                                                $checkIn = ($dataOT['check_in'] == '00:00:00')?'':jam($dataOT['check_in']);
+                                                $checkOut = ($dataOT['check_out'] == '00:00:00')?'':jam($dataOT['check_out']);
                                                 ?>
-                                                    <tr id="<?=$dataAbsen['id_absensi']?>" >
+                                                    <tr id="<?=$dataOT['id_absensi']?>" >
                                                     <td class="td"><?=$no++?></td>
-                                                    <td class="td"><?=$dataAbsen['npk']?></td>
-                                                    <td style="max-width:200px" class="text-truncate td"><?=$dataAbsen['nama']?></td>
-                                                    <td class="td"><?=$dataAbsen['employee_shift']?></td>
-                                                    <td style="max-width:100px" class="text-truncate"><?=getOrgName($link,  $dataAbsen['grp'], "group")?></td>
-                                                    <td class="td"><?=getOrgName($link, $dataAbsen['dept_account'], "deptAcc")?></td>
-                                                    <td class="td"><?=tgl($dataAbsen['work_date'])?></td>
+                                                    <td class="td"><?=$dataOT['npk']?></td>
+                                                    <td style="max-width:200px" class="text-truncate td"><?=$dataOT['nama']?></td>
+                                                    <td class="td"><?=$dataOT['employee_shift']?></td>
+                                                    <td style="max-width:100px" class="text-truncate"><?=getOrgName($link,  $dataOT['grp'], "group")?></td>
+                                                    <td class="td"><?=getOrgName($link, $dataOT['dept_account'], "deptAcc")?></td>
+                                                    <td class="td"><?=tgl($dataOT['work_date'])?></td>
                                                     <td class="td"><?=$checkIn?></td>
                                                     <td class="td"><?=$checkOut?></td>
-                                                    <td class="td"><?=$dataAbsen['CODE']?></td>
+                                                    <td class="td"><?=$dataOT['CODE']?></td>
                                                 </tr>
         
                                                 <?php
@@ -784,17 +599,23 @@ if(isset($_SESSION['user'])){
             
             FROM view_organization ";
 
-        $origin_query_absen = "SELECT view_absen_hr.id_absensi,
-                                        view_absen_hr.npk,
-                                        view_absen_hr.nama,
-                                        view_absen_hr.employee_shift,
-                                        view_absen_hr.grp,
-                                        view_absen_hr.dept_account,
-                                        view_absen_hr.work_date,
-                                        view_absen_hr.check_in,
-                                        view_absen_hr.check_out,
-                                        view_absen_hr.CODE
-                                        FROM view_absen_hr ";
+        $origin_query_overtime = "SELECT `id_ot`,
+        `npk`,
+        `nama`,
+        `shift`,
+        `sub_post`,
+        `post`,
+        `grp`,
+        `sect`,
+        `dept`,
+        `dept_account`,
+        `division`,
+        `plant`,
+        `work_date`,
+        `in_date`,
+        `out_date`,
+        `start`,
+        `end` FROM `view_hr_ot`";
 
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
@@ -812,8 +633,8 @@ if(isset($_SESSION['user'])){
         $tanggal = " AND work_date BETWEEN '$start' AND '$end' ";
         $access_org_abs = orgAccess($level);
         $add_filter_absen = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal;
-    //    echo $queryAbsen;
+        $queryOT = filtergenerator($link, $level, $generate, $origin_query_overtime, $access_org_abs).$add_filter_absen.$tanggal;
+    //    echo $queryOT;
         // pagination
         $sql_jml = mysqli_query($link, $queryMP)or die(mysqli_error($link));
         $total_records= mysqli_num_rows($sql_jml);
@@ -860,11 +681,10 @@ if(isset($_SESSION['user'])){
                                 $hari = hari_singkat($tgl);
                                 $tanggal = tgl($tgl);
                                 $color = ($hari == "Sab" || $hari == "Min" ) ? "background: rgba(211, 84, 0, 0.3)" : "";
-                                echo "<th scope=\"col\" colspan=\"3\" style=\"text-align: center;".$color++."\">$tanggal</th>";
+                                echo "<th scope=\"col\" colspan=\"2\" style=\"text-align: center;".$color."\">$tanggal</th>";
                             }
                             
                         ?>
-                        <th scope="col" style="width:100px;border:1px solid white" colspan="10">Rekap Absen</th>
 
                         <tr>
                         <?php
@@ -873,43 +693,26 @@ if(isset($_SESSION['user'])){
                             $date = $tgl;
                             $cell_ = date('D, d - M', strtotime($date));
                             $cell = explode(' ', $cell_);
-                            $color = ($cell['0'] == "Sun," || $cell['0'] == "Sat," ) ? "style=\"background: rgba(211, 84, 0, 0.3)\"" : "";
+                            $color = ($cell['0'] == "Sun," || $cell['0'] == "Sat," ) ? "background: rgba(211, 84, 0, 0.3)" : "";
                             ?>
-                            <th scope="col" style="width:100px;border:1px solid white">IN</th>
-                            <th scope="col" style="width:100px;border:1px solid white">OUT</th>
-                            <th scope="col" style="width:50px;border:1px solid white">KET</th>
+                            <th scope="col" style="width:100px;border:1px solid white; <?=$color?>">IN</th>
+                            <th scope="col" style="width:100px;border:1px solid white; <?=$color?>">OUT</th>
 
                             <?php
                             
                         }
                         
                         ?>
-                        <th style="width:50px;border:1px solid white">S1</th>
-                        <th style="width:50px;border:1px solid white">S2</th>
-                        <th style="width:50px;border:1px solid white">T1</th>
-                        <th style="width:50px;border:1px solid white">T2</th>
-                        <th style="width:50px;border:1px solid white">T3</th>
-                        <th style="width:50px;border:1px solid white">TL</th>
-                        <th style="width:50px;border:1px solid white">M</th>
-                        <th style="width:50px;border:1px solid white">C1</th>
-                        <th style="width:50px;border:1px solid white">C2</th>
-                        <th style="width:50px;border:1px solid white">Others</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     //query mp
                     $no_spl = 1;
-                    // $qryMonitoring .= " $limit";
-                    // echo $qryMonitoring;
+                    // echo $queryOT;
                     $sql_monMp = mysqli_query($link, $queryMP.$addOrder.$addLimit)or die(mysqli_error($link));
                     if(mysqli_num_rows($sql_monMp)>0){
-
                         while($data_mon = mysqli_fetch_assoc($sql_monMp)){
-                            //query lembur sesuai dengan npk karyawan
-                            // $sql_lembur = "SELECT * FROM lembur WHERE npk = $data_mon[npk_karyawan]";
-                            // $lembur = mysqli_query($link, $sql_lembur)or die(mysqli_error($link));
                             
                             ?>
                         <tr>
@@ -919,120 +722,35 @@ if(isset($_SESSION['user'])){
                             <td  style="max-width:50px" class="text-truncate"  ><?=$data_mon['shift']?></td>
                             <td  style="max-width:200px" class="text-truncate"  ><?=$data_mon['groupfrm']?></td>
                             <td  style="max-width:200px" class="text-truncate"  ><?=$data_mon['dept_account']?></td>
-                            <td  style="max-width:100px" class="text-truncate"  ">Absensi</td>
+                            <td  style="max-width:100px" class="text-truncate"  ">Overtime</td>
                             <?php
                             
                             
                                 
                             foreach($data_tanggal as $tgl_){//looping tanggal request
                                 //ambil array data lembur 
-                                $qry_absen = $queryAbsen." AND npk = '$data_mon[npk]' AND work_date = '$tgl_' ";
+                                $qry_ot = $queryOT." AND work_date = '$tgl_' ";
                                 
-                                $sqlAbsen = mysqli_query($link, $qry_absen)or die(mysqli_error($link));
-                                $dataAbsen = mysqli_fetch_assoc($sqlAbsen);
+                                $sqlOT = mysqli_query($link, $qry_ot)or die(mysqli_error($link));
+                                $dataOT = mysqli_fetch_assoc($sqlOT);
     
-                                $check_in = ($dataAbsen['check_in'] == "00:00:00")?"":jam($dataAbsen['check_in']);
-                                $check_out = ($dataAbsen['check_out'] == "00:00:00")?"":jam($dataAbsen['check_out']);
+                                $check_in = ($dataOT['start'] == "00:00:00" || $dataOT['start'] == "")?"":jam($dataOT['start']);
+                                $check_out = ($dataOT['end'] == "00:00:00") || $dataOT['end'] == ""?"":jam($dataOT['end']);
                                 $hari = hari_singkat($tgl_);
                                 $color = ($hari == "Sab" || $hari == "Min" ) ? "background: rgba(228, 227, 227, 0.5)" : "";
     
-                                // switch($dataAbsen['status_absen']){
-                                //     case '':
-                                //         $bg_color = "";
-                                //         $text_color = "";
-                                //         $text_tooltip = "BELUM ADA PENGAJUAN";
-                                //         break;
-                                //     case '0':
-                                //         $bg_color = "muted";
-                                //         $text_color = "danger";
-                                //         $text_tooltip = "DRAFT PENGAJUAN";
-                                //         break;
-    
-                                //     case '25':
-                                //         $bg_color = "danger";
-                                //         $text_color = "white";
-                                //         $text_tooltip = "WAITING APPROVAL";
-                                //         break;
-    
-                                //     case '50':
-                                //         $bg_color = "warning";
-                                //         $text_color = "white";
-                                //         $text_tooltip = "WAITING ADMIN PROCESS";
-                                //         break;
-                                //     case '75':
-                                //         $bg_color = "info";
-                                //         $text_color = "white";
-                                //         $text_tooltip = "ADMIN PROCESS";
-                                //         break;
-                                //     case '100':
-                                //         $bg_color = "success";
-                                //         $text_color = "white";
-                                //         $text_tooltip = "CLOSE / SUCCESS";
-                                //         break;
-                                // }
-                                // $tooltipIn = ($dataAbsen['status_absen'] != '')?"data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$dataAbsen[check_in]\"":"";
-                                // $tooltipOut = ($dataAbsen['status_absen'] != '')?"data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$dataAbsen[check_out]\"":"";
-                                // $tooltipKet = ($dataAbsen['status_absen'] != '')?"data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"$dataAbsen[keterangan] - STATUS : $text_tooltip\"":"";
-                                
                                 ?>
                                 
-                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=$check_in?></td>
-                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=$check_out?></td>
-                                <td style="min-width:50px ;max-width:50px" class="bg- text-"  ><?=$dataAbsen['CODE']?></td>
+                                <td style="min-width:100px ;max-width:100px; <?=$color?>" class="bg- text-" ><?=$check_in?></td>
+                                <td style="min-width:100px ;max-width:100px; <?=$color?>" class="bg- text-" ><?=$check_out?></td>
                                 <?php
                                 flush();
                             }
-                            $qry_absen = $queryAbsen." AND npk = '$data_mon[npk]'";
-                            $qry_M = $qry_absen." AND CODE = 'M' ";
-                            $qry_TL = $qry_absen." AND CODE = 'TL' ";
-                            $qry_C1 = $qry_absen." AND CODE = 'C1' ";
-                            $qry_C2 = $qry_absen." AND CODE = 'C2' ";
-                            $qry_S1 = $qry_absen." AND CODE = 'S1' ";
-                            $qry_S2 = $qry_absen." AND CODE = 'S2' ";
-                            $qry_T1 = $qry_absen." AND CODE = 'T1' ";
-                            $qry_T2 = $qry_absen." AND CODE = 'T2' ";
-                            $qry_T3 = $qry_absen." AND CODE = 'T3' ";
-                            $qry_Oth = $qry_absen." AND CODE <> '' ";
-    
-                            $total_M = mysqli_num_rows(mysqli_query($link, $qry_M));
-                            $total_C1 = mysqli_num_rows(mysqli_query($link, $qry_C1));
-                            $total_C2 = mysqli_num_rows(mysqli_query($link, $qry_C2));
-                            $total_S1 = mysqli_num_rows(mysqli_query($link, $qry_S1));
-                            $total_S2 = mysqli_num_rows(mysqli_query($link, $qry_S2));
-                            $total_T1 = mysqli_num_rows(mysqli_query($link, $qry_T1));
-                            $total_T2 = mysqli_num_rows(mysqli_query($link, $qry_T2));
-                            $total_T3 = mysqli_num_rows(mysqli_query($link, $qry_T3));
-                            $total_TL = mysqli_num_rows(mysqli_query($link, $qry_TL));
-                            $total_Oth = mysqli_num_rows(mysqli_query($link, $qry_Oth));
-                            $other = $total_Oth - ($total_M + $total_C1 + $total_C2 +$total_S1 +$total_S2+$total_T1+$total_T2+$total_T3+$total_TL);
-    
-    
-                            ?>
-                            <td rowspan=""><?=$total_S1?></td>
-                            <td rowspan=""><?=$total_S2?></td>
-                            <td rowspan=""><?=$total_T1?></td>
-                            <td rowspan=""><?=$total_T2?></td>
-                            <td rowspan=""><?=$total_T3?></td>
-                            <td rowspan=""><?=$total_TL?></td>
-                            <td rowspan=""><?=$total_M?></td>
-                            <td rowspan=""><?=$total_C1?></td>
-                            <td rowspan=""><?=$total_C2?></td>
-                            <td rowspan=""><?=$other?></td>
-                            
-                            <?php
-                                    
-                                    
-                                   
     
                             ?>
                             
                             
-                            <?php
                             
-                            
-                            
-                            
-                            ?>
                             
                         </tr>
                         

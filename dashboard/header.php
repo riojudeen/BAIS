@@ -473,7 +473,7 @@
             <a data-toggle="collapse" href="#monitoring" aria-expanded="false">
               <i class="nc-icon nc-layout-11"></i>
               <p>
-                Employee Update <b class="caret"></b>
+                Organization Data <b class="caret"></b>
               </p>
             </a>
             <div class="collapse " id="monitoring" >
@@ -495,14 +495,26 @@
                   ?> 
                 <li class="menu " data-name="mpu" id="mpu">
                   <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
-                    <span class="sidebar-mini-icon">EM</span>
-                    <span class="sidebar-normal"> Employee Monitoring  </span>
+                    <span class="sidebar-mini-icon">ED</span>
+                    <span class="sidebar-normal"> Employee Data </span>
                   </a>
                 </li>
                 <li class="menu d-none" data-name="reqmp" id="reqmp">
                   <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
                     <span class="sidebar-mini-icon">MR</span>
                     <span class="sidebar-normal"> Employee Update Request </span>
+                  </a>
+                </li>
+                <li class="menu" data-name="lisbl" id="lisbl">
+                  <a ><!---link halaman request edit MP--->
+                    <span class="sidebar-mini-icon">BL</span>
+                    <span class="sidebar-normal"> Black List Hospital </span>
+                  </a>
+                </li>
+                <li class="menu" data-name="lisbl" id="lisbl">
+                  <a ><!---link halaman request edit MP--->
+                    <span class="sidebar-mini-icon">BL</span>
+                    <span class="sidebar-normal"> Recomendation Hospital </span>
                   </a>
                 </li>
                 <?php
@@ -527,7 +539,7 @@
 
           <?php 
 
-          if($level > 2 ){
+          if($level >= 1 ){
           ?>                  
           <li class="clpse " data-name="req" id="req" data-target="requests">
             <a data-toggle="collapse" href="#requests" aria-expanded="false">
@@ -546,7 +558,7 @@
                 </li>
                 <?php 
 
-                if($level != 5 ){
+                if($level != 5 && $level >= 3 ){
                 ?> 
                 <li class="menu " data-name="reqabs" id="reqabs">
                   <a href="<?=base_url()?>/dashboard/absensi/req_absensi.php"><!---link halaman pengajuan SUPEM--->
@@ -596,7 +608,7 @@
           <?php
             }
           ?>         
-          <?php if($level >= 2){?>
+          <?php if($level >= 1){?>
           <li class="clpse " data-name="ot" id="ot" data-target="overtime">
             <a data-toggle="collapse" href="#overtime" aria-expanded="false"><!---link halaman Kontrol--->
               <i class="nc-icon nc-box"></i>
@@ -607,7 +619,10 @@
             </a>
             <div class="cllpse collapse " id="overtime" data-name="overtime">
               <ul class="nav">
-                <li class="menu d-none" data-name="ovrtime" id="ovrtime">
+                <?php
+                if($level != 5 && $level >= 3 ){
+                ?>
+                <li class="menu " data-name="ovrtime" id="ovrtime">
                   <a href="<?=base_url()?>/dashboard/pages/overtime.php">
                     <span class="sidebar-mini-icon">OM</span>
                     <span class="sidebar-normal"> Overtime Montoring </span>
@@ -615,26 +630,16 @@
                 </li>
                 <li class="menu " data-name="ovrtime2" id="ovrtime2">
                   <a href="<?=base_url()?>/dashboard/ot/req_overtime.php">
-                    <span class="sidebar-mini-icon">OM</span>
-                    <span class="sidebar-normal"> Overtime Montoring </span>
+                    <span class="sidebar-mini-icon">OR</span>
+                    <span class="sidebar-normal"> Overtime Request</span>
                   </a>
                 </li>
                 <?php 
-
-                if($level != 5 ){
-                ?>
-                <li class="menu " data-name="reqot" id="reqot">
-                  <a href="<?=base_url()?>/dashboard/overtime/overtime_request.php"><!---link halaman request lembur--->
-                    <span class="sidebar-mini-icon">OR</span>
-                    <span class="sidebar-normal"> Overtime Request </span>
-                  </a>
-                </li>
-                <?php
                 }
                 if($level >= 4 && $level != 5){
                 ?>
                 <li class="menu " data-name="appot" id="appot">
-                  <a href="<?=base_url()?>/dashboard/overtime/overtime_approval.php">
+                  <a href="<?=base_url()?>/dashboard/ot/approval/index.php">
                     <span class="sidebar-mini-icon">OA</span>
                     <span class="sidebar-normal"> Overtime Approval </span>
                   </a>
@@ -782,29 +787,29 @@
             <a data-toggle="collapse" href="#documentation" aria-expanded="false"><!---link halaman Kontrol--->
               <i class="nc-icon nc-book-bookmark"></i>
               <p>
-              Documentation <b class="caret"></b>
+              Document & Form <b class="caret"></b>
               </p>
               </p>
             </a>
             <div class="collapse" id="documentation">
               <ul class="nav">
-                <li class="menu d-none" data-name="UG" id="UG">
-                  <a href="<?=base_url()?>/dashboard/documentation/index.php">
+                <li class="menu " data-name="UG" id="UG">
+                  <a >
                     <span class="sidebar-mini-icon">UG</span>
                     <span class="sidebar-normal"> User Guidance </span>
                   </a>
                 </li>
                 
-                <li class="menu d-none" data-name="doc" id="doc">
-                  <a href="<?=base_url()?>/dashboard/documentation/system.php">
+                <li class="menu " data-name="doc" id="doc">
+                  <a >
                     <span class="sidebar-mini-icon">DO</span>
-                    <span class="sidebar-normal"> System Docs </span>
+                    <span class="sidebar-normal"> System Docs & BRD </span>
                   </a>
                 </li>
-                <li class="menu d-none" data-name="doc" id="doc">
-                  <a href="<?=base_url()?>/dashboard/document/">
-                    <span class="sidebar-mini-icon">FM</span>
-                    <span class="sidebar-normal"> Forms </span>
+                <li class="menu " data-name="doc" id="doc">
+                  <a >
+                    <span class="sidebar-mini-icon">AF</span>
+                    <span class="sidebar-normal"> Administration Forms </span>
                   </a>
                 </li>
                 <li class="menu " data-name="exportmp" id="exportmp">
