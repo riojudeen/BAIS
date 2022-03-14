@@ -20,7 +20,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
             <div class="card-header ">
                 <div class="row">
                     <div class="col-md-6">
-                        <h4 class="card-title " >Pengajuan Absensi</h4>
+                        <h4 class="card-title " >Pengajuan Overtime</h4>
                         <p class="card-category ">Periode : <?=tgl($tanggalAwal)." s.d. ".tgl($tanggalAkhir)?></p>
 
                     </div>
@@ -30,26 +30,9 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                 <div class="form-group bg-transparent ">
                                     <select class="form-control" name="att_type" id="att_type">
                                         <option value="">Pilih Tipe Pengajuan</option>
-                                        <?php
-                                        $q_attType = mysqli_query($link, "SELECT * FROM attendance_type")or die(mysqli_error($link));
-                                        if(mysqli_num_rows($q_attType)){
-                                            $collect = array();
-                                            while($data = mysqli_fetch_assoc($q_attType)){
-                                                ?>
-                                                <option value="<?=$data['id']?>"><?=$data['name']?> / <?=$data['id']?></option>
-                                                <?php
-                                                $collect[] = $data['id'];
-                                            }
-                                            $data_collect = "";
-                                            foreach($collect AS $collect){
-                                                $data_collect .= $collect." + ";
-                                            }
-                                            $data_collect=substr($data_collect, 0, -2);
-                                            ?>
-                                            <option value=""><?=$data_collect?></option>
-                                            <?php
-                                        }
-                                        ?>
+                                        <option value="PO">Post Overtime</option>
+                                        <option value="EO">Early Overtime</option>
+                                        
                                     </select>
                                 </div>
 

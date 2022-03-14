@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-md-6 ">
                        
-                        <h4 class="card-title " >Absensi Karyawan</h4>
+                        <h4 class="card-title " >Employee Overtime</h4>
                         <p class="card-category ">Periode : <?=tgl($tanggalAwal)." s.d. ".tgl($tanggalAkhir)?></p>
                     </div>
                     <div class="col-md-6 text-right">

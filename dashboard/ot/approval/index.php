@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
-$halaman = "Approval Request Absensi";
+$halaman = "Approval Overtime";
 if(isset($_SESSION['user'])){
 
     include_once("../../header.php");
@@ -172,10 +172,23 @@ if(isset($_SESSION['user'])){
                         url:getLink,
                         method:"GET",
                         data:{approve:data},
-                        success:function(){
+                        success:function(data){
+                            var d = $.parseJSON(data);
+                                // console.log(d.info);
                             load_data(page)
                             getSumary()
-                            success('Diproses', 'data pengajuan telah disetujui untuk diproses');                     
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })              
                         }
                     })
                 }
@@ -202,10 +215,23 @@ if(isset($_SESSION['user'])){
                         url:getLink,
                         method:"GET",
                         data:{reject:data},
-                        success:function(){
-                            load_data(page);
+                        success:function(data){
+                            var d = $.parseJSON(data);
+                                console.log(data);
+                            load_data(page)
                             getSumary()
-                            success('Ditolak','data pengajuan telah dihentikan');
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })    
                         }
                     })
                 }
@@ -231,10 +257,23 @@ if(isset($_SESSION['user'])){
                         url:getLink,
                         method:"GET",
                         data:{proses:data},
-                        success:function(){
-                            load_data(page);
+                        success:function(data){
+                            var d = $.parseJSON(data);
+                                console.log(data);
+                            load_data(page)
                             getSumary()
-                            success('Diproses','data pengajuan disetujui untuk diproses');
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })              
                         }
                     })
                 }
@@ -261,10 +300,23 @@ if(isset($_SESSION['user'])){
                         url:getLink,
                         method:"GET",
                         data:{stop:data},
-                        success:function(){
-                            load_data(page);
+                        success:function(data){
+                            var d = $.parseJSON(data);
+                                console.log(data);
+                            load_data(page)
                             getSumary()
-                            success('Dihentikan','data pengajuan telah dihentikan');
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })   
                         }
                     })
                 }
@@ -290,10 +342,23 @@ if(isset($_SESSION['user'])){
                         url:getLink,
                         method:"GET",
                         data:{del:data},
-                        success:function(){
-                            load_data(page);
+                        success:function(data){
+                            var d = $.parseJSON(data);
+                                console.log(data);
+                            load_data(page)
                             getSumary()
-                            success('Dihapus','data pengajuan telah dihapus, silakan ajukan kembali');
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })   
                         }
                     })
                 }
@@ -319,10 +384,23 @@ if(isset($_SESSION['user'])){
                         url:getLink,
                         method:"GET",
                         data:{return:data},
-                        success:function(){
+                        success:function(data){
+                            var d = $.parseJSON(data);
+                                console.log(data);
                             load_data(page)
                             getSumary()
-                            success('Dikembalikan','data pengajuan dikembalikan untuk dikonfirmasi');
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })   
                         }
                     })
                 }
@@ -349,9 +427,22 @@ if(isset($_SESSION['user'])){
                         method:"GET",
                         data:{request:data},
                         success:function(){
+                            var d = $.parseJSON(data);
+                                console.log(data);
                             load_data(page)
                             getSumary()
-                            success('Diajukan','data pengajuan dibuat untuk dilanjutkan');
+                            Swal.fire({
+                                title: d.message,
+                                text: d.info,
+                                timer: 2000,
+                                
+                                icon: d.icon,
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#00B9FF',
+                                cancelButtonColor: '#B2BABB',
+                                
+                            })   
                         }
                     })
                 }
@@ -376,6 +467,7 @@ if(isset($_SESSION['user'])){
         })
             
         function getSumary(){
+            
             var id = 'leave';
             var div_id = $('#s_div').val();
             var dept_id = $('#s_dept').val();
@@ -391,7 +483,7 @@ if(isset($_SESSION['user'])){
             $.ajax({
                 url: 'ajax/sumary.php',	
                 method: 'GET',
-                data:{id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
+                data:{summary_approval:"",id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,cari:cari,att_type:att_type,prog:prog,filter:'yes'},		
                 success:function(data){
                     $('#sumary').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
                     
@@ -478,7 +570,7 @@ if(isset($_SESSION['user'])){
         // proses
         $(document).on('click','.prosesAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?proses_multiple=';
+            var getLink = '../proses-approval.php?proses_multiple=';
                 
                 Swal.fire({
                 title: 'Memproses Pengajuan?',
@@ -499,17 +591,16 @@ if(isset($_SESSION['user'])){
                             method:"POST",
                             data:form,
                             success:function(data){
-                                
+                                var d = $.parseJSON(data);
+                                // console.log(d.info);
                                 load_data(page)
                                 getSumary()
-                                
-                                
                                 Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil diproses",
+                                    title: d.message,
+                                    text: d.info,
                                     timer: 2000,
                                     
-                                    icon: 'success',
+                                    icon: d.icon,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     confirmButtonColor: '#00B9FF',
@@ -540,7 +631,7 @@ if(isset($_SESSION['user'])){
         // return
         $(document).on('click','.returnAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?return_multiple=';
+            var getLink = '../proses-approval.php?return_multiple=';
                 
                 Swal.fire({
                 title: 'Kembalikan Pengajuan?',
@@ -560,14 +651,16 @@ if(isset($_SESSION['user'])){
                             method:"POST",
                             data:form,
                             success:function(data){
+                                var d = $.parseJSON(data);
+                                // console.log(d.info);
                                 load_data(page)
                                 getSumary()
                                 Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil diproses",
+                                    title: d.message,
+                                    text: d.info,
                                     timer: 2000,
                                     
-                                    icon: 'success',
+                                    icon: d.icon,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     confirmButtonColor: '#00B9FF',
@@ -598,7 +691,7 @@ if(isset($_SESSION['user'])){
         // stop
         $(document).on('click','.stopAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?stop_multiple=';
+            var getLink = '../proses-approval.php?stop_multiple=';
                 
                 Swal.fire({
                 title: 'Hentikan Pengajuan ?',
@@ -618,14 +711,16 @@ if(isset($_SESSION['user'])){
                             method:"POST",
                             data:form,
                             success:function(data){
+                                var d = $.parseJSON(data);
+                                // console.log(d.info);
                                 load_data(page)
                                 getSumary()
                                 Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil diproses",
+                                    title: d.message,
+                                    text: d.info,
                                     timer: 2000,
                                     
-                                    icon: 'success',
+                                    icon: d.icon,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     confirmButtonColor: '#00B9FF',
@@ -656,7 +751,7 @@ if(isset($_SESSION['user'])){
         // approve SPV
         $(document).on('click','.approveAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?approve_multiple=';
+            var getLink = '../proses-approval.php?approve_multiple=';
                 
                 Swal.fire({
                 title: 'Setujui Pengajuan ?',
@@ -676,14 +771,17 @@ if(isset($_SESSION['user'])){
                             method:"POST",
                             data:form,
                             success:function(data){
+                                
+                                var d = $.parseJSON(data);
+                                // console.log(d.info);
                                 load_data(page)
                                 getSumary()
                                 Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil diproses",
+                                    title: d.message,
+                                    text: d.info,
                                     timer: 2000,
                                     
-                                    icon: 'success',
+                                    icon: d.icon,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     confirmButtonColor: '#00B9FF',
@@ -714,7 +812,7 @@ if(isset($_SESSION['user'])){
         // reject SPV
         $(document).on('click','.rejectAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?reject_multiple=';
+            var getLink = '../proses-approval.php?reject_multiple=';
                 
                 Swal.fire({
                 title: 'Tolak Pengajuan ?',
@@ -734,14 +832,16 @@ if(isset($_SESSION['user'])){
                             method:"POST",
                             data:form,
                             success:function(data){
+                                var d = $.parseJSON(data);
+                                // console.log(d.info);
                                 load_data(page)
                                 getSumary()
                                 Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil ditolak",
+                                    title: d.message,
+                                    text: d.info,
                                     timer: 2000,
                                     
-                                    icon: 'success',
+                                    icon: d.icon,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     confirmButtonColor: '#00B9FF',
@@ -772,7 +872,7 @@ if(isset($_SESSION['user'])){
         // reject SPV
         $(document).on('click','.deleteAll', function(){
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?delete_multiple=';
+            var getLink = '../proses-approval.php?delete_multiple=';
                 
                 Swal.fire({
                 title: 'Delete Data Pengajuan?',
@@ -792,14 +892,16 @@ if(isset($_SESSION['user'])){
                             method:"POST",
                             data:form,
                             success:function(data){
+                                var d = $.parseJSON(data);
+                                // console.log(d.info);
                                 load_data(page)
                                 getSumary()
                                 Swal.fire({
-                                    title: "Sukses",
-                                    text: "data berhasil didelete",
+                                    title: d.message,
+                                    text: d.info,
                                     timer: 2000,
                                     
-                                    icon: 'success',
+                                    icon: d.icon,
                                     showCancelButton: false,
                                     showConfirmButton: false,
                                     confirmButtonColor: '#00B9FF',
