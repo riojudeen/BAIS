@@ -326,6 +326,7 @@ include("../../../config/approval_system.php");
                                           <div class="col-md-12">
                                             <div class="progress">
                                                 <div class="progress-bar bg-<?=$color_eff?>" role="progressbar" style="width: <?=$eff?>%;" aria-valuenow="<?=$eff?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                
                                             </div>
 
                                           </div>
@@ -335,7 +336,7 @@ include("../../../config/approval_system.php");
                                 
                             </div>
                             <div class="card-footer my-0">
-                            
+                            <a href="?dept=<?=$dept['id']?>" class="stretched-link"></a>
                             </div>
                         </div>
                     </div>

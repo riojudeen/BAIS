@@ -118,194 +118,304 @@ include("../../../config/config.php");
                                                     <div class="card-body">
                                                         <div class="row">
                                                             <div class="col-md-2">
-                                                                <h6 class="text-uppercase title text-nowrap text-truncate"><?=$grp['nama_org']?></h6>
+                                                                <h4 class="text-uppercase title text-nowrap text-truncate my-0 py-0"><?=$grp['nama_org']?></h4>
                                                                 <ul class="list-unstyled team-members">
                                                                     <li>
                                                                         <div class="row">
-                                                                        <div class="col-md-2 col-2">
-                                                                            <div class="avatar">
-                                                                            <img src="<?=getFoto($grp['cord'])?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                                            <div class="col-md-12 col-12 author">
+                                                                                <div class="card card-plain card-user my-0 py-0">
+                                                                                    <div class="avatar">
+                                                                                        <img src="<?=getFoto($grp['cord'])?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                                                    </div>
+
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-md-10 col-10 text-nowrap text-truncate">
-                                                                            
-                                                                                <?=$grp['nama_cord']?>
-                                                                                <br>
-                                                                            <span style="background-color:rgba(216, 215, 215); width:100px; z-index:1000" class="text-muted badge badge-pill bg-<?=$color_masuk?><?=$color_telat?><?=$color_ijin?><?=$color_ta?>"><?=$ket?></span>
-                                                                        </div>
+                                                                            <div class="col-md-12 col-12 text-nowrap text-truncate">
+                                                                                
+                                                                                    <?=$grp['nama_cord']?>
+                                                                                    <br>
+                                                                                <span style="background-color:rgba(216, 215, 215); width:100px; z-index:1000" class="text-muted badge badge-pill bg-<?=$color_masuk?><?=$color_telat?><?=$color_ijin?><?=$color_ta?>"><?=$ket?></span>
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="col-md-1 number bg-secondary rounded-lg my-2  text-center">
-                                                                <span class="card-label mb-0 mt-1">- eff -</span>
-                                                                <hr class="my-0">
-                                                                <h4 class="text-uppercase pt-0 mt-0 mb-0 pb-0"><?=$percent_eff?></h4>
-                                                                <hr class="my-0">
-                                                                %
-                                                                
-                                                            </div>
                                                             
-                                                            <div class="col-md-9">
+                                                            
+                                                            <div class="col-md-10">
                                                                 <div class="row">
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-md-2 px-4">
                                                                         <div class="row">
-                                                                            <div class="col-3 col-md-3">
-                                                                                <span class="fa-stack" >
-                                                                                    <i class="far fa-circle fa-stack-2x text-success fa-inverse mt-1"></i>
-                                                                                    <i class="fa fa-briefcase text-success fa-stack-1x fa-inverse mt-1"></i>
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="col-9 col-md-9 ">
-                                                                                <div class=" pr-2">
-                                                                                    <p class="card-category py-0 my-0 ">Masuk</p>
-                                                                                    <p class="card-title py-0 my-0 text-danger"><?=$total_masuk?> <p>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: <?=$percent_masuk?>%;" aria-valuenow="<?=$percent_masuk?>" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                                </div>
+                                                                            <div class="col-md-12 number bg-secondary text-white rounded-lg my-2 px-2 text-center">
+
+                                                                                <span class="card-label mb-0 mt-1 ">- eff -</span>
+                                                                                <hr class="my-0 text-white">
+                                                                                <h4 class="text-uppercase pt-0 mt-0 mb-0 pb-0"><?=$percent_eff?></h4>
+                                                                                <hr class="my-0 text-white">
+                                                                                %
                                                                             </div>
                                                                         </div>
+                                                                        
                                                                     </div>
-                                                                    <div class="col-md-3">
+                                                                    <div class="col-md-10">
                                                                         <div class="row">
-                                                                            <div class="col-3 col-md-3">
-                                                                                <span class="fa-stack" >
-                                                                                    <i class="far fa-circle fa-stack-2x text-danger fa-inverse mt-1"></i>
-                                                                                    <i class="fa fa-bell-slash fa-stack-1x text-danger fa-inverse mt-1"></i>
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="col-9 col-md-9 ">
-                                                                                <div class=" pr-2">
-                                                                                    <p class="card-category py-0 my-0 ">TA Keterangan</p>
-                                                                                    <p class="card-title py-0 my-0 text-danger"><?=$total_mangkir?><p>
+
+                                                                            <div class="col-md-3">
+                                                                                <div class="row">
+                                                                                    <div class="col-3 col-md-3">
+                                                                                        <span class="fa-stack" >
+                                                                                            <i class="far fa-circle fa-stack-2x text-success fa-inverse mt-1"></i>
+                                                                                            <i class="fa fa-briefcase text-success fa-stack-1x fa-inverse mt-1"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="col-9 col-md-9 ">
+                                                                                        <div class=" pr-2">
+                                                                                            <p class="card-category py-0 my-0 ">Masuk</p>
+                                                                                            <p class="card-title py-0 my-0 text-danger"><?=$total_masuk?> <p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="progress">
+                                                                                            <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: <?=$percent_masuk?>%;" aria-valuenow="<?=$percent_masuk?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-danger" role="progressbar" style="width: <?=$percent_mangkir?>%;" aria-valuenow="<?=$percent_mangkir?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            <div class="col-md-3">
+                                                                                <div class="row">
+                                                                                    <div class="col-3 col-md-3">
+                                                                                        <span class="fa-stack" >
+                                                                                            <i class="far fa-circle fa-stack-2x text-danger fa-inverse mt-1"></i>
+                                                                                            <i class="fa fa-bell-slash fa-stack-1x text-danger fa-inverse mt-1"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="col-9 col-md-9 ">
+                                                                                        <div class=" pr-2">
+                                                                                            <p class="card-category py-0 my-0 text-truncate">TA Keterangan</p>
+                                                                                            <p class="card-title py-0 my-0 text-danger"><?=$total_mangkir?><p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="progress">
+                                                                                            <div class="progress-bar progress-bar-animated progress-bar-striped bg-danger" role="progressbar" style="width: <?=$percent_mangkir?>%;" aria-valuenow="<?=$percent_mangkir?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="row">
-                                                                            <div class="col-3 col-md-3">
-                                                                                <span class="fa-stack" >
-                                                                                    <i class="far fa-circle fa-stack-2x text-info fa-inverse mt-1"></i>
-                                                                                    <i class="fas fa-suitcase-rolling fa-stack-1x text-info fa-inverse mt-1"></i>
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="col-9 col-md-9 ">
-                                                                                <div class=" pr-2">
-                                                                                    <p class="card-category py-0 my-0 ">Ijin / Sakit</p>
-                                                                                    <p class="card-title py-0 my-0 text-info"><?=$total_ijin?><p>
+                                                                            <div class="col-md-3">
+                                                                                <div class="row">
+                                                                                    <div class="col-3 col-md-3">
+                                                                                        <span class="fa-stack" >
+                                                                                            <i class="far fa-circle fa-stack-2x text-info fa-inverse mt-1"></i>
+                                                                                            <i class="fas fa-suitcase-rolling fa-stack-1x text-info fa-inverse mt-1"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="col-9 col-md-9 ">
+                                                                                        <div class=" pr-2">
+                                                                                            <p class="card-category py-0 my-0 ">Ijin / Sakit</p>
+                                                                                            <p class="card-title py-0 my-0 text-info"><?=$total_ijin?><p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="progress">
+                                                                                            <div class="progress-bar progress-bar-animated progress-bar-striped bg-info" role="progressbar" style="width: <?=$percent_ijin?>%;" aria-valuenow="<?=$percent_ijin?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-info" role="progressbar" style="width: <?=$percent_ijin?>%;" aria-valuenow="<?=$percent_ijin?>" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-3">
-                                                                        <div class="row">
-                                                                            <div class="col-3 col-md-3">
-                                                                                <span class="fa-stack" >
-                                                                                    <i class="far fa-circle fa-stack-2x text-warning fa-inverse mt-1"></i>
-                                                                                    <i class="nc-icon nc-user-run fa-stack-1x text-warning fa-inverse mt-1"></i>
-                                                                                </span>
-                                                                            </div>
-                                                                            <div class="col-9 col-md-9 ">
-                                                                                <div class=" pr-2">
-                                                                                    <p class="card-category py-0 my-0 ">Terlambat</p>
-                                                                                    <p class="card-title py-0 my-0 text-warning"><?=$total_telat?><p>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col-md-12">
-                                                                                <div class="progress">
-                                                                                    <div class="progress-bar progress-bar-animated progress-bar-striped bg-warning" role="progressbar" style="width: <?=$percent_telat?>%;" aria-valuenow="<?=$percent_telat?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            <div class="col-md-3">
+                                                                                <div class="row">
+                                                                                    <div class="col-3 col-md-3">
+                                                                                        <span class="fa-stack" >
+                                                                                            <i class="far fa-circle fa-stack-2x text-warning fa-inverse mt-1"></i>
+                                                                                            <i class="nc-icon nc-user-run fa-stack-1x text-warning fa-inverse mt-1"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="col-9 col-md-9 ">
+                                                                                        <div class=" pr-2">
+                                                                                            <p class="card-category py-0 my-0 ">Terlambat</p>
+                                                                                            <p class="card-title py-0 my-0 text-warning"><?=$total_telat?><p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="progress">
+                                                                                            <div class="progress-bar progress-bar-animated progress-bar-striped bg-warning" role="progressbar" style="width: <?=$percent_telat?>%;" aria-valuenow="<?=$percent_telat?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            
-                                                        </div>
-                                                        <hr class="mt-0 mb-2">
+                                                                <hr class="mt-0 mb-2">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <?php
+                                                                        $q_tm_unregistered = mysqli_query($link, "SELECT karyawan.npk AS `npk`, 
+                                                                                karyawan.nama AS `nama`, org.post AS `pos`,
+                                                                                org.grp AS `group`, org.dept_account AS `dept_account`
+                                                                                FROM org JOIN karyawan ON karyawan.npk = org.npk 
+                                                                                WHERE org.grp = '$grp[id]' ".$dept_account.$shift)or die(mysqli_error($link));
+                                                                        if(mysqli_num_rows($q_tm_unregistered)>0){
+                                                                            
+                                                                            ?>
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 ">
+                                                                                
+                                                                                    <!-- <p class="text-nowrap text-truncate m-0">Unregistered Team</p> -->
+                                                                                    <div class=" table-full-width">
+                                                                                        <table class="text-uppercase table-sm text-truncate text-center"  width="100%" style="border-spacing: 20px;" >
+                                                                                            <tbody style="border:1px solid white;">
+                                                                                                <tr>
+                                                                                                <?php
+                                                                                                        $index = 1;
+                                                                                                        $max = 1;
+                                                                                                        while($data_unregist = mysqli_fetch_assoc($q_tm_unregistered)){
+                                                                                                            $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen',
+                                                                                                                absensi.check_in AS `check_in`, absensi.ket AS `ket`,
+                                                                                                                absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
+                                                                                                                JOIN karyawan ON karyawan.npk = absensi.npk
+                                                                                                                JOIN org ON karyawan.npk = org.npk
+                                                                                                                WHERE absensi.npk = '$data_unregist[npk]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
+                                                                                                                $data_absen = mysqli_fetch_assoc($q_cek_absen);
+                                                                                                                $check_in = ($data_absen['check_in'] != '')?$data_absen['check_in']:'TA';
+                                                                                                                    
+                                                                                                                if(mysqli_num_rows($q_cek_absen)>0){
+                                                                                                                    $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'bg-success':'';
+                                                                                                                    $color_ta = ($data_absen['ket'] == 'M' )?'bg-danger':'';
+                                                                                                                    $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"bg-info":'';
+                                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"bg-warning":'';
+                                                                                                                    $color = "bg-warning";
+                                                                                                                }else{
+                                                                                                                    $color = "";
+                                                                                                                    $color_masuk = $color_telat = $color_ta = $color_ijin = '';
+                                                                                                                }
+                                                                                                            ?>
+                                                                                                            <td id="<?=$data_unregist['npk']?>" style="max-width:50px;background-color:rgba(216, 215, 215);border:1px solid white;" celpadding="5px" class=" data-karyawan text-truncate <?=$color_masuk?> <?=$color_ta?> <?=$color_ijin?> <?=$color_telat?>" >
+                                                                                                                <?=$data_unregist['nama']?>
+                                                                                                            </td>
+                                                                                                            <?php
+                                                                                                            if($max++ == 10 * $index){
+                                                                                                                $index++;
+                                                                                                                ?>
+                                                                                                                </tr><tr>
+                                                                                                                <?php
+                                                                                                            }
+                                                                                                            
+                                                                                                            // if($)
+                                                                                                            // $break = $max / $index;
+                                                                                                            // if($break == 10 && $max > 10){
+                                                                                                                
+                                                                                                            // }
+                                                                                                            // $max++;
+                                                                                                            
+                                                                                                        }
+                                                                                                        $selisih = (10 * $index) - $max;
+                                                                                                        // echo$selisih;
+                                                                                                        if($selisih > 0){
+                                                                                                            for($i = 0 ; $i<=$selisih;$i++){
+                                                                                                                ?>
+                                                                                                                <td style="min-width:50px;max-width:50px;background-color:rgba(216, 215, 215);border:1px solid white;" celpadding="5px" >
+                                                                                                                <?php
+                                                                                                            }
+                                                                                                        }
+                                                                                                ?>
+                                                                                                </tr>
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div> 
+                                                                            </div>
+                                                                            <?php
+                                                                        }
+                                                                        ?>
+                                                                    </div>
+                                                                </div>
+
                                                         <?php
-                                                        $q_tm_unregistered = mysqli_query($link, "SELECT karyawan.npk AS `npk`, 
+                                                        if(mysqli_num_rows($s_team)>0){
+                                                            while($team = mysqli_fetch_assoc($s_team)){
+                                                                
+
+                                                                $q_tm = mysqli_query($link, "SELECT karyawan.npk AS `npk`, 
                                                                 karyawan.nama AS `nama`, org.post AS `pos`,
                                                                 org.grp AS `group`, org.dept_account AS `dept_account`
                                                                 FROM org JOIN karyawan ON karyawan.npk = org.npk 
-                                                                WHERE org.grp = '$grp[id]' ".$dept_account.$shift)or die(mysqli_error($link));
-                                                        if(mysqli_num_rows($q_tm_unregistered)>0){
-                                                            
-                                                            ?>
-                                                            <div class="row">
-                                                                <div class="col-md-12 ">
-                                                                   
-                                                                    <!-- <p class="text-nowrap text-truncate m-0">Unregistered Team</p> -->
-                                                                    <div class=" table-full-width">
-                                                                        <table class=" table text-truncate text-center"  width="100%" style="border-spacing: 20px;" >
-                                                                            <tbody style="border:1px solid white;">
-                                                                                <tr>
-                                                                                <?php
-                                                                                        $index = 1;
-                                                                                        $max = 1;
-                                                                                        while($data_unregist = mysqli_fetch_assoc($q_tm_unregistered)){
-                                                                                            $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen',
-                                                                                                absensi.check_in AS `check_in`, absensi.ket AS `ket`,
-                                                                                                absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
-                                                                                                JOIN karyawan ON karyawan.npk = absensi.npk
-                                                                                                JOIN org ON karyawan.npk = org.npk
-                                                                                                WHERE absensi.npk = '$data_unregist[npk]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
-                                                                                                $data_absen = mysqli_fetch_assoc($q_cek_absen);
-                                                                                                $check_in = ($data_absen['check_in'] != '')?$data_absen['check_in']:'TA';
-                                                                                                    
-                                                                                                if(mysqli_num_rows($q_cek_absen)>0){
-                                                                                                    $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'bg-success':'';
-                                                                                                    $color_ta = ($data_absen['ket'] == 'M' )?'bg-danger':'';
-                                                                                                    $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"bg-info":'';
-                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"bg-warning":'';
-                                                                                                    $color = "bg-warning";
-                                                                                                }else{
-                                                                                                    $color = "";
-                                                                                                    $color_masuk = $color_telat = $color_ta = $color_ijin = '';
+                                                                WHERE org.post = '$team[id]' AND org.npk <> '$team[cord]' ")or die(mysqli_error($link));
+                                                                ?>
+                                                                <div class="row">
+                                                                    <div class="col-md-12 ">
+                                                                        <div class="card">
+                                                                            <div class="card-body">
+                                                                                <div class="row">
+                                                                                    <p class="text-nowrap text-truncate m-0 col-md-6"><?=$team['nama_org']?></p>
+                                                                                    <p class="text-nowrap text-truncate m-0 col-md-6 text-right"><?=$team['nama_cord']?></p>
+                                                                                </div>
+                                                                                <div class="  table-full-width">
+                                                                                    <table class=" table-sm text-truncate text-center" style="border:1px solid white" width="100%">
+                                                                                        <tbody style="border:1px solid white">
+                                                                                            <tr style="border:1px solid white">
+                                                                                            <?php
+                                                                                                if(mysqli_num_rows($q_tm)>0){
+                                                                                                    $index = 1;
+                                                                                                    while($data_mp = mysqli_fetch_assoc($q_tm)){
+                                                                                                        $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen',
+                                                                                                                absensi.check_in AS `check_in`, absensi.ket AS `ket`,
+                                                                                                                absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
+                                                                                                                JOIN karyawan ON karyawan.npk = absensi.npk
+                                                                                                                JOIN org ON karyawan.npk = org.npk
+                                                                                                                WHERE absensi.npk = '$data_mp[npk]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
+                                                                                                                $data_absen = mysqli_fetch_assoc($q_cek_absen);
+                                                                                                                $check_in = ($data_absen['check_in'] != '')?$data_absen['check_in']:'TA';
+                                                                                                                    
+                                                                                                                if(mysqli_num_rows($q_cek_absen)>0){
+                                                                                                                    $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'bg-success':'';
+                                                                                                                    $color_ta = ($data_absen['ket'] == 'M' )?'bg-danger':'';
+                                                                                                                    $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"bg-info":'';
+                                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"bg-warning":'';
+                                                                                                                    $color = "bg-warning";
+                                                                                                                }else{
+                                                                                                                    $color = "";
+                                                                                                                    $color_masuk = $color_telat = $color_ta = $color_ijin = '';
+                                                                                                                }
+                                                                                                        $index++;
+                                                                                                        ?>
+                                                                                                        <td style="max-width:50px" class=" text-truncate table-success ">
+                                                                                                            <a class="stretched-link"><?=$data_mp['nama']?></a>
+                                                                                                            
+                                                                                                        </td>
+                                                                                                        <?php
+                                                                                                        if($index == 10){
+                                                                                                            ?>
+                                                                                                            </tr><tr>
+                                                                                                            <?php
+                                                                                                        }
+                                                                                                    }
                                                                                                 }
                                                                                             ?>
-                                                                                            <td id="<?=$data_unregist['npk']?>" style="max-width:50px;background-color:rgba(216, 215, 215);border-radius:200px 200px 200px 200px;border:1px solid white;" celpadding="5px" class=" data-karyawan text-truncate <?=$color_masuk?> <?=$color_ta?> <?=$color_ijin?> <?=$color_telat?>" >
-                                                                                                
-                                                                                                <?=$data_unregist['nama']?>
-                                                                                            </td>
-                                                                                            <?php
-                                                                                            if($max++ == 10 * $index){
-                                                                                                $index++;
-                                                                                                ?>
-                                                                                                </tr><tr>
-                                                                                                <?php
-                                                                                            }
-                                                                                            // $break = $max / $index;
-                                                                                            // if($break == 10 && $max > 10){
-                                                                                                
-                                                                                            // }
-                                                                                            // $max++;
-                                                                                            
-                                                                                        }
-                                                                                ?>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div> 
-                                                            </div>
-                                                            <?php
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> 
+                                                                </div>
+                                                                <?php
+                                                            }
                                                         }
+                                                        
+
+                                                        // $org_query = mysqli_query($link, "SELECT npk FROM org WHERE grp = '$grp[id]' ")or die(mysqli_error($link));
+                                                        
+                                                        // $group_name[$i] = cutName($grp['nama_org']);
+                                                        // $group_mp[$i] = mysqli_num_rows($org_query);
+                                                        // $i++
                                                         ?>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -313,83 +423,6 @@ include("../../../config/config.php");
                                         <!-- group -->
                                         
                                         
-                                        <?php
-                                        if(mysqli_num_rows($s_team)>0){
-                                            while($team = mysqli_fetch_assoc($s_team)){
-                                                
-
-                                                $q_tm = mysqli_query($link, "SELECT karyawan.npk AS `npk`, 
-                                                karyawan.nama AS `nama`, org.post AS `pos`,
-                                                org.grp AS `group`, org.dept_account AS `dept_account`
-                                                FROM org JOIN karyawan ON karyawan.npk = org.npk 
-                                                WHERE org.post = '$team[id]' AND org.npk <> '$team[cord]' ")or die(mysqli_error($link));
-                                                ?>
-                                                <div class="row">
-                                                    <div class="col-md-12 ">
-                                                        <div class="card">
-                                                            <div class="card-body">
-                                                                <div class="row">
-                                                                    <p class="text-nowrap text-truncate m-0 col-md-6"><?=$team['nama_org']?></p>
-                                                                    <p class="text-nowrap text-truncate m-0 col-md-6 text-right"><?=$team['nama_cord']?></p>
-                                                                </div>
-                                                                <div class="  table-full-width">
-                                                                    <table class=" table-sm text-truncate text-center" style="border:1px solid white" width="100%">
-                                                                        <tbody style="border:1px solid white">
-                                                                            <tr style="border:1px solid white">
-                                                                            <?php
-                                                                                if(mysqli_num_rows($q_tm)>0){
-                                                                                    $index = 1;
-                                                                                    while($data_mp = mysqli_fetch_assoc($q_tm)){
-                                                                                        $q_cek_absen = mysqli_query($link, "SELECT absensi.npk AS 'npk_absen',
-                                                                                                absensi.check_in AS `check_in`, absensi.ket AS `ket`,
-                                                                                                absensi.date AS 'tgl_absen', absensi.shift AS `shift_absen`, karyawan.shift AS `shift_kary` FROM absensi 
-                                                                                                JOIN karyawan ON karyawan.npk = absensi.npk
-                                                                                                JOIN org ON karyawan.npk = org.npk
-                                                                                                WHERE absensi.npk = '$data_mp[npk]'".$shift.$dept_account.$tanggal)or die(mysqli_error($link));
-                                                                                                $data_absen = mysqli_fetch_assoc($q_cek_absen);
-                                                                                                $check_in = ($data_absen['check_in'] != '')?$data_absen['check_in']:'TA';
-                                                                                                    
-                                                                                                if(mysqli_num_rows($q_cek_absen)>0){
-                                                                                                    $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'bg-success':'';
-                                                                                                    $color_ta = ($data_absen['ket'] == 'M' )?'bg-danger':'';
-                                                                                                    $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"bg-info":'';
-                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"bg-warning":'';
-                                                                                                    $color = "bg-warning";
-                                                                                                }else{
-                                                                                                    $color = "";
-                                                                                                    $color_masuk = $color_telat = $color_ta = $color_ijin = '';
-                                                                                                }
-                                                                                        $index++;
-                                                                                        ?>
-                                                                                        <td style="max-width:50px" class=" text-truncate table-success stretched-link"><?=$data_mp['nama']?></td>
-                                                                                        <?php
-                                                                                        if($index == 10){
-                                                                                            ?>
-                                                                                            </tr><tr>
-                                                                                            <?php
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            ?>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div> 
-                                                </div>
-                                                <?php
-                                            }
-                                        }
-                                        
-
-                                        // $org_query = mysqli_query($link, "SELECT npk FROM org WHERE grp = '$grp[id]' ")or die(mysqli_error($link));
-                                        
-                                        // $group_name[$i] = cutName($grp['nama_org']);
-                                        // $group_mp[$i] = mysqli_num_rows($org_query);
-                                        // $i++
-                                        ?>
                                         
                                         <?php
                                     }

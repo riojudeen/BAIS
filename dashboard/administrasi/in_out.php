@@ -12,15 +12,15 @@ if(isset($_SESSION['user'])){
 
 <div class="row">
     
-    <div class="col-md-4">
+    <div class="col-md-1">
         <h5 class=""></h5>
     </div>
-    <div class="col-md-8 ">
+    <div class="col-md-11 ">
         <div class="row">
             <div class="col-md-5">
                 <div class="row">
-                    <label class="col-md-4 col-form-label text-right">Based On :</label>
-                    <div class="col-md-8">
+                    <label class="col-md-5 col-form-label text-right">Based On :</label>
+                    <div class="col-md-7">
                         <div class="form-group-sm pr-1">
                             <select name="show_dept" id="show_dept" class="form-control">
                                 <option value="">Departmen Administratif</option>
@@ -73,11 +73,10 @@ if(isset($_SESSION['user'])){
                     </div>
                 </div>
             </div>
-            <div class="col-md-1 text-right">
-                <div class="row ">
-                    <!-- <div class="nav-link active btn-magnify mt-0"><i class="fas fa-th-list"></i></div> -->
-                    <div class="nav-link text-danger btn-magnify mt-0"><i class="fas fa-th-large"></i></div>
-
+            <div class="col-md-1  pl-1">
+                <div class="row text-right">
+                    <span class="  active btn btn-primary  btn-sm mt-1 btn-magnify mt-0 search"><i class="fas fa-search-plus"></i></span>
+                    <span class="  active btn btn-primary  btn-sm mt-1 btn-magnify mt-0 "><i class="fas fa-tasks"></i></span>
                 </div>
             </div>
         </div>
@@ -105,11 +104,41 @@ if(isset($_SESSION['user'])){
     <div class="modal fade" id="modal_cico"  data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered ">
     
-        <div class="modal-content">
+        <div class="modal-content data_kary">
         
-            <div class="modal-body data_kary">
+            
+        
+        </div>
+    
+        
+      </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="modal fade" id="modal_search"  data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
+      <div class="modal-dialog modal-dialog-centered ">
+    
+        <div class="modal-content " style="border-radius:100px">
+            <div class="modal-body  p-1 m-1 ">
+                <div class="row">
+                    <div class="input-group no-border mx-4  mt-2">
+                        <input type="text" name="cari" id="pencarian" class="form-control cari" placeholder="Cari NPK atau nama" style="border-radius:100px" >
+                        <div class="input-group-append " >
+                            <div class="input-group-text p-0 bg-transparent">
+                                <div class="btn btn-primary btn-sm btn-icon btn-round btn-link m-0 btn-cari"><i class="nc-icon nc-zoom-split"></i></div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="input-group">
+                        <div class="form-group col-md-12 m-0 p-0">
+                            <input class="form-control m-1" type="text" >
+                        </div>
+                        <button class="input-append btn btn-sm">tes</button>
+                    </div> -->
+                </div>
             </div>
-        
         </div>
     
         
@@ -195,6 +224,19 @@ if(isset($_SESSION['user'])){
                 
             }
             
+            $(document).on('click', '.search', function(a){
+                a.preventDefault();
+                modalSearch()
+            })
+            $(document).on('click', '.btn-cari', function(a){
+                a.preventDefault();
+                var data = $('#pencarian').val()
+                $('#modal_search').modal('hide');
+                loadModal(data)
+            })
+            function modalSearch(){
+                $('#modal_search').modal('show');
+            }
             $(document).on('click', 'td.data-karyawan', function(a){
                 a.preventDefault();
                 var data = $(this).attr('id');
@@ -202,12 +244,12 @@ if(isset($_SESSION['user'])){
             })
             function loadModal(data){
                 $('#modal_cico').modal('show');
-                
+                var date = $('#date_').val()
                 // console.log(data)
                     $.ajax({
                         url: 'chart_view/preview.php',
                         method: 'GET',
-                        data: {data:data},
+                        data: {data:data,date:date},
                         success:function(data){
                             $('.data_kary').html(data);
                         }

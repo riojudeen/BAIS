@@ -10,6 +10,7 @@ if(isset($_SESSION['user'])){
     $start = DBtoForm($start_date);
     $end = DBtoForm($end_date);
     include_once("../header.php");
+    
 ?>
 <div class="row">
     <div class="col-md-2">
@@ -104,12 +105,23 @@ if(isset($_SESSION['user'])){
                         $('.data-eff').fadeOut('slow', function(){
                             $(".spinner_load").css("display","none")
                             $(this).html(data).fadeIn('slow');
-                            load_data2()
+                            
                         });
                     }
                 })
             }
-            load_data();
+            <?php
+            if(isset($_GET['dept'])){
+                ?>
+                load_data2();
+                <?php
+            }else{
+                ?>
+                load_data();
+                <?php
+            }
+            ?>
+            
             function load_data2(){
                 var start = $('#start_date').val()
                 var end = $('#end_date').val()
@@ -130,7 +142,17 @@ if(isset($_SESSION['user'])){
             }
             // // load_data2();
             $(document).on('click', '#loadData' , function(){
-                load_data();
+                <?php
+                if(isset($_GET['dept'])){
+                    ?>
+                    load_data2();
+                    <?php
+                }else{
+                    ?>
+                    load_data();
+                    <?php
+                }
+                ?>
             })
             
             var autoRefresh;
@@ -142,7 +164,17 @@ if(isset($_SESSION['user'])){
             window.onkeypress = resetTimeInterval;
     
             function refresh() {
-                load_data()
+                <?php
+                if(isset($_GET['dept'])){
+                    ?>
+                    load_data2();
+                    <?php
+                }else{
+                    ?>
+                    load_data();
+                    <?php
+                }
+                ?>
             }
             
             function resetTimeInterval() {

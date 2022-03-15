@@ -497,11 +497,7 @@ if(isset($_SESSION['user'])){
                 }
             });
         });
-
-
-
-
-
+        
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
             $(this).addClass('data-active');
