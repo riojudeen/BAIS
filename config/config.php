@@ -828,16 +828,52 @@ function cutName($nama){
 }
 function getFoto($npk){
     $path = "//adm-fs/HRD/HRD-Photo/".$npk.".jpg";
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    if (file_exists($path)) {
-        $dataImage = file_get_contents($path);
+    $newPath = "//adm-fs/BODY/BODY02/Body Plant/BAIS/employee-photo/".$npk.".jpg";
+    if(file_exists($newPath)){
+        
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $dataImage = file_get_contents($newPath);
         $image = 'data:image/' . $type . ';base64,' . base64_encode($dataImage);
         $base64 = ($image)? $image : "";
-        // die("File tidak ditemukan");
-    } else {
-        $base64 = base_url()."/assets/img/img/tm.png";
-        // $file = fopen($path, "r");
-        // echo "File berhasil dibaca.";
+    }else{
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        if (file_exists($path)) {
+            
+            // compress image
+            $source = $path;
+            $imgInfo = getimagesize($source); 
+            $mime = $imgInfo['mime'];  
+            // $fileName = $npk.".jpg";
+            $destination = $newPath;
+            $quality = 50;
+            // membuat image baru
+            switch($mime){ 
+            // proses kode memilih tipe tipe image 
+                case 'image/jpeg': 
+                    $image = imagecreatefromjpeg($source); 
+                    break; 
+                case 'image/png': 
+                    $image = imagecreatefrompng($source); 
+                    break; 
+                case 'image/gif': 
+                    $image = imagecreatefromgif($source); 
+                    break; 
+                default: 
+                    $image = imagecreatefromjpeg($source); 
+            } 
+            
+            imagejpeg($image, $newPath, $quality); 
+            // $base64 = $newPath;
+
+            $dataImage = file_get_contents($newPath);
+            $image = 'data:image/' . $type . ';base64,' . base64_encode($dataImage);
+            $base64 = ($image)? $image : "";
+        } else {
+            $base64 = base_url()."/assets/img/img/tm.png";
+            // $file = fopen($path, "r");
+            // echo "File berhasil dibaca.";
+        }
+
     }
     return $base64;
 }

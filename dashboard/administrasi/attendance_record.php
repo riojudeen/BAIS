@@ -4,7 +4,10 @@
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
 $halaman = "Attendance Efficiency";
-if(isset($_SESSION['user'])){
+if(!isset($_SESSION['user'])){
+    $level = 10;
+    $npkUser = 0;
+}
     $start_date = date('Y-m-1');
     $end_date = date('Y-m-t');
     $start = DBtoForm($start_date);
@@ -190,9 +193,6 @@ if(isset($_SESSION['user'])){
     <?php
     include_once("../endbody.php"); 
 
-} else{
-    echo "<script>window.location='".base_url('auth/login.php')."';</script>";
-}
   
 
 ?>

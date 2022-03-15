@@ -342,7 +342,7 @@
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
   </div>
   <div class="wrapper ">
-    <div class="sidebar bg-primary" data-color="default" data-active-color="danger">
+    <div class="sidebar bg-primary " data-color="default" data-active-color="danger">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color=" default | primary | info | success | warning | danger |"
       -->
@@ -361,7 +361,45 @@
         </a>
       </div>
       <div class="sidebar-wrapper">
+        <?php
+        if($level >= 10){
+            
+          ?>
+          <div class="user">
+            
+            <div class="photo">
+              <img src="<?=base_url()?>/assets/img/img/dvh.png"/>
+            </div>
+            <div class="info"> 
+              <a data-toggle="collapse" href="#profile" class="clpse collapsed" data-id="profile" data-name="profile">
+                <span style="text-transform:uppercase">
+                  BODY DIVISION
+                  <br class="m-0">
+                  <small for="" style="font-size:8px" class="label text-white m-0 py-0">(version X.alpha )</small>
+                  <b class="caret"></b>
+                </span>
+              </a>
+              <div class="clearfix"></div>
+              <div class="collapse " id="profile">
+                <ul class="nav">
+                  <li class="menu " data-name="myprofile" id="myprofile">
+                    <a href="<?=base_url()?>/auth/login.php">
+                      <span class="sidebar-mini-icon">UL</span>
+                      <span class="sidebar-normal">User Login</span>
+                    </a>
+                  </li>                
+                  
+                </ul>
+              </div>
+              
+            </div>
+          </div>
+          <?php
+        }else{
+          
+        ?>
         <div class="user">
+          
           <div class="photo">
             <img src="<?=$base64?>"  />
           </div>
@@ -391,455 +429,462 @@
             </div>
           </div>
         </div>
-        <ul class="nav" >
-          <li class="menu clpse " data-name="dashboard" id="dashboard" data-target="dashboard">
-            <a href="<?php echo base_url('dashboard/');?>">
-              <i class="nc-icon nc-bank"></i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li class="clpse " data-name="achieve" id="achieve" data-target="achieve_">
-            <a data-toggle="collapse" href="#achieve_" aria-expanded="false">
-              <i class="nc-icon nc-chart-bar-32"></i>
-              <p>
-              Dashboard <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="achieve_">
-              <ul class="nav">
-                <li class="menu " data-name="ach" id="ach">
-                  <a href="<?=base_url()?>/dashboard/administrasi/attendance_record.php"><!---link halaman absen MP--->
-                    <span class="sidebar-mini-icon">ME</span>
-                    <span class="sidebar-normal"> Attendance Efficiency </span>
-                  </a>
-                </li>
-                
-                <li class="menu " data-name="rcg" id="rcg">
-                  <a href="<?=base_url()?>/dashboard/administrasi/in_out.php"><!---link halaman pengajuan SUPEM--->
-                    <span class="sidebar-mini-icon">IO</span>
-                    <span class="sidebar-normal"> In - Out Monitoring</span>
-                  </a>
-                </li>
-                
-              </ul>
-            </div>
-          </li>
-          <?php
-          //akses menu
-            // if($role == "admin" || $role == "frm" || $role == "spv" || $role == "mng"){?>
-          <li class="clpse d-none" data-name="tf" id="tf" data-target="transfer">
-            <a data-toggle="collapse" href="#transfer">
-              <i class="nc-icon nc-book-bookmark"></i>
-              <p>
-                Informasi Transfer <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="transfer">
-              <ul class="nav">
-                <li class="menu " data-name="um" id="um">
-                  <a href=" "> <!---link halaman uang makan--->
-                    <span class="sidebar-mini-icon">UM</span>
-                    <span class="sidebar-normal"> Transfer Uang Makan </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="ss" id="ss">
-                  <a href=" "><!---link halaman SS--->
-                    <span class="sidebar-mini-icon">SS</span>
-                    <span class="sidebar-normal"> Transfer SS </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="tj" id="tj">
-                  <a href=" "><!---link halaman Tunjangan Pengobatan--->
-                    <span class="sidebar-mini-icon">TJ</span>
-                    <span class="sidebar-normal"> Transfer Tunjangan </span>
-                  </a>
-                </li>
-                </ul>
-            </div>
-          </li>
-          <?php
-            // }
-          ?>         
-          <?php 
-          if($level > 2 && $level != 5){
-            ?>
-          <li class="clpse " data-name="mntrg" id="mntrg" data-target="monitoring">
-            <a data-toggle="collapse" href="#monitoring" aria-expanded="false">
-              <i class="nc-icon nc-layout-11"></i>
-              <p>
-                Organization Data <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse " id="monitoring" >
-              <ul class="nav">
-                <?php 
-                // if($role == "user"){
-                //   echo "";
-                // }else{
-                
-                ?>
-                <li class="menu d-none" data-name="emp" id="emp">
-                  <a href="<?=base_url()?>/dashboard/pages/manpower.php"><!---link halaman update MP--->
-                    <span class="sidebar-mini-icon">EM</span>
-                    <span class="sidebar-normal"> Employee Monitoring (exp)</span>
-                  </a>
-                </li> 
-                <?php
-                if($level == 3 || $level == 8){
-                  ?> 
-                <li class="menu " data-name="mpu" id="mpu">
-                  <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
-                    <span class="sidebar-mini-icon">ED</span>
-                    <span class="sidebar-normal"> Employee Data </span>
-                  </a>
-                </li>
-                <li class="menu d-none" data-name="reqmp" id="reqmp">
-                  <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
-                    <span class="sidebar-mini-icon">MR</span>
-                    <span class="sidebar-normal"> Employee Update Request </span>
-                  </a>
-                </li>
-                <li class="menu" data-name="lisbl" id="lisbl">
-                  <a ><!---link halaman request edit MP--->
-                    <span class="sidebar-mini-icon">BL</span>
-                    <span class="sidebar-normal"> Black List Hospital </span>
-                  </a>
-                </li>
-                <li class="menu" data-name="lisbl" id="lisbl">
-                  <a ><!---link halaman request edit MP--->
-                    <span class="sidebar-mini-icon">BL</span>
-                    <span class="sidebar-normal"> Recomendation Hospital </span>
-                  </a>
-                </li>
-                <?php
-                  }else if($level >= 6 ){
-                    
-                  ?>
-                <li class="menu " data-name="reinburst" id="reinburst">
-                  <a href="">
-                    <span class="sidebar-mini-icon">EA</span>
-                    <span class="sidebar-normal"> Employee Update Approval </span>
-                  </a>
-                </li>
-                <?php
-                }
-                ?>
-              </ul>
-            </div>
-          </li>
-          <?php
-          }
-          ?>
-
-          <?php 
-
-          if($level >= 1 ){
-          ?>                  
-          <li class="clpse " data-name="req" id="req" data-target="requests">
-            <a data-toggle="collapse" href="#requests" aria-expanded="false">
-              <i class="nc-icon nc-ruler-pencil"></i>
-              <p>
-              attendance <b class="caret"></b>
-              </p>
-            </a>
-            <div class="collapse" id="requests">
-              <ul class="nav">
-                <li class="menu " data-name="abs" id="abs">
-                  <a href="<?=base_url()?>/dashboard/pages/absensi.php"><!---link halaman absen MP--->
-                    <span class="sidebar-mini-icon">AM</span>
-                    <span class="sidebar-normal"> attendance Monitoring </span>
-                  </a>
-                </li>
-                <?php 
-
-                if($level != 5 && $level >= 3 ){
-                ?> 
-                <li class="menu " data-name="reqabs" id="reqabs">
-                  <a href="<?=base_url()?>/dashboard/absensi/req_absensi.php"><!---link halaman pengajuan SUPEM--->
-                    <span class="sidebar-mini-icon">LR</span>
-                    <span class="sidebar-normal"> Leave Request </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="reqshift" id="reqshift">
-                  <a href="<?=base_url()?>/dashboard/absensi/shift_request.php"><!---link halaman pengajuan SUPEM--->
-                    <span class="sidebar-mini-icon">LR</span>
-                    <span class="sidebar-normal"> Shift Request </span>
-                  </a>
-                </li>
-                <?php
-                }
-                if($level >= 4 && $level != 5){
-                  
-                ?>
-                <li class="menu " data-name="leave" id="leave">
-                  <a href="<?=base_url()?>/dashboard/absensi/approval/index.php">
-                    <span class="sidebar-mini-icon">LA</span>
-                    <span class="sidebar-normal"> Leave Approval </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="shiftapprove" id="shiftapprove">
-                  <a href="<?=base_url()?>/dashboard/absensi/approval/shift-approval.php">
-                    <span class="sidebar-mini-icon">SA</span>
-                    <span class="sidebar-normal"> Shift Approval </span>
-                  </a>
-                </li>
-                <?php
-                }
-                if($level >= 6){
-                ?>
-                <li class="menu " data-name="cico" id="cico">
-                  <a target="blank" href="<?=base_url()?>/dashboard/setting/cico/index.php">
-                    <span class="sidebar-mini-icon">MC</span>
-                    <span class="sidebar-normal"> Migrasi CiCo </span>
-                  </a>
-                </li>
-                <?php
-                }
-                ?>
-              </ul>
-            </div>
-          </li>
-          <?php
-            }
-          ?>         
-          <?php if($level >= 1){?>
-          <li class="clpse " data-name="ot" id="ot" data-target="overtime">
-            <a data-toggle="collapse" href="#overtime" aria-expanded="false"><!---link halaman Kontrol--->
-              <i class="nc-icon nc-box"></i>
-              <p>
-              Overtime <b class="caret"></b>
-              </p>
-              </p>
-            </a>
-            <div class="cllpse collapse " id="overtime" data-name="overtime">
-              <ul class="nav">
-                <?php
-                if($level != 5 && $level >= 3 ){
-                ?>
-                <li class="menu " data-name="ovrtime" id="ovrtime">
-                  <a href="<?=base_url()?>/dashboard/pages/overtime.php">
-                    <span class="sidebar-mini-icon">OM</span>
-                    <span class="sidebar-normal"> Overtime Montoring </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="ovrtime2" id="ovrtime2">
-                  <a href="<?=base_url()?>/dashboard/ot/req_overtime.php">
-                    <span class="sidebar-mini-icon">OR</span>
-                    <span class="sidebar-normal"> Overtime Request</span>
-                  </a>
-                </li>
-                <?php 
-                }
-                if($level >= 4 && $level != 5){
-                ?>
-                <li class="menu " data-name="appot" id="appot">
-                  <a href="<?=base_url()?>/dashboard/ot/approval/index.php">
-                    <span class="sidebar-mini-icon">OA</span>
-                    <span class="sidebar-normal"> Overtime Approval </span>
-                  </a>
-                </li>
-                  <?php
-                }
-                ?>
-              </ul>
-            </div>
-          </li>
-          <?php
-          }
-          ?> 
-          <?php 
-          if($level >= 6 ){?>
-          <li class="clpse " data-name="contsettings" id="contsettings" data-target="settings">
-            <a data-toggle="collapse" href="#settings" aria-expanded="false"><!---link halaman Kontrol--->
-              <i class="nc-icon nc-lock-circle-open"></i>
-              <p>
-              Control Settings <b class="caret"></b>
-              </p>
-              </p>
-            </a>
-            <div class="collapse" id="settings">
-              <ul class="nav" >
-              <?php
-                if($level >= 7){
-                  
-                ?>
-                <li class="menu " data-name="master" id="master">
-                  <a href="<?=base_url()?>/dashboard/setting/master.php">
-                    <span class="sidebar-mini-icon">MD</span>
-                    <span class="sidebar-normal"> Master Data</span>
-                  </a>
-                </li>
-                <li class="menu " data-name="leave_transfer" id="leave_transfer">
-                  <a href="<?=base_url()?>/dashboard/setting/leave_alloc/index.php">
-                    <span class="sidebar-mini-icon">LA</span>
-                    <span class="sidebar-normal"> Leave Allocation</span>
-                  </a>
-                </li>
-                
-                <!-- seting waktu dan schedule produksi -->
-                <li class="menu " data-name="workinghours" id="workinghours">
-                  <a href="<?=base_url()?>/dashboard/wh">
-                    <span class="sidebar-mini-icon">WH</span>
-                    <span class="sidebar-normal"> Working Schedule</span>
-                  </a>
-                </li>
-                <!-- seting waktu dan schedule produksi -->
-                <?php
-                }
-                ?>
-                <li class="menu " data-name="resource" id="resource">
-                  <a href="<?=base_url()?>/dashboard/setting/employee/add_karyawan.php">
-                    <span class="sidebar-mini-icon">ED</span>
-                    <span class="sidebar-normal"> Employee Data</span>
-                  </a>
-                </li>
-                <li class="menu " data-name="user" id="user">
-                  <a href="<?=base_url()?>/dashboard/setting/employee/user.php">
-                    <span class="sidebar-mini-icon">UD</span>
-                    <span class="sidebar-normal"> User Data</span>
-                  </a>
-                </li>
-                
-                <li class="menu " data-name="org" id="org">
-                  <a href="<?=base_url()?>/dashboard/setting/organization/">
-                    <span class="sidebar-mini-icon">OS</span>
-                    <span class="sidebar-normal"> Organization Setting</span>
-                  </a>
-                </li>
-                <li class="menu d-none" data-name="mps" id="mps">
-                  <a href="<?=base_url()?>/dashboard/setting/manpower.php">
-                    <span class="sidebar-mini-icon">MO</span>
-                    <span class="sidebar-normal"> Man Power Setting</span>
-                  </a>
-                </li>
-                
-                <li class="menu d-none" data-name="infoport" id="infoport">
-                  <a href="<?=base_url()?>/dashboard/setting/portal.php">
-                    <span class="sidebar-mini-icon">IP</span>
-                    <span class="sidebar-normal"> Transfer Portal</span>
-                  </a>
-                </li>
-                <li class="menu " data-name="attendanceport" id="attendanceport">
-                  <a href="<?=base_url()?>/dashboard/setting/portAtt.php">
-                    <span class="sidebar-mini-icon">IP</span>
-                    <span class="sidebar-normal"> Attendance Portal</span>
-                  </a>
-                </li>
-                <li class="menu " data-name="overtimeport" id="overtimeport">
-                  <a href="<?=base_url()?>/dashboard/setting/portOt.php">
-                    <span class="sidebar-mini-icon">IP</span>
-                    <span class="sidebar-normal"> Overtime Portal</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <?php
-          }
-          if($level == 2 || $level == 8 ){
-            
-          ?>
-           
-          <li class="clpse " data-name="costmon" id="costmon" data-target="costMonitoring">
-            <a data-toggle="collapse" href="#costMonitoring" aria-expanded="false"><!---link halaman Kontrol--->
-              <i class="nc-icon nc-money-coins"></i>
-              <p>
-              Cost Monitoring <b class="caret"></b>
-              </p>
-              </p>
-            </a>
-            <div class="collapse" id="costMonitoring">
-              <ul class="nav">
-                <li class="menu " data-name="costBody1" id="costBody1">
-                  <a href="<?=base_url()?>/dashboard/cost/index.php?dept=5">
-                    <span class="sidebar-mini-icon">B1</span>
-                    <span class="sidebar-normal"> Body 1</span>
-                  </a>
-                </li>
-                <li class="menu " data-name="costBody2" id="costBody2">
-                  <a href="<?=base_url()?>/dashboard/cost/index.php?dept=6">
-                    <span class="sidebar-mini-icon">B2</span>
-                    <span class="sidebar-normal"> Body 2</span>
-                  </a>
-                </li>
-                <li class="menu " data-name="costBQC" id="costBQC">
-                  <a href="<?=base_url()?>/dashboard/cost/index.php?dept=3">
-                    <span class="sidebar-mini-icon">BQ</span>
-                      <span class="sidebar-normal"> BQC <span class="badge badge-sm badge-pill badge-white">Dev</span>
-                    </span>
-                  </a>
-                  
-                </li>
-              </ul>
-            </div>
-          </li>
-          <?php
-          
+        <?php
         }
-          ?>
-          <li class="clpse " data-name="doc" id="doc" data-target="documentation">
-            <a data-toggle="collapse" href="#documentation" aria-expanded="false"><!---link halaman Kontrol--->
-              <i class="nc-icon nc-book-bookmark"></i>
-              <p>
-              Document & Form <b class="caret"></b>
-              </p>
-              </p>
-            </a>
-            <div class="collapse" id="documentation">
-              <ul class="nav">
-                <li class="menu " data-name="UG" id="UG">
-                  <a href="<?=base_url()?>/dashboard/document/guide.php">
-                    <span class="sidebar-mini-icon">UG</span>
-                    <span class="sidebar-normal"> User Guidance </span>
-                  </a>
-                </li>
-                
-                <li class="menu " data-name="doc" id="doc">
-                  <a >
-                    <span class="sidebar-mini-icon">DO</span>
-                    <span class="sidebar-normal"> System Docs & BRD </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="doc" id="doc">
-                  <a >
-                    <span class="sidebar-mini-icon">AF</span>
-                    <span class="sidebar-normal"> Administration Forms </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="exportmp" id="exportmp">
-                  <a href="<?=base_url()?>/dashboard/setting/employee/proses/export.php?export=mp">
-                    <span class="sidebar-mini-icon">EX</span>
-                    <span class="sidebar-normal"> Export Employee Data </span>
-                  </a>
-                </li>
-                <li class="menu " data-name="exportmp" id="exportmp">
-                  <a href="<?=base_url()?>/dashboard/setting/employee/proses/export.php?export=organization">
-                    <span class="sidebar-mini-icon">EO</span>
-                    <span class="sidebar-normal"> Export Org Data </span>
-                  </a>
-                </li>
-                
-              </ul>
-            </div>
-          </li>
-          <?php
-          if($level >= 7){
+        ?>
+        <ul class="nav" >
+            <li class="menu clpse d-none" data-name="dashboard" id="dashboard" data-target="dashboard">
+              <a href="<?php echo base_url('dashboard/');?>">
+                <i class="nc-icon nc-bank"></i>
+                <p>Dashboard</p>
+              </a>
+            </li>
             
-          ?>
-          <li class="menu clpse " data-name="chat" id="chat" data-target="chat">
-            <a target="blank" href="<?php echo base_url('chat/');?>">
-              <i class="nc-icon nc-chat-33"></i>
-              <p>Chat </p>
-            </a>
-          </li>
-          <li class="menu clpse " data-name="lm" id="lm" data-target="lm">
-            <a href="<?php echo base_url('dashboard/time_lock/');?>">
-            <i class="far fa-clock"></i>
-              <p>Time-Lock Management </p>
-            </a>
-          </li>
-          <li>
+            <li class="clpse " data-name="achieve" id="achieve" data-target="achieve_">
+              <a data-toggle="collapse" href="#achieve_" aria-expanded="false">
+                <i class="nc-icon nc-chart-bar-32"></i>
+                <p>
+                Dashboard <b class="caret"></b>
+                </p>
+              </a>
+              <div class="collapse" id="achieve_">
+                <ul class="nav">
+                  <li class="menu " data-name="ach" id="ach">
+                    <a href="<?=base_url()?>/dashboard/administrasi/attendance_record.php"><!---link halaman absen MP--->
+                      <span class="sidebar-mini-icon">ME</span>
+                      <span class="sidebar-normal"> Attendance Efficiency </span>
+                    </a>
+                  </li>
+                  <li class="menu " data-name="rcg" id="rcg">
+                    <a href="<?=base_url()?>/dashboard/administrasi/in_out.php"><!---link halaman pengajuan SUPEM--->
+                      <span class="sidebar-mini-icon">IO</span>
+                      <span class="sidebar-normal"> In - Out Monitoring</span>
+                    </a>
+                  </li>
+                  
+                </ul>
+              </div>
+            </li>
             <?php
+          if($level < 10){
+
+              
+              //akses menu
+                // if($role == "admin" || $role == "frm" || $role == "spv" || $role == "mng"){?>
+              <li class="clpse d-none" data-name="tf" id="tf" data-target="transfer">
+                <a data-toggle="collapse" href="#transfer">
+                  <i class="nc-icon nc-book-bookmark"></i>
+                  <p>
+                    Informasi Transfer <b class="caret"></b>
+                  </p>
+                </a>
+                <div class="collapse" id="transfer">
+                  <ul class="nav">
+                    <li class="menu " data-name="um" id="um">
+                      <a href=" "> <!---link halaman uang makan--->
+                        <span class="sidebar-mini-icon">UM</span>
+                        <span class="sidebar-normal"> Transfer Uang Makan </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="ss" id="ss">
+                      <a href=" "><!---link halaman SS--->
+                        <span class="sidebar-mini-icon">SS</span>
+                        <span class="sidebar-normal"> Transfer SS </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="tj" id="tj">
+                      <a href=" "><!---link halaman Tunjangan Pengobatan--->
+                        <span class="sidebar-mini-icon">TJ</span>
+                        <span class="sidebar-normal"> Transfer Tunjangan </span>
+                      </a>
+                    </li>
+                    </ul>
+                </div>
+              </li>
+              <?php
+                // }
+              ?>         
+              <?php 
+              if($level > 2 && $level != 5){
+                ?>
+              <li class="clpse " data-name="mntrg" id="mntrg" data-target="monitoring">
+                <a data-toggle="collapse" href="#monitoring" aria-expanded="false">
+                  <i class="nc-icon nc-layout-11"></i>
+                  <p>
+                    Organization Data <b class="caret"></b>
+                  </p>
+                </a>
+                <div class="collapse " id="monitoring" >
+                  <ul class="nav">
+                    <?php 
+                    // if($role == "user"){
+                    //   echo "";
+                    // }else{
+                    
+                    ?>
+                    <li class="menu d-none" data-name="emp" id="emp">
+                      <a href="<?=base_url()?>/dashboard/pages/manpower.php"><!---link halaman update MP--->
+                        <span class="sidebar-mini-icon">EM</span>
+                        <span class="sidebar-normal"> Employee Monitoring (exp)</span>
+                      </a>
+                    </li> 
+                    <?php
+                    if($level == 3 || $level == 8){
+                      ?> 
+                    <li class="menu " data-name="mpu" id="mpu">
+                      <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">ED</span>
+                        <span class="sidebar-normal"> Employee Data </span>
+                      </a>
+                    </li>
+                    <li class="menu d-none" data-name="reqmp" id="reqmp">
+                      <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">MR</span>
+                        <span class="sidebar-normal"> Employee Update Request </span>
+                      </a>
+                    </li>
+                    <li class="menu" data-name="lisbl" id="lisbl">
+                      <a ><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">BL</span>
+                        <span class="sidebar-normal"> Black List Hospital </span>
+                      </a>
+                    </li>
+                    <li class="menu" data-name="lisbl" id="lisbl">
+                      <a ><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">BL</span>
+                        <span class="sidebar-normal"> Recomendation Hospital </span>
+                      </a>
+                    </li>
+                    <?php
+                      }else if($level >= 6 ){
+                        
+                      ?>
+                    <li class="menu " data-name="reinburst" id="reinburst">
+                      <a href="">
+                        <span class="sidebar-mini-icon">EA</span>
+                        <span class="sidebar-normal"> Employee Update Approval </span>
+                      </a>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                  </ul>
+                </div>
+              </li>
+              <?php
+              }
+              ?>
+
+              <?php 
+
+              if($level >= 1 ){
+              ?>                  
+              <li class="clpse " data-name="req" id="req" data-target="requests">
+                <a data-toggle="collapse" href="#requests" aria-expanded="false">
+                  <i class="nc-icon nc-ruler-pencil"></i>
+                  <p>
+                  attendance <b class="caret"></b>
+                  </p>
+                </a>
+                <div class="collapse" id="requests">
+                  <ul class="nav">
+                    <li class="menu " data-name="abs" id="abs">
+                      <a href="<?=base_url()?>/dashboard/pages/absensi.php"><!---link halaman absen MP--->
+                        <span class="sidebar-mini-icon">AM</span>
+                        <span class="sidebar-normal"> attendance Monitoring </span>
+                      </a>
+                    </li>
+                    <?php 
+
+                    if($level != 5 && $level >= 3 ){
+                    ?> 
+                    <li class="menu " data-name="reqabs" id="reqabs">
+                      <a href="<?=base_url()?>/dashboard/absensi/req_absensi.php"><!---link halaman pengajuan SUPEM--->
+                        <span class="sidebar-mini-icon">LR</span>
+                        <span class="sidebar-normal"> Leave Request </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="reqshift" id="reqshift">
+                      <a href="<?=base_url()?>/dashboard/absensi/shift_request.php"><!---link halaman pengajuan SUPEM--->
+                        <span class="sidebar-mini-icon">LR</span>
+                        <span class="sidebar-normal"> Shift Request </span>
+                      </a>
+                    </li>
+                    <?php
+                    }
+                    if($level >= 4 && $level != 5){
+                      
+                    ?>
+                    <li class="menu " data-name="leave" id="leave">
+                      <a href="<?=base_url()?>/dashboard/absensi/approval/index.php">
+                        <span class="sidebar-mini-icon">LA</span>
+                        <span class="sidebar-normal"> Leave Approval </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="shiftapprove" id="shiftapprove">
+                      <a href="<?=base_url()?>/dashboard/absensi/approval/shift-approval.php">
+                        <span class="sidebar-mini-icon">SA</span>
+                        <span class="sidebar-normal"> Shift Approval </span>
+                      </a>
+                    </li>
+                    <?php
+                    }
+                    if($level >= 6){
+                    ?>
+                    <li class="menu " data-name="cico" id="cico">
+                      <a target="blank" href="<?=base_url()?>/dashboard/setting/cico/index.php">
+                        <span class="sidebar-mini-icon">MC</span>
+                        <span class="sidebar-normal"> Migrasi CiCo </span>
+                      </a>
+                    </li>
+                    <?php
+                    }
+                    ?>
+                  </ul>
+                </div>
+              </li>
+              <?php
+                }
+              ?>         
+              <?php if($level >= 1){?>
+              <li class="clpse " data-name="ot" id="ot" data-target="overtime">
+                <a data-toggle="collapse" href="#overtime" aria-expanded="false"><!---link halaman Kontrol--->
+                  <i class="nc-icon nc-box"></i>
+                  <p>
+                  Overtime <b class="caret"></b>
+                  </p>
+                  </p>
+                </a>
+                <div class="cllpse collapse " id="overtime" data-name="overtime">
+                  <ul class="nav">
+                    <?php
+                    if($level != 5 && $level >= 3 ){
+                    ?>
+                    <li class="menu " data-name="ovrtime" id="ovrtime">
+                      <a href="<?=base_url()?>/dashboard/pages/overtime.php">
+                        <span class="sidebar-mini-icon">OM</span>
+                        <span class="sidebar-normal"> Overtime Montoring </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="ovrtime2" id="ovrtime2">
+                      <a href="<?=base_url()?>/dashboard/ot/req_overtime.php">
+                        <span class="sidebar-mini-icon">OR</span>
+                        <span class="sidebar-normal"> Overtime Request</span>
+                      </a>
+                    </li>
+                    <?php 
+                    }
+                    if($level >= 4 && $level != 5){
+                    ?>
+                    <li class="menu " data-name="appot" id="appot">
+                      <a href="<?=base_url()?>/dashboard/ot/approval/index.php">
+                        <span class="sidebar-mini-icon">OA</span>
+                        <span class="sidebar-normal"> Overtime Approval </span>
+                      </a>
+                    </li>
+                      <?php
+                    }
+                    ?>
+                  </ul>
+                </div>
+              </li>
+              <?php
+              }
+              ?> 
+              <?php 
+              if($level >= 6 ){?>
+              <li class="clpse " data-name="contsettings" id="contsettings" data-target="settings">
+                <a data-toggle="collapse" href="#settings" aria-expanded="false"><!---link halaman Kontrol--->
+                  <i class="nc-icon nc-lock-circle-open"></i>
+                  <p>
+                  Control Settings <b class="caret"></b>
+                  </p>
+                  </p>
+                </a>
+                <div class="collapse" id="settings">
+                  <ul class="nav" >
+                  <?php
+                    if($level >= 7){
+                      
+                    ?>
+                    <li class="menu " data-name="master" id="master">
+                      <a href="<?=base_url()?>/dashboard/setting/master.php">
+                        <span class="sidebar-mini-icon">MD</span>
+                        <span class="sidebar-normal"> Master Data</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="leave_transfer" id="leave_transfer">
+                      <a href="<?=base_url()?>/dashboard/setting/leave_alloc/index.php">
+                        <span class="sidebar-mini-icon">LA</span>
+                        <span class="sidebar-normal"> Leave Allocation</span>
+                      </a>
+                    </li>
+                    
+                    <!-- seting waktu dan schedule produksi -->
+                    <li class="menu " data-name="workinghours" id="workinghours">
+                      <a href="<?=base_url()?>/dashboard/wh">
+                        <span class="sidebar-mini-icon">WH</span>
+                        <span class="sidebar-normal"> Working Schedule</span>
+                      </a>
+                    </li>
+                    <!-- seting waktu dan schedule produksi -->
+                    <?php
+                    }
+                    ?>
+                    <li class="menu " data-name="resource" id="resource">
+                      <a href="<?=base_url()?>/dashboard/setting/employee/add_karyawan.php">
+                        <span class="sidebar-mini-icon">ED</span>
+                        <span class="sidebar-normal"> Employee Data</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="user" id="user">
+                      <a href="<?=base_url()?>/dashboard/setting/employee/user.php">
+                        <span class="sidebar-mini-icon">UD</span>
+                        <span class="sidebar-normal"> User Data</span>
+                      </a>
+                    </li>
+                    
+                    <li class="menu " data-name="org" id="org">
+                      <a href="<?=base_url()?>/dashboard/setting/organization/">
+                        <span class="sidebar-mini-icon">OS</span>
+                        <span class="sidebar-normal"> Organization Setting</span>
+                      </a>
+                    </li>
+                    <li class="menu d-none" data-name="mps" id="mps">
+                      <a href="<?=base_url()?>/dashboard/setting/manpower.php">
+                        <span class="sidebar-mini-icon">MO</span>
+                        <span class="sidebar-normal"> Man Power Setting</span>
+                      </a>
+                    </li>
+                    
+                    <li class="menu d-none" data-name="infoport" id="infoport">
+                      <a href="<?=base_url()?>/dashboard/setting/portal.php">
+                        <span class="sidebar-mini-icon">IP</span>
+                        <span class="sidebar-normal"> Transfer Portal</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="attendanceport" id="attendanceport">
+                      <a href="<?=base_url()?>/dashboard/setting/portAtt.php">
+                        <span class="sidebar-mini-icon">IP</span>
+                        <span class="sidebar-normal"> Attendance Portal</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="overtimeport" id="overtimeport">
+                      <a href="<?=base_url()?>/dashboard/setting/portOt.php">
+                        <span class="sidebar-mini-icon">IP</span>
+                        <span class="sidebar-normal"> Overtime Portal</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <?php
+              }
+              if($level == 2 || $level == 8 ){
+                
+              ?>
+              
+              <li class="clpse " data-name="costmon" id="costmon" data-target="costMonitoring">
+                <a data-toggle="collapse" href="#costMonitoring" aria-expanded="false"><!---link halaman Kontrol--->
+                  <i class="nc-icon nc-money-coins"></i>
+                  <p>
+                  Cost Monitoring <b class="caret"></b>
+                  </p>
+                  </p>
+                </a>
+                <div class="collapse" id="costMonitoring">
+                  <ul class="nav">
+                    <li class="menu " data-name="costBody1" id="costBody1">
+                      <a href="<?=base_url()?>/dashboard/cost/index.php?dept=5">
+                        <span class="sidebar-mini-icon">B1</span>
+                        <span class="sidebar-normal"> Body 1</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="costBody2" id="costBody2">
+                      <a href="<?=base_url()?>/dashboard/cost/index.php?dept=6">
+                        <span class="sidebar-mini-icon">B2</span>
+                        <span class="sidebar-normal"> Body 2</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="costBQC" id="costBQC">
+                      <a href="<?=base_url()?>/dashboard/cost/index.php?dept=3">
+                        <span class="sidebar-mini-icon">BQ</span>
+                          <span class="sidebar-normal"> BQC <span class="badge badge-sm badge-pill badge-white">Dev</span>
+                        </span>
+                      </a>
+                      
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <?php
+              
+            }
+              ?>
+              <li class="clpse " data-name="doc" id="doc" data-target="documentation">
+                <a data-toggle="collapse" href="#documentation" aria-expanded="false"><!---link halaman Kontrol--->
+                  <i class="nc-icon nc-book-bookmark"></i>
+                  <p>
+                  Document & Form <b class="caret"></b>
+                  </p>
+                  </p>
+                </a>
+                <div class="collapse" id="documentation">
+                  <ul class="nav">
+                    <li class="menu " data-name="UG" id="UG">
+                      <a href="<?=base_url()?>/dashboard/document/guide.php">
+                        <span class="sidebar-mini-icon">UG</span>
+                        <span class="sidebar-normal"> User Guidance </span>
+                      </a>
+                    </li>
+                    
+                    <li class="menu " data-name="doc" id="doc">
+                      <a >
+                        <span class="sidebar-mini-icon">DO</span>
+                        <span class="sidebar-normal"> System Docs & BRD </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="doc" id="doc">
+                      <a >
+                        <span class="sidebar-mini-icon">AF</span>
+                        <span class="sidebar-normal"> Administration Forms </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="exportmp" id="exportmp">
+                      <a href="<?=base_url()?>/dashboard/setting/employee/proses/export.php?export=mp">
+                        <span class="sidebar-mini-icon">EX</span>
+                        <span class="sidebar-normal"> Export Employee Data </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="exportmp" id="exportmp">
+                      <a href="<?=base_url()?>/dashboard/setting/employee/proses/export.php?export=organization">
+                        <span class="sidebar-mini-icon">EO</span>
+                        <span class="sidebar-normal"> Export Org Data </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </li>
+              <?php
+              if($level >= 7){
+                
+              ?>
+              <li class="menu clpse " data-name="chat" id="chat" data-target="chat">
+                <a target="blank" href="<?php echo base_url('chat/');?>">
+                  <i class="nc-icon nc-chat-33"></i>
+                  <p>Chat </p>
+                </a>
+              </li>
+              <li class="menu clpse " data-name="lm" id="lm" data-target="lm">
+                <a href="<?php echo base_url('dashboard/time_lock/');?>">
+                <i class="far fa-clock"></i>
+                  <p>Time-Lock Management </p>
+                </a>
+              </li>
+              <li>
+                <?php
+            }
 
             
           }

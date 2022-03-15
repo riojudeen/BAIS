@@ -6,11 +6,7 @@ include("../config/config.php");
 
 //redirect ke halaman dashboard index jika sudah ada session
 
-
-
 ?>
-        
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -77,7 +73,7 @@ include("../config/config.php");
         <a class="js-scroll-trigger" href="#portfolio">Coming Soon</a>
       </li>
       <li class="sidebar-nav-item">
-        <a class="js-scroll-trigger" href="#contact">HRIS</a>
+        <a class="js-scroll-trigger" href="../dashboard/administrasi/in_out.php">Attendance Monitor</a>
       </li>
     </ul>
   </nav>

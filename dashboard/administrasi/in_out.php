@@ -4,7 +4,10 @@
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
 $halaman = "In-Out Monitoring";
-if(isset($_SESSION['user'])){
+if(!isset($_SESSION['user'])){
+    $level = 10;
+    $npkUser = 0;
+}
 
     include_once("../header.php");
     $today = date('Y-m-d');
@@ -262,10 +265,4 @@ if(isset($_SESSION['user'])){
     </script>
     <?php
     include_once("../endbody.php"); 
-
-} else{
-    echo "<script>window.location='".base_url('auth/login.php')."';</script>";
-}
-  
-
 ?>

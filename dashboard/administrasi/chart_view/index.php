@@ -1,5 +1,6 @@
 <?php
 include("../../../config/config.php"); 
+
 ?>
 
 
@@ -64,8 +65,8 @@ include("../../../config/config.php");
                                             $ket = ($data_absen['ket'] != '')?$data_absen['ket']:'masuk';
                                             $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'success':'';
                                             $color_ta = ($data_absen['ket'] == 'M' )?'danger':'';
-                                            $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"info":'';
-                                            $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"warning":'';
+                                            $color_ijin = ($data_absen['ket'] != '' && ($data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' ||  $data_absen['ket'] != 'T2' || $data_absen['ket'] != 'T3') )?"info":'';
+                                            $color_telat = ($data_absen['ket'] == 'T1' ||  $data_absen['ket'] == 'T2' || $data_absen['ket'] == 'T3')?"warning":'';
                                             $color = "bg-warning";
                                         }else{
                                             $ket = '-';
@@ -119,34 +120,44 @@ include("../../../config/config.php");
                                                         <div class="row">
                                                             <div class="col-md-2">
                                                                 <h4 class="text-uppercase title text-nowrap text-truncate my-0 py-0"><?=$grp['nama_org']?></h4>
+                                                                <hr class="m-0">
                                                                 <ul class="list-unstyled team-members">
                                                                     <li>
-                                                                        <div class="row">
-                                                                            <div class="col-md-12 col-12 author">
-                                                                                <div class="card card-plain card-user my-0 py-0">
-                                                                                    <div class="avatar">
-                                                                                        <img src="<?=getFoto($grp['cord'])?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                                        <div class="row text-center">
+                                                                            <div class="col-md-12 col-12 author text-center">
+                                                                                <div class="card card-plain card-user my-0 py-0 px-5">
+                                                                                    <div class="avatar text-center ">
+                                                                                        <img src="<?=getFoto($grp['cord'])?>" alt="Circle Image" class="mx-auto img-circle img-no-padding img-responsive">
                                                                                     </div>
 
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col-md-12 col-12 text-nowrap text-truncate">
-                                                                                
-                                                                                    <?=$grp['nama_cord']?>
-                                                                                    <br>
-                                                                                <span style="background-color:rgba(216, 215, 215); width:100px; z-index:1000" class="text-muted badge badge-pill bg-<?=$color_masuk?><?=$color_telat?><?=$color_ijin?><?=$color_ta?>"><?=$ket?></span>
+                                                                                <h6><?=$grp['nama_cord']?></h6>
+                                                                                <span style="width:100%; z-index:1000" class=" badge badge-pill badge-<?=$color_masuk?><?=$color_ta?><?=$color_ijin?><?=$color_telat?>"><?=$ket?></span>
                                                                             </div>
                                                                         </div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            
-                                                            
+                                                            <?php
+                                                            if($percent_eff >= 98){
+                                                                $color_eff = "bg-success";
+                                                                $text_eff = "text-white";
+                                                            }else if($percent_eff >= 95 && $percent_eff <= 97){
+                                                                $color_eff = "bg-warning";
+                                                                $text_eff = "text-white";
+                                                            }else{
+                                                                $color_eff = "bg-danger";
+                                                                $text_eff = "text-white";
+                                                            }
+
+                                                            ?>
                                                             <div class="col-md-10">
                                                                 <div class="row">
                                                                     <div class="col-md-2 px-4">
                                                                         <div class="row">
-                                                                            <div class="col-md-12 number bg-secondary text-white rounded-lg my-2 px-2 text-center">
+                                                                            <div class="col-md-12 number border <?=$color_eff?> <?=$text_eff?> rounded-lg my-2 px-2 text-center">
 
                                                                                 <span class="card-label mb-0 mt-1 ">- eff -</span>
                                                                                 <hr class="my-0 text-white">
@@ -284,7 +295,7 @@ include("../../../config/config.php");
                                                                                                                     $color_masuk = ($data_absen['ket'] == '' || $data_absen['ket'] == 'TL')?'bg-success':'';
                                                                                                                     $color_ta = ($data_absen['ket'] == 'M' )?'bg-danger':'';
                                                                                                                     $color_ijin = ($data_absen['ket'] != '' || $data_absen['ket'] != 'TL' || $data_absen['ket'] != 'T1' &&  $data_absen['ket'] != 'T2' && $data_absen['ket'] != 'T3' )?"bg-info":'';
-                                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' &&  $data_absen['ket'] == 'T2' && $data_absen['ket'] == 'T3')?"bg-warning":'';
+                                                                                                                    $color_telat = ($data_absen['ket'] == 'T1' ||  $data_absen['ket'] == 'T2' || $data_absen['ket'] == 'T3')?"bg-warning":'';
                                                                                                                     $color = "bg-warning";
                                                                                                                 }else{
                                                                                                                     $color = "";

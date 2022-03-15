@@ -7,6 +7,8 @@ $halaman = "User Guide";
 if(isset($_SESSION['user'])){
 
     include("../header.php");
+    echo getFoto($npkUser);
+    
     ?>
     <div class="row">
         <div class="col-md-12">
