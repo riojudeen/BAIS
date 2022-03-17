@@ -51,7 +51,7 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
 <?php
 ?>
     
-    <form class="table-responsive" name="proses">
+    <form class="table-responsive text-uppercase " name="proses">
         <table class="table table-hover" id="usersetting" cellspacing="0" width="100%">
             <thead>
             <tr>
@@ -59,6 +59,7 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
                 <th>Npk</th>
                 <th>Nama</th>
                 <th>Username</th>
+                <th>Status</th>
                 <th class="text-right">Action</th>
                 <th scope="col" class="text-right">
                     <div class="form-check">
@@ -80,10 +81,16 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
                     while($data = mysqli_fetch_assoc($sql_data)){
                         ?>
                         <tr  id="<?=$data['npk']?>">
-                            <td><?=$no++?></td>
-                            <td><?=$data['npk']?></td>
+                            <td class="text-success"><?=$no++?></td>
+                            <td ><?=$data['npk']?></td>
                             <td><?=$data['nama']?></td>
                             <td><?=$data['username']?></td>
+                            <td >
+                                <div class="legend card-category">
+                                    <i class="fa fa-circle text-primary"></i>
+                                    active
+                                </div>
+                            </td>
                             <td class="text-right">
                                 <input type="hidden" name="tab" value="<?=$id_role?>">
                                 <a href="proses/proses.php?tab=<?=$id_role?>&reset=<?=$data['npk']?>" class="btn-round btn-outline-danger btn btn-danger btn-link btn-icon btn-sm reset"><i class="fas fa-undo-alt"></i></a>
