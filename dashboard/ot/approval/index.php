@@ -573,13 +573,13 @@ if(isset($_SESSION['user'])){
             var getLink = '../proses-approval.php?proses_multiple=';
                 
                 Swal.fire({
-                title: 'Memproses Pengajuan?',
+                title: 'Pengajuan Diproses?',
                 text: "Semua data yang dicheck / centang akan diproses secara administratif",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#FF5733',
+                confirmButtonColor: '#3498DB',
                 cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
+                confirmButtonText: 'Ya, Proses!'
             }).then((result) => {
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
@@ -634,13 +634,13 @@ if(isset($_SESSION['user'])){
             var getLink = '../proses-approval.php?return_multiple=';
                 
                 Swal.fire({
-                title: 'Kembalikan Pengajuan?',
+                title: 'Pengajuan Ingin Dikembalikan?',
                 text: "Semua data yang dicheck / centang akan dikembalikan untuk dicek kembali oleh foreman",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#FF5733',
+                confirmButtonColor: '#F1C40F',
                 cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
+                confirmButtonText: 'Ya, Kembalikan!'
             }).then((result) => {
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
@@ -694,13 +694,13 @@ if(isset($_SESSION['user'])){
             var getLink = '../proses-approval.php?stop_multiple=';
                 
                 Swal.fire({
-                title: 'Hentikan Pengajuan ?',
+                title: 'Pengajuan Dihentikan ?',
                 text: "Semua data yang dicheck / centang akan dihentikan dan pengajuan tidak bisa dibuat lagi",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#FF5733',
                 cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
+                confirmButtonText: 'Ya, Hentikan!'
             }).then((result) => {
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
@@ -754,13 +754,13 @@ if(isset($_SESSION['user'])){
             var getLink = '../proses-approval.php?approve_multiple=';
                 
                 Swal.fire({
-                title: 'Setujui Pengajuan ?',
+                title: 'Pengajuan Disetujui?',
                 text: "Semua data yang dicheck / centang akan disetujui untuk diproses admin",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#FF5733',
+                confirmButtonColor: '#3498DB',
                 cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
+                confirmButtonText: 'Yes, Setujui!'
             }).then((result) => {
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
@@ -815,13 +815,13 @@ if(isset($_SESSION['user'])){
             var getLink = '../proses-approval.php?reject_multiple=';
                 
                 Swal.fire({
-                title: 'Tolak Pengajuan ?',
+                title: 'Pengajuan Ditolak?',
                 text: "Semua data yang dicheck / centang akan ditolak dan tidak akan diteruskan ke admin untuk diproses serta pengajuan yang sama tidak dapat dibuat kembali",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#FF5733',
                 cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Yes, proses!'
+                confirmButtonText: 'Yes, Tolak Pengajuan!'
             }).then((result) => {
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
