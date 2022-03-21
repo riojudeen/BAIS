@@ -35,15 +35,12 @@ if(isset($_SESSION['user'])){
 <!-- filter -->
 
 <div id="load_trigger" data-id="0"></div>
-<div class="collapse show" id="collapseExample">
-    <div class="row ">
-        <div class="col-md-12">
-            
-            <div class="card " style="border: 5px #CACACA solid;  border-radius: 15px 15px 15px 15px">
-                
-                <div class="card-body px-3" >
-                    <div class="row " id="tes">
-                         
+<div class="modal fade bd-example-modal-lg"  data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalExample">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="border: 5px #CACACA solid;  border-radius: 15px 15px 15px 15px">
+            <div class="modal-body">
+                <div class="row ">
+                    <div class="col-md-12">       
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="row">
                                 <div class="col-md-12 ">
@@ -84,10 +81,10 @@ if(isset($_SESSION['user'])){
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
+
 <form method="POST">
 <div class="row">
     <div class="col-md-12" >
@@ -119,6 +116,27 @@ if(isset($_SESSION['user'])){
                         <input class="btn btn-icon btn-round" name="sort" value="go">
                     </div> -->
                 </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12 float-right text-right">
+                            <ul class="nav nav-pills  nav-pills-primary nav-pills-icons justify-content-end" role="tablist">
+                                
+                                <li class="nav-item">
+                                    <a class="nav-link nav-port " data-toggle="tab" id="nav-ot"  href="#link8" role="tablist">
+                                    <i class="nc-icon nc-box"></i> | 
+                                    Overtime
+                                    </a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link nav-port port-active active" id="nav-att" data-toggle="tab" href="#link9" role="tablist">
+                                    <i class="nc-icon nc-touch-id"></i> | 
+                                    Attendace
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 
             </div>
                 
@@ -128,26 +146,21 @@ if(isset($_SESSION['user'])){
 </div>
 </form>
 <div class="row ">
+<button class="btn" data-toggle="modal" data-target="#myModal10">
+                      Small alert modal
+                    </button>
 	<div class="col-md-12 ">
 		<div class="card">
 			<div class="card-header">
 				<h5 class="title pull-left">Database Absensi</h5>
                 <div class="box pull-right">
                     
-                    <button class="btn btn-sm btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <button class="btn btn-sm btn-info" data-toggle="modal" href="#modalExample" role="button" aria-expanded="false" aria-controls="modalExample">
                         <span class="btn-label">
                             <i class="nc-icon nc-cloud-download-93"></i>
                         </span>
                     Import
                     </button>
-                    
-                    <a href="proses/export.php?export=mp" class="btn btn-sm btn-success" name="export" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
-                        <span class="btn-label">
-                            <i class="nc-icon nc-cloud-upload-94"></i>
-                            
-                        </span>
-                        Export
-                    </a>
                     <button  class="btn btn-sm btn-danger  deleteall" >
                         <span class="btn-label">
                             <i class="nc-icon nc-simple-remove" ></i>
@@ -217,6 +230,13 @@ if(isset($_SESSION['user'])){
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <div class="data_preview"></div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="col-md-12">
                         <div class="data-monitor">Belum Ada Data</div>
 
                     </div>
@@ -284,14 +304,14 @@ if(isset($_SESSION['user'])){
         
     });
     </script>
+   
     <script>
         $(document).ready(function(){
-            
-            
-        })
-    </script>
-    <script>
-        $(document).ready(function(){
+            $(document).on('click', '.nav-port', function(){
+                $('.nav-port').removeClass('port-active');
+                $(this).addClass('port-active');
+                loadData();
+            })
 
             function triggerLoad(val){
                 var trigger = 1;
@@ -342,6 +362,7 @@ if(isset($_SESSION['user'])){
                     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
                 }
                 function progressHandler(event){
+                    $('#modalExample').modal('show');
                     if(event.lengthComputable) {
                         var percentComplete = event.loaded / event.total;
                         // Do something with download progress
@@ -395,7 +416,11 @@ if(isset($_SESSION['user'])){
                         $('.progress-bar').removeClass('bg-info');
                         $('.progress-bar').css('width', '0%');
                     },5000);
+                    // $('.data-monitor').fadeOut('fast', function(){
+                    //     $(this).html(data).fadeIn('fast');
+                    // });
                     // loadData();
+                    $('#modalExample').modal('hide');
                 }
                 function errorHandler(event){
                     $('#success_message').html("Upload Failed");
@@ -406,6 +431,8 @@ if(isset($_SESSION['user'])){
             }
 
             function loadData(page){
+                var data_port = $('.port-active').attr('id');
+                console.log(data_port);
                 var div_id = $('#s_div').val();
                 var dept_id = $('#s_dept').val();
                 var section_id = $('#s_section').val();
@@ -419,7 +446,7 @@ if(isset($_SESSION['user'])){
                 $.ajax({
                     url:"../absensi/ajax_monitor.php",
                     method:"GET",
-                    data:{page:page,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
+                    data:{data_port : data_port,page:page,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
                     success:function(data){
                         $('.data-monitor').fadeOut('fast', function(){
                             $(this).html(data).fadeIn('fast');

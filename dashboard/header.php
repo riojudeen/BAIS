@@ -963,7 +963,7 @@
                 </div>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn-rotate" href="javascript:;">
+                <a class="nav-link btn-rotate" id="btn-notification" href="javascript:;" onclick="showNotification('bottom','right')">
                   <i class="nc-icon nc-settings-gear-65"></i>
                   <p>
                     <span class="d-lg-none d-md-block">Account</span>
@@ -997,4 +997,27 @@
               </div>
             </div>
 
+        </div>
+        <div class="modal fade modal-primary" id="myModal10" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header justify-content-center">
+                <div class="modal-profile mx-auto">
+                  <i class="nc-icon nc-bulb-63"></i>
+                </div>
+              </div>
+              <div class="modal-body">
+                <p>Remaining 1 minutes ..</p>
+              </div>
+              <div class="modal-footer">
+                <div class="left-side">
+                  <button type="button" class="btn btn-link">Back</button>
+                </div>
+                <div class="divider"></div>
+                <div class="right-side">
+                  <button type="button" class="btn btn-link btn-danger" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>

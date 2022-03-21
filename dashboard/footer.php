@@ -447,5 +447,62 @@ if($actual_link != $link_exception){
     }
   }
 }
-    </script>
+</script>
+<script type="text/javascript">
+        function toggleFullScreen() {
+  if ((document.fullScreenElement && document.fullScreenElement !== null) ||  
+   (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+    if (document.documentElement.requestFullScreen) {
+      document.documentElement.requestFullScreen();
+      $('#fullscreen').removeClass("fa-expand");
+      $('#fullscreen').addClass("fa-compress");
+    } else if (document.documentElement.mozRequestFullScreen) {
+      document.documentElement.mozRequestFullScreen();
+      $('#fullscreen').removeClass("ffa-expand");
+      $('#fullscreen').addClass("fa-compress");
+    } else if (document.documentElement.webkitRequestFullScreen) {
+      document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+      $('#fullscreen').removeClass("fa-expand");
+      $('#fullscreen').addClass("fa-compress");
+    }
+  } else {
+    if (document.cancelFullScreen) {
+      document.cancelFullScreen();
+      $('#fullscreen').removeClass("fa-compress");
+      $('#fullscreen').addClass("fa-expand");
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+      $('#fullscreen').removeClass("fa-compress");
+      $('#fullscreen').addClass("fa-expand");
+    } else if (document.webkitCancelFullScreen) {
+      document.webkitCancelFullScreen();
+      $('#fullscreen').removeClass("fa-compress");
+      $('#fullscreen').addClass("fa-expand");
+    }
+  }
+}
+</script>
+<script>
+    function showNotification(from, align){
+    color = 1;
+    // 4 danger //untuk notifikasi pengajuan bermasalah
+    // 3 warning //untuk reminder pengajuan
+    // 1 info //informasi 
+    // 2 success
+        console.log(color);
+    $.notify({
+      icon: "nc-icon nc-bell-55",
+      message: "Batas Pengajuan 25 Maret"
+
+    },{
+      type: type[color],
+      timer: 8000,
+      placement: {
+        from: from,
+        align: align
+      }
+    });
+  }
+</script>
+
 

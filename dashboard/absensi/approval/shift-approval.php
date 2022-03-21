@@ -119,35 +119,8 @@ if(isset($_SESSION['user'])){
             }).then((result) => {
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
-                        // var form = $("#formAbsensi").serialize()
-                        // console.log(form);
                         document.proses.action = getLink;
                         document.proses.submit();
-                        // $.ajax({
-                            
-                        //     url:getLink,
-                        //     method:"POST",
-                        //     data:form,
-                        //     success:function(data){
-                                
-                        //         load_data(page)
-                        //         getSumary()
-                                
-                                
-                        //         Swal.fire({
-                        //             title: "Sukses",
-                        //             text: "data berhasil diproses",
-                        //             timer: 2000,
-                                    
-                        //             icon: 'success',
-                        //             showCancelButton: false,
-                        //             showConfirmButton: false,
-                        //             confirmButtonColor: '#00B9FF',
-                        //             cancelButtonColor: '#B2BABB',
-                                    
-                        //         })
-                        //     }
-                        // })
                         
                     }else{
                         Swal.fire({

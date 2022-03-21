@@ -20,6 +20,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         // echo $path;
         if (file_exists($path)) {
             // echo $path['name'];
+            echo "OK";
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             
@@ -64,6 +65,10 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 `check_in`,`check_out`,`ket`,`requester`) VALUES ";
             $q_cek_shift = "SELECT npk , shift FROM karyawan ";
             $q_cek_req = "SELECT `npk`, `keterangan`, `date`, `check_in`, `check_out` FROM req_absensi ";
+
+            $q_replace_overtime =  "REPLACE INTO hr_lembur (`id`,
+                `npk`,`date`,`in_date`,`out_date`,
+                `start`,`end`, `updated_by`) VALUES ";
             
             foreach($array_tgl AS $date){
                 // looping data karyawan
@@ -133,24 +138,51 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                             }
                         }
                         
+                    }else if($scope == 'Lembur'){
+                        $npk = $sheetData[$i]['0'];
+                        $nama = $sheetData[$i]['1'];
+                        $dept = $sheetData[$i]['2'];
+
+                        // ambil data mulai dan selesai lembur
+                        $index_mulai = 4 + $index_tanggal; //index pertama 5
+                        $in = $index_mulai + 1;
+                        $out = $index_mulai + 2;
+                        $ket = $index_mulai + 3;
+
+                        $start = ($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in];
+                        $end = ($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out];
+                        $id= $npk.$date;
+                        $q_shift = mysqli_query($link, $q_cek_shift." WHERE npk = '$npk' ")or die(mysqli_error($link));
+                        // jika karyawan ada di database pake shift karyawan
+                        if(mysqli_num_rows($q_shift)>0){
+                            $data_shift = mysqli_fetch_assoc($q_shift);
+                            $shift = $data_shift['shift'];
+                        }else{
+                            $shift = shift_ubah($sheetData[$i]['3']);
+                        }
+                        list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
+                        
+                        // echo $iin."-".$iint."-".$iiint."<br>";
+                        $q_replace_overtime .= " ('$id','$npk','$date','$date_mulai','$date_selesai','$start','$end','$npkUser'),";
+                        // cek apalkah sudah ada pengajuan atau belum
                     }
-                    
-                    
-                    
                     ?>
                     
                     <?php
                     
                 }
             }
+            // echo $q_replace_overtime;
+            $q_replace_overtime = substr($q_replace_overtime, 0, -1);
             $q_replace_absensi = substr($q_replace_absensi, 0, -1);
-            $sql = mysqli_query($link, $q_replace_absensi)or die(mysqli_error($link));
-            if($sql){
+            $sql_absensi = mysqli_query($link, $q_replace_absensi);
+            $sql_overtime = mysqli_query($link, $q_replace_overtime);
+            if($sql_absensi && $sql_overtime){
                 ?>
                     <script>
                         Swal.fire({
                             title: 'Sukses',
-                            text: "data absensi tanggal <?=tgl($tgl_pertama)?> sampai <?=tgl($tgl_terakhir)?> berhasil diupload",
+                            text: "data absensi & overtime tanggal <?=tgl($tgl_pertama)?> sampai <?=tgl($tgl_terakhir)?> berhasil diupload",
                             timer: 2000,
                             
                             icon: 'success',
@@ -180,8 +212,6 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     </script>
                 <?php
             }
-
-
         } else {
             ?>
                 <script>

@@ -64,6 +64,8 @@ if(isset($_SESSION['user'])){
                     <th style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">Nama</th>
                     <th style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">Mulai</th>
                     <th style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">Selesai</th>
+                    <th style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">Shift Asal</th>
+                    <th style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">Shift Tujuan</th>
                 </tr>
                     
             </thead>
@@ -71,7 +73,7 @@ if(isset($_SESSION['user'])){
                 <?php
                     
                         $filter_id = ($id_req != '')?" AND (".substr($id_req, 0, -2).")":'';
-                        $query = mysqli_query($link, "SELECT MIN(`req_work_date`) AS mulai, MAX(`req_work_date`) AS selesai, req_work_date, npk, nama FROM view_absen_req WHERE shift_req = '1' AND req_code = 'SHIFT'  $filter_id GROUP BY nama, npk")or die(mysqli_error($link));
+                        $query = mysqli_query($link, "SELECT MIN(`req_work_date`) AS mulai, MAX(`req_work_date`) AS selesai, req_work_date, npk, nama, req_shift, employee_shift FROM view_absen_req WHERE shift_req = '1' AND req_code = 'SHIFT'  $filter_id GROUP BY nama, npk, req_shift")or die(mysqli_error($link));
                         while($data = mysqli_fetch_assoc($query)){
                             $npk = $data['npk'];
                             $nama = $data['nama'];
@@ -95,18 +97,20 @@ if(isset($_SESSION['user'])){
                                 <td  style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">
                                 <?=tgl($end)?>
                                 </td>
+                                <td  style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">
+                                <?=$data['employee_shift']?>
+                                </td>
+                                <td  style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">
+                                <?=$data['req_shift']?>
+                                </td>
                             </tr>
                             <?php
                         }
                 ?>
-                
-                
-                
-                
             </tbody>
         </table>
         
-        <p style="width:60%; margin-top:100px">Jakarta ,</p>
+        <p style="width:60%; margin-top:100px">Jakarta , <?=tgl($today)?></p>
         <table cellspacing="0" cellpadding="0" class="table  py-0" style="width:60%; ">
             <tbody >
                 <tr class="py-0">
@@ -133,14 +137,15 @@ if(isset($_SESSION['user'])){
             </tbody>
         </table>
         <?php
-        $nama_dokumen = "Tes";
+        $nama_dokumen = "Memo_Perubahan_Shift_";
+       
         $html = ob_get_contents();
         ob_end_clean();
         // ob_end_flush();
         $mpdf->AddPage('P');
         // $mpdf->setFooter('{PAGENO}');
         $mpdf->WriteHTML(utf8_encode($html));
-        $mpdf->Output($nama_dokumen.".pdf" ,'D');
+        $mpdf->Output($nama_dokumen.$today.".pdf" ,'D');
         $db1->close();
     }else{
         include_once ("../../../no_access.php");
