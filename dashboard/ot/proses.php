@@ -54,7 +54,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 ?>
                 <script>
                     Swal.fire({
-                        title: 'Disimpan',
+                        title: 'Telah Dibuat',
                         text: 'Pengajuan Overtime Telah Dibuat dan Siap Diajukan',
                         timer: 2000,
                         
@@ -71,7 +71,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 ?>
                 <script>
                     Swal.fire({
-                        title: 'Disimpan',
+                        title: 'Gagal Dibuat',
                         text: 'Gagal',
                         timer: 2000,
                         

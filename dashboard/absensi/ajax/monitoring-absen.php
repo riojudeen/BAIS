@@ -338,11 +338,12 @@ if(isset($_SESSION['user'])){
                                     <p class="card-category text-white">Masuk Tepat Waktu</p>
                                     <p class="card-title"><?=$totalWFO?> MP
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="1" ></a> 
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <a href="" class="stretched-link view_data text-white" id="1" ></a> 
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-6">
@@ -359,11 +360,11 @@ if(isset($_SESSION['user'])){
                                     <p class="card-category text-white">Absen Tidak lengkap</p>
                                     <p class="card-title"><?=$totalTL?> MP
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="2" ></a> 
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <a href="" class="stretched-link view_data text-white" id="2" ></a> 
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 col-sm-6">
@@ -380,11 +381,12 @@ if(isset($_SESSION['user'])){
                                     <p class="card-category text-white">Terlambat</p>
                                     <p class="card-title"><?=$totalT?> MP
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="3" ></a> 
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <a href="" class="stretched-link view_data text-white" id="3" ></a> 
                 </div>
             </div>
         </div>
@@ -405,11 +407,12 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti</p>
                                         <p class="card-title"><?=$totalC?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="4" ></a> 
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="4" ></a> 
                     </div>
                 <!-- </div>
                 <div class="col-lg-4 col-md-6 col-sm-6"> -->
@@ -426,11 +429,12 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti Lain-Lain</p>
                                         <p class="card-title"><?=$totalCL?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="5" ></a> 
+                                         
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="5" ></a>
                     </div>
                 <!-- </div>
                 
@@ -448,11 +452,12 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti Dokter & Dirawat</p>
                                         <p class="card-title text-white"><?=$totalS?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="6" ></a>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="6" ></a>
                     </div>
                 <!-- </div>
                 <div class="col-lg-4 col-md-6 col-sm-6"> -->
@@ -469,11 +474,12 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Ijin Keluar Perusahaan</p>
                                         <p class="card-title"><?=$totalP?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="7" ></a> 
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="7" ></a> 
                     </div>
                 <!-- </div>
                 <div class="col-lg-4 col-md-6 col-sm-6"> -->
@@ -490,11 +496,12 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">WFH</p>
                                         <p class="card-title"><?=$totalWFH?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="8" ></a> 
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="8" ></a> 
                     </div>
                 <!-- </div>
                 <div class="col-lg-4 col-md-6 col-sm-6"> -->
@@ -511,11 +518,12 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Mangkir</p>
                                         <p class="card-title"><?=$totalM?> MP
                                         <p>
-                                        <a class="stretched-link view_data text-white" id="9" ></a> 
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="9" ></a> 
                     </div>
                 <!-- </div> -->
             </div>

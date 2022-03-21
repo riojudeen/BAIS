@@ -471,7 +471,7 @@ if(isset($_GET['id'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         // echo $filter_cari;
         $exception = " AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' ";
@@ -743,7 +743,7 @@ if(isset($_GET['id'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         
         $exception = " AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' ";
@@ -1015,7 +1015,7 @@ if(isset($_GET['id'])){
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         
         $exception = " AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' ";

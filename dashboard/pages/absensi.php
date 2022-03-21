@@ -5,7 +5,7 @@ include("../../config/config.php");
 include("../../config/approval_system.php"); 
 include("../../config/schedule_system.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
-$halaman = "Monitoring Kehadiran";
+$halaman = "Attendance Monitoring";
 if(isset($_SESSION['user'])){
     include_once("../header.php");
     $_SESSION['now'] = $tanggalSekarang = date('Y-m-d');
@@ -141,9 +141,9 @@ if(isset($_SESSION['user'])){
                 });
             }
             $(document).on('click','.view_data',function(e){
+                e.preventDefault()
                 var data = $(this).attr("id");
                 modalActive(data,'1')
-                
             });
             $(document).on('click', '.halaman_modal', function(){
                 var page = $(this).attr("id");

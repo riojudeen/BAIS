@@ -395,6 +395,8 @@ if(isset($_SESSION['user'])){
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
+
+                
                
                 $.ajax({
                     url:"ajax/index.php",
@@ -409,7 +411,35 @@ if(isset($_SESSION['user'])){
                 })
             }
         }
-        
+        $(document).on('click', '.sort', function(){
+            var div_id = $('#s_div').val();
+            var dept_id = $('#s_dept').val();
+            var section_id = $('#s_section').val();
+            var group_id = $('#s_goupfrm').val();
+            var deptAcc_id = $('#s_deptAcc').val();
+            var shift = $('#s_shift').val();
+            var start = $('#start_date').val();
+            var end = $('#end_date').val();
+
+            var id = $('.data-active').attr('data-id');
+            var start = $('#startDate').val();
+            var end = $('#endDate').val();
+            var sort = $("#dataSort").serialize()
+            var page = $('.page_active').attr('id');
+            // console.log(sort);
+            // dataActive(page)
+            $.ajax({
+                            
+                url:"ajax/index.php?page="+page+"&id="+id+"&start="+start+"&end="+end+"&div="+div_id+"&dept="+dept_id+"&sect="+section_id+"&group="+group_id+"&deptAcc="+deptAcc_id+"&shift="+shift+"&filter=yes",
+                method:"GET",
+                data:sort,
+                success:function(data){
+                    $('#monitor').fadeOut('fast', function(){
+                        $(this).html(data).fadeIn('fast');
+                    });
+                }
+            })
+        })
         function inputNpk(page){
             var div_id = $('#s_div').val();
             var dept_id = $('#s_dept').val();
@@ -577,8 +607,8 @@ if(isset($_SESSION['user'])){
         $('#s_section').on('change', function(){
             getGroup()
         })
-        $(document).on('blur', '#cari', function(eventform){
-            eventform.preventDefault()
+        $(document).on('blur', '#cari', function(a){
+            a.preventDefault()
             // var cari = $(this).val()
             dataActive()
             // console.log(cari);
@@ -662,13 +692,13 @@ if(isset($_SESSION['user'])){
             var form = $('#form_request').serialize()
             var page = $('.page_active').attr('id')
             Swal.fire({
-                title: 'Apakah Anda Yakin?',
+                title: 'Ajukan Sekarang?',
                 text: "draft pengajuan akan diajukan untuk disetujui dan diproses",
                 icon: false,
                 showCancelButton: true,
-                confirmButtonColor: '#CB4335',
+                confirmButtonColor: '#1ABC9C',
                 cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Delete!'
+                confirmButtonText: 'Request!'
             }).then((result) => {
                 if (result.value) {
                    
@@ -699,6 +729,7 @@ if(isset($_SESSION['user'])){
                 
             })
         }
+        
     })
     </script>
     <script>
