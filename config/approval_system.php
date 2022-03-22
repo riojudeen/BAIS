@@ -903,19 +903,42 @@ function partAccess($level, $req){
 
 
 function queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npkUser, $val_access){
+    //koneksi database
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $dbpass = "";
+    $dbname = "bais_db";
+    $link = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname);
     if($level >= 1 && $level <= 2){
         $query_org = "SELECT $table.$field_request AS `data` FROM $table WHERE $table.$table_field1 = '$npkUser' ";
     }else if($level >= 3 && $level <= 8){
         if($level >= 3 && $level <= 5){
             //jika user foreman atau supervisor , meraka hanya bisa mengakses organisasi yang dikoordinir
             $query_org = "SELECT $table.$field_request AS `data` FROM $table WHERE $table.$table_field1 = '$npkUser' AND $table.$table_field2 = '$part'  ";
-            
+            $sql_org = mysqli_query($link, $query_org);
+            if(mysqli_num_rows($sql_org) > 0 ){
+                $query_org = $query_org;
+            }else{
+                $query_org = " SELECT karyawan.npk AS `data` FROM karyawan WHERE karyawan.npk = '$npkUser' ";
+            }
         }else if($level >= 6 && $level <= 7){
             // jika admin department , admin division
             $query_org = "SELECT $table.$field_request AS `data` FROM $table WHERE $table.$table_field2 = '$part' ";
+            $sql_org = mysqli_query($link, $query_org);
+            if(mysqli_num_rows($sql_org) > 0 ){
+                $query_org = $query_org;
+            }else{
+                $query_org = " SELECT karyawan.npk AS `data` FROM karyawan WHERE karyawan.npk = '$npkUser' ";
+            }
         }else if($level == 8){
             // jika admin sistem bisa mengakses semua data plant
             $query_org = "SELECT $table.$field_request AS `data` FROM $table WHERE $table.$table_field2 = '$part' ";
+            $sql_org = mysqli_query($link, $query_org);
+            if(mysqli_num_rows($sql_org) > 0 ){
+                $query_org = $query_org;
+            }else{
+                $query_org = " SELECT karyawan.npk AS `data` FROM karyawan WHERE karyawan.npk = '$npkUser' ";
+            }
         }
     }else{
         $query_org = "parameter salah";
@@ -925,15 +948,136 @@ function queryGenerator($level, $table, $field_request, $table_field1, $table_fi
 // query data absensi
 function filtergenerator($link, $level, $generate, $origin_query, $access_org){
     if($level >=1 AND $level <= 8){
+        
         $sql = mysqli_query($link, $generate)or die(mysqli_error($link));
         $jml = mysqli_num_rows($sql);
+        // cek area 
         if($jml > 0){
-            $query = " $origin_query WHERE (";
-            while($data = mysqli_fetch_assoc($sql)){
-                $query .= " $access_org = '$data[data]' OR";
+            // part 
+            if($level == 1){
+                // general user
+                $part = "npk"; //field table untuk kondiwi where statement : WHERE field_data = 'npk' AND $table.$table_field2 = '$part'
+               
+            }else if($level == 2){
+                // special user
+                $part = "npk";
+               
+            }else if($level == 3){
+                // foreman
+                $part = "group";
+               
+            }else if($level == 4){
+                // section head
+                $part = "section";
+               
+            }else if($level == 5){
+                // manajemen
+                $part = "dept";
+                
+            }else if($level == 6){
+                // admin department
+                $part = "division";
+               
+            }else if($level == 7){
+                // admin divisi
+                $part = "division";
+               
+            }else if($level == 8){
+                // admin system
+                $part = "division";
+                
+            }else{
+                $part = "function argumen tida lengkap atau salah";
             }
-            $query = substr($query , 0, -2);
-            return $query.')';
+            $npkUser = $GLOBALS['npkUser'];
+            $cekArea = mysqli_query($link, " SELECT view_daftar_area.id AS id_area FROM view_daftar_area WHERE cord = '$npkUser' AND part = '$part' ");
+            $jmlArea = mysqli_num_rows($cekArea);
+            if((($level == 3 || $level == 4 || $level == 5) && $jmlArea > 0) OR ($level == 6 || $level == 7 || $level == 8)){
+                $query = " $origin_query WHERE (";
+                while($data = mysqli_fetch_assoc($sql)){
+                    $query .= " $access_org = '$data[data]' OR";
+                }
+                $query = substr($query , 0, -2);
+                return $query.')';
+            }else{
+                $query = " $origin_query WHERE (";
+                while($data = mysqli_fetch_assoc($sql)){
+                    $query .= " npk = '$data[data]' OR";
+                }
+                $query = substr($query , 0, -2);
+                return $query.')';
+            }
+
+            
+        }
+
+    }else{
+        return "tidak akses data";
+    }
+}
+function filtergeneratorJoinAbsen($link, $level, $generate, $origin_query, $access_org){
+    if($level >=1 AND $level <= 8){
+        
+        $sql = mysqli_query($link, $generate)or die(mysqli_error($link));
+        $jml = mysqli_num_rows($sql);
+        // cek area 
+        if($jml > 0){
+            // part 
+            if($level == 1){
+                // general user
+                $part = "npk"; //field table untuk kondiwi where statement : WHERE field_data = 'npk' AND $table.$table_field2 = '$part'
+               
+            }else if($level == 2){
+                // special user
+                $part = "npk";
+               
+            }else if($level == 3){
+                // foreman
+                $part = "group";
+               
+            }else if($level == 4){
+                // section head
+                $part = "section";
+               
+            }else if($level == 5){
+                // manajemen
+                $part = "dept";
+                
+            }else if($level == 6){
+                // admin department
+                $part = "division";
+               
+            }else if($level == 7){
+                // admin divisi
+                $part = "division";
+               
+            }else if($level == 8){
+                // admin system
+                $part = "division";
+                
+            }else{
+                $part = "function argumen tida lengkap atau salah";
+            }
+            $npkUser = $GLOBALS['npkUser'];
+            $cekArea = mysqli_query($link, " SELECT view_daftar_area.id AS id_area FROM view_daftar_area WHERE cord = '$npkUser' AND part = '$part' ");
+            $jmlArea = mysqli_num_rows($cekArea);
+            if((($level == 3 || $level == 4 || $level == 5) && $jmlArea > 0) OR ($level == 6 || $level == 7 || $level == 8)){
+                $query = " $origin_query WHERE (";
+                while($data = mysqli_fetch_assoc($sql)){
+                    $query .= " $access_org = '$data[data]' OR";
+                }
+                $query = substr($query , 0, -2);
+                return $query.')';
+            }else{
+                $query = " $origin_query WHERE (";
+                while($data = mysqli_fetch_assoc($sql)){
+                    $query .= " view_organization.npk = '$data[data]' OR";
+                }
+                $query = substr($query , 0, -2);
+                return $query.')';
+            }
+
+            
         }
 
     }else{

@@ -92,7 +92,7 @@ if(isset($_SESSION['user'])){
         // filter data absensi
         $access_org_abs = orgAccess_joinAbsen($level, "view_absen_hr");
         $add_filter_absen = filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari,"view_absen_hr");
-        $queryAbsen = filtergenerator($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal_filter;
+        $queryAbsen = filtergeneratorJoinAbsen($link, $level, $generate, $origin_query_absen, $access_org_abs).$add_filter_absen.$tanggal_filter;
         
     //    echo $queryAbsen ;
 
@@ -938,8 +938,8 @@ if(isset($_SESSION['user'])){
                                 $sqlAbsen = mysqli_query($link, $qry_absen)or die(mysqli_error($link));
                                 $dataAbsen = mysqli_fetch_assoc($sqlAbsen);
     
-                                $check_in = ($dataAbsen['check_in'] == "00:00:00")?"":jam($dataAbsen['check_in']);
-                                $check_out = ($dataAbsen['check_out'] == "00:00:00")?"":jam($dataAbsen['check_out']);
+                                $check_in = ($dataAbsen['check_in'] == "00:00:00" || $dataAbsen['check_in'] == "")?"":jam($dataAbsen['check_in']);
+                                $check_out = ($dataAbsen['check_out'] == "00:00:00" || $dataAbsen['check_out'] == "")?"":jam($dataAbsen['check_out']);
                                 $hari = hari_singkat($tgl_);
                                 $color = ($hari == "Sab" || $hari == "Min" ) ? "background: rgba(228, 227, 227, 0.5)" : "";
     

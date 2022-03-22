@@ -72,6 +72,7 @@ echo $gabung;
 if(isset($_GET['id'])){
     // echo count($_GET['sort']);
     // count($_GET['sort']);
+    // $level = 3;
     if($_GET['id'] == 'req'){
         $_GET['prog'] = '';
         // $_GET['cari'] = '';
@@ -126,7 +127,9 @@ if(isset($_GET['id'])){
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
         $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$exception;
         
-        // echo $query_req_absensi;
+        // echo $generate."<br>";
+        // echo $query_req_absensi."<br>";
+        // echo $access_org;
 
         // $qry = "SELECT
         //     bais_db.absensi.id AS id_absensi,

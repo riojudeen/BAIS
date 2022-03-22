@@ -6,7 +6,7 @@ include("../../../config/config.php");
 if($level >=1 && $level <=8){
     require_once("../../../config/approval_system.php");
     
-    
+    $level = 3;
     // echo $deptAcc_filter;
     $shift = '';
     // echo $shift;
