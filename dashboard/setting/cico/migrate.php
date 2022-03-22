@@ -20,7 +20,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         // echo $path;
         if (file_exists($path)) {
             // echo $path['name'];
-            echo "OK";
+            // echo "OK";
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             
@@ -96,14 +96,13 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                         $out = $index_mulai + 2;
                         $ket = $index_mulai + 3;
 
-                        $checkin = ($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in];
-                        $checkout = ($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out];
-                        $ket = $sheetData[$i][$ket];
+                        $checkin = (isset($sheetData[$i][$in]))?(($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in]):"00:00:00";
+                        $checkout = (isset($sheetData[$i][$out]))?(($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out]):"00:00:00";
+                        $ket = (isset($sheetData[$i][$ket]))?$sheetData[$i][$ket]:'';
                         $id= $npk.$date;
 
                         list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
                         $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
-                        
                         
                         // echo $iin."-".$iint."-".$iiint."<br>";
                         $q_replace_absensi .= " ('$id','$npk', '$shift', '$date','$date_mulai','$date_selesai','$checkin','$checkout','$ket','$npkUser'),";
@@ -149,8 +148,8 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                         $out = $index_mulai + 2;
                         $ket = $index_mulai + 3;
 
-                        $start = ($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in];
-                        $end = ($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out];
+                        $start = (isset($sheetData[$i][$in]))?(($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in]):"00:00:00";
+                        $end = (isset($sheetData[$i][$out]))?(($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out]):"00:00:00";
                         $id= $npk.$date;
                         $q_shift = mysqli_query($link, $q_cek_shift." WHERE npk = '$npk' ")or die(mysqli_error($link));
                         // jika karyawan ada di database pake shift karyawan

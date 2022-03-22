@@ -838,14 +838,9 @@
                       </a>
                     </li>
                     
-                    <li class="menu " data-name="doc" id="doc">
-                      <a >
-                        <span class="sidebar-mini-icon">DO</span>
-                        <span class="sidebar-normal"> System Docs & BRD </span>
-                      </a>
-                    </li>
-                    <li class="menu " data-name="doc" id="doc">
-                      <a >
+                    
+                    <li class="menu " data-name="admForm" id="admForm">
+                      <a href="<?=base_url()?>/dashboard/document/form.php">
                         <span class="sidebar-mini-icon">AF</span>
                         <span class="sidebar-normal"> Administration Forms </span>
                       </a>
@@ -998,25 +993,19 @@
             </div>
 
         </div>
-        <div class="modal fade modal-primary" id="myModal10" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm">
-            <div class="modal-content">
+        <div class="modal fade modal-primary" id="myModal10" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content" style="border:5px solid #F3614D">
               <div class="modal-header justify-content-center">
-                <div class="modal-profile mx-auto">
-                  <i class="nc-icon nc-bulb-63"></i>
+                <div class="modal-profile mx-auto border-danger" style="margin-top:-500">
+                  <i class="nc-icon nc-time-alarm text-danger"></i>
                 </div>
               </div>
-              <div class="modal-body">
-                <p>Remaining 1 minutes ..</p>
+              <div class="modal-body text-center">
+                <h5 class="title text-danger text-uppercase">Sesi Pengajuan Berakhir</h5>
               </div>
               <div class="modal-footer">
-                <div class="left-side">
-                  <button type="button" class="btn btn-link">Back</button>
-                </div>
-                <div class="divider"></div>
-                <div class="right-side">
-                  <button type="button" class="btn btn-link btn-danger" data-dismiss="modal">Close</button>
-                </div>
+                
               </div>
             </div>
           </div>

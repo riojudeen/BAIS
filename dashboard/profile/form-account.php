@@ -21,8 +21,13 @@ if(isset($_SESSION['user'])){
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="text-uppercase">account info</h5>
-                <p class="card-category"><?=md5($data_akun['username'])?></p>
+                <div class="row">
+                    <h5 class="text-uppercase col-md-6">account info</h5>
+                    <div class="col-md-6 text-right">
+                        <a class="btn btn-sm btn-info" data-toggle="collapse" href="#change_password" role="button" aria-expanded="true" aria-controls="collapseExample">Change Password</a>
+                    </div>
+
+                </div>
             </div>
             <hr>
             <form class="card-body" action="" method="POST">
@@ -49,36 +54,40 @@ if(isset($_SESSION['user'])){
                         <input type="text" readonly class="form-control" value="<?=$data_userLevel['role_name']?>">
                     </div>
                 </div>
-
-                <label>Password</label>
-                    <div class="input-group ">
-                        <div class="input-group-prepend ">
-                            <span class="input-group-text px-2" id="pass">
-                                <i class="nc-icon nc-lock-circle-open"></i>
-                            </span>
+                <div class="collapse collapse-view" id="change_password">
+                    <div class="col-md-12 px-1">
+                        <label>Password</label>
+                        <div class="input-group ">
+                            <div class="input-group-prepend ">
+                                <span class="input-group-text px-2" id="pass">
+                                    <i class="nc-icon nc-lock-circle-open"></i>
+                                </span>
+                            </div>
+                            <input type="password" id="new_pass"  required class="form-control" placeholder="password baru" value="" autocomplete="off">
                         </div>
-                        <input type="password" id="new_pass"  required class="form-control" placeholder="password baru" value="" autocomplete="off">
-                    </div>
-                </div>
-                <div class="col-md-12 px-1">
-
-                <label>Password Lama</label>
-                    <div class="input-group ">
-                        <div class="input-group-prepend ">
-                            <span class="input-group-text px-2" id="basic-addon1">
-                                <i class="nc-icon nc-lock-circle-open"></i>
-                            </span>
                         </div>
-                        <input type="password" id="old_pass" required  class="form-control" placeholder="password Lama">
-                    </div>
-                    <p class="category">konfirmasi password lamu untuk ubah password</p>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 text-right">
-                        <button type="reset" class="btn btn-sm btn-warning">reset</button>
-                        <button type="submit" id="submit_account" class="btn btn-sm btn-primary">change</button>
-                    </div>
 
+                        <label>Password Lama</label>
+                        <div class="input-group ">
+                            <div class="input-group-prepend ">
+                                <span class="input-group-text px-2" id="basic-addon1">
+                                    <i class="nc-icon nc-lock-circle-open"></i>
+                                </span>
+                            </div>
+                            <input type="password" id="old_pass" required  class="form-control" placeholder="password Lama">
+                        </div>
+                        <p class="category">konfirmasi password lamu untuk ubah password</p>
+                        <div class="row">
+                            <div class="col-md-6 ">
+                                <button type="button" class="btn btn-sm  btn-link btn-danger" data-toggle="collapse" href="#change_password" role="button" aria-expanded="true" aria-controls="collapseExample">cancel</button>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <button type="reset" class="btn btn-sm btn-warning">reset</button>
+                                <button type="submit" id="submit_account" class="btn btn-sm btn-primary">change</button>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </form>
 

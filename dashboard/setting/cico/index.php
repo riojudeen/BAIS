@@ -146,9 +146,7 @@ if(isset($_SESSION['user'])){
 </div>
 </form>
 <div class="row ">
-<button class="btn" data-toggle="modal" data-target="#myModal10">
-                      Small alert modal
-                    </button>
+
 	<div class="col-md-12 ">
 		<div class="card">
 			<div class="card-header">
@@ -251,6 +249,7 @@ if(isset($_SESSION['user'])){
 </div>
 <!-- halaman utama end -->
 <?php
+    
     include_once("../../footer.php"); 
     //javascript
     ?>
