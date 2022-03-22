@@ -407,7 +407,6 @@ if(isset($_SESSION['user'])){
                                         <p class="card-category text-white">Cuti</p>
                                         <p class="card-title"><?=$totalC?> MP
                                         <p>
-                                        
                                     </div>
                                 </div>
                             </div>
