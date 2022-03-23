@@ -4,6 +4,8 @@
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
 $halaman = "Monitor Request Absensi";
+$part_lock = "at";
+$redirect_lock = base_url()."/dashboard/pages/absensi.php";
 if(isset($_SESSION['user'])){
 
     include_once("../header.php");

@@ -256,7 +256,6 @@ if(isset($_SESSION['user'])){
     }else{
         include_once ("../../no_access.php");
     }
-    include_once("../time_lock/system-lock.php"); 
     include_once("../footer.php");
     ?>
     <script type="text/javascript">

@@ -765,11 +765,11 @@
                     </li>
                     <li class="menu " data-name="attendanceport" id="attendanceport">
                       <a href="<?=base_url()?>/dashboard/setting/portAtt.php">
-                        <span class="sidebar-mini-icon">IP</span>
-                        <span class="sidebar-normal"> Attendance Portal</span>
+                        <span class="sidebar-mini-icon">DM</span>
+                        <span class="sidebar-normal"> Data Migration</span>
                       </a>
                     </li>
-                    <li class="menu " data-name="overtimeport" id="overtimeport">
+                    <li class="menu d-none" data-name="overtimeport" id="overtimeport">
                       <a href="<?=base_url()?>/dashboard/setting/portOt.php">
                         <span class="sidebar-mini-icon">IP</span>
                         <span class="sidebar-normal"> Overtime Portal</span>
@@ -959,9 +959,10 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link btn-rotate" id="btn-notification" href="javascript:;" onclick="showNotification('bottom','right')">
-                  <i class="nc-icon nc-settings-gear-65"></i>
+                  <i class="nc-icon nc-bell-55"></i>
                   <p>
-                    <span class="d-lg-none d-md-block">Account</span>
+                    <span class="d-lg-none d-md-block">Notification</span>
+                    <span class="badge badge-sm badge-pill badge-info">30</span>
                   </p>
                 </a>
               </li>
@@ -993,20 +994,4 @@
             </div>
 
         </div>
-        <div class="modal fade modal-primary" id="myModal10" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-md">
-            <div class="modal-content" style="border:5px solid #F3614D">
-              <div class="modal-header justify-content-center">
-                <div class="modal-profile mx-auto border-danger" style="margin-top:-500">
-                  <i class="nc-icon nc-time-alarm text-danger"></i>
-                </div>
-              </div>
-              <div class="modal-body text-center">
-                <h5 class="title text-danger text-uppercase">Sesi Pengajuan Berakhir</h5>
-              </div>
-              <div class="modal-footer">
-                
-              </div>
-            </div>
-          </div>
-        </div>
+        

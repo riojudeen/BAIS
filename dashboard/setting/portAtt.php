@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////
 require_once("../../config/config.php"); 
 if(isset($_SESSION['user'])){
-    $halaman = "Portal Data Absensi";
+    $halaman = "Data Migration";
     include_once("../header.php");
     
     
@@ -33,7 +33,80 @@ if(isset($_SESSION['user'])){
 ?>
 <!-- halaman utama -->
 <!-- filter -->
-
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card card-stats ">
+            <div class="card-body py-2 my-2">
+                <div class="row ">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center">
+                            <i class="fa fa-briefcase "></i>
+                            
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-title"> Manual
+                            <p>
+                            <p class="card-category ">Manual Data Upload</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="<?=base_url()?>/dashboard/setting/portAtt.php" class="stretched-link " ></a> 
+        </div>
+    </div>
+    
+    
+    
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card card-stats " style="border:5px solid red">
+            <div class="card-body py-2 my-2" >
+                <div class="row ">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center">
+                            <i class="fa fa-briefcase "></i>
+                            
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-title"> Migrasi CiCo
+                            <p>
+                            <p class="card-category ">Macro Data Upload</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="<?=base_url()?>/dashboard/setting/cico/index.php" class="stretched-link " ></a> 
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card card-stats ">
+            <div class="card-body py-2 my-2">
+                <div class="row ">
+                    <div class="col-5 col-md-4">
+                        <div class="icon-big text-center">
+                            <i class="fa fa-briefcase "></i>
+                            
+                        </div>
+                    </div>
+                    <div class="col-7 col-md-8">
+                        <div class="numbers">
+                            <p class="card-title"> Historian
+                            <p>
+                            <p class="card-category ">Untracked Data Upload</p>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="<?=base_url()?>/dashboard/setting/leave_alloc/index.php" class="stretched-link " ></a> 
+        </div>
+    </div>
+    
+    
+</div>
 <form method="POST">
 <div class="row">
     <div class="col-md-12" >
@@ -470,6 +543,7 @@ if(isset($_SESSION['user'])){
     <script>
         $(document).ready(function(){
             function loadData(page){
+                var data_port = 'nav-att';
                 var div_id = $('#s_div').val();
                 var dept_id = $('#s_dept').val();
                 var section_id = $('#s_section').val();
@@ -483,7 +557,7 @@ if(isset($_SESSION['user'])){
                 $.ajax({
                     url:"absensi/ajax_monitor.php",
                     method:"GET",
-                    data:{page:page,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
+                    data:{data_port:data_port,page:page,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift},
                     success:function(data){
                         $('.data-monitor').fadeOut('fast', function(){
                             $(this).html(data).fadeIn('fast');
