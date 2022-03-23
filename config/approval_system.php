@@ -901,14 +901,10 @@ function partAccess($level, $req){
     
 }
 
-
 function queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npkUser, $val_access){
     //koneksi database
-    $dbhost = "localhost";
-    $dbuser = "root";
-    $dbpass = "";
-    $dbname = "bais_db";
-    $link = mysqli_connect($dbhost,$dbuser,$dbpass,$dbname);
+    $link = $GLOBALS['link'];
+    
     if($level >= 1 && $level <= 2){
         $query_org = "SELECT $table.$field_request AS `data` FROM $table WHERE $table.$table_field1 = '$npkUser' ";
     }else if($level >= 3 && $level <= 8){
@@ -2412,108 +2408,6 @@ function orgAccessOrg($level){
     }
     return $access;
 }
-
-// list($id, $ket, $req_shift) = pecahID('441312022-01-01&&C1&&');
-// $query = "SELECT
-// req_absensi.id AS id_absensi,
-// req_absensi.npk AS npk,
-// karyawan.nama AS nama,
-// karyawan.shift AS employee_shift,
-// org.sub_post AS sub_post,
-// org.post AS post,
-// org.grp AS grp,
-// org.sect AS sect,
-// org.dept AS dept,
-// org.dept_account AS dept_account,
-// org.division AS division,
-// org.plant AS plant,
-// req_absensi.shift AS req_shift,
-// req_absensi.date AS req_work_date,
-// req_absensi.date_in AS req_date_in,
-// req_absensi.date_out AS req_date_out,
-// req_absensi.check_in AS req_in,
-// req_absensi.check_out AS req_out,
-// req_absensi.keterangan AS req_code,
-// attendance_code.keterangan AS keterangan,
-// req_absensi.requester AS requester,
-// req_absensi.status AS req_status_absen,
-// req_absensi.req_status AS req_status,
-// req_absensi.req_date AS req_date,
-// req_absensi.shift_req AS shift_req,
-// absensi.shift AS att_shift,
-// absensi.date AS work_date,
-// absensi.check_in AS check_in,
-// absensi.check_out AS check_out,
-// absensi.ket AS CODE,
-// attendance_code.type AS att_type,
-// attendance_code.alias AS att_alias
-// FROM req_absensi
-//     JOIN org ON req_absensi.npk = org.npk
-//     LEFT JOIN karyawan ON org.npk = karyawan.npk
-//     LEFT JOIN absensi ON absensi.id = req_absensi.id_absensi
-//     LEFT JOIN attendance_code ON attendance_code.kode = req_absensi.keterangan ";
-// debugging
-$level = $level;
-$npk = $npkUser;
-$access_org = orgAccess($level);
-$table = partAccess($level, "table");
-$field_request = partAccess($level, "field_request");
-$table_field1 = partAccess($level, "table_field1");
-$table_field2 = partAccess($level, "table_field2");
-$part = partAccess($level, "part");
-$data = generateAccess($link,$level,$npk);
-// list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-$generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data);
-// $origin_query = "SELECT view_absen_req.id_absensi,
-// view_absen_req.npk,view_absen_req.nama,view_absen_req.employee_shift, view_absen_req.grp,view_absen_req.dept_account,
-// view_absen_req.req_work_date,view_absen_req.req_date_in,view_absen_req.req_date_out,view_absen_req.req_in,
-// view_absen_req.req_out,view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
-// FROM view_absen_req ";
-// echo filtergenerator($link, $level, $generate, $origin_query, $access_org);
-// $query_ = mysqli_query($link, filtergenerator($link, $level, $generate, $origin_query, $access_org))or die(mysqli_error($link));
-// while($data = mysqli_fetch_assoc($query_)){
-//     echo $data['npk']."<br>";
-// }
-// echo "level User : ".$level."<br>";
-// echo "npk : ".$npk."<br>";
-// echo "sub_post : ".$sub_post."<br>";
-// echo "pos_leader : ".$post."<br>";
-// echo "group : ".$group."<br>";
-// echo "section : ".$sect."<br>";
-// echo "department : ".$dept."<br>";
-// echo "administratif : ".$dept_account."<br>";
-// echo "division : ".$div."<br>";
-// echo "plant : ".$plant."<br>";
-// echo "table yang diakses : ".$table."<br>";
-// echo "part table yang diakses : ".$part."<br>";
-// echo "field org yang diakses / maksimal akses yang diberikan : ".$access_org."<br>";
-// echo "field yang direquest untuk diambil nilainya dari table $table : ".$field_request."<br>";
-// echo "field1 yang dipakai untuk conditional statement pada table $table : ".$table_field1."<br>";
-// echo "field2 yang dipakai untuk conditional statement pada table $table : ".$table_field2."<br>";
-// echo "id organisasi yang diakses sebagai monitoring : ".$data."<br>";
-// echo "query yang dijalankan : ".$generate."<br>";
-// $sql = mysqli_query($link, $generate)or die(mysqli_error($link));
-// echo mysqli_num_rows($sql);
-// echo $id."<br>";
-// echo $ket."<br>";
-// echo $req_shift."<br>";
-// list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npkUser);
-// $access_org = orgAccessOrg($level);
-//     $data_access = generateAccess($link,$level,$npk);
-//     $table = partAccess($level, "table");
-//     $field_request = partAccess($level, "field_request");
-//     $table_field1 = partAccess($level, "table_field1");
-//     $table_field2 = partAccess($level, "table_field2");
-//     $part = partAccess($level, "part");
-//     // echo $access_org."<br>";
-//     // echo $part."<br>";
-//     // echo $data_access."<br>";
-//     $ognName = getOrgName($link, $data_access, $part);
-    
-//     // echo initial($ognName);
-//     $group = initial(getOrgName($link, $group, 'group'));
-//     $div = initial(getOrgName($link, $div, 'division'));
-//     $tanggal = "2022-03-10";
 function docOt($tanggal, $data_access, $group, $div){
     $initial = ($group == '')?'-':$group;
     $group = ($group == '')?'-':$group;

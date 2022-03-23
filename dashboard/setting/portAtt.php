@@ -30,83 +30,14 @@ if(isset($_SESSION['user'])){
     
     $today = date('Y-m-d');
 
+$a = "style=\"border:5px solid #FF7834\"";
+$b = "";
+$c = "";
+include_once('../component/migration-nav.php');
 ?>
 <!-- halaman utama -->
 <!-- filter -->
-<div class="row">
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats ">
-            <div class="card-body py-2 my-2">
-                <div class="row ">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center">
-                            <i class="fa fa-briefcase "></i>
-                            
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-title"> Manual
-                            <p>
-                            <p class="card-category ">Manual Data Upload</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="<?=base_url()?>/dashboard/setting/portAtt.php" class="stretched-link " ></a> 
-        </div>
-    </div>
-    
-    
-    
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats " style="border:5px solid red">
-            <div class="card-body py-2 my-2" >
-                <div class="row ">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center">
-                            <i class="fa fa-briefcase "></i>
-                            
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-title"> Migrasi CiCo
-                            <p>
-                            <p class="card-category ">Macro Data Upload</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="<?=base_url()?>/dashboard/setting/cico/index.php" class="stretched-link " ></a> 
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-6 col-sm-6">
-        <div class="card card-stats ">
-            <div class="card-body py-2 my-2">
-                <div class="row ">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center">
-                            <i class="fa fa-briefcase "></i>
-                            
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers">
-                            <p class="card-title"> Historian
-                            <p>
-                            <p class="card-category ">Untracked Data Upload</p>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a href="<?=base_url()?>/dashboard/setting/leave_alloc/index.php" class="stretched-link " ></a> 
-        </div>
-    </div>
-    
-    
-</div>
+
 <form method="POST">
 <div class="row">
     <div class="col-md-12" >
@@ -289,13 +220,6 @@ if(isset($_SESSION['user'])){
                     Import
                     </button>
                     
-                    <a href="proses/export.php?export=mp" class="btn btn-sm btn-success" name="export" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
-                        <span class="btn-label">
-                            <i class="nc-icon nc-cloud-upload-94"></i>
-                            
-                        </span>
-                        Export
-                    </a>
                     <button  class="btn btn-sm btn-danger  deleteall" >
                         <span class="btn-label">
                             <i class="nc-icon nc-simple-remove" ></i>

@@ -23,12 +23,14 @@ if(isset($_SESSION['user'])){
         $cari = $_GET['cari'];
         $filter = $cari;
         $folder = '//adm-fs/BODY/BODY02/Body Plant/BAIS/BAIS-FORM/2022/';
+        $jml_char = strlen($folder);
         $proses = new RecursiveDirectoryIterator("$folder");
         $files = array();
         foreach(new RecursiveIteratorIterator($proses) as $file){
             if (!((strpos(strtolower($file), $filter)) === false) || empty($filter)){
                 $data = preg_replace("#/#", "/", $file);
-                array_push($files, $data);
+                $file = substr($data, $jml_char);
+                array_push($files, $file);
             }
         }
         
@@ -61,7 +63,10 @@ if(isset($_SESSION['user'])){
             </h6>
         </div>
         <form class="col-md-6 text-right" method="GETs">
-            <div class="mr-2 float-right order-3">
+            <a href="form.php" class="btn float-right btn-sm btn-round btn-icon py-1 my-1 mr-1 btn-primary">
+                <i class="nc-icon nc-refresh-69"></i>
+            </a>
+            <div class="mr-2 float-right ">
                 <div class="input-group ">
 
                     <input type="text" name="cari"  class="form-control " placeholder="Cari File.." value="<?=$cari?>">
@@ -72,7 +77,9 @@ if(isset($_SESSION['user'])){
                     </div>
                 </div>
             </div>
+            
         </form>
+        
     </div>
     <hr/>
     <div class="row">

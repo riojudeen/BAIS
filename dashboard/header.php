@@ -629,16 +629,7 @@
                     </li>
                     <?php
                     }
-                    if($level >= 6){
-                    ?>
-                    <li class="menu " data-name="cico" id="cico">
-                      <a target="blank" href="<?=base_url()?>/dashboard/setting/cico/index.php">
-                        <span class="sidebar-mini-icon">MC</span>
-                        <span class="sidebar-normal"> Migrasi CiCo </span>
-                      </a>
-                    </li>
-                    <?php
-                    }
+                    
                     ?>
                   </ul>
                 </div>

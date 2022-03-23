@@ -29,7 +29,10 @@ if(isset($_SESSION['user'])){
 
     
     $today = date('Y-m-d');
-
+    $b = "style=\"border:5px solid #FF7834\"";
+    $a = "";
+    $c = "";
+    include_once('../../component/migration-nav.php');
 ?>
 <!-- halaman utama -->
 <!-- filter -->
@@ -249,7 +252,7 @@ if(isset($_SESSION['user'])){
 </div>
 <!-- halaman utama end -->
 <?php
-    
+
     include_once("../../footer.php"); 
     //javascript
     ?>

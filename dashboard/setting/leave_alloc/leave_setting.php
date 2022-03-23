@@ -1,10 +1,23 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////
-// include("../../../config/config.php"); 
+include("../../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
-$halaman = "Leave Allocation Settings";
+
 if(isset($_SESSION['user'])){
+    //query database
+    // mysqli_query($link, "DELETE FROM req_absensi");
+    $qry_leave = mysqli_query($link, "SELECT leave_alocation.id AS id_aloc,
+    leave_alocation.effective_date AS eff_date,
+    leave_alocation.id_leave AS id_leave,
+    leave_alocation.alocation AS alocation,
+    attendance_code.kode AS leave_code,
+    attendance_code.keterangan AS jenis_cuti
+
+    FROM leave_alocation 
+    JOIN attendance_code ON leave_alocation.id_leave = attendance_code.kode
+    ")or die(mysqli_error($link));
+
 ?>
 <div class="row ">
     <div class="col-md-12">
@@ -12,14 +25,12 @@ if(isset($_SESSION['user'])){
             <h5 class="title text-uppercase">Leave Allocation Setting</h5>
         </div>
         <div class="box pull-right">
-            
             <a href="add.php" class="btn btn-sm btn-default" >
                 <span class="btn-label">
                     <i class="nc-icon nc-simple-add"></i>
                 </span>
             Add Settings
             </a>
-            
         </div>
 
         <form method="post" name="proses" action="" >
@@ -78,9 +89,7 @@ if(isset($_SESSION['user'])){
          
 </div>
 <?php
-} else{
-    echo "<script>window.location='".base_url('auth/login.php')."';</script>";
-  }
+} 
   
 
 ?>

@@ -26,7 +26,7 @@ if(isset($_SESSION['user'])){
             //redirect dan download file
             header("Content-Disposition: attachment; filename=".$filename);
             
-            unlink($file);
+            // unlink($file);
             exit($content);
             // // readfile($file);
             // exit;
