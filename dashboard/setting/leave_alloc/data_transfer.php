@@ -178,7 +178,7 @@ if(isset($_SESSION['user'])){
     
         $sql_req = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
 
-        echo $query_req_absensi;
+        // echo $query_req_absensi;
                     
                     $no = 1;
                     // echo mysqli_num_rows($sql_req);
@@ -191,7 +191,7 @@ if(isset($_SESSION['user'])){
                             <td><?=$no++?></td>
                             <td><?=$data_reqAbsensi['npk']?></td>
                             <td><?=$data_reqAbsensi['nama']?></td>
-                            <td><?=$data_reqAbsensi['shift_req']?></td>
+                            <td><?=$data_reqAbsensi['employee_shift']?></td>
                             <td><?=$data_reqAbsensi['dept_account']?></td>
                             <td><?=hari_singkat($data_reqAbsensi['req_work_date']).", ".DBtoForm($data_reqAbsensi['req_work_date'])?></td>
                             <td><?=$checkIn?></td>
