@@ -21,16 +21,22 @@ if(isset($_SESSION['user'])){
 
     if(isset($_GET['cari']) && !(empty($_GET['cari']))){
         $cari = $_GET['cari'];
-        $filter = $cari;
+        $filter = strtolower($cari);
         $folder = '//adm-fs/BODY/BODY02/Body Plant/BAIS/BAIS-FORM/2022/';
         $jml_char = strlen($folder);
         $proses = new RecursiveDirectoryIterator("$folder");
         $files = array();
+        // print_r($proses);
         foreach(new RecursiveIteratorIterator($proses) as $file){
             if (!((strpos(strtolower($file), $filter)) === false) || empty($filter)){
                 $data = preg_replace("#/#", "/", $file);
+                // echo $file."<br>";
+                
                 $file = substr($data, $jml_char);
-                array_push($files, $file);
+                if($file !='.' && $file !='..'){   
+                    array_push($files, $file);
+                }
+                
             }
         }
         
@@ -88,6 +94,7 @@ if(isset($_SESSION['user'])){
 
         
         <?php
+            
             // membuka isi file dalam folder
             for($x=$start;$x<($start+$page);$x++){
                 
@@ -171,6 +178,14 @@ if(isset($_SESSION['user'])){
         </div>
     </div>
     <?php
+    if($jumlah_file ==0){
+        ?>
+        <div class="alert alert-info">
+            <span>Formulir dengan nama "<strong><?=$_GET['cari']?></strong>" tidak ditemukan</span>
+        </div>
+        <?php
+
+    }
 //footer
     include_once("../footer.php");
 
