@@ -5,19 +5,29 @@ include("../../../config/config.php");
 //redirect ke halaman dashboard index jika sudah ada session
 
 if(isset($_SESSION['user'])){
+    $start = $_GET['start'];
+        $end = $_GET['end'];
+        // echo $start;
+        // echo $end;
     //query database
     // mysqli_query($link, "DELETE FROM req_absensi");
-    $qry_leave = mysqli_query($link, "SELECT leave_alocation.id AS id_aloc,
+    $qry = "SELECT leave_alocation.id AS id_aloc,
     leave_alocation.effective_date AS eff_date,
+    leave_alocation.end AS `end`,
+    leave_alocation.type AS `type`,
     leave_alocation.id_leave AS id_leave,
     leave_alocation.alocation AS alocation,
     attendance_code.kode AS leave_code,
     attendance_code.keterangan AS jenis_cuti
 
     FROM leave_alocation 
-    JOIN attendance_code ON leave_alocation.id_leave = attendance_code.kode
-    ")or die(mysqli_error($link));
-
+    JOIN attendance_code ON leave_alocation.id_leave = attendance_code.kode 
+    WHERE (leave_alocation.effective_date BETWEEN '$start' AND '$end') OR (leave_alocation.end BETWEEN '$start' AND '$end')
+    ORDER BY `type` DESC, `effective_date` ASC, `end` ASC , id_leave ASC
+    ";
+    $qry_leave = mysqli_query($link, $qry)or die(mysqli_error($link));
+// echo $qry;
+// echo mysqli_num_rows($qry_leave);
 ?>
 <div class="row ">
     <div class="col-md-12">
@@ -35,14 +45,16 @@ if(isset($_SESSION['user'])){
 
         <form method="post" name="proses" action="" >
         <div class="table-responsive">
-            <table class="table table-striped table_org" id="uangmakan" cellspacing="0" width="100%">
+            <table class="table table-striped table_org text-uppercase" id="uangmakan" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Kode Cuti</th>
                         <th>Jenis Cuti</th>
-                        <th>Allocation</th>
-                        <th>Tanggal Effective</th>
+                        <th>Alloc</th>
+                        <th>Eff</th>
+                        <th>End</th>
+                        <th>Type</th>
                         <th class="text-right">Action</th>
                     </tr>
                 </thead>
@@ -57,7 +69,9 @@ if(isset($_SESSION['user'])){
                             <td><?=$leave_aloc['id_leave']?></td>
                             <td><?=$leave_aloc['jenis_cuti']?></td>
                             <td><?=$leave_aloc['alocation']?></td>
-                            <td><?=DBtoForm($leave_aloc['eff_date'])?></td>
+                            <td><?=tgl($leave_aloc['eff_date'])?></td>
+                            <td><?=tgl($leave_aloc['end'])?></td>
+                            <td><?=$leave_aloc['type']?></td>
                             <td class="text-right text-nowrap">
                                 <span>
                                     <a href="edit.php?edit=<?=$leave_aloc['id_aloc']?>&kode=<?=$leave_aloc['id_leave']?>" class="btn-round btn-outline-warning btn btn-warning btn-link btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>

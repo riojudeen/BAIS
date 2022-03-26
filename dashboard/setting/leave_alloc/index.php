@@ -189,6 +189,11 @@ if(isset($_SESSION['user'])){
                 $(this).addClass('data-active');
                 dataActive()
             });
+            $(document).on('click', '.halaman', function(){
+                var page = $(this).attr("id");
+                dataActive(page)
+                // console.log(hal)
+            });
             function dataActive(page){
                 if($(".data-active")[0]){
                     var id = $('.data-active').attr('data-id');
@@ -223,7 +228,7 @@ if(isset($_SESSION['user'])){
                     }
                 }
             }
-            $('#allmp').on('click', function() {
+            $(document).on('click', '#allmp' ,function() {
                 if(this.checked){
                     $('.mp').each(function() {
                         this.checked = true;
@@ -236,7 +241,7 @@ if(isset($_SESSION['user'])){
 
             });
 
-            $('.mp').on('click', function() {
+            $(document).on('click', '.mp', function() {
                 if($('.mp:checked').length == $('.mp').length){
                     $('#allmp').prop('checked', true)
                 } else {

@@ -72,18 +72,22 @@ if(isset($_SESSION['user'])){
         
         <form method="post" name="proses" action="" >
         <div class="table-responsive">
-            <table class="table table-striped table_org" id="uangmakan" cellspacing="0" width="100%">
+            <table class="table table-striped table_org text-nowrap" id="uangmakan" cellspacing="0" width="100%">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>NPK</th>
                         <th>Nama</th>
                         <th>Shift</th>
-                        <th>Area</th>
+                        <th>group</th>
+                        <th>Dept Admin</th>
                         <th>Tanggal</th>
-                        <th>Check in</th>
-                        <th>Check out</th>
+                        <th>in</th>
+                        <th>out</th>
                         <th>Ket</th>
+                        <th>Note</th>
+                        <th colspan="2">Progress</th>
+                        <th>Tgl Arsip</th>
                         <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
                             <div class="form-check">
                                 <label class="form-check-label">
@@ -135,6 +139,8 @@ if(isset($_SESSION['user'])){
             view_absen_req.req_in,
             view_absen_req.req_out,
             view_absen_req.shift_req,
+            view_absen_req.note,
+            view_absen_req.delete_date,
             view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
             FROM view_absen_req ";
         $access_org = orgAccess($level);
@@ -146,7 +152,7 @@ if(isset($_SESSION['user'])){
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $exception = " AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' AND req_date IS NOT NULL  AND shift_req = '0' ";
+        $exception = " AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' AND (req_date IS NOT NULL) AND note = 'Transfer PS' AND (delete_date IS NOT NULL) AND shift_req = '0' ";
         
 
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
@@ -166,7 +172,6 @@ if(isset($_SESSION['user'])){
         // echo $limit_start;
         $addOrder = " ORDER BY req_date, requester DESC ";
         $addLimit = " LIMIT $limit_start, $limit";
-        $no = 1;
 
         // pagin
         $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
@@ -178,31 +183,41 @@ if(isset($_SESSION['user'])){
     
         $sql_req = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
 
-        echo $query_req_absensi;
-                    
-                    $no = 1;
+        // echo $query_req_absensi;
                     // echo mysqli_num_rows($sql_req);
                     if(mysqli_num_rows($sql_req) > 0){
                         while($data_reqAbsensi = mysqli_fetch_assoc($sql_req)){
-                            $checkIn = ($data_reqAbsensi['req_in'] == '00:00:00')? "-" : $data_reqAbsensi['req_in'];
-                            $checkOut = ($data_reqAbsensi['req_out'] == '00:00:00')? "-" : $data_reqAbsensi['req_out'];
+                            $checkIn = (isset($data_reqAbsensi['req_in']))?(($data_reqAbsensi['req_in'] == '00:00:00')? "" : jam($data_reqAbsensi['req_in'])):"";
+                            $checkOut = (isset($data_reqAbsensi['req_out']))?(($data_reqAbsensi['req_out'] == '00:00:00')? "" : jam($data_reqAbsensi['req_out'])):"";
+                            $clr = authColor($data_reqAbsensi['req_status']);
+                            $stt = authText($data_reqAbsensi['status']);
+                            $prs = $data_reqAbsensi['req_status_absen'];
                         ?>
                         <tr>
                             <td><?=$no++?></td>
                             <td><?=$data_reqAbsensi['npk']?></td>
                             <td><?=$data_reqAbsensi['nama']?></td>
-                            <td><?=$data_reqAbsensi['shift_req']?></td>
-                            <td><?=$data_reqAbsensi['dept_account']?></td>
-                            <td><?=hari_singkat($data_reqAbsensi['req_work_date']).", ".DBtoForm($data_reqAbsensi['req_work_date'])?></td>
+                            <td><?=$data_reqAbsensi['employee_shift']?></td>
+                            <td><?=getOrgName($link, $data_reqAbsensi['grp'], "group")?></td>
+                            <td><?=getOrgName($link, $data_reqAbsensi['dept_account'], "deptAcc")?></td>
+                            <td><?=tgl($data_reqAbsensi['req_work_date'])?></td>
                             <td><?=$checkIn?></td>
                             <td><?=$checkOut?></td>
                             
                             <td><?=$data_reqAbsensi['req_code']?></td>
+                            <td><?=$data_reqAbsensi['note']?></td>
+                            <td class="td">
+                                <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
+                                    <div class="progress-bar progress-bar-animated progress-bar-<?=$clr?> progress-bar-striped" role="progressbar" style="width: <?=$prs?>%" aria-valuenow="<?=$prs?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </td>
+                            <td class="td"><?=$stt?></td>
+                            <td><?=tgl($data_reqAbsensi['delete_date'])?></td>
                             
                             <td class="sticky-col first-last-col text-right">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input  class="form-check-input mp" name="checked[]" type="checkbox" value="<?=$data_reqAbsensi['id_absensi']?>">
+                                        <input  class="form-check-input mp" name="checked[]" type="checkbox" value="<?=$data_reqAbsensi['id_absensi']?>&&<?=$data_reqAbsensi['req_code']?>&&<?=$data_reqAbsensi['shift_req']?>">
                                     <span class="form-check-sign"></span>
                                     </label>
                                 </div>
@@ -231,12 +246,6 @@ if(isset($_SESSION['user'])){
            
     </div>
     <div class="box pull-right">
-        <button class="btn btn-success editall">
-            <span class="btn-label">
-                <i class="nc-icon nc-check-2"></i>
-            </span>
-            Edit
-        </button>
         <button  class="btn btn-danger  deleteall" >
             <span class="btn-label">
                 <i class="nc-icon nc-simple-remove" ></i>
