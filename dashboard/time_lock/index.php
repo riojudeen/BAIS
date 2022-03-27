@@ -162,8 +162,8 @@ if(isset($_SESSION['user'])){
 			
 <?php
 //footer
-		include_once("../footer.php");
-        ?>
+    include_once("../footer.php");
+    ?>
         
 <script>
     $(document).ready(function(){

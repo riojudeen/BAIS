@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         } else {
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
         }
-        
+        $today = date('Y-m-d');
         $spreadsheet = $reader->load($_FILES['file_import']['tmp_name']);
         $sql = "INSERT INTO req_absensi 
             (`id`,
@@ -40,6 +40,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         $sheetData = $spreadsheet->getActiveSheet()->toArray();
         // echo count($sheetData);
         $no = 1;
+        $idx = 1;
         for($i = 1;$i < count($sheetData);$i++){
             
             $npk = $sheetData[$i]['1'];
@@ -91,6 +92,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             $start = $month = strtotime($tanggalAwal);
             $end = strtotime($tanggalAkhir);
             $index = 0;
+            
             while($month <= $end){ 
                 $tgl = date('Y-m-d', $month);
                 $month = strtotime("+1 day", $month);
@@ -126,6 +128,11 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 
                 $req_date = date('Y-m-d');
                 $note = "transfer PS";
+                //cek absensi 
+                $cek_abs = mysqli_query($link, "SELECT 
+                    `id`, `npk` , `date`
+                    FROM absensi WHERE  `date` = '$date_in' AND id = '$id'
+                ")or die(mysqli_error($link));
                 // cek pengajuan
                 $cek_req = mysqli_query($link, "SELECT 
                     `id`,
@@ -143,19 +150,33 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     `req_date`,
                     `note`, 
                     `shift_req`
-                    FROM req_absensi WHERE `date` = '$date_in' AND id = '$id' AND keterangan = '$keterangan' 
+                    FROM req_absensi WHERE `date` = '$date_in' AND id = '$id' AND npk = '$npk' AND keterangan = '$keterangan' 
                     AND shift_req <> '1' ")or die(mysqli_error($link));
-
+                // jika pengajuan sudah pernah dibuat, lakukan update
                 if(mysqli_num_rows($cek_req)>0){
-                    $sql = mysqli_query($link, " UPDATE req_absensi SET
+                    $query = " UPDATE req_absensi SET
                         `status` = '$status' ,
                         `req_status` = '$req_status'
                         WHERE `date` = '$date_in' AND id = '$id' AND keterangan = '$keterangan' AND shift_req <> '1'
-                    ")or die(mysqli_error($link));
+                    ";
+                    // echo $idx." - ".$query."<br>";
+                    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
                 }else{
-                    echo "INSERT";
+                    //jika belum pernah dibuat, cek apakah data absensi sudah ada sebelum tanggal sekarang?
+                    //jika belum , jadikan sebagai arsip, jika sudah jadikan sebagai request baru
+                    if(mysqli_num_rows($cek_abs)>0){
+                        $delete_date = "NULL";
+                    }else{
+                        if(strtotime($date_in) > strtotime($today) ){
+                            //jadikan sebagai arsip
+                            $delete_date = "NULL";
+                        }else{
+                            $delete_date = "'$today'";
+                        }
+                    }
+                    // echo "INSERT";
                     $shift_req = '0';
-                    $sql = mysqli_query($link, " INSERT INTO req_absensi (`id`, `npk`,
+                    $query = " INSERT INTO req_absensi (`id`, `npk`,
                     `shift`,
                     `date`,
                     `date_in`,
@@ -168,7 +189,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                     `req_status`,
                     `req_date`,
                     `note`, 
-                    `shift_req`) VALUES ('$id' ,
+                    `shift_req`, `delete_date`) VALUES ('$id' ,
                         '$npk' ,
                         '$shift' ,
                         '$date_in' ,
@@ -182,40 +203,17 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                         '$req_status',
                         '$req_date',
                         '$note' , 
-                        '$shift_req' )")or die(mysqli_error($link));
-
-                    
-                    // echo "('$id', 
-                    // '$npk', 
-                    // '$shift', 
-                    // '$date', 
-                    // '$date_in', 
-                    // '$date_out', 
-                    // '$check_in', 
-                    // '$check_out', 
-                    // '$keterangan', 
-                    // '$requester', 
-                    // '$status', 
-                    // '$req_status', 
-                    // '', 
-                    // '', NULL ),<br>";
+                        '$shift_req', $delete_date )";
+                    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
                     
                 }
-                
-                
-
-                
                 $index++;
+                $idx++;
                 
             }
-            
         }
         $total = count($sheetData) - 1;
-        // $sql = substr($sql, 0 , -1); //untuk trim koma terakhir
-        // $data = mysqli_query($link, $sql)or die(mysqli_error($link));
-        // echo $sql;
-        
-        //query dan alihkan
+      
         if($sql){
             // mysqli_query($link, $sqlUser)or die(mysqli_error($link));
             $_SESSION['info'] = "Disimpan";
@@ -226,27 +224,9 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             header("Location: index.php");
         }
        
-
-
-
-
-
-        // $sql = substr($sql, 0 , -1); //untuk trim koma terakhir
-        // // $sqlUser = substr($dataUser, 0 , -1); //untuk trim koma terakhir
-        // $total = count($sheetData) - 3;
-        // $data = mysqli_query($link, $sql)or die(mysqli_error($link));
-        // // echo $sqlUser;
-        // if($data){
-        //     // mysqli_query($link, $sqlUser)or die(mysqli_error($link));
-        //     $_SESSION['info'] = "Disimpan";
-        //     header("Location: ../manpower.php"); 
-        // }else{
-        //     $_SESSION['info'] = "Kosong";
-        //     header("Location: ../manpower.php");
-        // }
     }else{
-        // $_SESSION['info'] = "Kosong";
-        // header("Location: ../manpower.php");
+        $_SESSION['info'] = "Kosong";
+        header("Location: ../manpower.php");
     }
  }else{
      if(isset($_FILES['file_import']['name']) && in_array($_FILES['file_import']['type'], $file_mimes)) {

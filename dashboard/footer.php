@@ -1,10 +1,80 @@
 <?php
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $link_exception = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/cico/index.php";
+$time_lock = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/time_lock/";
 
 ?>
 
+<!-- maintnance  -->
+<label for="" class="d-none"  id="waktu_maintenance">5</label>
+<div class="modal fade modal-primary" id="myModal_maintenance" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+    <div class="modal-content ">
+        <div class="modal-header justify-content-center">
+        <div class="modal-profile mx-auto border-danger" style="margin-top:-500">
+            <i class="nc-icon nc-time-alarm text-danger"></i>
+        </div>
+        </div>
+        <div class="modal-body text-center">
+        <h5 class="title text-danger text-uppercase">Mohon Maaf</h5>
+        <label for="" class="card-label text-uppercase"> System Sedang dalam proses maintenance
+            
+        </label>
+        </div>
+        <div class="modal-footer">
+          <?php
+          if($level > 5){
+            ?>
+          <a href="<?=$time_lock?>" class="btn btn-link">Time Management</a>
 
+            <?php
+          }
+          ?>
+        </div>
+    </div>
+    </div>
+</div>
+<button class="btn btn-maintenance d-none" data-toggle="modal" data-id="0" data-target="#myModal_maintenance">
+    Lock
+</button>
+<!-- maintenance -->
+<?php
+$time_query = "SELECT 
+(TIME_TO_SEC(off_start)) AS 'second' , 
+    id, system_name, 
+    `status`, 
+    off_start, 
+    `off_end`, 
+    `type` , 
+    `periodic`  
+    FROM system_lock 
+WHERE `status` = '1' ";
+$queryLock_maintenance = mysqli_query($link, $time_query." AND `type` = 'sm' ")or die(mysqli_error($link));
+if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
+  ?>
+  <script>
+      $(document).ready(function(){
+          var data = $('.btn-maintenance').attr('data-id');
+          window.setInterval(function () {
+              var sisawaktu = $("#waktu_maintenance").html();
+              sisawaktu = eval(sisawaktu);
+              
+              if (sisawaktu == 0 ) {
+                  
+                  if(data == 0){
+                    $('.btn-maintenance').click();
+                    $('.btn-maintenance').prop('data-id', "1");
+                  }
+                  data = 1
+              } else {
+                  $("#waktu_maintenance").html(sisawaktu - 1);
+              }
+          }, 1000);
+      });
+  </script>
+  <?php
+}
+?>
 </div>
 <footer class="footer footer-black  footer-white ">
     <div class="container-fluid">

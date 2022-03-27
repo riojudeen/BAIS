@@ -23,17 +23,48 @@ $redirect_lock = $redirect_lock;
     </div>
     </div>
 </div>
+
 <button class="btn btn-lock d-none" data-toggle="modal" data-id="0" data-target="#myModal10">
     Lock
 </button>
+
 <?php
     $day_today = date('Y-m-d');
     $year = date('Y');
     $date_lock_start = date('Y-m-t', strtotime("$year"."-"."11-01"));
     $date_lock_end = date('Y-m-t', strtotime("$year"."-"."12-01"));
+    $current_time = date("H:i:s");
+    $str_time = "$current_time";
+
+    sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
+    $time_seconds = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+    // echo $time_seconds;
     
-    $queryLock = mysqli_query($link, "SELECT * FROM system_lock WHERE `status` = '1' AND `type` = '$part_lock' ")or die(mysqli_error($link));
-    if(mysqli_num_rows($queryLock) > 0){
+    $time_query = "SELECT 
+    (TIME_TO_SEC(off_start)) AS 'second' , 
+        id, system_name, 
+        `status`, 
+        off_start, 
+        `off_end`, 
+        `type` , 
+        `periodic`  
+        FROM system_lock 
+    WHERE `status` = '1' ";
+    $queryLock_maintenance = mysqli_query($link, $time_query." 
+        AND `type` = 'sm' 
+        AND (TIME_TO_SEC(off_start) <= $time_seconds ) AND (TIME_TO_SEC(off_end) >= $time_seconds )
+    ")or die(mysqli_error($link));
+
+    $queryLock_redirect = mysqli_query($link, $time_query." 
+        AND `type` = '$part_lock' 
+        AND (TIME_TO_SEC(off_start) <= $time_seconds ) AND (TIME_TO_SEC(off_end) >= $time_seconds )
+    ")or die(mysqli_error($link));
+
+    $queryLock = mysqli_query($link, $time_query." AND (`type` = '$part_lock') ")or die(mysqli_error($link));
+    
+    
+    
+    if(mysqli_num_rows($queryLock_redirect)){
         ?>
         <script>
             $(document).ready(function(){
@@ -56,10 +87,13 @@ $redirect_lock = $redirect_lock;
                 }, 1000);
             });
         </script>
+        <?php
+    }
+    if(mysqli_num_rows($queryLock) > 0){
+        ?>
+        
         <script>
-            //  $('.btn-lock').click()
             var data_lock = $('.btn-lock').attr('data-id')
-            // var link = document.getElementsByClassName('data_load');
             var load = 0;
             var approval_num = setInterval(function (){ 
             <?php
@@ -69,6 +103,7 @@ $redirect_lock = $redirect_lock;
             $l_end = array();
                 
             while($data = mysqli_fetch_assoc($queryLock)){
+                
                 // close book
                 if($data['periodic'] == 'y'){
 
@@ -111,8 +146,7 @@ $redirect_lock = $redirect_lock;
                 
                 $i++;
             }
-            // print_r($l_start);
-            // print_r($l_end);
+            
             // conditional untuk lock system
             if(count($l_end)>0 && count($l_start)>0){
                 $i = 1;
@@ -120,7 +154,6 @@ $redirect_lock = $redirect_lock;
                 foreach($l_index AS $i){
                     $str_if .= " (d_start".$i." <= now && now <= d_end".$i." ) ||";
                 }
-                
                 $str_if = substr($str_if, 0, -2);
                 ?>
                 const date = new Date(); 
@@ -154,7 +187,10 @@ $redirect_lock = $redirect_lock;
             ?>
         }, 1000 // refresh every 10000 milliseconds
     ); 
+    
 </script>
+
 <?php
+
 }
 ?>

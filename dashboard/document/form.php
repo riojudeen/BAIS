@@ -192,6 +192,5 @@ if(isset($_SESSION['user'])){
 } else{
     echo "<script>window.location='".base_url('auth/login.php')."';</script>";
 }
-	
 
 ?>
