@@ -219,19 +219,20 @@ if(isset($_SESSION['user'])){
                                                 
                                                 FROM view_organization";
                 $access_org = orgAccessOrg($level);
-                                                // $data_access = generateAccess($link,$level,$npk);
-                                                // $table = partAccess($level, "table");
-                                                // $field_request = partAccess($level, "field_request");
-                                                // $table_field1 = partAccess($level, "table_field1");
-                                                // $table_field2 = partAccess($level, "table_field2");
-                                                // $part = partAccess($level, "part");
-                                                // $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+                $npk = $npkUser;
+                                                $data_access = generateAccess($link,$level,$npk);
+                                                $table = partAccess($level, "table");
+                                                $field_request = partAccess($level, "field_request");
+                                                $table_field1 = partAccess($level, "table_field1");
+                                                $table_field2 = partAccess($level, "table_field2");
+                                                $part = partAccess($level, "part");
+                                                $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
                                                 // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-                                                // // echo $group_filter;
-                                                
-                                                $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
-                                                echo $queryMP;
-                
+                                                // echo $access_org;
+                                                $queryMP = $origin_query." WHERE id_plant = '1' ";
+                                                // $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
+                                                // echo $queryMP;
+                // print_r($data_npk);
                 if(count($data_npk)>0){
                     // print_r($data_npk);
                     ?>
@@ -274,7 +275,7 @@ if(isset($_SESSION['user'])){
                                             $queryMP .= " AND npk = '$npk'";
                                             $query = mysqli_query($link, $queryMP)or die(mysqli_error($link));
                                             $jml = mysqli_num_rows($query);
-
+                                            // echo $jml;
                                             // $checked = ($jml > 0)?'disabled':'';
                                             // $checked_class = ($jml > 0)?'':'check';
                                             

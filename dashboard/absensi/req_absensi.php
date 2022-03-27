@@ -114,27 +114,9 @@ if(isset($_SESSION['user'])){
                             <input type="submit" name="sort" class="btn-icon btn btn-round p-0 ml-2 my-auto " value="go" >
                             
                         </div>
-                        
-                        <!-- <div class="col-4">
-                            <input class="btn btn-icon btn-round" name="sort" value="go">
-                        </div> -->
                     </div>
                     <div class="col-md-7 border-2 ">
-                        <p class="box float-right order-1">
-                            <button class="btn btn-icon btn-round btn-default" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                            <i class="nc-icon nc-simple-add "></i>
-                            </button>
-                        </p>
-                        <p class="float-right mr-2">
-                            <button data-toggle="modal" data-id="" id="" data-target="#modal" class="btn btn-icon btn-info btn-outline-info btn-round" type="button" data-toggle="collapse" data-target="#absensi" aria-expanded="false" aria-controls="absensi">
-                                <i class="nc-icon nc-calendar-60 "> </i>
-                            </button>
-                        </p>
                         
-                        
-                        <!-- <div class="col-4">
-                            <input class="btn btn-icon btn-round" name="sort" value="go">
-                        </div> -->
                     </div>
                 </div>
                     
@@ -343,7 +325,6 @@ if(isset($_SESSION['user'])){
             }else{
                 $('#prosesrequest').prop('disabled', true )
             }
-            
         }
         get_notifData()
         
@@ -649,52 +630,58 @@ if(isset($_SESSION['user'])){
         });
     </script>
     <script>
-    
-    $(document).on('keyup', '.data-npk',function(){
-        var npk = $(this).val();
-        
-        $.ajax({
-            url: 'ajax/get_resource.php',
-            method: 'get',
-            data: {data:npk},
-            success:function(data){
-                var obj = $.parseJSON(data);
-                var total = obj.msg[0].total;
-                var msg = obj.msg[0].msg;
-                if(total > 0){
-                    var nama = obj.data[0].nama;
-                    var status = obj.data[0].status;
-                    var jabatan = obj.data[0].jabatan;
-                    $('.data-nama').val(nama);
-                    $('.data-jabatan').val(jabatan);
-                    $('.data-stats').val(status);
-                    $('#prosesrequest').removeClass("d-none");
-                    // $('#cek_data').removeClass("d-none");
-                    // $('#cek_data').prop("disabled", false);
-                    
-                }else if(total === 0){
-                    var nama = obj.msg[0].msg;
-                    var status = obj.msg[0].msg;
-                    var jabatan = obj.msg[0].msg;
-                    $('.data-nama').val(nama);
-                    $('.data-jabatan').val(jabatan);
-                    $('.data-stats').val(status);
-                    $('#prosesrequest').addClass("d-none", true);
-                    // $('#cek_data').addClass("d-none");
-                }else{
-                    var nama = obj.msg[0].msg;
-                    var status = obj.msg[0].msg;
-                    var jabatan = obj.msg[0].msg;
-                    $('.data-nama').val(nama);
-                    $('.data-jabatan').val(jabatan);
-                    $('.data-stats').val(status);
-                    $('#prosesrequest').addClass("d-none", true);
-                    // $('#prosesrequest').prop("disabled", true);
-                    // $('#cek_data').addClass("d-none");
-                }
+        $(document).ready(function(){
+            
+            function get_data_karyawan(){
+                var npk = $('.data-npk').val();
+                // console.log(npk);
+                $.ajax({
+                    url: 'ajax/get_resource.php',
+                    method: 'get',
+                    data: {data:npk},
+                    success:function(data){
+                        var obj = $.parseJSON(data);
+                        var total = obj.msg[0].total;
+                        var msg = obj.msg[0].msg;
+                        if(total > 0){
+                            var nama = obj.data[0].nama;
+                            var status = obj.data[0].status;
+                            var jabatan = obj.data[0].jabatan;
+                            $('.data-nama').val(nama);
+                            $('.data-jabatan').val(jabatan);
+                            $('.data-stats').val(status);
+                            $('#prosesrequest').prop("disabled", false);
+                            // $('#cek_data').removeClass("d-none");
+                            // $('#cek_data').prop("disabled", false);
+                            
+                        }else if(total === 0){
+                            var nama = obj.msg[0].msg;
+                            var status = obj.msg[0].msg;
+                            var jabatan = obj.msg[0].msg;
+                            $('.data-nama').val(nama);
+                            $('.data-jabatan').val(jabatan);
+                            $('.data-stats').val(status);
+                            $('#prosesrequest').prop("disabled", true);
+                            // $('#cek_data').addClass("d-none");
+                        }else{
+                            var nama = obj.msg[0].msg;
+                            var status = obj.msg[0].msg;
+                            var jabatan = obj.msg[0].msg;
+                            $('.data-nama').val(nama);
+                            $('.data-jabatan').val(jabatan);
+                            $('.data-stats').val(status);
+                            $('#prosesrequest').prop("disabled", true);
+                            // $('#cek_data').addClass("d-none");
+                        }
+                    }
+                })
             }
+            
+            $(document).on('keyup', '.data-npk',function(){
+                get_data_karyawan()
+            })
         })
-    })
+    
 </script>
 <?php
     include_once("../endbody.php"); 

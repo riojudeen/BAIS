@@ -127,57 +127,6 @@ if(isset($_GET['id'])){
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
         $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$exception;
         
-        // echo $generate."<br>";
-        // echo $query_req_absensi."<br>";
-        // echo $access_org;
-
-        // $qry = "SELECT
-        //     bais_db.absensi.id AS id_absensi,
-        //     bais_db.absensi.npk AS npk,
-        //     bais_db.karyawan.nama AS nama,
-        //     bais_db.karyawan.shift AS employee_shift,
-
-        //     bais_db.org.sub_post AS sub_post,
-        //     bais_db.org.post AS post,
-        //     bais_db.org.grp AS grp,
-        //     bais_db.org.sect AS sect,
-        //     bais_db.org.dept AS dept,
-        //     bais_db.org.dept_account AS dept_account,
-        //     bais_db.org.division AS division,
-        //     bais_db.org.plant AS plant,
-
-        //     bais_db.absensi.shift AS att_shift,
-        //     bais_db.absensi.date AS work_date,
-        //     bais_db.absensi.check_in AS check_in,
-        //     bais_db.absensi.check_out AS check_out,
-        //     bais_db.absensi.ket AS CODE,
-
-        //     bais_db.attendance_code.keterangan AS keterangan,
-        //     bais_db.attendance_code.type AS att_type,
-        //     bais_db.attendance_code.alias AS att_alias
-
-        //     -- bais_db.req_absensi.shift AS req_shift,
-        //     -- bais_db.req_absensi.date AS req_work_date,
-        //     -- bais_db.req_absensi.date_in AS req_date_in,
-        //     -- bais_db.req_absensi.date_out AS req_date_out,
-        //     -- bais_db.req_absensi.check_in AS req_in,
-        //     -- bais_db.req_absensi.check_out AS req_out,
-        //     -- bais_db.req_absensi.keterangan AS req_code,
-            
-        //     -- bais_db.req_absensi.requester AS requester,
-        //     -- bais_db.req_absensi.status AS req_status_absen,
-        //     -- bais_db.req_absensi.req_status AS req_status,
-        //     -- bais_db.req_absensi.req_date AS req_date
-
-           
-            
-        // FROM bais_db.absensi
-        // JOIN bais_db.org ON bais_db.absensi.npk = bais_db.org.npk
-        // LEFT JOIN bais_db.karyawan ON bais_db.org.npk = bais_db.karyawan.npk
-        
-        // LEFT JOIN bais_db.attendance_code ON bais_db.attendance_code.kode = bais_db.absensi.ket";
-    //  $sql= mysqli_query($link, $qry)or die(mysqli_error($link));
-    //  echo mysqli_num_rows($sql);
         ?>
     
         <div class="row">
@@ -209,7 +158,7 @@ if(isset($_GET['id'])){
                                             <div class="col-md-2 pl-1 pr-1">
                                                 <div class="form-group">
                                                     <label for="">NPK Karyawan</label>
-                                                    <input name="npk" type="number" class="form-control no-border data-npk" id="npk_karyawan" required>
+                                                    <input name="npk" type="number" class="form-control no-border data-npk" id="npk_karyawan"  required>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 pl-1">
@@ -230,7 +179,7 @@ if(isset($_GET['id'])){
                                                     <select name="jenis" type="number" id="attendance_type" class="form-control no-border" required>
                                                         <option value="">Pilih Jenis Pengajuan</option>
                                                         <?php
-                                                        $query_attendance_type = mysqli_query($link, "SELECT * FROM attendance_type WHERE `name` <> '' ")or die(mysqli_error($link));
+                                                        $query_attendance_type = mysqli_query($link, "SELECT * FROM attendance_type WHERE `name` <> '' AND `stats` = 1 ")or die(mysqli_error($link));
                                                         while($data_attendance_type = mysqli_fetch_assoc($query_attendance_type)){
                                                             ?>
                                                             <option value="<?=$data_attendance_type['id']?>"><?=$data_attendance_type['name']?></option>
@@ -244,7 +193,7 @@ if(isset($_GET['id'])){
                                             <div class="col-md-5 pl-1 pr-1">
                                                 <label for="">Pilih Pengajuan</label>
                                                 <div class="input-group">
-                                                    <select name="att_code" type="number" class="form-control no-border" id="attendance_code" required>
+                                                    <select name="att_code" type="number" class="form-control no-border " id="attendance_code" required>
                                                         <option value="-">Pengajuan Belum Dipilih</option>
                                                     </select>
                                                     <div class="input-group-append">
@@ -266,14 +215,15 @@ if(isset($_GET['id'])){
                                                 </div>
                                             </div>
                                         </div>
-                                        
-                                        <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
-                                        <button type="submit" name="add_request" disabled id="prosesrequest"  class="d-none btn btn-sm btn-primary load-data pull-right" >Proses</button>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="notification"></div>
                                             </div>
                                         </div>
+                                        
+                                        <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
+                                        <button type="submit" name="add_request" disabled id="prosesrequest"  class=" btn btn-sm btn-primary load-data pull-right" >Proses</button>
+                                        
                                     </form>
                                 </div>
                             </div>

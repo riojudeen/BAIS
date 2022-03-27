@@ -248,6 +248,14 @@ if(isset($_SESSION['user'])){
                     $('#allmp').prop('checked', false)
                 }
             })
+            
+        })
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '.btn-attach', function(event){
+                event.preventDefault()
+            })
         })
     </script>
     <script>
