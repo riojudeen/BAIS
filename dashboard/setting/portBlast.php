@@ -2,52 +2,67 @@
 //////////////////////////////////////////////////////////////////////
 require_once("../../config/config.php"); 
 if(isset($_SESSION['user'])){
-    $halaman = "Transfer Uang Makan";
+    $halaman = "Information Portal";
     include_once("../header.php");
 ?>
 <!-- halaman utama -->
-<div class="collapse" id="collapseExample">
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title pull-left">Create Information</h5>
-                    <div class="pull-right">    
-                        <a  class="btn btn-danger btn-icon btn-round btn-link" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="nc-icon nc-simple-remove"></i></a>
-                    </div>
-                </div>
-                <hr>
-                <div class="card-body ">
-                    <form method="post" enctype="multipart/form-data" action="proses/prosesBlast">
-                        <div class="form-group border rounded py-auto text-center">
-                            <hr class="my-0">
-                            <div class="fileinput fileinput-new text-center " data-provides="fileinput">
-                                <div class="fileinput-new thumbnail">
-                                    
-                                </div>
-                                <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:100px">
-                                    <input type="text" class="form-control mx-0">
-                                </div>
-                                <div>
-                                    <span class="btn btn-outline-default btn-round btn-rose btn-file">
-                                    <span class="fileinput-new ">Select Image</span>
-                                    <span class="fileinput-exists">Change</span>
-                                        <input type="file"  name="file_import" />
-                                    </span>
-                                    <a href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+
+<div class="modal fade" id="modalInfo" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content mx-1 px-1">
+            <div class="modal-header justify-content-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </button>
+                <h5 class="card-title pull-left">Create Information</h5>
+            </div>
+            <div class="modal-body px-2">
+                <div class="row ">
+                    <div class="col-md-12">
+                        <form method="POST" id="form_info" enctype="multipart/form-data" action="proses/prosesBlast">
+                            <label>Category</label>
+                            <div class="form-group">
+                                <select name="cat_info" class="form-control" id="cat_info">
+                                    <option value="">Pilih Category</option>
+                                    <option value="int">Internal Info</option>
+                                    <option value="ext">External Info</option>
+                                    <option value="at">Attendance Info</option>
+                                    <option value="ot">Overtime Info</option>
+                                    <option value="oth">Other Info</option>
+                                </select>
+                            </div>
+                            <label>Insert Gambar (optional)</label>
+                            <div class="form-group border rounded py-auto text-center">
+                                <div class="fileinput fileinput-new text-center " data-provides="fileinput" >
+                                    <div class="fileinput-new thumbnail">
+                                        
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail mt-4   mx-0 shadow-none" style="width:500px;min-width:500px">
+                                        <input type="text"  class="form-control mx-0">
+                                    </div>
+                                    <div>
+                                        <span class="btn btn-outline-default btn-round btn-rose btn-file">
+                                        <span class="fileinput-new ">Select Image</span>
+                                        <span class="fileinput-exists">Change</span>
+                                            <input type="file"  name="file_import" id="file_import" />
+                                        </span>
+                                        <a href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+                                    </div>
+                                    <p class="category">pastikan gambar berformat .JPG / .JPEG</p>
                                 </div>
                             </div>
-                        </div>
-                        <label>Judul</label>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="">
-                        </div>
-                        <label class="text-left">Datail Informasi</label>
-                        <div class="form-group">
-                            <textarea type="text" class="form-control ckeditor" id="ckedtor" placeholder="" maxlength="500" rows="10"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary pull-right">Upload</button>
-                    </form>
+                            <label>Judul</label>
+                            <div class="form-group">
+                                <input type="text" id="title_info" name="title_info" class="form-control title text-uppercase" placeholder="">
+                            </div>
+                            <label class="text-left">Detail Informasi</label>
+                            <div class="form-group">
+                                <textarea type="text" class="form-control ckeditor" name="desc_info" id="desc_info" placeholder="" maxlength="500" rows="10"></textarea>
+                            </div>
+                            <button type="reset" class="btn btn-sm btn-warning pull-right">Reset</button>
+                            <button type="submit" class="btn btn-sm btn-primary pull-right upload-info">Upload</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -61,104 +76,152 @@ if(isset($_SESSION['user'])){
 			<div class="card-header">
 				<h5 class="title pull-left">Info Post</h5>
                 <div class="box pull-right">
-                    <a href="file/FormatUpdate_MP.xlsx" class="btn btn-warning btn-icon btn-round" data-toggle="tooltip" data-placement="bottom" title="Download Format">
-                        <i class="nc-icon nc-paper"></i>
-                    </a>
-                    <button class="btn btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    <button class="btn btn-sm btn-info" data-toggle="modal" href="#modalInfo" role="button" aria-expanded="false" aria-controls="modalInfo">
                         <span class="btn-label">
                             <i class="nc-icon nc-cloud-download-93"></i>
                         </span>
-                    Import
+                    Create New
                     </button>
-                    
-                    <a href="proses/export.php?export=mp" class="btn btn-success" name="export" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
-                        <span class="btn-label">
-                            <i class="nc-icon nc-cloud-upload-94"></i>
-                            
-                        </span>
-                        Export
-                    </a>
                 </div>
 			</div>
             <hr>
-            <form action="" name="proses" method="POST">
 			<div class="card-body table-hover">
-                <div class="">
-                    <table class="table ">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Image</th>
-                                <th>Title</th>
-                                <th>Information</th>
-                                <th>Category</th>
-                                <th class="text-right">Action</th>
-                                <th class="text-right">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" id="allcek">
-                                        <span class="form-check-sign"></span>
-                                        </label>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $noInfo = 1;
-                            $sqlInfo = mysqli_query($link, "SELECT * FROM info ORDER BY id DESC")or die(mysqli_error($link));
-                            while($dataInfo = mysqli_fetch_assoc($sqlInfo)){
-                                ?>
-                                <tr>
-                                    <td><?=$noInfo++?></td>
-                                    <td class="text-nowrap">
-                                        <img src="<?=base_url()?>/dashboard/img/content/<?=$dataInfo['image']?>" alt="" style="width:50px; height:50px; overflow:hidden">
-                                    </td>
-                                    <td class="text-nowrap"><?=$dataInfo['title']?></td>
-                                    <td><?=$dataInfo['info']?></td>
-                                    <td class="text-nowrap"><?=$dataInfo['category']?></td>
-                                    <td class="text-right text-nowrap">
-                                        <a href="editInfo.php?t=info&info=<?=$dataInfo['id']?>" class="btn-round btn-outline-warning btn btn-warning btn-link btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>
-                                        <a href="proses/prosesInfo.php?del=info&info=<?=$dataInfo['id']?>" class="btn-round btn-outline-danger btn btn-danger btn-link btn-icon btn-sm remove"><i class="fa fa-times"></i></a>
-                                    </td>
-
-                                    <td class="text-right">
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input cek" name="mpchecked[]" type="checkbox" value="<?=$data[$i]['npk']?>">
-                                            <span class="form-check-sign"></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-                <hr>
-                <div class="box pull-right">
-                    <button  class="btn btn-danger  deleteall" >
-                        <span class="btn-label">
-                            <i class="nc-icon nc-simple-remove" ></i>
-                        </span>    
-                        Delete
-                    </button>
-                </div>
+                
             </div>
-            </form>
             
 		</div>
         
 	</div>
 </div>
+<div class="response"></div>
 
 <!-- halaman utama end -->
 <?php
     include_once("../footer.php"); 
     ?>
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '#allcek', function() {
+                if(this.checked){
+                    $('.cek').each(function() {
+                        this.checked = true;
+                    })
+                } else {
+                    $('.cek').each(function() {
+                        this.checked = false;
+                    })
+                }
 
+            });
+
+            $(document).on('click', '.cek', function() {
+                if($('.cek:checked').length == $('.cek').length){
+                    $('#allcek').prop('checked', true)
+                } else {
+                    $('#allcek').prop('checked', false)
+                }
+            })
+        })
+    </script>
+    <script>
+        $(document).ready(function(){
+            $(document).on('click', '.remove', function(a){
+                a.preventDefault();
+                var url = $(this).attr('href');
+                var data = 'delete_info';
+                // console.log(url)
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    text: "Informasi Ini Akan Dihapus Secara Permanent",
+                    icon: false,
+                    showCancelButton: true,
+                    confirmButtonColor: '#CB4335',
+                    cancelButtonColor: '#B2BABB',
+                    confirmButtonText: 'Delete!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: {delete_info:data},
+                            success: function (msg) {
+                                $('.response').html(msg)
+                                load_data()
+                            },
+                            error: function () {
+                                alert("Data Gagal dihapus");
+                                load_data()
+                            }
+                        });  
+                    }
+                })
+            })
+            function load_data(){
+                data = '1'
+                $.ajax({
+                    type: 'GET',
+                    url: "information.php",
+                    data: data,
+                    success: function (msg) {
+                        $('.card-body').html(msg)
+                    },
+                });
+            }
+            load_data()
+            $('.upload-info').on('click', function(e){
+                e.preventDefault();
+                upload_data();
+                
+            })
+            function upload_data(){
+                const file_import = $('#file_import').prop('files')[0];
+                const desc = CKEDITOR.instances.desc_info.getData()
+                const category = $('#cat_info').val();
+                const title = $('#title_info').val();
+                if(category == '' || title == '' || desc == ''){
+                    Swal.fire({
+                        title: 'Data Kosong',
+                        text: 'Pastikan formulir diisi semua',
+                        timer: 2000,
+                        
+                        icon: false,
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        confirmButtonColor: '#00B9FF',
+                        cancelButtonColor: '#B2BABB',
+                        
+                    })
+                }else{
+                    let formData = new FormData();
+                    formData.append('file_import', file_import);
+                    formData.append('cat_info', $('#cat_info').val());
+                    formData.append('title_info', $('#title_info').val());
+                    formData.append('desc_info', desc);
+                    console.log(desc);
+        
+                    $.ajax({
+                        type: 'POST',
+                        url: "proses/prosesInfo.php",
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (msg) {
+                            $('.response').html(msg)
+                            document.getElementById("form_info").reset();
+                            $('.ckeditor').val('');
+                            load_data()
+                        },
+                        error: function () {
+                            alert("Data Gagal Diupload");
+                        }
+                    });
+
+                }
+                
+            }
+        })
+    </script>
     <script>
     //untuk crud masal update department
     $('.deleteall').on('click', function(e){
@@ -181,38 +244,9 @@ if(isset($_SESSION['user'])){
         })
         
     });
-    $('.editall').on('click', function(e){
-        e.preventDefault();
-        var getLink = 'massEditBlast.php';
-
-        document.proses.action = getLink;
-        document.proses.submit();
-    });
+    
     </script>
-    <script>
-    //untuk crud masal update department
-
-    $('.remove').on('click', function(e){
-        e.preventDefault();
-        var getLink = $(this).attr('href');
-            
-        Swal.fire({
-        title: 'Anda Yakin ?',
-        text: "Data Akan Dihapus Permanent",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#FF5733',
-        cancelButtonColor: '#B2BABB',
-        confirmButtonText: 'Yes, delete!'
-        }).then((result) => {
-            if (result.value) {
-                document.proses.action = getLink;
-                document.proses.submit();
-            }
-        })
-        
-    });
-    </script>
+    
     
     <?php
     include_once("../endbody.php"); 

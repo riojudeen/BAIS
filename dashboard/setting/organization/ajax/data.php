@@ -232,7 +232,7 @@ if(isset($_SESSION['user'])){
                 $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
                 if($level > 5){
                     // jika administrator , dapat update semua karyawan , jika tidak hanya update rganisasi internal
-                    $queryMP = $queryMP." WHERE id_plant = '1' ";
+                    $queryMP = $queryMP." AND id_plant = '1' ";
                 }else{
                     $queryMP = $queryMP;
                 }

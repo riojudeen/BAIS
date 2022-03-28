@@ -754,10 +754,16 @@
                       </a>
                     </li>
                     
-                    <li class="menu d-none" data-name="infoport" id="infoport">
+                    <li class="menu " data-name="infoport" id="infoport">
                       <a href="<?=base_url()?>/dashboard/setting/portal.php">
-                        <span class="sidebar-mini-icon">IP</span>
+                        <span class="sidebar-mini-icon">TP</span>
                         <span class="sidebar-normal"> Transfer Portal</span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="infprt" id="infprt">
+                      <a href="<?=base_url()?>/dashboard/setting/portBlast.php">
+                        <span class="sidebar-mini-icon">IP</span>
+                        <span class="sidebar-normal"> Information Portal</span>
                       </a>
                     </li>
                     <li class="menu " data-name="attendanceport" id="attendanceport">

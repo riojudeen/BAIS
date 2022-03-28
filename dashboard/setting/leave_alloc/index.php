@@ -255,6 +255,7 @@ if(isset($_SESSION['user'])){
         $(document).ready(function(){
             $(document).on('click', '.btn-attach', function(event){
                 event.preventDefault()
+                
             })
         })
     </script>
