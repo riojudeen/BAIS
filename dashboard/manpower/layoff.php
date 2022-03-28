@@ -6,7 +6,7 @@ require_once("../../config/approval_system.php");
 // halaman khusus untuk kordinator area
 //redirect ke halaman dashboard index jika sudah ada session
 
-$halaman = "Daftar Man Power";
+$halaman = "Man Power Evaluasi";
 if(isset($_SESSION['user'])){
 
     include("../header.php");
@@ -352,12 +352,10 @@ if(isset($_SESSION['user'])){
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-6 text-left mt-3">
-                                    <h5 class="title ">Daftar Man Power</h5>
+                                    <h5 class="title ">Daftar Man Power Under Evaluation</h5>
                                     <p class="category">data karyawan sedang masa evaluasi akan otomatis muncul disini</p>
                                 </div>
-                                <div class="col-md-6 text-right">
-                                    <a href="../pages/mp_update.php" class="btn">Kembali</a>
-                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="col-md-3">

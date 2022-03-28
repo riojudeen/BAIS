@@ -274,8 +274,6 @@ if(isset($_SESSION['user'])){
                     $('.check-all').prop('checked', false)
                 }
             })
-            
-            
         })
     </script>
     <script>

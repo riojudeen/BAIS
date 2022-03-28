@@ -537,6 +537,12 @@
                         <span class="sidebar-normal"> Employee Data </span>
                       </a>
                     </li>
+                    <li class="menu " data-name="mpeval" id="mpeval">
+                      <a href="<?=base_url()?>/dashboard/manpower/layoff.php"><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">ED</span>
+                        <span class="sidebar-normal"> Evaluation Employee </span>
+                      </a>
+                    </li>
                     <li class="menu d-none" data-name="reqmp" id="reqmp">
                       <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">MR</span>

@@ -306,7 +306,7 @@ if(isset($_SESSION['user'])){
                             </div>
                         </div>
                     </div>
-                    <div class="row rounded flex-row flex-nowrap overflow-auto img_holder" id="b">
+                    <div class="row rounded flex-row flex-nowrap overflow-auto img_holder d-none" id="b">
     
                         <div class="col-md-12 col-sm-12 pl-5">
                             <div class="card card-stats bg-info">
@@ -490,13 +490,15 @@ if(isset($_SESSION['user'])){
                             <div class="row">
                                 <div class="col-md-6">
                                     <h4 class="text-uppercase title "><?=$part.$headerGroup?></h4>
+                                    <a class="btn btn-sm btn-info" data-toggle="collapse" href="#collapsesummary" role="button" aria-expanded="true" aria-controls="collapsesummary">Data Sumary</a>
                                 </div>
-                                
+                                <div class="col-md-6 text-right pt-4 mb-0">
+                                    
                                 <?php
                                 if($edit == 1){
                                     ?>
-                                    <form name="regist" action="../setting/organization/proses/add.php" method="POST" class="col-md-6 text-right pt-4 mb-0">
-                                        
+                                    <form name="regist" action="../setting/organization/proses/add.php" method="POST">
+                                    
                                         <input type="hidden" name="count" value="1">
                                         <input type="hidden" name="frm" value="1">
                                         <input type="submit" class="btn btn-sm btn-success mb-0 register" value="Register Organisasi">
@@ -504,12 +506,11 @@ if(isset($_SESSION['user'])){
                                     <?php
                                 }else{
                                     ?>
-                                    <div class="col-md-6 text-right pt-4 mb-0">
                                         <a  href="../setting/organization/" class="btn btn-sm mb-0"> Kembali </a>
-                                    </div>
                                     <?php
                                 }
                                 ?>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -531,11 +532,12 @@ if(isset($_SESSION['user'])){
                                                                     
                                                                     
                                                                     <td class="text-danger pl-4 title">
-                                                                        <div class="title">
+                                                                        <div class="title"> 
+                                                                            <span class="text-white category">NEW </span>
                                                                             <?=$dataPos['nama_org']?>
         
                                                                         </div>
-                                                                        <div class="badge badge-pill">Data Karyawan belum diposting</div>
+                                                                        <div class="badge badge-pill">Data Karyawan belum diposting. Klik Update untuk melakukan seting</div>
                                                                     </td>
                                                                     <td class="text-right pr-4">
                                                                         <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-round btn-outline-danger btn-success">Update</a>
@@ -555,81 +557,83 @@ if(isset($_SESSION['user'])){
                                 </div>
                                 
                             </div>
-                            <div class=" table-striped table-full-width text-uppercase" >
-                                <table class="table-sm" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Area</th>
-                                            <th>Jml Emp</th>
-                                            <th>FRM</th>
-                                            <th>TL</th>
-                                            <th>TM</th>
-                                            <th class="table-warning">TM K1</th>
-                                            <th class="table-warning">TM K2</th>
-                                            <th class="table-warning">TM P</th>
-                                            <th class="text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        if(mysqli_num_rows($sql_group)>0){
-                                            $no = 1;
-                                            while($data = mysqli_fetch_assoc($sql_group)){
-                                                $part = $part;
-                                                $color = ($data[$sub] == '')?"text-danger ":"";
-                                                $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
-                                                $addSub = " AND $sub $filter_sub";
-                                                $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
-                                                $total = mysqli_num_rows($query_total);
-                                                // echo $addSub;
-                                                // if($no == 1){
-                                                //     echo $queryMP.$addPermanent.$addSub;
-                                                // }
-                                                $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
-                                                $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
-                                                $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
-                                                $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
-                                                $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
-                                                $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
-                                                $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
-                                                
-                                                $jm_permanen = mysqli_num_rows($permanent);
-                                                $jm_kontrak1 = mysqli_num_rows($kontrak1);
-                                                $jm_kontrak2 = mysqli_num_rows($kontrak2);
-                                                $jm_TM = mysqli_num_rows($TM);
-                                                $jm_TL = mysqli_num_rows($TL);
-                                                $jm_FRM = mysqli_num_rows($FRM);
-                                                // echo $queryMP.$addMng;
-                                                ?>
-                                                <tr class="<?=$color?>">
-                                                    <td><?=$no++?></td>
-                                                    <td><?=$nama_area?></td>
-                                                    <td><?=$total?></td>
+                            <div class="collapse " id="collapsesummary">
+                                <div class=" table-striped table-full-width text-uppercase" >
+                                    <table class="table-sm" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Area</th>
+                                                <th>Jml Emp</th>
+                                                <th>FRM</th>
+                                                <th>TL</th>
+                                                <th>TM</th>
+                                                <th class="table-warning">TM K1</th>
+                                                <th class="table-warning">TM K2</th>
+                                                <th class="table-warning">TM P</th>
+                                                <th class="text-right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if(mysqli_num_rows($sql_group)>0){
+                                                $no = 1;
+                                                while($data = mysqli_fetch_assoc($sql_group)){
+                                                    $part = $part;
+                                                    $color = ($data[$sub] == '')?"text-danger ":"";
+                                                    $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
+                                                    $addSub = " AND $sub $filter_sub";
+                                                    $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
+                                                    $total = mysqli_num_rows($query_total);
+                                                    // echo $addSub;
+                                                    // if($no == 1){
+                                                    //     echo $queryMP.$addPermanent.$addSub;
+                                                    // }
+                                                    $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
+                                                    $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
+                                                    $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
+                                                    $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
+                                                    $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
+                                                    $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
+                                                    $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
                                                     
-                                                    <td><?=$jm_FRM?></td>
-                                                    <td><?=$jm_TL?></td>
-                                                    <td><?=$jm_TM?></td>
-                                                    <td class="table-warning"><?=$jm_kontrak1?></td>
-                                                    <td class="table-warning"><?=$jm_kontrak2?></td>
-                                                    <td class="table-warning"><?=$jm_permanen?></td>
-                                                    <td class="text-right">
-                                                        <?php
-                                                        if($data[$sub] != ''){
-                                                            ?>
-                                                            <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
+                                                    $jm_permanen = mysqli_num_rows($permanent);
+                                                    $jm_kontrak1 = mysqli_num_rows($kontrak1);
+                                                    $jm_kontrak2 = mysqli_num_rows($kontrak2);
+                                                    $jm_TM = mysqli_num_rows($TM);
+                                                    $jm_TL = mysqli_num_rows($TL);
+                                                    $jm_FRM = mysqli_num_rows($FRM);
+                                                    // echo $queryMP.$addMng;
+                                                    ?>
+                                                    <tr class="<?=$color?>">
+                                                        <td><?=$no++?></td>
+                                                        <td><?=$nama_area?></td>
+                                                        <td><?=$total?></td>
+                                                        
+                                                        <td><?=$jm_FRM?></td>
+                                                        <td><?=$jm_TL?></td>
+                                                        <td><?=$jm_TM?></td>
+                                                        <td class="table-warning"><?=$jm_kontrak1?></td>
+                                                        <td class="table-warning"><?=$jm_kontrak2?></td>
+                                                        <td class="table-warning"><?=$jm_permanen?></td>
+                                                        <td class="text-right">
                                                             <?php
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <?php
+                                                            if($data[$sub] != ''){
+                                                                ?>
+                                                                <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                }
                                             }
-                                        }
-                                        ?>
-                                        
-                                    </tbody>
-                                </table>
+                                            ?>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             
                         </div>

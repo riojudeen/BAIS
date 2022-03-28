@@ -864,6 +864,7 @@ if(isset($_SESSION['user'])){
     <script>
     
     $(document).on('keyup', '.data-npk',function(){
+        
         var npk = $(this).val();
         
         $.ajax({

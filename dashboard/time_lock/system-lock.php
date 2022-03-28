@@ -64,7 +64,7 @@ $redirect_lock = $redirect_lock;
     
     
     
-    if(mysqli_num_rows($queryLock_redirect)){
+    if(mysqli_num_rows($queryLock_redirect)>0 && $level < 6){
         ?>
         <script>
             $(document).ready(function(){
@@ -89,7 +89,7 @@ $redirect_lock = $redirect_lock;
         </script>
         <?php
     }
-    if(mysqli_num_rows($queryLock) > 0){
+    if(mysqli_num_rows($queryLock) > 0  && $level < 6){
         ?>
         
         <script>

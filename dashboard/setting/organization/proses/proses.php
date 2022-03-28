@@ -34,6 +34,12 @@ if(isset($_SESSION['user'])){
             // echo "pos";
             
             if($sql){
+                // echo "tes";
+                if($level > 5){
+                    $url="../index.php";
+                }else{
+                    $url=base_url()."/dashboard/pages/mp_update.php";
+                }
                 $_SESSION['tab'] = "pos";
                 $_SESSION['info'] = "Disimpan";
                 echo "<script>window.location='../index.php';</script>";

@@ -95,7 +95,7 @@ if(isset($_SESSION['user'])){
         }else if($_POST['part_area_posting'] == 'deptacc'){
             $query = "UPDATE  org SET `dept_account` = '$id_area'";
         }
-        // print_r($_POST['checked']);
+        print_r($_POST['checked']);
         $no = 1;
         if(isset($_POST['checked'])){
             foreach($_POST['checked'] AS $npk ){
@@ -105,8 +105,10 @@ if(isset($_SESSION['user'])){
                 $sql = mysqli_query($link, $query_update);
             }
             if($sql){
+
                 $_SESSION['info'] = "Disimpan";
                 echo "<script>window.location='../data-update.php?id=$id_area&part=$part_area';</script>";
+                
             }else{
                 $_SESSION['info'] = "Gagal Disimpan";
                 echo "<script>window.location='../data-update.php?id=$id_area&part=$part_area';</script>";

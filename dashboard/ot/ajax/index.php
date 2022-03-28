@@ -187,6 +187,7 @@ if(isset($_GET['id'])){
                                     <form method="get" action="">
                                         
                                         <div class="row">
+                                        
                                             <div class="col-md-3 pr-1">
                                                 <div class="form-group">
                                                     <label for="">Tanggal Kerja</label>
@@ -230,6 +231,28 @@ if(isset($_GET['id'])){
                                                                 ?>
                                                             </select>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="">Total Activity</label>
+                                                <div class="row">
+                                                    <div class="col-md-10 pr-1">
+                                                        <div class="form-group">
+                                                            <input type="number" class="count_more form-control" value="2">
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-2 text-right pl-1">
+                                                        <button type="button" class="btn mt-0 btn-success btn-icon  add_more">
+                                                        <i class="fas fa-plus"></i>
+                                                        </button>
+                                                        <button type="button" class="btn mt-0 btn-danger btn-icon kurangi">
+                                                        <i class="fas fa-minus"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1253,17 +1276,38 @@ $(document).ready(function(){
 
 <script>
     $(document).ready(function(){
+        
+        function add_more(){
+            var total = Number($('.count_more').val())+1;
+            $('.count_more').val(total)
+        }
+        function kurangi(){
+            var total = Number($('.count_more').val())-1;
+            $('.count_more').val(total)
+        }
+        $('.add_more').on('click', function(){
+            add_more()
+            filterInput()
+        })
+        $('.kurangi').on('click', function(){
+            kurangi()
+            filterInput()
+        })
         function filterInput(){
+            var count = Number($('.count_more').val())
             var work_date = $('#work_date').val();
             var type = $('#ot_type').val();
             var shift = $('#shift_request').val()
+            
+            console.log(count);
             $.ajax({
                 url:"ajax/filter-input.php",
                 method:"GET",
                 data:{
                     shift : shift,
                     work_date:work_date,
-                    type:type
+                    type:type,
+                    count : count
                 },
                 success:function(data){
                     $('#filter-input').html(data)
@@ -1276,7 +1320,7 @@ $(document).ready(function(){
         $('#ot_type').on('change', function(){
             filterInput()
         })
-        filterInput()
+        // filterInput()
         
         
     })

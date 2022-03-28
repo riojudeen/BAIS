@@ -220,24 +220,30 @@ if(isset($_SESSION['user'])){
                                                 FROM view_organization";
                 $access_org = orgAccessOrg($level);
                 $npk = $npkUser;
-                                                $data_access = generateAccess($link,$level,$npk);
-                                                $table = partAccess($level, "table");
-                                                $field_request = partAccess($level, "field_request");
-                                                $table_field1 = partAccess($level, "table_field1");
-                                                $table_field2 = partAccess($level, "table_field2");
-                                                $part = partAccess($level, "part");
-                                                $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-                                                // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-                                                // echo $access_org;
-                                                $queryMP = $origin_query." WHERE id_plant = '1' ";
-                                                // $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
-                                                // echo $queryMP;
-                // print_r($data_npk);
+                $data_access = generateAccess($link,$level,$npk);
+                $table = partAccess($level, "table");
+                $field_request = partAccess($level, "field_request");
+                $table_field1 = partAccess($level, "table_field1");
+                $table_field2 = partAccess($level, "table_field2");
+                $part = partAccess($level, "part");
+                $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+                // $add_filter = filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+                // echo $access_org;
+                $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
+                if($level > 5){
+                    // jika administrator , dapat update semua karyawan , jika tidak hanya update rganisasi internal
+                    $queryMP = $queryMP." WHERE id_plant = '1' ";
+                }else{
+                    $queryMP = $queryMP;
+                }
+                $queryData = $queryMP;
+                // echo $queryMP;
+
                 if(count($data_npk)>0){
                     // print_r($data_npk);
                     ?>
                     <div class="table-responsive" >
-                        <table class="table table-hover">
+                        <table class="table table-hover table-striped">
                             <thead class="table-warning">
                                 <tr>
                                     <th scope="col">No</th>
@@ -266,16 +272,17 @@ if(isset($_SESSION['user'])){
                             </thead>
                             <tbody class="text-uppercase text-nowrap">
                                 <?php
+                                // print_r($data_npk);
                                 if(count($data_npk)>0 ){
                                     if($data_npk[0] != ''){
                                         $no = 1;
                                         foreach($data_npk AS $npk){
                                             // $div_filter = $_GET['div'];
 
-                                            $queryMP .= " AND npk = '$npk'";
+                                            $queryMP = $queryData." AND npk = '$npk'";
                                             $query = mysqli_query($link, $queryMP)or die(mysqli_error($link));
                                             $jml = mysqli_num_rows($query);
-                                            // echo $jml;
+                                            // echo $queryMP."<br>";
                                             // $checked = ($jml > 0)?'disabled':'';
                                             // $checked_class = ($jml > 0)?'':'check';
                                             
@@ -348,8 +355,10 @@ if(isset($_SESSION['user'])){
                                                 <?php
                                             }else{
                                                 ?>
-                                                    <tr>
-                                                        <td colspan="15" class="text-center"> Data Belum Ada atau tidak tersedia untuk area anda</td>
+                                                    <tr class="table-danger">
+                                                        <td ><?=$no?></td>
+                                                        <td><?=$npk?></td>
+                                                        <td colspan="13"> Data Belum Ada atau tidak tersedia untuk area anda</td>
                                                     </tr>
                                                 <?php
                                             }
