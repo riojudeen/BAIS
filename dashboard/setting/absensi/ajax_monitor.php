@@ -374,11 +374,6 @@ if(isset($_SESSION['user'])){
             <div class="col-md-12 pull-rigt">
                 <ul class="pagination ">
                 <?php
-                // echo $page."<br>";
-                // echo $jumlah_page."<br>";
-                // echo $jumlah_number."<br>";
-                // echo $start_number."<br>";
-                // echo $end_number."<br>";
                 if($page == 1){
                     echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
                     echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';

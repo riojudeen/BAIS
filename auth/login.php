@@ -22,7 +22,7 @@ if(isset($_SESSION['user'])){
           //jika benar maka simpan session user sebagai variable user, dan redirect ke base_url / dashboard
           ($_SESSION['user'] = $user);
           ($_SESSION['level'] = $idRole);
-          
+          // header('location:')
           echo "<script>window.location='".base_url('dashboard/')."';</script>";
         } else {
           $pesan = "galat";               

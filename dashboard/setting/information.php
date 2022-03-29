@@ -5,8 +5,10 @@ require_once("../../config/approval_system.php");
 if(isset($_SESSION['user'])){
     if($level < 6){
         $addFilterNpk = "publisher = '$npkUser' ";
+        $title_card = "Support Ticket";
     }else{
         $addFilterNpk ="";
+        $title_card = "Information Management";
     }
     $filterNpk = ($addFilterNpk != '')?" AND $addFilterNpk":"";
     // echo $_GET['data'];
@@ -14,131 +16,35 @@ if(isset($_SESSION['user'])){
         switch($_GET['data']){
             case "nav-general":
                 $addFilter = " category = 'ext' OR category = 'int' OR category = 'oth' ";
+                $icon = '<i class="fas fa-bullhorn"></i>';
+                $text_close = "";
+                $text_publish = "published";
+                
+                $close_date = 0;
                 break;
             case "nav-support":
                 $addFilter = " category = 'report' ";
+                $icon = '<i class="fas fa-ticket-alt"></i>';
+                $text_close = "solved date";
+                $text_publish = "reported";
+                $close_date = 1;
                 break;
             case "nav-notif":
                 $addFilter = " category = 'at' OR category = 'ot' OR category = 'mtc' ";
+                $icon = '<i class="far fa-bell"></i>';
+                $text_close = "";
+                $text_publish = "created";
+                $close_date = 0;
                 break;
             case "nav-holiday":
                 $addFilter = " category = 'holidays' ";
+                $icon = '<i class="fas fa-umbrella-beach"></i>';
+                $text_close = "";
+                $text_publish = "created";
+                $close_date = 0;
                 break;
         }
     }
-    /*
-    ?>
-    <form action="" name="proses" method="POST">
-        <div class="table-full-width table-striped ">
-            <table class="table ">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Image</th>
-                        <th>Title</th>
-                        <th>Information</th>
-                        <th>Publisher</th>
-                        <th>Reported Date</th>
-                        <th>Solved Date</th>
-                        <th>Category</th>
-                        <th>Status</th>
-                        <th class="text-right">Action</th>
-                        <th class="text-right">
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" id="allcek">
-                                <span class="form-check-sign"></span>
-                                </label>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $noInfo = 1;
-                    $sqlInfo = mysqli_query($link, "SELECT * FROM info ORDER BY id DESC")or die(mysqli_error($link));
-                    if(mysqli_num_rows($sqlInfo)>0){
-                        while($dataInfo = mysqli_fetch_assoc($sqlInfo)){
-                            $clr = (isset($dataInfo['stats']) && $dataInfo['stats'] == 0)?"muted":"success";
-                            $text = (isset($dataInfo['stats']) && $dataInfo['stats'] == 0)?"Not-active":"active";
-                            $image = (isset($dataInfo['image']))?$dataInfo['image']:"";
-                            $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/$image";
-                            $start = (isset($dataInfo['date_start']))?tgl($dataInfo['date_start']):"";
-                            $end = (isset($dataInfo['date_end']))?tgl($dataInfo['date_end']):"";
-                            
-                            if(file_exists($path)){
-        
-                                $type = pathinfo($path, PATHINFO_EXTENSION);
-                                $dataImage = file_get_contents($path);
-                                $image = 'data:image/' . $type . ';base64,' . base64_encode($dataImage);
-                                $imageSupport = ($image)? $image : "";
-                            }else{
-                                $imageSupport = base_url()."/assets/img/img/no-image.png";
-                            }
-                            ?>
-                            <tr>
-                                <td><?=$noInfo++?></td>
-                                <td class="text-nowrap">
-                                    <img src="<?=$imageSupport?>" alt="" style="width:50px; height:50px; overflow:hidden">
-                                </td>
-                                <td class="text-nowrap"><?=$dataInfo['title']?></td>
-                                
-                                <td><?=$dataInfo['info']?></td>
-                                <td class="text-nowrap"><?=$dataInfo['publisher']?></td>
-                                <td class="text-nowrap"><?=$start?></td>
-                                <td class="text-nowrap"><?=$end?></td>
-                                <td class="text-nowrap"><?=$dataInfo['category']?></td>
-                                <td class="text-nowrap">
-                                    <div class="legend card-category">
-                                        <i class="fa fa-circle text-<?=$clr?>"></i>
-                                        <span class="category"><?=$text?></span>
-                                        
-                                    </div>
-                                    
-                                </td>
-                                <td class="text-right text-nowrap">
-                                    <a href="proses/prosesInfo.php?del=<?=$dataInfo['id']?>" class="btn-round btn-outline-danger btn btn-danger btn-link btn-icon btn-sm remove"><i class="fa fa-times"></i></a>
-                                </td>
-                                <td class="text-right">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input cek" name="mpchecked[]" type="checkbox" value="<?=$data[$i]['npk']?>">
-                                        <span class="form-check-sign"></span>
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php
-                        }
-                    }else{
-                        ?>
-                        <tr>
-                            <td colspan="11" class="text-uppercase text-center">Tiket Problem / Informasi Tidak Ditemukan</td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-        <hr>
-        <div class="box pull-right">
-            <button  class="btn btn-sm btn-success  activeAll" >
-                <span class="btn-label">
-                    <i class="nc-icon nc-simple-remove" ></i>
-                </span>    
-                Active All
-            </button>
-            <button  class="btn btn-sm btn-warning  activeAll" >
-                <span class="btn-label">
-                    <i class="nc-icon nc-simple-remove" ></i>
-                </span>    
-                Solved All
-            </button>
-        </div>
-    </form>
-    <?php
-    */
     $addFilter = ($addFilter != '')?" WHERE ($addFilter) ".$filterNpk:"";
     $noInfo = 1;
     $query = "SELECT * FROM info ".$addFilter;
@@ -173,7 +79,7 @@ if(isset($_SESSION['user'])){
             $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/$image";
             $start = (isset($dataInfo['date_start']))?tgl($dataInfo['date_start']):"";
             $end = (isset($dataInfo['date_end']))?tgl($dataInfo['date_end']):"";
-            
+            $text_color = ($dataInfo['stats'] == 1)?"text-success":"";
             if(file_exists($path)){
 
                 $type = pathinfo($path, PATHINFO_EXTENSION);
@@ -209,13 +115,11 @@ if(isset($_SESSION['user'])){
                                                 <ul class="list-unstyled team-members col-md-12">
                                                     <li>
                                                         <div class="row">
-                                                            <div class="col-md-1 col-1">
-                                                                <div class="avatar">
-                                                                <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                            <div class="col-md-9 col-9 pr-0">
+                                                                <div class="icon <?=$text_color?>">
+                                                                    <?=$icon?>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-md-8 col-8">
-                                                                <h5 class="text-uppercase mb-0">
+                                                                <h5 class="text-uppercase mb-0 <?=$text_color?> title">
                                                                     <?=$dataInfo['title']?>
                                                                 </h5>
                                                                 <span class="legend card-category mb-0 pb-0 mt-3 mr-4">
@@ -226,11 +130,17 @@ if(isset($_SESSION['user'])){
                                                                     <i class="fa fa-calendar text-category"></i>
                                                                     <span class="category"> created : <?=$start?></span>
                                                                 </span>
-                                                                <span class="legend border-left pl-4 card-category mb-0 pb-0 mt-3 ">
-                                                                    <span class="category">closed : <?=$end?></span>
-                                                                </span>
+                                                                <?php
+                                                                if($close_date == 1){
+                                                                    ?>
+                                                                    <span class="legend border-left pl-4 card-category mb-0 pb-0 mt-3 ">
+                                                                        <span class="category"><?=$text_close?> : <?=$end?></span>
+                                                                    </span>
+                                                                    <?php
+                                                                }
+                                                                ?>
                                                             </div>
-                                                            <div class="col-md-3 col-3 mx-0 px-0 text-right">
+                                                            <div class="col-md-3 col-3 mx-0 px-0 text-right mb-0 pb-0">
                                                                 <span class="form-check ">
                                                                     <label class="form-check-label">
                                                                         <input class="form-check-input cek" name="mpchecked[]" type="checkbox" value="<?=$dataInfo['id']?>">
@@ -256,26 +166,30 @@ if(isset($_SESSION['user'])){
                                     <div class="card-text">
                                         <div class="row">
                                             
-                                            <div class="col-md-6 ">
+                                            <div class="col-md-6 col-6">
                                                 <div class="row">
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-2 col-2">
                                                         <div class="avatar">
-                                                            <img src="../../assets/img/faces/ayo-ogunseinde-2.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                                            <img src="<?=getFoto($dataInfo['publisher'])?>" alt="Circle Image" class="img-circle img-no-padding img-responsive">
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-10 mx-0 px-0 mt-0">
-                                                        <label for="">created: <br> 
+                                                    <div class="col-md-10 col-10 mx-0 px-0 mt-0">
+                                                        <label for=""><?=$text_publish?>: <br> 
                                                         <strong>
-                                                        Rio Setiawn Judin
+                                                            <?php
+                                                            $updater = mysqli_query($link, "SELECT nama , npk FROM karyawan WHERE npk = '$dataInfo[publisher]' ")or die(mysqli_error($link));
+                                                            $dataUpdater = mysqli_fetch_assoc($updater);
+                                                            $namaUpdater = (isset($dataUpdater['nama']))?"$dataUpdater[npk] ".nick($dataUpdater['nama']):'';
+                                                            ?>
+                                                        <?=$namaUpdater?>
                                                         </strong>
                                                         </label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 mt-0 text-right">
+                                            <div class="col-md-6 col-6 mt-0 text-right">
                                                                 
                                                 <a href="proses/prosesInfo.php?del=<?=$dataInfo['id']?>" class="btn-round btn btn-outline-danger btn-icon btn-sm remove"><i class="fa fa-trash"></i></a>
-                                                <span class="btn btn-sm btn-outline-success btn-round btn-icon"><i class="fa fa-envelope"></i></span>
                                                 
                                             </div>
                                         </div>
@@ -353,14 +267,7 @@ if(isset($_SESSION['user'])){
             ?>
             </ul>
         </div>
-        <div class="col-md-6 text-right">
-            <button  class="btn btn-sm btn-success  activeAll" >
-                <span class="btn-label">
-                    <i class="nc-icon nc-simple-remove" ></i>
-                </span>    
-                Active All
-            </button>
-        </div>
+        
     </div>
     <?php
 } else{

@@ -106,6 +106,9 @@ require_once("../../../config/error.php");
         $newPath = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/$image";
        
         $sql = mysqli_query($link, "DELETE FROM info WHERE id = '$data' ");
+
+
+        
         if($sql){
             if (file_exists($newPath)){
                 unlink($newPath);
@@ -153,6 +156,22 @@ require_once("../../../config/error.php");
         $sql = mysqli_fetch_assoc($cek_data);
         $stats = $sql['stats'];
         $cat = $sql['category'];
+        switch($_POST['id']){
+            case "nav-general":
+                
+                $text_publish = "0";
+                
+                break;
+            case "nav-support":
+                $text_publish = "1";
+                break;
+            case "nav-notif":
+                $text_publish = "0";
+                break;
+            case "nav-holiday":
+                $text_publish = "0";
+                break;
+        }
         if($stats == 0){
             $stats = 1;
         }else{
@@ -162,7 +181,7 @@ require_once("../../../config/error.php");
         $sql = mysqli_query($link, $queryStats);
         // echo $queryStats;
         if($sql){
-            if($stats == 0){
+            if($stats == 0 && $text_publish == "1"){
                 ?>
                 <script>
                     Swal.fire({

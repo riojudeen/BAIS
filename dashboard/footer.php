@@ -55,6 +55,8 @@ if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
   <script>
       $(document).ready(function(){
           var data = $('.btn-maintenance').attr('data-id');
+          var number = 1
+          
           window.setInterval(function () {
               var sisawaktu = $("#waktu_maintenance").html();
               sisawaktu = eval(sisawaktu);
@@ -552,27 +554,76 @@ if($actual_link != $link_exception){
   }
 }
 </script>
-<script>
-    function showNotification(from, align){
-    color = 1;
-    // 4 danger //untuk notifikasi pengajuan bermasalah
-    // 3 warning //untuk reminder pengajuan
-    // 1 info //informasi 
-    // 2 success
-        console.log(color);
-    $.notify({
-      icon: "nc-icon nc-bell-55",
-      message: "Batas Pengajuan 25 Maret"
-
-    },{
-      type: type[color],
-      timer: 8000,
-      placement: {
-        from: from,
-        align: align
+<?php
+$i = 1;
+$query_notif = "SELECT info, publisher, title, category, stats, date_start, date_end, `image` FROM info 
+WHERE (category = 'at' 
+  OR category = 'ot' 
+  OR category = 'holidays' 
+  OR category = 'mtc') AND `stats` = '1' ";
+$sqlNotif = mysqli_query($link, $query_notif)or die(mysqli_error($link));
+if(mysqli_num_rows($sqlNotif)>0){
+  while($dataNotif = mysqli_fetch_assoc($sqlNotif)){
+    $title = $dataNotif['title'];
+    $info = $dataNotif['info'];
+    $cat = $dataNotif['category'];
+    if($cat == 'mtc' ){
+      $show = 1;
+      $color = 4;
+      $icon = 'fas fa-tools';
+    }else if($cat == 'at' ){
+      if(isset($alertMe) && $alertMe == 'at'){
+        $show = 1;
+      }else{
+        $show = 0;
       }
-    });
+      $icon = 'far fa-calendar-check';
+      $color = 1;
+    }else if($cat == 'holidays'){
+      $show = 1;
+      $icon = 'far fa-sticky-note';
+      $color = 3;
+    }else if($cat == 'ot'){
+      if(isset($alertMe) && $alertMe == 'ot'){
+        $show = 1;
+      }else{
+        $show = 0;
+      }
+      $icon = 'far fa-clock';
+      $color = 1;
+    }
+    if($show == 1){
+      
+      ?>
+      
+      <script>
+          showNotification<?=$i?>('top','right')
+          function showNotification<?=$i?>(from, align){
+          color = 1;
+          // 4 danger //untuk notifikasi pengajuan bermasalah
+          // 3 warning //untuk reminder pengajuan
+          // 1 info //informasi 
+          // 2 success
+              // console.log(color);
+          $.notify({
+            icon: '<?=$icon?>',
+            message: '<h6><strong><?=$title?></strong></h6>'+'<?=$info?>'
+
+          },{
+            type: type[<?=$color?>],
+            timer: 5000,
+            placement: {
+              from: from,
+              align: align
+            }
+          });
+        }
+      </script>
+      <?php
+    
+      }
+    $i++;
   }
-</script>
-
-
+}
+?>
+  

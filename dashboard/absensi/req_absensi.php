@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
+$alertMe = "at";
 $halaman = "Monitor Request Absensi";
 $part_lock = "at";
 $redirect_lock = base_url()."/dashboard/pages/absensi.php";

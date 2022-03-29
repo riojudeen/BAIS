@@ -4,6 +4,11 @@ require_once("../../config/config.php");
 if(isset($_SESSION['user'])){
     $halaman = "Information Portal";
     include_once("../header.php");
+    if($level < 6){
+        $title_card = "Support Ticket";
+    }else{
+        $title_card = "Information Management";
+    }
     
 ?>
 <!-- halaman utama -->
@@ -15,7 +20,7 @@ if(isset($_SESSION['user'])){
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="nc-icon nc-simple-remove"></i>
                 </button>
-                <h5 class="card-title pull-left">Create Information</h5>
+                <h5 class="card-title pull-left">Create New</h5>
             </div>
             <div class="modal-body px-2">
                 <div class="row ">
@@ -35,7 +40,7 @@ if(isset($_SESSION['user'])){
                                         <?php
                                         if($level == 8){
                                             ?>
-                                            <option value="holidays">Holidays Feature</option>
+                                            <option value="holidays">Reminder Feature</option>
                                             <option value="at">Notifikasi Absensi</option>
                                             <option value="ot">Notifikasi Overtime</option>
                                             <option value="mtc">Maintenance Info</option>
@@ -96,11 +101,11 @@ if(isset($_SESSION['user'])){
 			<div class="card-header">
                 <div class="row">
                     
-                    <h5 class="title col-md-6">Info Post</h5>
+                    <h5 class="title col-md-6"><?=$title_card?></h5>
                     <div class="text-right col-md-6">
                         <button class="btn btn-sm btn-info" data-toggle="modal" href="#modalInfo" role="button" aria-expanded="false" aria-controls="modalInfo">
                             <span class="btn-label">
-                                <i class="nc-icon nc-cloud-download-93"></i>
+                            <i class="fas fa-plus"></i>
                             </span>
                         Create New
                         </button>
@@ -112,12 +117,12 @@ if(isset($_SESSION['user'])){
                         <?php
                         if($level > 5){
                             ?>
-                            <a class="nav-item nav-link active navigasi-info " id="nav-general" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">General Information</a>
+                            <a class="nav-item nav-link navigasi-info " id="nav-general" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">General Information</a>
                             <?php
                             if($level == 8){
                             ?> 
                             <a class="nav-item nav-link navigasi-info" id="nav-notif" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Notifikasi</a>
-                            <a class="nav-item nav-link navigasi-info" id="nav-holiday" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Holiday Feature</a>
+                            <a class="nav-item nav-link navigasi-info" id="nav-holiday" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Reminder Feature</a>
                             <?php
                                 
                             }
@@ -154,18 +159,19 @@ if(isset($_SESSION['user'])){
     <script>
         $(document).ready(function(){
             $(document).on('click', '.cek', function() {
+                var id = $('.nav-active').attr('id');
                 var data = $(this).val()
-                console.log(data);
+                console.log(id);
                 $.ajax({
                     type: 'POST',
                     url: 'proses/prosesInfo.php',
-                    data: {update_info:data},
+                    data: {update_info:data, id:id},
                     success: function (msg) {
                         $('.response').html(msg)
                         load_data()
                     },
                     error: function () {
-                        alert("Data Gagal dihapus");
+                        alert("Data Gagal Perbaharui");
                         load_data()
                     }
                 }); 

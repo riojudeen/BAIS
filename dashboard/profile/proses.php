@@ -14,7 +14,8 @@ if(isset($_SESSION['user'])){
 		$user_levQuery = mysqli_query($link, "SELECT role_name FROM user_role WHERE id_role = '$data_akun[level_user]' ")or die(mysqli_error($link));
 		// $data_userLevel = mysqli_fetch_assoc($user_levQuery);
         $new_pass = sha1($_GET['new_pass']);
-        $pass_before = $data_akun['pass'];
+        
+        $pass_before = $data_akun['pass']; //password lama
         $cekPass = mysqli_num_rows($user_levQuery);
         if($pass == $data_akun['pass']){
             

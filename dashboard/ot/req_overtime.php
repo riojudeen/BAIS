@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
+$alertMe = "ot";
 $halaman = "Overtime Request";
 $part_lock = "ot";
 $redirect_lock = base_url()."/dashboard/pages/overtime.php";

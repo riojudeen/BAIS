@@ -193,7 +193,37 @@
   <!-- loading bar -->
   <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/dist/loading-bar.css"/>
   <script type="text/javascript" src="<?=base_url()?>/assets/dist/loading-bar.js"></script>
-  
+  <script>
+    $(document).ready(function(){
+      // get_notif_data()
+      window.setInterval(function () {
+        get_notif_data()
+      }, 5000);
+      function get_notif_data(){
+        $.ajax({
+            type: 'GET',
+            url: '<?=base_url()?>/dashboard/notif/index.php',
+            success: function (data) {
+              var obj = $.parseJSON(data);
+              var total = obj.msg[0].jml;
+              var ot = obj.data[0].ot;
+              var at = obj.data[0].at;
+              var inf = obj.data[0].info;
+              if(total > 0){
+                  $('#notif-app-at').text(at)
+                  $('#notif-app-ot').text(ot)
+                  $('#notif-gen-info').text(inf)
+                  $('#notif-all').text(total)
+              }
+            },
+            error: function () {
+                alert("Data Gagal Perbaharui");
+                // load_data()
+            }
+        }); 
+      }
+    })
+  </script>
 
   <!-- date range picker -->
   <style type="text/css">
@@ -253,69 +283,6 @@
         transform: translate(24px, 0);
       }
     }
-
-    /* @keyframes ldio-wgt5lhdj7pi {
-      0% { transform: rotate(0deg) }
-      100% { transform: rotate(360deg) }
-    }
-    .ldio-wgt5lhdj7pi > div > div {
-      transform-origin: 100px 100px;
-      animation: ldio-wgt5lhdj7pi 3.0303030303030303s linear infinite;
-      opacity: 0.8;
-      top:40%;
-    }
-    .ldio-wgt5lhdj7pi > div > div > div {
-      position: absolute;
-      left: 30px;
-      top: 30px;
-      width: 70px;
-      height: 70px;
-      border-radius: 70px 0 0 0;
-      transform-origin: 100px 100px;
-
-    }.ldio-wgt5lhdj7pi > div div:nth-child(1) {
-      animation-duration: 0.7575757575757576s
-    }
-    .ldio-wgt5lhdj7pi > div div:nth-child(1) > div {
-      background: #e15b64;
-      transform: rotate(0deg);
-    }.ldio-wgt5lhdj7pi > div div:nth-child(2) {
-      animation-duration: 1.0101010101010102s
-    }
-    .ldio-wgt5lhdj7pi > div div:nth-child(2) > div {
-      background: #f47e60;
-      transform: rotate(0deg);
-    }.ldio-wgt5lhdj7pi > div div:nth-child(3) {
-      animation-duration: 1.5151515151515151s
-    }
-    .ldio-wgt5lhdj7pi > div div:nth-child(3) > div {
-      background: #f8b26a;
-      transform: rotate(0deg);
-    }.ldio-wgt5lhdj7pi > div div:nth-child(4) {
-      animation-duration: 3.0303030303030303s
-    }
-    .ldio-wgt5lhdj7pi > div div:nth-child(4) > div {
-      background: #abbd81;
-      transform: rotate(0deg);
-    }
-    .loadingio-spinner-wedges-kild66l96a {
-      width: 200px;
-      height: 100%;
-      display: inline-block;
-      overflow: hidden;
-
-    }
-    .ldio-wgt5lhdj7pi {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform: translateZ(0) scale(1);
-      backface-visibility: hidden;
-      transform-origin: 0 0; 
-      top:30%;
-    }
-    .ldio-wgt5lhdj7pi div { box-sizing: content-box; 
-    } */
     
     .overlay {
       z-index :9999;
@@ -541,6 +508,12 @@
                       <a href="<?=base_url()?>/dashboard/manpower/layoff.php"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">ED</span>
                         <span class="sidebar-normal"> Evaluation Employee </span>
+                      </a>
+                    </li>
+                    <li class="menu " data-name="infoportal" id="infoportal">
+                      <a href="<?=base_url()?>/dashboard/administrasi/info.php"><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">IP</span>
+                        <span class="sidebar-normal"> Information </span>
                       </a>
                     </li>
                     <li class="menu d-none" data-name="reqmp" id="reqmp">
@@ -914,7 +887,6 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
             <span class="navbar-toggler-bar navbar-kebab"></span>
             <span class="navbar-toggler-bar navbar-kebab"></span>
-            
           </button>
 
           <!--- inactive sementara-->
@@ -926,8 +898,6 @@
           <div id="clock" class="input-group no-border"></div>
           </span>
           <!--
-
-            
             <form>
               <div class="input-group no-border">
                 <input type="text" value="" class="form-control" placeholder="Search...">
@@ -948,7 +918,7 @@
                 </a>
               </li>
               <li class="nav-item btn-rotate dropdown">
-                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="nc-icon nc-send"></i>
                   <p>
                     <span class="d-lg-none d-md-block">Some Actions</span>
@@ -961,14 +931,28 @@
                   <a class="dropdown-item" href="<?=base_url()?>/dashboard/setting/portBlast.php">Ticket Problem</a>
                 </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link btn-rotate" id="btn-notification" href="javascript:;" onclick="showNotification('bottom','right')">
+              <li class="nav-item btn-rotate dropdown" >
+                <a class="nav-link dropdown-toggle" href="" id="btn-notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="nc-icon nc-bell-55"></i>
                   <p>
-                    <span class="d-lg-none d-md-block">Notification</span>
-                    <span class="badge badge-sm badge-pill badge-info">30</span>
+                    <span class="d-lg-none d-md-block">Some Actions</span>
+                    <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info " id="notif-all"></span>
+                    </p>
                   </p>
                 </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-notification" >
+                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/absensi/approval/">Leave Request 
+                  <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info text-right" id="notif-app-at"></span>
+                  </a>
+                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/ot/approval/">Overtime Request
+                    <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info text-right" id="notif-app-ot"></span>
+                    </a>
+                  </a>
+                  <a class="dropdown-item" href="#">New Info
+                    <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info text-right" id="notif-gen-info"></span>
+                    </a>
+                  </a>
+                </div>
               </li>
             </ul>
           </div>
@@ -992,8 +976,6 @@
                       <h6>Lock</h6>
                     </div>
                 </div>
-            
-                
               </div>
             </div>
 

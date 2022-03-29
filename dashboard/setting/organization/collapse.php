@@ -7,7 +7,7 @@
                 <div class="card-body  mt-2">
                     <form method="post" enctype="multipart/form-data" action="proses/org/import.php">
                         <div class="form-group">
-                            <textarea class="form-control " name="" id="text_input" cols="30" rows="10"><?=$fill_text_area?></textarea>
+                            <textarea class="form-control "  name="" id="text_input" cols="30" rows="10"><?=$fill_text_area?></textarea>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
