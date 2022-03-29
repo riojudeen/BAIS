@@ -438,34 +438,35 @@
               
               //akses menu
                 // if($role == "admin" || $role == "frm" || $role == "spv" || $role == "mng"){?>
-              <li class="clpse d-none" data-name="tf" id="tf" data-target="transfer">
+              <li class="clpse " data-name="tf" id="tf" data-target="transfer">
                 <a data-toggle="collapse" href="#transfer">
                   <i class="nc-icon nc-book-bookmark"></i>
                   <p>
-                    Informasi Transfer <b class="caret"></b>
+                    INFORMATION <b class="caret"></b>
                   </p>
                 </a>
                 <div class="collapse" id="transfer">
                   <ul class="nav">
-                    <li class="menu " data-name="um" id="um">
-                      <a href=" "> <!---link halaman uang makan--->
-                        <span class="sidebar-mini-icon">UM</span>
-                        <span class="sidebar-normal"> Transfer Uang Makan </span>
+                    
+                    <li class="menu " data-name="infoportal" id="infoportal">
+                      <a href="<?=base_url()?>/dashboard/administrasi/info.php"><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">GI</span>
+                        <span class="sidebar-normal"> General Information </span>
                       </a>
                     </li>
-                    <li class="menu " data-name="ss" id="ss">
-                      <a href=" "><!---link halaman SS--->
-                        <span class="sidebar-mini-icon">SS</span>
-                        <span class="sidebar-normal"> Transfer SS </span>
+                    <li class="menu" data-name="lisbl" id="lisbl">
+                      <a ><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">BL</span>
+                        <span class="sidebar-normal"> BlackListed Hospital </span>
                       </a>
                     </li>
-                    <li class="menu " data-name="tj" id="tj">
-                      <a href=" "><!---link halaman Tunjangan Pengobatan--->
-                        <span class="sidebar-mini-icon">TJ</span>
-                        <span class="sidebar-normal"> Transfer Tunjangan </span>
+                    <li class="menu" data-name="lisrc" id="lisrc">
+                      <a ><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">RH</span>
+                        <span class="sidebar-normal"> Recomended Hospital </span>
                       </a>
                     </li>
-                    </ul>
+                  </ul>
                 </div>
               </li>
               <?php
@@ -510,30 +511,13 @@
                         <span class="sidebar-normal"> Evaluation Employee </span>
                       </a>
                     </li>
-                    <li class="menu " data-name="infoportal" id="infoportal">
-                      <a href="<?=base_url()?>/dashboard/administrasi/info.php"><!---link halaman request edit MP--->
-                        <span class="sidebar-mini-icon">IP</span>
-                        <span class="sidebar-normal"> Information </span>
-                      </a>
-                    </li>
                     <li class="menu d-none" data-name="reqmp" id="reqmp">
                       <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">MR</span>
                         <span class="sidebar-normal"> Employee Update Request </span>
                       </a>
                     </li>
-                    <li class="menu" data-name="lisbl" id="lisbl">
-                      <a ><!---link halaman request edit MP--->
-                        <span class="sidebar-mini-icon">BL</span>
-                        <span class="sidebar-normal"> Black List Hospital </span>
-                      </a>
-                    </li>
-                    <li class="menu" data-name="lisbl" id="lisbl">
-                      <a ><!---link halaman request edit MP--->
-                        <span class="sidebar-mini-icon">BL</span>
-                        <span class="sidebar-normal"> Recomendation Hospital </span>
-                      </a>
-                    </li>
+                    
                     <?php
                       }else if($level >= 6 ){
                         
@@ -627,15 +611,16 @@
                 </a>
                 <div class="cllpse collapse " id="overtime" data-name="overtime">
                   <ul class="nav">
-                    <?php
-                    if($level != 5 && $level >= 3 ){
-                    ?>
+                    
                     <li class="menu " data-name="ovrtime" id="ovrtime">
                       <a href="<?=base_url()?>/dashboard/pages/overtime.php">
                         <span class="sidebar-mini-icon">OM</span>
                         <span class="sidebar-normal"> Overtime Montoring </span>
                       </a>
                     </li>
+                    <?php
+                    if($level != 5 && $level >= 3 ){
+                    ?>
                     <li class="menu " data-name="ovrtime2" id="ovrtime2">
                       <a href="<?=base_url()?>/dashboard/ot/req_overtime.php">
                         <span class="sidebar-mini-icon">OR</span>
