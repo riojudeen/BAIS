@@ -4,6 +4,7 @@ require_once("../../config/config.php");
 if(isset($_SESSION['user'])){
     $halaman = "Information Portal";
     include_once("../header.php");
+    
 ?>
 <!-- halaman utama -->
 
@@ -23,12 +24,31 @@ if(isset($_SESSION['user'])){
                             <label>Category</label>
                             <div class="form-group">
                                 <select name="cat_info" class="form-control" id="cat_info">
-                                    <option value="">Pilih Category</option>
-                                    <option value="int">Internal Info</option>
-                                    <option value="ext">External Info</option>
-                                    <option value="at">Attendance Info</option>
-                                    <option value="ot">Overtime Info</option>
-                                    <option value="oth">Other Info</option>
+                                    <?php
+                                    if($level > 5){
+                                        ?>
+                                        <option value="" disabled>Pilih Category</option>
+                                        <option value="report">Support Ticket</option>
+                                        <option value="int">Internal Info</option>
+                                        <option value="ext">External Info</option>
+                                        <option value="oth">Other Info</option>
+                                        <?php
+                                        if($level == 8){
+                                            ?>
+                                            <option value="holidays">Holidays Feature</option>
+                                            <option value="at">Notifikasi Absensi</option>
+                                            <option value="ot">Notifikasi Overtime</option>
+                                            <option value="mtc">Maintenance Info</option>
+                                            <?php
+
+                                        }
+                                    }else{
+                                        ?>
+                                        <option value="report">Support Ticket</option>
+                                        <?php
+                                    }
+                                    ?>
+                                    
                                 </select>
                             </div>
                             <label>Insert Gambar (optional)</label>
@@ -74,19 +94,51 @@ if(isset($_SESSION['user'])){
         
 		<div class="card">
 			<div class="card-header">
-				<h5 class="title pull-left">Info Post</h5>
-                <div class="box pull-right">
-                    <button class="btn btn-sm btn-info" data-toggle="modal" href="#modalInfo" role="button" aria-expanded="false" aria-controls="modalInfo">
-                        <span class="btn-label">
-                            <i class="nc-icon nc-cloud-download-93"></i>
-                        </span>
-                    Create New
-                    </button>
+                <div class="row">
+                    
+                    <h5 class="title col-md-6">Info Post</h5>
+                    <div class="text-right col-md-6">
+                        <button class="btn btn-sm btn-info" data-toggle="modal" href="#modalInfo" role="button" aria-expanded="false" aria-controls="modalInfo">
+                            <span class="btn-label">
+                                <i class="nc-icon nc-cloud-download-93"></i>
+                            </span>
+                        Create New
+                        </button>
+                    </div>
                 </div>
-			</div>
-            <hr>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link navigasi-info nav-active active" id="nav-support" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Support Ticket</a>
+                        <?php
+                        if($level > 5){
+                            ?>
+                            <a class="nav-item nav-link active navigasi-info " id="nav-general" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">General Information</a>
+                            <?php
+                            if($level == 8){
+                            ?> 
+                            <a class="nav-item nav-link navigasi-info" id="nav-notif" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Notifikasi</a>
+                            <a class="nav-item nav-link navigasi-info" id="nav-holiday" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Holiday Feature</a>
+                            <?php
+                                
+                            }
+                        }
+                        ?>
+                    </div>
+                </nav>
+            </div>
+            <hr class="mt-0">
 			<div class="card-body table-hover">
-                
+<!--                 
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                </div> -->
+                <div class="row">
+                    <div class="col-md-12 data-body">
+                    
+                    </div>
+                </div>
             </div>
             
 		</div>
@@ -101,30 +153,23 @@ if(isset($_SESSION['user'])){
     ?>
     <script>
         $(document).ready(function(){
-            $(document).on('click', '#allcek', function() {
-                if(this.checked){
-                    $('.cek').each(function() {
-                        this.checked = true;
-                    })
-                } else {
-                    $('.cek').each(function() {
-                        this.checked = false;
-                    })
-                }
-
-            });
-
             $(document).on('click', '.cek', function() {
-                if($('.cek:checked').length == $('.cek').length){
-                    $('#allcek').prop('checked', true)
-                } else {
-                    $('#allcek').prop('checked', false)
-                }
+                var data = $(this).val()
+                console.log(data);
+                $.ajax({
+                    type: 'POST',
+                    url: 'proses/prosesInfo.php',
+                    data: {update_info:data},
+                    success: function (msg) {
+                        $('.response').html(msg)
+                        load_data()
+                    },
+                    error: function () {
+                        alert("Data Gagal dihapus");
+                        load_data()
+                    }
+                }); 
             })
-        })
-    </script>
-    <script>
-        $(document).ready(function(){
             $(document).on('click', '.remove', function(a){
                 a.preventDefault();
                 var url = $(this).attr('href');
@@ -156,16 +201,25 @@ if(isset($_SESSION['user'])){
                     }
                 })
             })
+            $('.navigasi-info').on('click', function(){
+                $('.navigasi-info').removeClass('nav-active');
+                $(this).addClass('nav-active')
+                load_data()
+            })
+            
             function load_data(){
-                data = '1'
-                $.ajax({
-                    type: 'GET',
-                    url: "information.php",
-                    data: data,
-                    success: function (msg) {
-                        $('.card-body').html(msg)
-                    },
-                });
+                if($('.nav-active')[0]){
+                    var data = $('.nav-active').attr('id');
+                    console.log(data)
+                    $.ajax({
+                        type: 'GET',
+                        url: "information.php",
+                        data: {data:data},
+                        success: function (msg) {
+                            $('.data-body').html(msg)
+                        },
+                    });
+                }
             }
             load_data()
             $('.upload-info').on('click', function(e){

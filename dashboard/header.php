@@ -958,6 +958,7 @@
                   <a class="dropdown-item" href="#">Personal Site</a>
                   <a class="dropdown-item" href="#">HRIS</a>
                   <a class="dropdown-item" href="#">MOS</a>
+                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/setting/portBlast.php">Ticket Problem</a>
                 </div>
               </li>
               <li class="nav-item">

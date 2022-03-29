@@ -8,6 +8,8 @@ if(isset($_SESSION['user'])){
 
     include("../header.php");
     $dir = '//adm-fs/BODY/BODY02/Body Plant/BAIS/DOCUMENT/MANUALS/Welcome/';
+    if(file_exists($dir)){
+
     $getStart =$dir."Getting Started.ppsx";
     $files = array();
     $open    =opendir($dir) or die('Folder tidak ditemukan ...!');
@@ -118,6 +120,16 @@ if(isset($_SESSION['user'])){
     </div>
     <?php
 //footer
+    
+    }else{
+        ?>
+        <div class="row">
+            <div class="col-md-12">
+                <p>Halaman Tidak Didukung Karena Tidak Terhubung Ke Intranet</p>
+            </div>
+        </div>
+        <?php
+    }
     include_once("../footer.php");
     ?>
     <script>

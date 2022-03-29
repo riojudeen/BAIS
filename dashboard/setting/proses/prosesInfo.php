@@ -47,11 +47,11 @@ require_once("../../../config/error.php");
                 } 
                 
                 imagejpeg($image, $newPath, $quality); 
+                // nama file baru
+                $imageName = "'".$namaGambar.".$ImageExt"."'";
+            }else{
+                $imageName = "'NULL'";
             }
-
-           
-            // nama file baru
-            $imageName = "'".$namaGambar.".$ImageExt"."'";
 
         }else{
             $imageName = "'NULL'";
@@ -97,7 +97,7 @@ require_once("../../../config/error.php");
             <?php
         }
        
-    }else if($_POST['delete_info']){
+    }else if(isset($_POST['delete_info'])){
 
         $data = $_GET['del'];
         $cek_data = mysqli_query($link, "SELECT `image` FROM info WHERE id = '$data' ")or die(mysqli_error($link));
@@ -144,20 +144,60 @@ require_once("../../../config/error.php");
             <?php
         }
         ?>
-        <script>
-            Swal.fire({
-                title: 'Sukses',
-                text: 'Informasi Telah Didelete',
-                timer: 2000,
-                
-                icon: 'success',
-                showCancelButton: false,
-                showConfirmButton: false,
-                confirmButtonColor: '#00B9FF',
-                cancelButtonColor: '#B2BABB',
-                
-            })
-        </script>
+        
         <?php
+    }else if(isset($_POST['update_info'])){
+        $today = date('Y-m-d');
+        $data = $_POST['update_info'];
+        $cek_data = mysqli_query($link, "SELECT * FROM info WHERE id = '$data' ")or die(mysqli_error($link));
+        $sql = mysqli_fetch_assoc($cek_data);
+        $stats = $sql['stats'];
+        $cat = $sql['category'];
+        if($stats == 0){
+            $stats = 1;
+        }else{
+            $stats = 0;
+        }
+        $queryStats = " UPDATE info SET stats = '$stats', date_end = '$today' WHERE id = '$data' ";
+        $sql = mysqli_query($link, $queryStats);
+        // echo $queryStats;
+        if($sql){
+            if($stats == 0){
+                ?>
+                <script>
+                    Swal.fire({
+                        title: 'Problem Solved',
+                        text: 'Informasi Telah Diperbarui',
+                        timer: 2000,
+                        
+                        icon: 'success',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        confirmButtonColor: '#00B9FF',
+                        cancelButtonColor: '#B2BABB',
+                        
+                    })
+                </script>
+                <?php
+            }
+            
+        }else{
+            ?>
+            <script>
+                Swal.fire({
+                    title: 'Gagal',
+                    text: "Informasi Gagal Dihapus (Kode Error: <?=mysqli_error($link)?>)",
+                    timer: 2000,
+                    
+                    icon: 'danger',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    confirmButtonColor: '#00B9FF',
+                    cancelButtonColor: '#B2BABB',
+                })
+            </script>
+            <?php
+        }
+        
     }
 ?>
