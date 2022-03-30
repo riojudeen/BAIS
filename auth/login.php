@@ -3,7 +3,6 @@ include("../config/config.php");
 //redirect ke halaman dashboard index jika sudah ada session
 if(isset($_SESSION['user'])){
   echo "<script>window.location='".base_url('/dashboard')."';</script>";
-
 } else{
   //ambil data inputan form login//
   //jika file diset cara bacanya jika nilai yang dikirim adalah login / name=login di dalam form yang memiliki method=post,
@@ -25,7 +24,7 @@ if(isset($_SESSION['user'])){
           mysqli_query($link, "UPDATE data_user SET stats = '1' WHERE npk = '$user' AND pass = '$pass'")or die(mysqli_error($link));
           // header('location:')
           echo "<script>window.location='".base_url('dashboard/')."';</script>";
-        } else {
+        }else{
           $pesan = "galat";               
         }
     }

@@ -39,8 +39,8 @@ if(isset($_SESSION['lock']) && $cekUser == sha1($_SESSION['lock'])){
     $idRole = (!empty($query['level']))?$query['level']:"";
     // echo $idRole;
     $user = $_npk;
-
     if(mysqli_num_rows($query_login) > 0){
+      mysqli_query($link, "UPDATE data_user SET stats = '1' WHERE npk = '$_npk'")or die(mysqli_error($link));
       //jika benar maka simpan session user sebagai variable user, dan redirect ke base_url / dashboard
       ($_SESSION['user'] = $user);
       ($_SESSION['level'] = $idRole);

@@ -181,15 +181,15 @@ if(isset($_SESSION['user'])){
     <div class="modal-dialog modal-md">
     <div class="modal-content ">
         <div class="modal-header justify-content-center">
-        <div class="modal-profile mx-auto " style="margin-top:-500">
-            <i class="fa fa-paperclip"></i>
-            
-        </div>
+            <div class="modal-profile mx-auto " style="margin-top:-500">
+                <i class="fas fa-cog"></i>
+                
+            </div>
         </div>
         <form class="modal-body text-center" method="POST" id="attachForm">
             <div class="row">
                 <div class="col-md-12">
-                    <h5 class="title  text-uppercase">Edit Seting</h5>
+                    <h5 class="title  text-uppercase">Leave Seting</h5>
                 </div>
             </div>
             <div class="row">
@@ -205,10 +205,20 @@ if(isset($_SESSION['user'])){
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="" class="card-label text-uppercase">Attachment Seting</label>
+                        <label for="" class="category label">Seting untuk kebutuhan attachment / lampiran pendukung</label>
                         <select name="attachment_seting" class="form-control">
                             <option value="0">Tidak Ada</option>
                             <option value="1">Ada Attachment</option>
                         </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="" class="card-label text-uppercase mb-0">Add Allocation</label>
+                        <label for="" class="category label">Seting penambahan hari yang bisa diajukan untuk ijin / cuti > 60 km</label>
+                        <input type="number"  name="addition_aloc"  id="addition_aloc" class="form-control">
                     </div>
                 </div>
             </div>
@@ -234,7 +244,8 @@ if(isset($_SESSION['user'])){
                     url:'proses.php',
                     method:"POST",
                     data:form,
-                    success:function(data){
+                    success:function(){
+                        $('#myModal_attachment').modal('hide');
                         dataActive()
                     }
                 })
@@ -250,10 +261,8 @@ if(isset($_SESSION['user'])){
                     $('#input_jenis_cuti').prop('readonly', true);
                 $('.attach-update').on('click',function(a){
                     a.preventDefault();
-                    
                     update_attach()
                 })
-                
             })
 
 

@@ -3,7 +3,7 @@ require_once("../../config/config.php");
 require_once("../../config/schedule_system.php"); 
 require_once("../../config/approval_system.php"); 
 if(isset($_SESSION['user'])){
-    $halaman = "Monitor Request Absensi";
+    $halaman = "Permit & Permit Request";
     include_once("../header.php");
     // include_once("leave_calc.php");
     $npk_kry = $_GET['npk'];
@@ -81,14 +81,6 @@ if(isset($_SESSION['user'])){
     }
     $disableTanggalAkhir = (mysqli_num_rows($sql_reqAbs) > 0)?"disabled":"";
 
-
-    // echo $dataWD['wh'];
-    // echo $dataWD['ci'];
-    // echo $dataWD['co'];
-    // // echo $cout;
-    // $waktu_awal = strtotime("2019-10-11 07:15:00");
-    // $waktu_akhir = strtotime("2019-10-11 16:00:00"); // bisa juga waktu sekarang now()
-    // echo $dataWD['code_wh']."<br/>";
     if($cin > $cout){
         $tglini = ($tgl);
         $sesudah = date('Y-m-d', strtotime("+1 days", strtotime($tgl)));
@@ -133,7 +125,7 @@ if(isset($_SESSION['user'])){
                 <input type="hidden" name="npk" class="form-control" value="<?=$npk_kry?>">
                 
                 <div class="form-group after-add-more row">
-                    <div class="col-3">
+                    <div class="col-md-3 d-sm-none d-md-block">
                         <h6>Working Days</h6>
                         <label>Tanggal</label>
                         <input disabled type="text"  class="form-control col-lg-12 datepicker mr-0" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($tgl)?>" id="schedule" >
@@ -268,9 +260,6 @@ if(isset($_SESSION['user'])){
                         // echo $sisaC1." hari <br>";
                         // echo $sisaC2." hari <br>";
 
-
-
-
                         ?>
                         <h6>Cuti Panjang - C2</h6>
                         <label for="">ALOKASI CUTI PANJANG :</label>
@@ -315,8 +304,8 @@ if(isset($_SESSION['user'])){
                     </div>
                    
                     
-                    <div class="col-9 border-left pull-right" id="sticker">
-                    <?php
+                    <div class="col-md-9 border-left" id="sticker">
+                        <?php
                             list($npk,$subpost,$post,$group,$sect,$dept,$dept_account,$div,$plant) = dataOrg($link, $npk_kry);
                         ?>
                         <h5><?=$nama_." - ".$npk_kry?></h5>
@@ -404,14 +393,12 @@ if(isset($_SESSION['user'])){
                                             </div>
                                             <?php
                                                 if($_GET['jenis'] == 'SUKET'){
-                                                    
                                                     ?>
-                                                        <label class="col-md-1 col-form-label text-right px-1"><i class="nc-icon  nc-time-alarm"></i> In</label>
+                                                    <label class="col-md-1 col-form-label text-right px-1"><i class="nc-icon  nc-time-alarm"></i> In</label>
                                                 <div class="col-md-2"> 
                                                     <div class="form-group">
                                                         <input <?=$disabled_in?> type="text" name="ci[]" class="form-control text-center col-lg-12 datepicker mr-0" data-date-format="H:mm" value="<?=$in_?>" required >
                                                     </div>
-                                                    
                                                 </div>
                                                 <label class="col-md-1 col-form-label text-right px-1"><i class="nc-icon nc-time-alarm"></i> Out</label>
                                                 <div class="col-md-2"> 
@@ -471,13 +458,50 @@ if(isset($_SESSION['user'])){
                         
                         <label>Alasan / keperluan</label>
                         <div class="form-group">
-                            <textarea  name="note" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required></textarea>
+                            <input  name="note" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required />
                         </div>
+                        <div class="row">
+                            
+                            <div class="col-md-12">
+                                <label> <i class="fas fa-paperclip"></i>
+                                    Attachment / Lampiran
+                                </label>
+                                <p class="category mb-0">
+                                    pengajuan membutuhkan lampiran tambahan
+                                </p>
+                                <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">
+                                
+                                    <div class="fileinput fileinput-new text-center " data-provides="fileinput">
+                                        <div class="fileinput-new thumbnail">
+                                            
+                                        </div>
+                                        <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:500px;">
+                                            <input type="text" class="form-control mx-0">
+                                        </div>
+                                        <div >
+                                            <span class="btn btn-sm  btn-round btn-rose btn-file ">
+                                            <span class="fileinput-new ">Select File</span>
+                                            <span class="fileinput-exists">Change</span>
+                                                <input type="file"  name="file-excel" accept="image/png, image/jpeg, image/jpg" id="file_export"/>
+                                            </span>
+                                            <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+                                            <p class="category mt-0">
+                                                pastikan gambar yang diupload berekstensi JPG, JPEG atau PNG
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <hr>
+                            </div>
+                        </div>
+                        
                         <div class="row">
                             <div class="col-12">
                                 <input class="btn btn-success float-right" type="submit" name="req_<?=$_GET['jenis']?>" value="Submit <?=$_GET['jenis']?>">
                             </div>
                         </div>
+                        
                     
                     </div>
                 </div>
@@ -526,7 +550,6 @@ if(isset($_SESSION['user'])){
         $('#DateTimePicker2').data("DateTimePicker").minDate(date);
    });
 </script>
-
 <?php
     //javascript
     include_once("../endbody.php"); 

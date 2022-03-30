@@ -51,7 +51,9 @@ if(isset($_SESSION['user'])){
     }else if(isset($_POST['attachment_seting'])){
         $attach_seting = $_POST['attachment_seting'];
         $id = $_POST['input_kode_cuti'];
-        $sql = mysqli_query($link, "UPDATE attendance_code SET attachment = '$attach_seting' WHERE kode = '$id' ");
+        $addition = $_POST['addition_aloc'];
+        $sql = mysqli_query($link, "UPDATE attendance_code SET attachment = '$attach_seting', addition = '$addition' WHERE kode = '$id' ");
+        
     }
         
     

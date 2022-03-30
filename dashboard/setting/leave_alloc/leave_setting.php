@@ -19,7 +19,8 @@ if(isset($_SESSION['user'])){
     leave_alocation.alocation AS alocation,
     attendance_code.kode AS leave_code,
     attendance_code.attachment AS attachment,
-    attendance_code.keterangan AS jenis_cuti
+    attendance_code.keterangan AS jenis_cuti,
+    attendance_code.addition AS addition
 
     FROM leave_alocation 
     JOIN attendance_code ON leave_alocation.id_leave = attendance_code.kode 
@@ -54,10 +55,12 @@ if(isset($_SESSION['user'])){
                         <th>Kode Cuti</th>
                         <th>Jenis Cuti</th>
                         <th>Alloc</th>
+                        <th>Add</th>
                         <th>Eff</th>
                         <th>End</th>
                         <th>Type</th>
-                        <th>Attachment</th>
+                        <th>Attach</th>
+                        
                         <th class="text-right">Action</th>
                     </tr>
                 </thead>
@@ -74,6 +77,7 @@ if(isset($_SESSION['user'])){
                             <td><?=$leave_aloc['id_leave']?></td>
                             <td><?=$leave_aloc['jenis_cuti']?></td>
                             <td><?=$leave_aloc['alocation']?></td>
+                            <td><?=$leave_aloc['addition']?></td>
                             <td><?=tgl($leave_aloc['eff_date'])?></td>
                             <td><?=tgl($leave_aloc['end'])?></td>
                             <td><?=$leave_aloc['type']?></td>
@@ -86,7 +90,7 @@ if(isset($_SESSION['user'])){
                             </td>
                             <td class="text-right text-nowrap">
                                 <button class="btn btn-sm btn-round btn-icon btn-attach btn-primary edit-attach "  data-name="<?=$leave_aloc['jenis_cuti']?>" data-id="<?=$leave_aloc['id_leave']?>" >
-                                    <i class="fa fa-paperclip"></i>
+                                <i class="fas fa-cog"></i>
                                 </button>
                                 <span>
                                     <a href="edit.php?edit=<?=$leave_aloc['id_aloc']?>&kode=<?=$leave_aloc['id_leave']?>" class="btn-round  btn btn-warning  btn-icon btn-sm edit"><i class="fa fa-edit"></i></a>

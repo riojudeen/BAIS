@@ -110,7 +110,7 @@ if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
         <li class="adjustments-line">
           <div class="switch-trigger background-color">
             <div class="badge-colors text-center">
-              <span class="badge filter badge-default active btn-sidebar-color" data-color="default"></span>
+              <span class="badge filter badge-default btn-sidebar-color" data-color="default"></span>
               <span class="badge filter badge-light btn-sidebar-color" data-color="white"></span>
             </div>
             <div class="clearfix"></div>
@@ -123,7 +123,7 @@ if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
             <span class="badge filter badge-info btn-sidebar-active" data-color="info"></span>
             <span class="badge filter badge-success btn-sidebar-active" data-color="success"></span>
             <span class="badge filter badge-warning btn-sidebar-active" data-color="warning"></span>
-            <span class="badge filter badge-danger active btn-sidebar-active" data-color="danger"></span>
+            <span class="badge filter badge-danger btn-sidebar-active" data-color="danger"></span>
           </a>
         </li>
        
@@ -214,22 +214,44 @@ $(document).ready(function() {
     
   });
 </script> -->
+<?php
+$url_style = base_url('dashboard/style.php');
+?>
 <script>
   $(document).ready(function(){
-    function ubah_sidebar_color(activecolor){
-      $('.sdbr').attr('data-color', activecolor);
+    function ubah_sidebar_color(sidebarcolor){
+      $.ajax({
+          url:'<?=$url_style?>',
+          method:"POST",
+          data:{sidebar_color : sidebarcolor},
+          success:function(){
+            $('.sdbr').attr('data-color', sidebarcolor);
+          }
+      })
     }
     function ubah_sidebar_active(activecolor){
-      $('.sdbr').attr('data-active-color', activecolor);
+      
+      $.ajax({
+          url:'<?=$url_style?>',
+          method:"POST",
+          data:{active_color : activecolor},
+          success:function(){
+            $('.sdbr').attr('data-active-color', activecolor);
+          }
+      })
     }
 
     $('.btn-sidebar-color').on('click',function(a){
       a.preventDefault();
+      $('.btn-sidebar-color').removeClass('active');
+      $(this).addClass('active');
       var color = $(this).attr('data-color');
       ubah_sidebar_color(color)
     })
     $('.btn-sidebar-active').on('click',function(a){
       a.preventDefault();
+      $('.btn-sidebar-active').removeClass('active');
+      $(this).addClass('active');
       var color = $(this).attr('data-color');
       ubah_sidebar_active(color)
     })
@@ -615,7 +637,7 @@ WHERE (category = 'at'
   OR category = 'holidays' 
   OR category = 'mtc') AND `stats` = '1' ";
 $sqlNotif = mysqli_query($link, $query_notif)or die(mysqli_error($link));
-if(mysqli_num_rows($sqlNotif)>0){
+if(mysqli_num_rows($sqlNotif)>0 ){
   while($dataNotif = mysqli_fetch_assoc($sqlNotif)){
     $title = $dataNotif['title'];
     $info = $dataNotif['info'];
@@ -625,7 +647,7 @@ if(mysqli_num_rows($sqlNotif)>0){
       $color = 4;
       $icon = 'fas fa-tools';
     }else if($cat == 'at' ){
-      if(isset($alertMe) && $alertMe == 'at'){
+      if(isset($alertMe) && $alertMe == 'at' && $level <= 5){
         $show = 1;
       }else{
         $show = 0;
@@ -636,8 +658,8 @@ if(mysqli_num_rows($sqlNotif)>0){
       $show = 1;
       $icon = 'far fa-sticky-note';
       $color = 3;
-    }else if($cat == 'ot'){
-      if(isset($alertMe) && $alertMe == 'ot'){
+    }else if($cat == 'ot' ){
+      if(isset($alertMe) && $alertMe == 'ot' && $level <= 5){
         $show = 1;
       }else{
         $show = 0;
@@ -645,8 +667,7 @@ if(mysqli_num_rows($sqlNotif)>0){
       $icon = 'far fa-clock';
       $color = 1;
     }
-    if($show == 1){
-      
+    if(isset($show) && $show == 1){
       ?>
       
       <script>

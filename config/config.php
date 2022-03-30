@@ -38,9 +38,11 @@ function default_password($tgl){
     $tahun = substr($tgl, 0, 4);
     return sha1($tanggal.$bulan.$tahun);
 }
+
 function default_username($npk){
     return "body".$npk;
 }
+
 //Total Day in Month
 function TotalDays($dates){
     $setthn= date("Y", strtotime($dates));

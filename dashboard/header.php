@@ -1,5 +1,8 @@
 <?php
 // error_reporting(0);
+// untuk sidebar dan active color
+$sidebar_color = (isset($_SESSION['sidebar_color']))?$_SESSION['sidebar_color']:'default';
+$active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'danger';
 //encode gambar foro profile dari personal site
   $title = (isset($halaman))? "BAIS | ".$halaman : "Body Administration Information System ";
   // $level = 8;
@@ -311,7 +314,7 @@
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
   </div>
   <div class="wrapper ">
-    <div class="sidebar bg-primary sdbr" data-color="default" data-active-color="danger">
+    <div class="sidebar bg-primary sdbr" data-color="<?=$sidebar_color?>" data-active-color="<?=$active_color?>">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color=" default | primary | info | success | warning | danger |"
       -->
@@ -878,10 +881,10 @@
 
           <!--- inactive sementara-->
           <div class="collapse navbar-collapse justify-content-end" id="navigation">
-          <span class="" style="width:300px">
-          <div id="tgl" class="input-group no-border"></div>
+          <span class="col-md-4 px-0" >
+            <span id="tgl" class="input-group no-border "></span>
           </span>
-          <span class="px-0" style="width:140px">
+          <span class="px-0 col-sm-3 col-md-2 " style="width:140px">
           <div id="clock" class="input-group no-border"></div>
           </span>
           <!--
