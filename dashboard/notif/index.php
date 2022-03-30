@@ -81,6 +81,7 @@ if(isset($_SESSION['user'])){
         $data = array();
         $notifikasi = array();
 
+        
         $notif = array(
             'jml' => $total_info,
         );

@@ -48,6 +48,10 @@ if(isset($_SESSION['user'])){
             $_SESSION['info'] = 'Gagal Disimpan';
             echo "<script>document.location.href='index.php'</script>";
         }
+    }else if(isset($_POST['attachment_seting'])){
+        $attach_seting = $_POST['attachment_seting'];
+        $id = $_POST['input_kode_cuti'];
+        $sql = mysqli_query($link, "UPDATE attendance_code SET attachment = '$attach_seting' WHERE kode = '$id' ");
     }
         
     

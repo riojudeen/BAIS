@@ -100,6 +100,36 @@ if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
 </footer>
 </div>
 </div>
+<div class="fixed-plugin">
+    <div class="dropdown show-dropdown">
+      <a href="#" data-toggle="dropdown">
+        <i class="fa fa-cog fa-2x"> </i>
+      </a>
+      <ul class="dropdown-menu">
+        <li class="header-title"> Sidebar Background</li>
+        <li class="adjustments-line">
+          <div class="switch-trigger background-color">
+            <div class="badge-colors text-center">
+              <span class="badge filter badge-default active btn-sidebar-color" data-color="default"></span>
+              <span class="badge filter badge-light btn-sidebar-color" data-color="white"></span>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </li>
+        <li class="header-title"> Sidebar Active Color</li>
+        <li class="adjustments-line text-center">
+          <a href="javascript:void(0)" class="switch-trigger active-color">
+            <span class="badge filter badge-primary btn-sidebar-active" data-color="primary"></span>
+            <span class="badge filter badge-info btn-sidebar-active" data-color="info"></span>
+            <span class="badge filter badge-success btn-sidebar-active" data-color="success"></span>
+            <span class="badge filter badge-warning btn-sidebar-active" data-color="warning"></span>
+            <span class="badge filter badge-danger active btn-sidebar-active" data-color="danger"></span>
+          </a>
+        </li>
+       
+      </ul>
+    </div>
+  </div>
 <!--   Core JS Files   -->
 <script src="<?=base_url('assets/js/core/jquery.min.js')?>"></script>
 <script src="<?=base_url('assets/js/core/popper.min.js')?>"></script>
@@ -184,6 +214,29 @@ $(document).ready(function() {
     
   });
 </script> -->
+<script>
+  $(document).ready(function(){
+    function ubah_sidebar_color(activecolor){
+      $('.sdbr').attr('data-color', activecolor);
+    }
+    function ubah_sidebar_active(activecolor){
+      $('.sdbr').attr('data-active-color', activecolor);
+    }
+
+    $('.btn-sidebar-color').on('click',function(a){
+      a.preventDefault();
+      var color = $(this).attr('data-color');
+      ubah_sidebar_color(color)
+    })
+    $('.btn-sidebar-active').on('click',function(a){
+      a.preventDefault();
+      var color = $(this).attr('data-color');
+      ubah_sidebar_active(color)
+    })
+    
+
+  })
+</script>
 <script>
     var stickyEl = new Sticksy('.sticker', {topSpacing: 70})
     stickyEl.onStateChanged = function (state) {
@@ -604,7 +657,6 @@ if(mysqli_num_rows($sqlNotif)>0){
           // 3 warning //untuk reminder pengajuan
           // 1 info //informasi 
           // 2 success
-              // console.log(color);
           $.notify({
             icon: '<?=$icon?>',
             message: '<h6><strong><?=$title?></strong></h6>'+'<?=$info?>'

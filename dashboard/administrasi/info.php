@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////
 require_once("../../config/config.php"); 
 if(isset($_SESSION['user'])){
-    $halaman = "Transfer Uang Makan";
+    $halaman = "General Information";
     include_once("../header.php");
     $start = date('Y-m-01');
         $end = date('Y-m-t');

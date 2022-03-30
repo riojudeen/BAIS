@@ -210,16 +210,18 @@
               var at = obj.data[0].at;
               var inf = obj.data[0].info;
               if(total > 0){
-                  $('#notif-app-at').text(at)
+                $('#notif-all').text(total)
+                if(at > 0){
                   $('#notif-app-ot').text(ot)
+                }
+                if(ot > 0){
+                  $('#notif-app-at').text(at)
+                }
+                if(inf > 0){
                   $('#notif-gen-info').text(inf)
-                  $('#notif-all').text(total)
+                }
               }
             },
-            error: function () {
-                alert("Data Gagal Perbaharui");
-                // load_data()
-            }
         }); 
       }
     })
@@ -309,7 +311,7 @@
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
   </div>
   <div class="wrapper ">
-    <div class="sidebar bg-primary " data-color="default" data-active-color="danger">
+    <div class="sidebar bg-primary sdbr" data-color="default" data-active-color="danger">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color=" default | primary | info | success | warning | danger |"
       -->
@@ -913,28 +915,28 @@
                   <a class="dropdown-item" href="#">Personal Site</a>
                   <a class="dropdown-item" href="#">HRIS</a>
                   <a class="dropdown-item" href="#">MOS</a>
-                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/setting/portBlast.php">Ticket Problem</a>
+                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/setting/portBlast.php">Report Issue</a>
                 </div>
               </li>
               <li class="nav-item btn-rotate dropdown" >
                 <a class="nav-link dropdown-toggle" href="" id="btn-notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="nc-icon nc-bell-55"></i>
-                  <p>
-                    <span class="d-lg-none d-md-block">Some Actions</span>
-                    <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info " id="notif-all"></span>
+                  <p class="badge-colors">
+                    <span class="d-lg-none d-md-block">Notification</span>
+                    <span class="badge badge-sm category filter badge-primary active" data-color="primary" id="notif-all"></span>
                     </p>
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-notification" >
-                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/absensi/approval/">Leave Request 
-                  <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info text-right" id="notif-app-at"></span>
+                  <a class="dropdown-item " href="<?=base_url()?>/dashboard/absensi/approval/">Leave Request 
+                  <span class="badge filter badge-primary" data-color="primary" id="notif-app-at" ></span>
                   </a>
                   <a class="dropdown-item" href="<?=base_url()?>/dashboard/ot/approval/">Overtime Request
-                    <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info text-right" id="notif-app-ot"></span>
+                    <span class="badge filter badge-primary" data-color="primary" id="notif-app-ot"></span>
                     </a>
                   </a>
                   <a class="dropdown-item" href="#">New Info
-                    <span class="ml-0 category label badge-icon badge badge-sm badge-pill badge-info text-right" id="notif-gen-info"></span>
+                    <span  class="badge filter badge-primary" data-color="primary" id="notif-gen-info"></span>
                     </a>
                   </a>
                 </div>

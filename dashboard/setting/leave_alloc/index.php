@@ -176,13 +176,87 @@ if(isset($_SESSION['user'])){
     </div>
 </div>
 </div>
+
+<div class="modal fade modal-primary" id="myModal_attachment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+    <div class="modal-content ">
+        <div class="modal-header justify-content-center">
+        <div class="modal-profile mx-auto " style="margin-top:-500">
+            <i class="fa fa-paperclip"></i>
+            
+        </div>
+        </div>
+        <form class="modal-body text-center" method="POST" id="attachForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="title  text-uppercase">Edit Seting</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="" class="card-label text-uppercase"> Jenis Pengajuan</label>
+                        <input type="hidden" name="input_kode_cuti" id="input_kode_cuti" class="form-control">
+                        <input type="text" id="input_jenis_cuti" name="input_jenis_cuti" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="" class="card-label text-uppercase">Attachment Seting</label>
+                        <select name="attachment_seting" class="form-control">
+                            <option value="0">Tidak Ada</option>
+                            <option value="1">Ada Attachment</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="modal-footer">
+            <a href="proses.php" class="btn btn-link btn-primary attach-update">Update</a>
+        </div>
+    </div>
+    </div>
+</div>
 <!-- end filter -->
 
 <?php
     include_once("../../footer.php");
     ?>
+    
     <script>
         $(document).ready(function(){
+            function update_attach(){
+                var form = $('#attachForm').serialize();
+                console.log(form)
+                $.ajax({
+                    url:'proses.php',
+                    method:"POST",
+                    data:form,
+                    success:function(data){
+                        dataActive()
+                    }
+                })
+            }
+            $(document).on('click', '.btn-attach', function(event){
+                event.preventDefault()
+                var id = $(this).attr('data-id');
+                var name = $(this).attr('data-name');
+                $('#myModal_attachment').modal('show');
+                $('#input_kode_cuti').val(id);
+                    $('#input_jenis_cuti').val(name);
+                    $('#input_kode_cuti').prop('readonly', true);
+                    $('#input_jenis_cuti').prop('readonly', true);
+                $('.attach-update').on('click',function(a){
+                    a.preventDefault();
+                    
+                    update_attach()
+                })
+                
+            })
+
+
             dataActive()
             $(document).on('click','.navigasi-data', function(){
                 $('.navigasi-data').removeClass('data-active');
@@ -251,14 +325,7 @@ if(isset($_SESSION['user'])){
             
         })
     </script>
-    <script>
-        $(document).ready(function(){
-            $(document).on('click', '.btn-attach', function(event){
-                event.preventDefault()
-                
-            })
-        })
-    </script>
+    
     <script>
     //untuk crud masal update department
 

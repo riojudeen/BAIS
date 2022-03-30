@@ -22,6 +22,7 @@ if(isset($_SESSION['user'])){
           //jika benar maka simpan session user sebagai variable user, dan redirect ke base_url / dashboard
           ($_SESSION['user'] = $user);
           ($_SESSION['level'] = $idRole);
+          mysqli_query($link, "UPDATE data_user SET stats = '1' WHERE npk = '$user' AND pass = '$pass'")or die(mysqli_error($link));
           // header('location:')
           echo "<script>window.location='".base_url('dashboard/')."';</script>";
         } else {

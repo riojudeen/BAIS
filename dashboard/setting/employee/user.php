@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////
 require_once("../../../config/config.php"); 
 if(isset($_SESSION['user'])){
-    $halaman = "Resource Account & Setting";
+    $halaman = "User Data Management";
     include_once("../../header.php");
     $_SESSION['tab'] = @$_GET['tab'];
 ?>
@@ -12,7 +12,7 @@ if(isset($_SESSION['user'])){
     <div class="col-md-12">
         <div class="card">
             <div class="card-header row">
-                <h5 class="col-md-6 title">User Setting</h5>
+                <h5 class="col-md-6 title">User Data Setting</h5>
                 <div class="col-md-6">
                     <a href="proses/export.php?export=dataUser" class="btn btn-sm btn-success pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
                         <span class="btn-label">
@@ -26,7 +26,7 @@ if(isset($_SESSION['user'])){
             <hr>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-3 card"style="box-shadow: rgb(223, 220, 220) -5px 0.0px 20px -13px inset;">
+                    <div class="col-md-3  ">
                         <div class="sticker">
                             <h6 class="pull-left">Role User</h6>
                             <div class="nav-tabs-wrapper">
@@ -53,7 +53,7 @@ if(isset($_SESSION['user'])){
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 border-left">
                         <div class="row">
                             <h6 class="text-title col-md-8 content-title"></h6>
                             <div class="col-md-4 text-right">

@@ -51,7 +51,7 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
 <?php
 ?>
     
-    <form class="table-responsive text-uppercase " name="proses">
+    <form class="table-full-width text-uppercase " name="proses">
         <table class="table table-hover" id="usersetting" cellspacing="0" width="100%">
             <thead>
             <tr>
@@ -79,16 +79,20 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
                 if(mysqli_num_rows($sql_data)>0){
                     
                     while($data = mysqli_fetch_assoc($sql_data)){
+                        $stats = (isset($data['stats']) && ($data['stats'] == '0'))?"offline":"online";
+                        $stats_color = (isset($data['stats']) && ($data['stats'] == '0'))?"text-muted":"text-primary font-weight-bold";
+                        
                         ?>
-                        <tr  id="<?=$data['npk']?>">
-                            <td class="text-success"><?=$no++?></td>
+                        <tr  id="<?=$data['npk']?>" class="<?=$stats_color?>">
+                            <td ><?=$no++?></td>
                             <td ><?=$data['npk']?></td>
                             <td><?=$data['nama']?></td>
                             <td><?=$data['username']?></td>
                             <td >
-                                <div class="legend card-category">
-                                    <i class="fa fa-circle text-primary"></i>
-                                    active
+                                <div class="legend card-category <?=$stats_color?>">
+                                    <i class="fa fa-circle <?=$stats_color?>"></i>
+                                    <span class="category"><?=$stats?></span>
+                                    
                                 </div>
                             </td>
                             <td class="text-right">
@@ -110,7 +114,7 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
                 }else{
                     ?>
                     <tr>
-                        <td class="bg-light text-center text-upercase" colspan="9">tidak ada data</td>
+                        <td class="bg-light text-center text-upercase " colspan="9">tidak ada data</td>
                     </tr>
                     <?php
                 }
@@ -122,8 +126,8 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
             
         </table>
     </form>  
-    <div class="row">
-        <div class="col-md-12 pull-rigt">
+    <div class="row mt-2">
+        <div class="col-md-6 ">
             <ul class="pagination ">
             <?php
             // echo $page."<br>";
@@ -156,22 +160,22 @@ $sql_data = mysqli_query($link, $q_data)or die(mysqli_error($link));
             ?>
             </ul>
         </div>
-    </div>
-    <div class="pull-right" >
-        
-        <button class="btn btn-sm btn-danger resetall" id="reset">
-            <span class="btn-label">
-                    <i class="fas fa-undo-alt"></i>
-            </span>
-            Reset Password
-        </button>
-        <button class="btn btn-sm btn-success editall" id="edit">
-            <span class="btn-label">
-                <i class="nc-icon nc-ruler-pencil"></i>
-            </span>
-            Edit
-        </button>
-        
+        <div class="col-md-6 text-right" >
+            
+            <button class="btn btn-sm btn-danger resetall" id="reset">
+                <span class="btn-label">
+                        <i class="fas fa-undo-alt"></i>
+                </span>
+                Reset Password
+            </button>
+            <button class="btn btn-sm btn-success editall" id="edit">
+                <span class="btn-label">
+                    <i class="nc-icon nc-ruler-pencil"></i>
+                </span>
+                Edit
+            </button>
+            
+        </div>
     </div>
 
 </div>
