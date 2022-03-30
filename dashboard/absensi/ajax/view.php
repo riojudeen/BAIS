@@ -1,8 +1,10 @@
 <?php
 include("../../../config/config.php"); 
 include("../../../config/approval_system.php");
-list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
 $id_absen = $_POST['id'];
+$npk = substr($id_absen, 0, -10);
+
+list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
 if(isset($_POST['type_data'])){
     $filter = " AND req_absensi.shift_req = '1'";
 }else{
@@ -22,6 +24,7 @@ $qry_abs = "SELECT req_absensi.id AS id_absen,
     req_absensi.req_status AS req_status,
     req_absensi.req_date AS req_date,
     req_absensi.note AS note,
+    req_absensi.id_absensi AS attachment,
 
     CONCAT(req_absensi.status,req_absensi.req_status) AS 'status',
     absensi.ket AS hr_ket,
@@ -86,7 +89,7 @@ if(isset($_POST['type_data'])){
                                 <img src="../../../assets/img/logo_daihatsu.png" alt="" style=" margin: 0px; padding:1px">
                             </td>
                             <td class="text-center"  style="border:1px solid #D6DBDF; ">
-                                <h5 class="text-uppercase">MEMO PERPINDAHAN SHIFT</h5>
+                                <h5 class="text-uppercase">MEMO PERPINDAHAN SHIFT </h5>
                             </td>
                             
                             <td class="text-center text-uppercase title"  style="border:1px solid #D6DBDF; width:50px">
@@ -103,7 +106,7 @@ if(isset($_POST['type_data'])){
             <div class="row">
                 <div class="col-md-10 pr-1 mb-0">
                     <label>Nama :</label>
-                    <h5 class="title text-uppercase"><?=$dataReqAbs['nama_']?> - <?=$dataReqAbs['npk_']?></h6>
+                    <h5 class="title text-uppercase"><?=$dataReqAbs['nama_']?> - <?=$npk?></h6>
                     <input name="req" value="<?=$id_absen?>" type="hidden">
                 </div>
             </div>
@@ -185,6 +188,7 @@ if(isset($_POST['type_data'])){
                         <input type="text" class="form-control text-white bg-<?=authColor($dataReqAbs['req_status'])?>" disabled="true" value="<?=authText($dataReqAbs['status'])?>">
                     </div>
                 </div>
+                
             </div>
         </div>
 
@@ -238,7 +242,7 @@ if(isset($_POST['type_data'])){
             <div class="row">
                 <div class="col-md-10 pr-1 mb-0">
                     <label>Nama :</label>
-                    <h5 class="title text-uppercase"><?=$dataReqAbs['nama_']?> - <?=$dataReqAbs['npk_']?></h6>
+                    <h5 class="title text-uppercase"><?=$dataReqAbs['nama_']?> - <?=$dataReqAbs['npk_']?> </h6>
                     <input name="req" value="<?=$id_absen?>" type="hidden">
                 </div>
             </div>
@@ -345,10 +349,38 @@ if(isset($_POST['type_data'])){
                     </div>
                 </div>
             </div>
-
-            <hr/>
+            <hr class="my-0" />
             <div class="row">
-                <h5 class="title col-md-12">History Pengajuan Cuti</h6>
+                <div class="col-md-12 ">
+                    <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse ">
+                        <div class="card card-plain mt-0 ">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <a data-toggle="collapse" class="" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    <i class="fas fa-paperclip"></i>
+                                    <span class="text-uppercase title text-danger">
+                                        attachment / lampiran
+                                    </span>     
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="collapse " role="tabpanel" aria-labelledby="headingOne">
+                                <div class="card-body">
+                                    <?php
+                                    if($dataReqAbs['attachment'] !== ""){
+                                        ?>
+                                        <img class="img border rounded" src="<?=base_url()?>/dashboard/absensi/image_attachment/<?=$dataReqAbs['attachment']?>" alt="">
+                                        
+                                        <?php
+                                    }else{
+                                        ?>
+                                        <p class="category my-0 py-0 ">Lampiran Tidak Tersedia</p>
+                                        <?php
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php
                 $explode_th = explode("-", $dataReqAbs['tanggal']);               
                 $tahunPeriod = $explode_th['0'];
@@ -415,54 +447,42 @@ if(isset($_POST['type_data'])){
             
                 ?>
                 <div class="col-md-6 pr-1">
-                    <h5>Cuti Panjang</h5>
-                    <p>Periode ke - <?=$maxPeriod?> : <?=DBtoForm($periodStart[$maxPeriod])?> s.d. <?=DBtoForm($periodEnd[$maxPeriod])?></p>
+                    <div class="card card-plain ">
+                        <div class="card-body ">
+                            <h6>Cuti Panjang</h6>
+                            <p class="category mt-0">Periode ke - <?=$maxPeriod?> : <?=DBtoForm($periodStart[$maxPeriod])?> s.d. <?=DBtoForm($periodEnd[$maxPeriod])?></p>
                     
-                    <div class="table table-stripped">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>cuti ke - </th>
-                                    <th>tanggal </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    
                             <?php
                             $cutiC2 = 1;
                             if($jml_C2 > 0){
                                 while($tglCutiC2 = mysqli_fetch_assoc($sql_C2)){
                                     ?>
-                                    <tr class="text-uppercase">
-                                        <td><?=$cutiC2++?></td>
-                                        <td><?=hari($tglCutiC2['date'])?>, <?=DBtoForm($tglCutiC2['date'])?></td>
-                                    </tr>
+                                    <ol>
+                                        <li>
+                                        <?=$cutiC2++?> --> <?=hari($tglCutiC2['date'])?>, <?=DBtoForm($tglCutiC2['date'])?>
+                                        </li>
+                                    </ol>
                                     <?php
                                 }
                             }else{
                                 ?>
-                                <tr class="text-uppercase">
-                                    <td colspan="2" class="bg-light">belum ada pengajuan</td>
-                                </tr>
+                                <ul>
+                                    <li>belum ada data pengajuan</li>
+                                </ul>
                                 <?php
                             }
                             ?>
-                            </tbody>
-                        </table>
+                            <p class="category mt-0">Sisa Cuti : <?=$jatah[$maxPeriod] - $jml_C2 ." hari (dari : ".$jatah[$maxPeriod]." hari)"?></p>
+                        </div>
                     </div>
-                    <p>Sisa Cuti : <?=$jatah[$maxPeriod] - $jml_C2 ." hari (dari : ".$jatah[$maxPeriod]." hari)"?></p>
                 </div>
                 <div class="col-md-6 pr-3">
-                    <h5>Cuti Tahunan</h5>
-                    <p>Periode <?=$tahunPeriod?> : <?=DBtoForm($startD)?> s.d. <?=DBtoForm($endD)?></p>
-                    <div class="table table-stripped">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>cuti ke - </th>
-                                    <th>tanggal </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <div class="card card-plain ">
+                        <div class="card-body ">
+                            <h6>Cuti Tahunan</h6>
+                            <p class="label category mt-0">Periode <?=$tahunPeriod?> : <?=DBtoForm($startD)?> s.d. <?=DBtoForm($endD)?></p>
+                           
                             <?php
                             $qryAloc = "SELECT * FROM leave_alocation WHERE effective_date BETWEEN '$startD' AND '$endD' AND id_leave = 'C1' ";
                             $sqlAloc = mysqli_query($link, $qryAloc);
@@ -478,10 +498,11 @@ if(isset($_POST['type_data'])){
                             if($jml_C1 > 0){
                                 while($tglCutiC1 = mysqli_fetch_assoc($sql_C1)){
                                     ?>
-                                    <tr class="text-uppercase">
-                                        <td><?=$cutiC1?></td>
-                                        <td><?=hari($tglCutiC1['date'])?>, <?=DBtoForm($tglCutiC1['date'])?></td>
-                                    </tr>
+                                    <ol>
+                                        <li>
+                                        <?=hari($tglCutiC1['date'])?>, <?=DBtoForm($tglCutiC1['date'])?>
+                                        </li>
+                                    </ol>
                                     <?php
                                     $cutiC1++;
                                 }
@@ -493,10 +514,11 @@ if(isset($_POST['type_data'])){
                                 <?php
                             }
                             ?>
-                            </tbody>
-                        </table>
+
+                        <p class="category mt-0">Sisa Cuti : <?=$aloc - $jml_C1 ." hari (dari : ".$aloc." hari)"?></p>
+                        
+                        </div>
                     </div>
-                    <p>Sisa Cuti : <?=$aloc - $jml_C1 ." hari (dari : ".$aloc." hari)"?></p>
                 </div>
                 
             </div>

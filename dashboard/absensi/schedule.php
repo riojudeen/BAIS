@@ -118,7 +118,7 @@ if(isset($_SESSION['user'])){
             </a>
         </div>
         <hr>
-        <form action="proses.php" method="POST">
+        <form action="proses.php" method="POST" enctype="multipart/form-data">
             <div class="card-body">
                 
                 <input type="hidden" name="id_" class="form-control" value="<?=$_GET['jenis']?>">
@@ -482,7 +482,7 @@ if(isset($_SESSION['user'])){
                                             <span class="btn btn-sm  btn-round btn-rose btn-file ">
                                             <span class="fileinput-new ">Select File</span>
                                             <span class="fileinput-exists">Change</span>
-                                                <input type="file"  name="file-excel" accept="image/png, image/jpeg, image/jpg" id="file_export"/>
+                                                <input type="file"  name="attach-upload" accept="image/png, image/jpeg, image/jpg" id="attach-upload"/>
                                             </span>
                                             <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
                                             <p class="category mt-0">

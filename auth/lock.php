@@ -1,7 +1,11 @@
 <?php 
 include("../config/config.php");
-mysqli_query($link, "UPDATE data_user SET stats = '0' WHERE npk = '$_SESSION[user]'")or die(mysqli_error($link));
-unset($_SESSION['user']);
+
+if(isset($_SESSION['user'])){
+  mysqli_query($link, "UPDATE data_user SET stats = '0' WHERE npk = '$_SESSION[user]'")or die(mysqli_error($link));
+  unset($_SESSION['user']);
+}
+
 $cekUser = @$_GET['u'];
 //encode gambar foro profile dari personal site
 $title = (isset($halaman))? "BAIS | ".$halaman : "Body Administration Information System ";

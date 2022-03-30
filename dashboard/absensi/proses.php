@@ -395,7 +395,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
         // }
      }else if(isset($_POST['req_SUPEM'])){
         // echo "SUPEM";
-        count($_POST['sd']);
+        // count($_POST['sd']);
         // echo "SUKET";
         $shift_req = 0;
         
@@ -412,7 +412,65 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
         $i = 0;
         $reqStats = 'a';
         $status = '25';
-        
+        $total_tgl = count($_POST['sd']);
+        $tot_tgl = sprintf("%07d", $total_tgl);
+        $id_image = $npk.dateToDB($_POST['sd'][0]);
+        // simpan file upload
+        $file_mimes = array('image/jpeg','image/jpg','image/png');
+        // echo $_FILES['attach-upload']['name'];
+        if(isset($_FILES['attach-upload']['name']) && in_array($_FILES['attach-upload']['type'], $file_mimes)) {
+           
+            $ImageName       = $_FILES['attach-upload']['name'];
+            $image = $_FILES['attach-upload']['name'];
+            $dir = $_FILES['attach-upload']['tmp_name']; //file upload
+            // $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/";
+            $path = "image_attachment/";
+            
+
+            if (file_exists($path)){
+                // compress image
+                $namaGambar     = $id_image."_".$tot_tgl."_".$type;
+                $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+                $ImageExt       = str_replace('.','',$ImageExt); // Extension
+                $ImageName      = preg_replace("/\.[^.\s]{3,4}$/", "", $ImageName);
+                $NewImageName   = str_replace(' ', '', $namaGambar.'.'.$ImageExt);
+
+                $newPath = $path.$NewImageName; //direktori penyimpanan
+                // echo $newPath;
+                $source =  $dir;
+                echo $source;
+                $imgInfo = getimagesize($source); 
+                $mime = $imgInfo['mime'];  
+                $quality = 20;
+                // membuat image baru
+                switch($mime){ 
+                // proses kode memilih tipe tipe image 
+                    case 'image/jpeg': 
+                        $image = imagecreatefromjpeg($source); 
+                        break; 
+                    case 'image/jpg': 
+                        $image = imagecreatefromjpeg($source); 
+                        break; 
+                    case 'image/png': 
+                        $image = imagecreatefrompng($source); 
+                        break; 
+                    default: 
+                        $image = imagecreatefromjpeg($source); 
+                } 
+                // echo $image;
+                imagejpeg($image, $newPath, $quality); 
+                // nama file baru
+                $imageName = "'".$namaGambar.".$ImageExt"."'";
+            }else{
+                $imageName = "'NULL'";
+            }
+
+        }else{
+            
+            $imageName = "'NULL'";
+        }
+
+        // query database
         foreach($_POST['sd'] AS $tgl){
             
             $tgl = dateToDB($tgl);
@@ -426,19 +484,21 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $req_date = date('Y-m-d');
             // $co = $_POST['ci'][$i];
             // echo $shift."-".$npk."-".$type."-".$alasan."-".$tgl."-".$ci."-".$co."-".$start_date."-".$end_date."<br>";
-            $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$co' , '$ci' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', '$id_absensi' ),";
+            $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$co' , '$ci' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', $imageName ),";
             $i++;
         }
         $query = substr($query, 0, -1);
         // echo $query;
         $sql = mysqli_query($link, $query);
         if($sql){
+            // echo $imageName;
+
             $_SESSION['info'] = 'Disimpan';
-            echo "<script>document.location.href='req_absensi.php'</script>";
+            header('location: req_absensi.php');
         }else{
             $_SESSION['info'] = 'Gagal Disimpan';
             $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
-            echo "<script>document.location.href='req_absensi.php'</script>";
+            header('location: req_absensi.php');
         }
 
 
