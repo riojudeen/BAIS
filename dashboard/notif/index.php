@@ -3,7 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 include("../../config/config.php"); 
 include("../../config/approval_system.php"); 
-if(isset($_SESSION['user'])){
+if(isset($_SESSION['user']) && $level < 10){
+    
     if($level == 4){
         $prog = "25a";
     }else if($level > 5 ){
@@ -100,7 +101,27 @@ if(isset($_SESSION['user'])){
         $output = "{\"data\":".$dataJSON.",\"msg\":".$stats."}";
         echo $output;
 } else{
-    header('location:../../auth/login.php');
+    $data = array();
+    $notifikasi = array();
+
+    
+    $notif = array(
+        'jml' => 0,
+    );
+    $array = array(
+        'ot' => 0,
+        'at' => 0,
+        'info' => 0,
+        
+    );
+    array_push($notifikasi, $notif);
+    array_push($data, $array);
+
+
+    $dataJSON = json_encode($data);
+    $stats = json_encode($notifikasi);
+    $output = "{\"data\":".$dataJSON.",\"msg\":".$stats."}";
+    echo $output;
 }
   
 

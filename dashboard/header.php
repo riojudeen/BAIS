@@ -437,9 +437,10 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
                 </ul>
               </div>
             </li>
+            
             <?php
+            
           if($level < 10){
-
               
               //akses menu
                 // if($role == "admin" || $role == "frm" || $role == "spv" || $role == "mng"){?>
