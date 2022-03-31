@@ -127,8 +127,6 @@ if(isset($_SESSION['user'])){
     </div>
     </form>
     <?php
-        // include('monitor.php');
-        // require_once('leave_request.php');
     ?>
     <div class="row">
         <div class="col-md-12">

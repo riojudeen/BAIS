@@ -3,9 +3,10 @@ require_once("../../config/config.php");
 require_once("../../config/schedule_system.php"); 
 require_once("../../config/approval_system.php"); 
 if(isset($_SESSION['user'])){
-    $halaman = "Permit & Permit Request";
+    $halaman = "Leave & Permit Request";
     include_once("../header.php");
-    // include_once("leave_calc.php");
+    
+   
     $npk_kry = $_GET['npk'];
     $tgl = $_GET['tanggal'];
     $jmlHari = $_GET['count'];
@@ -104,9 +105,7 @@ if(isset($_SESSION['user'])){
 
 ?>
 <div class="row ">
-
 <div class="col-md-12 ">
-   
     <div class="card">
         <div class="card-header">
             <h5 class="title pull-left">Input Data</h5>
@@ -223,43 +222,22 @@ if(isset($_SESSION['user'])){
                         }
                         $maxPeriod = max($period);
                         
-
-                        // echo $timeStampAwal."<br>";
-                        // echo $timeStampAkhir."<br>";
-
-                        // //hitung berapa tahun
-                        // $count_awal = date_create($tglMasuk);
-                        // $count_akhir = date_create($tglTahunini);
-                        // $jmlhari = date_diff($count_awal,$count_akhir)->days +1;
-                        // // echo $jmlhari." hari <br>";
-
                         $qryAloc = "SELECT * FROM leave_alocation WHERE effective_date BETWEEN '$startD' AND '$endD' AND id_leave = 'C1' ";
                         $sqlAloc = mysqli_query($link, $qryAloc);
                         $dataAloc = mysqli_fetch_assoc($sqlAloc);
                         $aloc = $dataAloc['alocation'];
-                        // // echo $aloc;
-
-                        // $qryAloc_C2 = "SELECT * FROM leave_alocation WHERE effective_date BETWEEN '$startD' AND '$endD' AND id_leave = 'C2' ";
-                        // $sqlAloc_C2 = mysqli_query($link, $qryAloc_C2);
-                        // $dataAloc_C2 = mysqli_fetch_assoc($sqlAloc_C2);
-                        // $aloc_C2 = $dataAloc_C2['alocation'];
-                        // // echo $aloc_C2;
-
+                        
                         $qry_C1 = "SELECT * FROM req_absensi WHERE npk = '$npk_kry' AND `date` BETWEEN '$startD' AND '$endD' AND keterangan = 'C1' ";
                         $sql_C1 = mysqli_query($link, $qry_C1);
                         $jml_C1 = mysqli_num_rows($sql_C1);
-                        // echo $jml_;
-
+                        
                         $qry_C2 = "SELECT * FROM req_absensi WHERE npk = '$npk_kry' AND `date` BETWEEN '$periodStart[$maxPeriod]' AND '$periodEnd[$maxPeriod]' AND keterangan = 'C2' ";
                         $sql_C2 = mysqli_query($link, $qry_C2);
                         $jml_C2 = mysqli_num_rows($sql_C2);
-                        // // echo $jml_;
-
+                        
                         $sisaC1 = $aloc - $jml_C1;
                         $sisaC2 = $aloc_C2 - $jml_C2;
-                        // echo $sisaC1." hari <br>";
-                        // echo $sisaC2." hari <br>";
-
+                        
                         ?>
                         <h6>Cuti Panjang - C2</h6>
                         <label for="">ALOKASI CUTI PANJANG :</label>
@@ -460,41 +438,50 @@ if(isset($_SESSION['user'])){
                         <div class="form-group">
                             <input  name="note" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required />
                         </div>
-                        <div class="row">
-                            
-                            <div class="col-md-12">
-                                <label> <i class="fas fa-paperclip"></i>
-                                    Attachment / Lampiran
-                                </label>
-                                <p class="category mb-0">
-                                    pengajuan membutuhkan lampiran tambahan
-                                </p>
-                                <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">
-                                
-                                    <div class="fileinput fileinput-new text-center " data-provides="fileinput">
-                                        <div class="fileinput-new thumbnail">
-                                            
-                                        </div>
-                                        <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:500px;">
-                                            <input type="text" class="form-control mx-0">
-                                        </div>
-                                        <div >
-                                            <span class="btn btn-sm  btn-round btn-rose btn-file ">
-                                            <span class="fileinput-new ">Select File</span>
-                                            <span class="fileinput-exists">Change</span>
-                                                <input type="file"  name="attach-upload" accept="image/png, image/jpeg, image/jpg" id="attach-upload"/>
-                                            </span>
-                                            <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
-                                            <p class="category mt-0">
-                                                pastikan gambar yang diupload berekstensi JPG, JPEG atau PNG
-                                            </p>
+                        <?php
+                         $kode_cuti = $_GET['att_code'];
+                         // cek apakah pengajuan butuh lampiran atau tidak
+                         $cek_attendance_attachement = mysqli_query($link,"SELECT attachment FROM attendance_code WHERE kode = '$type' ")or die(mysqli_error($link));
+                         $data_attachment = mysqli_fetch_assoc($cek_attendance_attachement);
+                         if(isset($data_attachment['attachment']) && $data_attachment['attachment'] == 1 )        {
+                            ?>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label> <i class="fas fa-paperclip"></i>
+                                        Attachment / Lampiran
+                                    </label>
+                                    <p class="category mb-0">
+                                        pengajuan membutuhkan lampiran tambahan
+                                    </p>
+                                    <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">
+                                    
+                                        <div class="fileinput fileinput-new text-center " data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                                
+                                            </div>
+                                            <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:500px;">
+                                                <input type="text" class="form-control mx-0">
+                                            </div>
+                                            <div >
+                                                <span class="btn btn-sm  btn-round btn-rose btn-file ">
+                                                <span class="fileinput-new ">Select File</span>
+                                                <span class="fileinput-exists">Change</span>
+                                                    <input type="file"  name="attach-upload" accept="image/png, image/jpeg, image/jpg" id="attach-upload"/>
+                                                </span>
+                                                <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+                                                <p class="category mt-0">
+                                                    pastikan gambar yang diupload berekstensi JPG, JPEG atau PNG
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
+                                
+                                    <hr>
                                 </div>
-                            
-                                <hr>
                             </div>
-                        </div>
+                        <?php
+                        }      
+                        ?>
                         
                         <div class="row">
                             <div class="col-12">

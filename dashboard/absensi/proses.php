@@ -383,28 +383,12 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                     $_SESSION['pesan'] = "(".mysqli_error($link).")";
                     echo "<script>document.location.href='shift_request.php'</script>";
                 }
-
             }
         }
-        // echo $query;// if(count($_POST['checked']) > 0){
-        
-        //     foreach($_POST['checked'] AS $data){
-        //       list($id, $ket, $req_shift) = pecahID($data);
-        //         mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
-        //     }
-        // }
      }else if(isset($_POST['req_SUPEM'])){
-        // echo "SUPEM";
-        // count($_POST['sd']);
-        // echo "SUKET";
         $shift_req = 0;
-        
-        // echo count($_POST['sd']);
-        // echo count($_POST['ci']);
-        // echo count($_POST['co']);
         $query = $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
              VALUES ";
-
         $npk = $_POST['npk'];
         $shift = $_POST['shift'][0];
         $type = $_POST['code'];
@@ -417,16 +401,12 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
         $id_image = $npk.dateToDB($_POST['sd'][0]);
         // simpan file upload
         $file_mimes = array('image/jpeg','image/jpg','image/png');
-        // echo $_FILES['attach-upload']['name'];
         if(isset($_FILES['attach-upload']['name']) && in_array($_FILES['attach-upload']['type'], $file_mimes)) {
-           
             $ImageName       = $_FILES['attach-upload']['name'];
             $image = $_FILES['attach-upload']['name'];
             $dir = $_FILES['attach-upload']['tmp_name']; //file upload
             // $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/";
             $path = "image_attachment/";
-            
-
             if (file_exists($path)){
                 // compress image
                 $namaGambar     = $id_image."_".$tot_tgl."_".$type;
@@ -438,7 +418,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 $newPath = $path.$NewImageName; //direktori penyimpanan
                 // echo $newPath;
                 $source =  $dir;
-                echo $source;
+                // echo $source;
                 $imgInfo = getimagesize($source); 
                 $mime = $imgInfo['mime'];  
                 $quality = 20;
@@ -456,23 +436,18 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                         break; 
                     default: 
                         $image = imagecreatefromjpeg($source); 
-                } 
-                // echo $image;
-                imagejpeg($image, $newPath, $quality); 
-                // nama file baru
+                }
+                imagejpeg($image, $newPath, $quality);
                 $imageName = "'".$namaGambar.".$ImageExt"."'";
             }else{
                 $imageName = "'NULL'";
             }
-
+            $image_judge = 1;
         }else{
-            
+            $image_judge = 0;
             $imageName = "'NULL'";
         }
-
-        // query database
         foreach($_POST['sd'] AS $tgl){
-            
             $tgl = dateToDB($tgl);
             $id_absensi = $npk.$tgl;
             $id = $npk.$tgl;
@@ -482,26 +457,47 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $start_date = $tgl;
 
             $req_date = date('Y-m-d');
-            // $co = $_POST['ci'][$i];
-            // echo $shift."-".$npk."-".$type."-".$alasan."-".$tgl."-".$ci."-".$co."-".$start_date."-".$end_date."<br>";
             $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$co' , '$ci' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', $imageName ),";
             $i++;
         }
+        // cek apakah pengajuan butuh lampiran atau tidak
+        $cek_attendance_attachement = mysqli_query($link,"SELECT attachment FROM attendance_code WHERE kode = '$type' ")or die(mysqli_error($link));
+        $data_attachment = mysqli_fetch_assoc($cek_attendance_attachement);
         $query = substr($query, 0, -1);
-        // echo $query;
-        $sql = mysqli_query($link, $query);
-        if($sql){
-            // echo $imageName;
-
-            $_SESSION['info'] = 'Disimpan';
-            header('location: req_absensi.php');
+        if(isset($data_attachment['attachment']) && $data_attachment['attachment'] == 1 ){
+            if($image_judge == 1){
+                $sql = mysqli_query($link, $query);
+                if($sql){
+                    $_SESSION['info'] = 'Disimpan';
+                    header('location: req_absensi.php');
+                }else{
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
+                    header('location: req_absensi.php');
+                }
+            }else{
+                $_SESSION['info'] = 'Gagal Disimpan';
+                $_SESSION['pesan'] = "( Silakan Ulangi Pengajuan dan Pastikan Lampiran diupload dengan format gambar )";
+                header('location: req_absensi.php');
+            }
         }else{
-            $_SESSION['info'] = 'Gagal Disimpan';
-            $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
-            header('location: req_absensi.php');
+            if($image_judge == 0){
+                $sql = mysqli_query($link, $query);
+                if($sql){
+                    // echo "gambar tidak ada untuk pengajuan yang tidak membutuhkan lampiran";
+                    $_SESSION['info'] = 'Disimpan';
+                    header('location: req_absensi.php');
+                }else{
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = "( ".mysqli_error($link)." )";
+                    header('location: req_absensi.php');
+                }
+            }else{
+                $_SESSION['info'] = 'Gagal Disimpan';
+                $_SESSION['pesan'] = "( pengajuan tidak mebutuhkan lampiran )";
+                header('location: req_absensi.php');
+            }
         }
-
-
     }else if(isset($_POST['req_SUKET'])){
         // echo "SUKET";
         $shift_req = 0;
