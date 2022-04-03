@@ -441,8 +441,10 @@ if(isset($_SESSION['user'])){
                         <?php
                          $kode_cuti = $_GET['att_code'];
                          // cek apakah pengajuan butuh lampiran atau tidak
-                         $cek_attendance_attachement = mysqli_query($link,"SELECT attachment FROM attendance_code WHERE kode = '$type' ")or die(mysqli_error($link));
+                         $cek_attendance_attachement = mysqli_query($link,"SELECT attachment FROM attendance_code WHERE kode = '$kode_cuti' ")or die(mysqli_error($link));
                          $data_attachment = mysqli_fetch_assoc($cek_attendance_attachement);
+                        
+                         
                          if(isset($data_attachment['attachment']) && $data_attachment['attachment'] == 1 )        {
                             ?>
                             <div class="row">

@@ -82,14 +82,7 @@ if(isset($_SESSION['user'])){
                                 
                             </div>
                         </div>
-                        <div class="col-md-7 border-2 ">
-                            <p class="float-right mr-2">
-                                <a href="../req_absensi.php" class="btn btn-default">Leave & Permit Request</a>
-                            </p>
-                            <!-- <div class="col-4">
-                                <input class="btn btn-icon btn-round" name="sort" value="go">
-                            </div> -->
-                        </div>
+                        
                     </div>
                     
                 </div>

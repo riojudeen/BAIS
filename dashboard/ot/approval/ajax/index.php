@@ -91,6 +91,8 @@ if(isset($_SESSION['user'])){
                         <th>Dept</th>
                         
                         <th>Tanggal</th>
+                        <th>In</th>
+                        <th>Out</th>
                         <th>Mulai</th>
                         <th>Selesai</th>
                         <th>Activity</th>
@@ -155,6 +157,8 @@ if(isset($_SESSION['user'])){
                                 <td style="max-width:100px" class="text-truncate"><?=$group?></td>
                                 <td class="td"><?=$dept_acc ?></td>
                                 <td class="td"><?=tgl_indo($data['work_date'])?></td>
+                                <td class="td"></td>
+                                <td class="td"></td>
                                 <td class="td"><?=$checkIn?></td>
                                 <td class="td"><?=$checkOut?></td>
                                 <td style="max-width:300px" class="text-truncate td"><?=$data['activity']?></td>

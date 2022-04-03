@@ -66,7 +66,7 @@ if(isset($_SESSION['user'])){
 
                 
                 
-                // echo $mulai;
+                // echo $code;
                 $tanggal_array = json_decode(loopHari($mulai, $total));
                 $array_data = array();
                 $array_data_absensi = array();
@@ -95,8 +95,8 @@ if(isset($_SESSION['user'])){
                             attendance_code.type AS `type`,
                             CONCAT(req_absensi.status,req_absensi.req_status) AS progress
                         FROM req_absensi JOIN attendance_code ON req_absensi.keterangan = attendance_code.kode 
-                        WHERE attendance_code.alias = '4' AND req_absensi.npk = '$npk' AND  req_absensi.shift_req <> 1 
-                        AND CONCAT(req_absensi.status,req_absensi.req_status) = '75a'";
+                        WHERE (attendance_code.kode = 'C1' OR attendance_code.kode = 'C2') AND req_absensi.npk = '$npk' AND  req_absensi.shift_req <> 1 
+                        AND CONCAT(req_absensi.status,req_absensi.req_status) = '75a' ";
 
                 $cek_req_cuti = mysqli_query($link, $qry_cek_request)or die(mysqli_error($link));
                 if(mysqli_num_rows($cek_req_cuti) > 0){
@@ -147,7 +147,6 @@ if(isset($_SESSION['user'])){
                     attendance_code.kode AS `ket_kode`,
                     attendance_code.type AS `type`
                     FROM req_absensi JOIN attendance_code ON req_absensi.keterangan = attendance_code.kode WHERE npk = '$npk' AND `date` = '$date' AND  shift_req <> 1 ")or die(mysqli_error($link));
-                    
                     if(mysqli_num_rows($cek_req) > 0){
                         $data_req = mysqli_fetch_assoc($cek_req);
                         $data_npk = $data_req['npk'];
@@ -157,6 +156,7 @@ if(isset($_SESSION['user'])){
                         $data_in = $data_req['check_in'];
                         $data_out = $data_req['check_out'];
                         $type = $data_req['type'];
+                        
                         $data = array('npk' => $data_npk , 
                             'tgl' => "$data_tgl" , 
                             'ket' => $data_ket , 
@@ -186,16 +186,16 @@ if(isset($_SESSION['user'])){
                     // data absensi
                     $data_absensi = mysqli_fetch_assoc($cek_absensi);
                    
+                    $data_npk_absensi = $data_absensi['npk'];
+                    $data_shift_absensi = $data_absensi['shift'];
+                    $data_date_absensi = $data_absensi['date'];
+                    $data_ket_absensi = $data_absensi['ket'];
+                    $data_in_absensi = $data_absensi['check_in'];
+                    $data_out_absensi = $data_absensi['check_out'];
+                    $data_type_absensi = $data_absensi['type'];
+                    // echo $data_npk_absensi;
                     if(mysqli_num_rows($cek_absensi) > 0){
-                        array_push($array_data_absensi, $data_absensi);
-                        $data_npk_absensi = $data_absensi['npk'];
-                        $data_shift_absensi = $data_absensi['shift'];
-                        $data_date_absensi = $data_absensi['date'];
-                        $data_ket_absensi = $data_absensi['ket'];
-                        $data_in_absensi = $data_absensi['check_in'];
-                        $data_out_absensi = $data_absensi['check_out'];
-                        $data_type_absensi = $data_absensi['type'];
-                        // echo $data_npk_absensi;
+                       
                         $data_absensi = array('npk' => $data_npk_absensi , 
                             'tgl' => "$data_date_absensi" , 
                             'shift' => $data_shift_absensi , 
@@ -204,6 +204,7 @@ if(isset($_SESSION['user'])){
                             'check_in' =>  $data_in_absensi , 
                             'check_out' => $data_out_absensi,
                             'type' => $data_type_absensi);
+                            array_push($array_data_absensi, $data_absensi);
                         // echo $data_tgl;
                     }
 
@@ -260,6 +261,7 @@ if(isset($_SESSION['user'])){
 
                     <?php
                 }else{
+                    /*
                     if(count($array_data_cuti)>0){
                         ?>
 
@@ -361,6 +363,53 @@ if(isset($_SESSION['user'])){
                         </div>
                         <?php
                     }
+                    */
+                    ?>
+                    <div id="notification_result" data-id="1" class="text-uppercase  alert alert-info alert-with-icon alert-dismissible fade show" data-notify="container">
+                            
+                            <span data-notify="icon" class="nc-icon nc-bell-55"></span>
+                            <span data-notify="message">
+                                Pengajuan belum pernah dibuat. klik proses untuk melanjutkan
+                            </span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-striped" >
+                                    <table class="table-sm" width="100%">
+                                        <tbody>
+                                            <thead class="table-info text-uppercase">
+                                                <tr>
+                                                    <th>Pengajuan</th>
+                                                    <th>Tanggal</th>
+                                                    <th>IN</th>
+                                                    <th>OUT</th>
+                                                    <th colspan="2">Kode Absensi</th>
+                                                </tr>
+                                            </thead>
+                                        <?php
+                                        $no = 1;
+                                        // echo count($array_data_absensi);
+                                            foreach($array_data_absensi AS $data => $val){
+                                                ?>
+                                                <tr>
+                                                    <td><?=tgl($val['tgl'])?></td>
+                                                    <td><?=jam($val['check_in'])?></td>
+                                                    <td><?=jam($val['check_out'])?></td>
+                                                    <td><?=$val['type']?></td>
+                                                    <td><?=$val['ket_kode']?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                            ?>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                    
+                            </div>
+                        </div>
+                    <?php
                 }
             }else{
                 ?>

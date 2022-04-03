@@ -958,7 +958,7 @@ if(isset($_SESSION['user'])){
             })
         })
     </script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         $(document).ready(function(){
             $(document).on('click', '.view_data', function(){
                 var id = $(this).parents("tr").attr("id");
@@ -989,7 +989,7 @@ if(isset($_SESSION['user'])){
             });
         });
         
-    </script>
+    </script> -->
 
     
     

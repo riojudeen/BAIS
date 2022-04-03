@@ -119,65 +119,71 @@ $totalBln = count($bln);
         </div>
     </div>
 </div>
-<div class="form-inline">
-    <div class="input-group no-border">
-        <div class="form-group-sm">
-            <select type="date" name="start" id="startdate" class="form-control pl-2" >
-                <option Disabled>Pilih Bulan</option>
-                <?php
-                $i =0;
-                foreach($bln AS $namaBln){
-                    $i++;
-                    $selectBln = ($i == $bulanini)?"selected":"";
+<div class="row">
+
+    <div class="form-inline col-md-12">
+        <div class="input-group no-border">
+            <!-- <div class="form-group-sm"> -->
+                <select type="date" name="start" id="startdate" class="form-control pl-2" >
+                    <option Disabled>Pilih Bulan</option>
+                    <?php
+                    $i =0;
+                    foreach($bln AS $namaBln){
+                        $i++;
+                        $selectBln = ($i == $bulanini)?"selected":"";
+                        
+                        echo "<option  $selectBln value=\"$i\">$namaBln</option>";
+                    }
+                    ?>
+                </select>
+            <!-- </div>
+            <div class="form-group-sm "> -->
+                <div class="form-control">
+                    to
+                </div>
+            <!-- </div>
+            <div class="form-group-sm"> -->
+                <select type="date" name="end"  id="enddate" class="form-control " >
+                    <option Disabled>Pilih Bulan</option>
+                    <?php
+                    $i =0;
+                    foreach($bln AS $namaBln){
+                        
+                        $i++;
+                        $selectBln = ($i == $bulanini)?"selected":"";
+                        echo "<option $selectBln value=\"$i\">$namaBln</option>";
+                    }
+                    ?>
+                </select>
+            <!-- </div>
+            <div class="form-group-sm "> -->
+                <select  name="year" id="year" class="form-control" >
+                    <?php
+                    $thn = mysqli_query($link, "SELECT `date` FROM holidays GROUP BY YEAR(`date`) ASC")or die(mysqli_error($link));
+                    while($dataThn = mysqli_fetch_assoc($thn)){
+                        
+                        $tgl = $dataThn['date'];
+                        $dataThn_pecah = explode("-", $tgl);
+                        $tahun = $dataThn_pecah['0'];
+                        $select = ($tahun == $year) ? "selected" : "";
+                        echo "<option $select value=\"$tahun\">$tahun</option>";
+                    }
+                    ?>
                     
-                    echo "<option  $selectBln value=\"$i\">$namaBln</option>";
-                }
-                ?>
-            </select>
-        </div>
-        <div class="form-group-sm ">
-            <div class="form-control">
-                to
-            </div>
-        </div>
-        <div class="form-group-sm">
-            <select type="date" name="end"  id="enddate" class="form-control pl-2" >
-                <option Disabled>Pilih Bulan</option>
-                <?php
-                $i =0;
-                foreach($bln AS $namaBln){
-                    
-                    $i++;
-                    $selectBln = ($i == $bulanini)?"selected":"";
-                    echo "<option $selectBln value=\"$i\">$namaBln</option>";
-                }
-                ?>
-            </select>
-        </div>
-        <div class="form-group-sm ">
-            <select  name="year" id="year" class="form-control" >
-                <?php
-                $thn = mysqli_query($link, "SELECT `date` FROM holidays GROUP BY YEAR(`date`) ASC")or die(mysqli_error($link));
-                while($dataThn = mysqli_fetch_assoc($thn)){
-                    
-                    $tgl = $dataThn['date'];
-                    $dataThn_pecah = explode("-", $tgl);
-                    $tahun = $dataThn_pecah['0'];
-                    $select = ($tahun == $year) ? "selected" : "";
-                    echo "<option $select value=\"$tahun\">$tahun</option>";
-                }
-                ?>
+                </select>
                 
-            </select>
-            
+            <!-- </div> -->
         </div>
+        <div class="input-group-append">
+            <input type="submit" name="go" id="sortyear" class="ml-2  btn mt-0 ml-0 " value="go">  
+        </div>
+        
     </div>
-    <div class="input-group-append">
-        <input type="submit" name="go" id="sortyear" class="ml-2 col-lg-1 btn btn-sm btn-round btn-icon btn-link" value="go">  
-    </div>
-    
 </div>
-<div class="dataview"></div>
+<div class="row">
+
+    <div class="dataview col-md-12"></div>
+</div>
 <script>
     $(document).ready(function(e){
         e.preventDefault

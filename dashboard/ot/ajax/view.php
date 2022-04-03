@@ -1,8 +1,10 @@
 <?php
 include("../../../config/config.php"); 
 include("../../../config/approval_system.php");
+$npk =$npkUser;
 list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
 $id_absen = $_POST['id'];
+echo $id_absen;
 $qry_abs = "SELECT req_absensi.id AS id_absen,
     req_absensi.npk AS npk_absen, 
     req_absensi.shift AS shift_absen,
@@ -213,159 +215,6 @@ $check_out = ($dataReqAbs['check_out']!='00:00:00')?jam($dataReqAbs['check_out']
         </div>
 
         <hr/>
-        <div class="row">
-            <h5 class="title col-md-12">History Pengajuan Cuti</h6>
-            <?php
-            $explode_th = explode("-", $dataReqAbs['tanggal']);               
-            $tahunPeriod = $explode_th['0'];
-            $startMonth = 01;
-            $endMonth = 12;
-            $t = $tahunPeriod ;
-            // echo $y."<br>";
-            $bM = $startMonth ;
-            $bS = $endMonth;
-
-            $startD = date('Y-m-d', strtotime($t.'-'.$bM.'-01'));
-            $endD = date('Y-m-t', strtotime($t.'-'.$bS.'-01'));
-
-            /*
-            mencari periode cuti 
-            */
-            $qry_tglMasuk = "SELECT tgl_masuk FROM karyawan WHERE npk = '$dataReqAbs[npk_]' ";
-            $sql_tglMasuk = mysqli_query($link, $qry_tglMasuk);
-            $data_tglMasuk = mysqli_fetch_assoc($sql_tglMasuk);
-            $tglMasuk = $data_tglMasuk['tgl_masuk'];
-            $timestamp = strtotime($tglMasuk);
-
-
-            $bulanMasuk = date('m', strtotime($tglMasuk));
-            $hariMasuk = date('d', strtotime($tglMasuk));;
-
-            $tglTahunini = date('Y-m-d', strtotime($t.'-'.$bulanMasuk.'-'.$hariMasuk));
-            
-            $timeStampAwal = $bln = $timestamp;
-            $timeStampAkhir = strtotime($tglTahunini);
-            $i = 0;
-            while($bln <= $timeStampAkhir ){
-                
-                $tgl_ = date('Y-m-d', $bln);
-                $bln = strtotime("+5 years", $bln);
-
-                $end = date('Y-m-d', strtotime("-1 day", $bln));
-
-                $periodEnd[$i] = $end;
-                $period[$i] = $i;
-                $periodStart[$i] = $tgl_;
-                
-                $i++;
-            }
-            
-            
-            foreach($period AS $periodeCuti){
-                $qryAloc_C2 = "SELECT * FROM leave_alocation WHERE effective_date BETWEEN '$startD' AND '$endD' AND id_leave = 'C2' ";
-                $sqlAloc_C2 = mysqli_query($link, $qryAloc_C2);
-                $dataAloc_C2 = mysqli_fetch_assoc($sqlAloc_C2);
-                $aloc_C2 = $dataAloc_C2['alocation'];
-                if($periodeCuti == 0){
-                    $jatah[$periodeCuti] = 0;
-                    
-                }else{
-                    $jatah[$periodeCuti] = (mysqli_num_rows($sqlAloc_C2) > 0)? $aloc_C2 : 22;
-                
-                }
-            }
-            $maxPeriod = max($period);
-            $qry_C2 = "SELECT * FROM req_absensi WHERE npk = '$dataReqAbs[npk_]' AND `date` BETWEEN '$periodStart[$maxPeriod]' AND '$periodEnd[$maxPeriod]' AND keterangan = 'C2' GROUP BY 'date' ";
-                    $sql_C2 = mysqli_query($link, $qry_C2);
-                    $jml_C2 = mysqli_num_rows($sql_C2);
-        
-            ?>
-            <div class="col-md-6 pr-1">
-                <h5>Cuti Panjang</h5>
-                <p>Periode ke - <?=$maxPeriod?> : <?=DBtoForm($periodStart[$maxPeriod])?> s.d. <?=DBtoForm($periodEnd[$maxPeriod])?></p>
-                
-                <div class="table table-stripped">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>cuti ke - </th>
-                                <th>tanggal </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        $cutiC2 = 1;
-                        if($jml_C2 > 0){
-                            while($tglCutiC2 = mysqli_fetch_assoc($sql_C2)){
-                                ?>
-                                <tr class="text-uppercase">
-                                    <td><?=$cutiC2++?></td>
-                                    <td><?=hari($tglCutiC2['date'])?>, <?=DBtoForm($tglCutiC2['date'])?></td>
-                                </tr>
-                                <?php
-                            }
-                        }else{
-                            ?>
-                            <tr class="text-uppercase">
-                                <td colspan="2" class="bg-light">belum ada pengajuan</td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                        </tbody>
-                    </table>
-                </div>
-                <p>Sisa Cuti : <?=$jatah[$maxPeriod] - $jml_C2 ." hari (dari : ".$jatah[$maxPeriod]." hari)"?></p>
-            </div>
-            <div class="col-md-6 pr-3">
-                <h5>Cuti Tahunan</h5>
-                <p>Periode <?=$tahunPeriod?> : <?=DBtoForm($startD)?> s.d. <?=DBtoForm($endD)?></p>
-                <div class="table table-stripped">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>cuti ke - </th>
-                                <th>tanggal </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                        $qryAloc = "SELECT * FROM leave_alocation WHERE effective_date BETWEEN '$startD' AND '$endD' AND id_leave = 'C1' ";
-                        $sqlAloc = mysqli_query($link, $qryAloc);
-                        $dataAloc = mysqli_fetch_assoc($sqlAloc);
-                        $aloc = $dataAloc['alocation'];
-
-                        $qry_C1 = "SELECT * FROM req_absensi WHERE npk = '$dataReqAbs[npk_]' AND `date` BETWEEN '$startD' AND '$endD' AND keterangan = 'C1' GROUP BY 'date'";
-                        $sql_C1 = mysqli_query($link, $qry_C1);
-                        $jml_C1 = mysqli_num_rows($sql_C1);
-                        
-
-                        $cutiC1 = 1;
-                        if($jml_C1 > 0){
-                            while($tglCutiC1 = mysqli_fetch_assoc($sql_C1)){
-                                ?>
-                                <tr class="text-uppercase">
-                                    <td><?=$cutiC1?></td>
-                                    <td><?=hari($tglCutiC1['date'])?>, <?=DBtoForm($tglCutiC1['date'])?></td>
-                                </tr>
-                                <?php
-                                $cutiC1++;
-                            }
-                        }else{
-                            ?>
-                            <tr class="text-uppercase">
-                                <td colspan="2" class="bg-light">belum ada pengajuan</td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                        </tbody>
-                    </table>
-                </div>
-                <p>Sisa Cuti : <?=$aloc - $jml_C1 ." hari (dari : ".$aloc." hari)"?></p>
-            </div>
-            
-        </div>
     </div>
 
     <div class="modal-footer ">
