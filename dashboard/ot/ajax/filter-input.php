@@ -112,10 +112,12 @@ for($i=1 ; $i <= $_GET['count']; $i++){
                     }else if($type == 'PO'){
                         if($i == 1){
                             $array_search_start = array_search($start_time, $array_wb_start);
-                            
-                            $array_search_end = array_search($end_time, $array_wb_end);
-                            $start_time = $array_wb_end[$array_search_start];
-                           
+                            // echo $array_search_start;
+                            if($array_search_start != ''){
+                                $array_search_end = array_search($end_time, $array_wb_end);
+                                $start_time = $array_wb_end[$array_search_start];
+                               
+                            }
                             $disabled_start = $disabled_time_start;
                             $disabled_end = $disabled_time_end;
                         }else{
@@ -123,8 +125,10 @@ for($i=1 ; $i <= $_GET['count']; $i++){
                             $disabled_end = '';
                         }
                     }
+                    // echo $start_time;
                 ?>
-                <input type="time" <?=$disabled_start?> name="waktu_mulai<?=$i?>" value="<?=jam($start_time)?>" data-id="<?=$i?>" class="form-control no-border start_time" id="start_time<?=$i?>" required>
+
+                <input type="time" <?=$disabled_start?> name="waktu_mulai<?=$i?>" data-date-format="hh:mm" value="<?=jam($start_time)?>" data-id="<?=$i?>" class="form-control no-border start_time datepicker" id="start_time<?=$i?>" required>
             </div>
         </div>
         <p class="col-md-1 pt-4 mt-2 text-center text-muted ">

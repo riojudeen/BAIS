@@ -522,17 +522,29 @@ if(isset($_SESSION['user'])){
             $('#modal_input_npk').modal('show');
         })
 
-        $(document).on('keyup', '#ot_activity', function(){
+        $(document).on('keyup', '.input_ot_activity', function(){
+            var id = $(this).attr('data-id');
             var data = $(this).val()
-            $('.ot_activity').text(data)
+            var index_before = Number(id)-1;
+            if(index_before >= 0 ){
+                var val_before = $('#input_ot_activity'+index_before).val()
+                if(val_before != '' && data != ''){
+                    var plus = ' + ';
+                }else{
+                    var plus = '';
+                }
+            }else{
+                var plus = '';
+            }
+            $('.ot_activity'+id).text(plus+data)
         })
         $('#modal_input_npk').on('show.bs.modal', function (event) {
                 // do something...inputNpk()
             inputNpk()
         })
-        $('#modal_input_npk').on('hidden.bs.modal', function (event) {
-            dataActive()
-        })
+        // $('#modal_input_npk').on('hidden.bs.modal', function (event) {
+        //     dataActive()
+        // })
         
 
 
@@ -540,7 +552,7 @@ if(isset($_SESSION['user'])){
         $(document).on('click','#create_ot', function(event){
             event.preventDefault();
             var form = $('#formInputData').serialize();
-            console.log(form);
+            // console.log(form);
             $.ajax({
                 url: 'proses.php',
                 method: 'POST',
