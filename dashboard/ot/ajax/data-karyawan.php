@@ -303,7 +303,14 @@ if(isset($_SESSION['user'])){
                             <div class="col-md-12 ">
                                 <h6 for="" class="title">Activity Detail :</h6>
                                 <div class="form-group">
-                                    <input type="text" max="50" min="5" name="ot_activity" id="ot_activity" class="form-control" >
+                                    <?php
+                                    foreach($_GET['kode_ot'] AS $data){
+                                        ?>
+                                            <input type="text" max="50" min="5" name="ot_activity" id="ot_activity" class="form-control" >
+                                        <?php
+                                    }
+                                    ?>
+                                    
                                 </div>
                             </div>
                         </div>

@@ -357,8 +357,10 @@ if(isset($_SESSION['user'])){
                                                             <option disabled value="">pilih pengajuan</option>
                                                             <?php
                                                                 if($notif == 1){
-                                                                    $qAttType = mysqli_query($link, "SELECT attendance_type.id AS `type`, attendance_type.name AS `name`, attendance_code.kode AS `kode` FROM attendance_code
-                                                                        JOIN attendance_type ON attendance_code.type = attendance_type.id WHERE attendance_code.kode = '$dataCek[keterangan]'")or die(mysqli_error($link));
+                                                                    $qAttType = mysqli_query($link, "SELECT attendance_type.id AS `type`, 
+                                                                        attendance_type.name AS `name`, 
+                                                                        attendance_code.kode AS `kode` FROM attendance_code
+                                                                        JOIN attendance_type ON attendance_code.type = attendance_type.id WHERE attendance_code.kode = '$dataCek[keterangan]' ")or die(mysqli_error($link));
                                                                     $dataType = mysqli_fetch_assoc($qAttType);
                                                                     $data = $dataType['type'];
                                                                     // echo $data;
@@ -368,7 +370,7 @@ if(isset($_SESSION['user'])){
                                                                     $addQuery = "";
                                                                 
                                                                 }
-                                                                $qry = mysqli_query($link, "SELECT `id`,`name` FROM `attendance_type` WHERE id <> 'REMARK' $addQuery")or die(mysqli_error($link));
+                                                                $qry = mysqli_query($link, "SELECT `id`,`name` FROM `attendance_type` WHERE id <> 'REMARK' AND stats = '1' $addQuery")or die(mysqli_error($link));
                                                                 if(mysqli_num_rows($qry) > 0){
                                                                     while($data = mysqli_fetch_assoc($qry)){
                                                                         $select = ($_GET['req'] == $data['id'])?'selected':'';

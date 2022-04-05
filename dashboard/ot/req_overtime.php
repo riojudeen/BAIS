@@ -94,7 +94,6 @@ if(isset($_SESSION['user'])){
                                 <select type="date" name="end" class="form-control bg-transparent" >
                                     <option Disabled>Pilih Bulan</option>
                                     <?php
-                                    
                                     $i =0;
                                     foreach($bln AS $namaBln){
                                         $i++;
@@ -399,8 +398,6 @@ if(isset($_SESSION['user'])){
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
-
-                
                
                 $.ajax({
                     url:"ajax/index.php",
@@ -454,16 +451,40 @@ if(isset($_SESSION['user'])){
             var id = $('.data-active').attr('data-id');
             var start = $('#startDate').val();
             var end = $('#endDate').val();
+            var total_activity = $('.total_activity').val()
+            // console.log(total_activity)
+            var kode_ot = [];
+            var start_time = [];
+            var end_time = [];
             // ot data
-            var kode_ot = $('#ot_code').val();
-            var start_time = $('#start_time').val();
-            var end_time = $('#end_time').val();
+            for(let i = 1; i <= total_activity; i++){
+                
+                var data_kode_ot = $('#ot_code'+i).val();
+                var data_start_time = $('#start_time'+i).val();
+                var data_end_time = $('#end_time'+i).val();
+
+                kode_ot.push(data_kode_ot);
+                start_time.push(data_start_time);
+                end_time.push(data_end_time);
+            }
+
+            console.log(kode_ot);
+            var work_date = $('#work_date').val();
             var in_date = $('#date_in_ot').val();
             var out_date = $('#date_out_ot').val();
-            var work_date = $('#work_date').val();
+            
             var type = $('#ot_type').val();
             var text_area = $('textarea#text_input').val()
             var shift_req = $('#shift_request').val()
+            // var kode_ot = $('#ot_code').val();
+            // var start_time = $('#start_time').val();
+            // var end_time = $('#end_time').val();
+            // var in_date = $('#date_in_ot').val();
+            // var out_date = $('#date_out_ot').val();
+            // var work_date = $('#work_date').val();
+            // var type = $('#ot_type').val();
+            // var text_area = $('textarea#text_input').val()
+            // var shift_req = $('#shift_request').val()
             $.ajax({
                 url:"ajax/data-karyawan.php",
                 method:"GET",

@@ -533,7 +533,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $i++;
         }
         $query = substr($query, 0, -1);
-        echo $query;
+        // echo $query;
         $sql = mysqli_query($link, $query);
         if($sql){
             $_SESSION['info'] = 'Disimpan';

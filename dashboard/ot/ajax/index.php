@@ -242,7 +242,7 @@ if(isset($_GET['id'])){
                                                 <div class="row">
                                                     <div class="col-md-10 pr-1">
                                                         <div class="form-group">
-                                                            <input type="number" class="count_more form-control" value="2">
+                                                            <input type="number" class="count_more form-control total_activity" value="2">
                                                         </div>
 
                                                     </div>

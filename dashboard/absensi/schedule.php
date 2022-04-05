@@ -362,10 +362,10 @@ if(isset($_SESSION['user'])){
                                 <div class="col-md-12 ">
                                     <div class="form-horizontal">
                                         <div class="row">
-                                            <label class="col-md-2 col-form-label text-left">Cuti ke-<?=$no++?></label>
+                                            <label class="col-md-2 col-form-label text-left">Pengajuan Hari ke-<?=$no++?></label>
                                             <div class="col-md-<?=$col?>"> 
                                                 <div class="form-group">
-                                                    <input <?=$disabled_tgl?> <?=$readonly?> type="text" name="sd[]" class="form-control col-lg-12 datepicker mr-0 datepickertgl" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($date)?>" required >
+                                                    <input readonly <?=$readonly?> type="text" name="sd[]" class="form-control col-lg-12 datepicker mr-0 datepickertgl" data-date-format="DD/MM/YYYY" value="<?=DBtoForm($date)?>" required >
                                                 </div>
                                                 
                                             </div>
@@ -436,7 +436,7 @@ if(isset($_SESSION['user'])){
                         
                         <label>Alasan / keperluan</label>
                         <div class="form-group">
-                            <input  name="note" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required />
+                            <textarea  name="note" minLength="5" maxLength="20" rows="4" cols="70" placeholder="tulis alasan / keperluan pengajuan.." class="form-control textarea"  required ></textarea>
                         </div>
                         <?php
                          $kode_cuti = $_GET['att_code'];

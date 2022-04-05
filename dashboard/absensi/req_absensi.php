@@ -21,18 +21,12 @@ if(isset($_SESSION['user'])){
 
         
         $y = $_SESSION['thn'];
-        // echo $y."<br>";
         $sM = $_SESSION['startM'];
         $eM = $_SESSION['endM'];
-        // mysqli_query($link, "UPDATE working_days SET ket = 'DOP' WHERE ket = 'DOT' ");
-        // echo $_SESSION['startM']."<br >";
-        // echo $_SESSION['endM']."<br >";
         $tahun = $_SESSION['thn'];
 
         $tanggalAwal = date('Y-m-d', strtotime($y.'-'.$sM.'-01'));
-        // echo "tanggal awal : ".$tanggalAwal."<br>";
         $tanggalAkhir = date('Y-m-t', strtotime($y.'-'.$eM.'-01'));
-        // echo "tanggal akhir : ". $tanggalAkhir."<br>";
 
         $count_awal = date_create($tanggalAwal);
         $count_akhir = date_create($tanggalAkhir);
@@ -282,6 +276,12 @@ if(isset($_SESSION['user'])){
         }
         getSumary()
         dataActive()
+        
+        $(document).on('click','.navigasi-absensi', function(){
+            $('.navigasi-absensi').removeClass('data-active');
+            $(this).addClass('data-active');
+            dataActive()
+        });
         function dataActive(page){
             if($(".data-active")[0]){
                 var div_id = $('#s_div').val();
@@ -290,16 +290,13 @@ if(isset($_SESSION['user'])){
                 var group_id = $('#s_goupfrm').val();
                 var deptAcc_id = $('#s_deptAcc').val();
                 var shift = $('#s_shift').val();
-                // var start = $('#start_date').val();
-                // var end = $('#end_date').val();
+                
                 var cari = $('#cari').val();
 
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();
-                // console.log(cari);
-                // $('#monitor').load("ajax/index.php?id="+id+"&start="+start+"&end="+end);
-               
+                
                 $.ajax({
                     url:"ajax/index.php",
                     method:"GET",
@@ -314,74 +311,6 @@ if(isset($_SESSION['user'])){
             }
         }
         
-        function get_notifData(){
-            var data = $('#notification_result').attr('data-id');
-            // console.log(data)
-            if(data == '1'){
-                $('#prosesrequest').prop('disabled', false )
-            }else if(data == '0'){
-                $('#prosesrequest').prop('disabled', true )
-            }else{
-                $('#prosesrequest').prop('disabled', true )
-            }
-        }
-        get_notifData()
-        
-        function get_cek(){
-            
-            var npk = $('#npk_karyawan').val();
-            var mulai = $('#tanggal_mulai').val();
-            var jumlah_hari = $('#jumlah_hari').val();
-            var code = $('#attendance_code').val();
-
-            // console.log("ok");
-            $.ajax({
-                url:"ajax/notification.php",
-                method:"GET",
-                data:{npk:npk,mulai:mulai,total:jumlah_hari,code:code},
-                success:function(data){
-                    $('.notification').fadeOut('fast', function(){
-                        $(this).html(data).fadeIn('fast');
-                        get_notifData()
-                    });
-                    // $('#data-monitoring').html(data)
-                }
-            })
-            // $('.notification').html()
-        }
-        $(document).on('click', '.cek_data', function(e){
-            e.preventDefault();
-            get_cek();
-        })
-        $(document).on('blur', '.data-npk',function(){
-            get_cek();
-        })
-        $(document).on('change', '#attendance_code', function(){
-            get_cek();
-        })
-        $(document).on('change', '#attendance_type', function(){
-            get_cek();
-        })
-        $(document).on('change', '#tanggal_mulai', function(){
-            get_cek();
-        })
-        $(document).on('change', '#jumlah_hari', function(){
-            get_cek();
-        })
-        $(document).on('click', '.reset', function(){
-            $('.data-npk').val('');
-            get_cek();
-        })
-        $(document).on('click','.navigasi-absensi', function(){
-            $('.navigasi-absensi').removeClass('data-active');
-            $(this).addClass('data-active');
-            dataActive()
-        });
-        $(document).on('click', '.halaman', function(){
-            var page = $(this).attr("id");
-            dataActive(page)
-            // console.log(hal)
-        });
         // getSumary()
         function getDiv(){
             var data = $('#s_div').val()
@@ -443,11 +372,7 @@ if(isset($_SESSION['user'])){
         $('#s_section').on('change', function(){
             getGroup()
         })
-        $(document).on('blur', '#cari', function(){
-            // var cari = $(this).val()
-            dataActive()
-            // console.log(cari);
-        });
+        
         $('#filterGo').on('click', function(){
             dataActive();
         })
@@ -649,9 +574,7 @@ if(isset($_SESSION['user'])){
                             $('.data-nama').val(nama);
                             $('.data-jabatan').val(jabatan);
                             $('.data-stats').val(status);
-                            $('#prosesrequest').prop("disabled", false);
-                            // $('#cek_data').removeClass("d-none");
-                            // $('#cek_data').prop("disabled", false);
+                           
                             
                         }else if(total === 0){
                             var nama = obj.msg[0].msg;
@@ -660,8 +583,7 @@ if(isset($_SESSION['user'])){
                             $('.data-nama').val(nama);
                             $('.data-jabatan').val(jabatan);
                             $('.data-stats').val(status);
-                            $('#prosesrequest').prop("disabled", true);
-                            // $('#cek_data').addClass("d-none");
+                            
                         }else{
                             var nama = obj.msg[0].msg;
                             var status = obj.msg[0].msg;
@@ -669,8 +591,7 @@ if(isset($_SESSION['user'])){
                             $('.data-nama').val(nama);
                             $('.data-jabatan').val(jabatan);
                             $('.data-stats').val(status);
-                            $('#prosesrequest').prop("disabled", true);
-                            // $('#cek_data').addClass("d-none");
+                            
                         }
                     }
                 })
