@@ -310,7 +310,6 @@ if(isset($_SESSION['user'])){
                                         <?php
                                     }
                                     ?>
-                                    
                                 </div>
                             </div>
                         </div>
