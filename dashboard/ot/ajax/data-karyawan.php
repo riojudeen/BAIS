@@ -98,134 +98,7 @@ if(isset($_SESSION['user'])){
         $doc_no = docOt($work_date, $data_access, $init_group, $init_div)
         
         ?>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive border">
-                    <table class="table border" rules="cols" >
-                        
-                        <thead class="text-center">
-                            <tr>
-                                <th style="width: 120px"><img style="width: 100px" src="../../assets/img/logo_daihatsu.png"></th>
-                                <th style="font-size: 25px" colspan="7">Surat Perintah Lembur</th>
-                                <th style="font-size: 25px; width: 120px"><?=date('Y')?></th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="py-1" colspan="9" style="height:2px"></td>
-                            </tr>
-                            <colgroup>
-                                <col style="width: 20px">
-                                <col style="width: 25px">
-                                <col style="width: 150px">
-                            </colgroup>
-                            <tr>
-                                <td class="py-0" colspan="2" style="height:50px">Group</td>
-                                <td class="py-0" style="height:50px">: <?=getOrgName($link, $group,"group")?></td>
-                                <td class="p-0 text-muted" rowspan="4" colspan="5">
-                                <div class="table-responsive text-nowrap">
-                                    <table class="table p-0 m-0">
-                                        <tbody>
-                                        <?php
-                                            // kode lembur
-                                            $baris = 5;
-                                            $q_jobcode = "SELECT * FROM kode_lembur";
-                                            $s_jobcode = mysqli_query($link, $q_jobcode)or die(mysqli_error($link));
-                                            $jml_row = mysqli_num_rows($s_jobcode);
-                                            
-                                            $sisa_kolom = $jml_row % $baris; //sisa baris
-                                            if($sisa_kolom > 0){
-                                                $hasil_kolom = (($jml_row - $sisa_kolom)/$baris)+1;
-                                            }else{
-                                                $hasil_kolom = ( $jml_row / $baris);
-                                            }
-                                            
-                                            echo "<tr>";
-                                            
-                                            for($i=0; $i<$hasil_kolom; $i++){
-                                                echo "<td class=\"p-0 m-0\"><table class=\"table table-striped\">"
-                                                ?>
-                                                <colgroup>
-                                                    <col style="width: 50px">
-                                                    <col style="width: 200px">
-                                                
-                                                </colgroup>
-
-                                                <?php
-                                                echo "<thead class=\"p-0 mt-0\">";
-                                                echo "<th class=\"py-1 px-1\">Kode</th>";
-                                                echo "<th class=\"py-1 px-1\">Activity</th>";
-                                                echo "<tbody class=\"p-0 mt-0\">";
-                                                
-                                                $offset = $i * $baris;
-                                                $q_code = "SELECT * FROM kode_lembur LIMIT $offset , $baris";
-                                                $s_code = mysqli_query($link, $q_code)or die(mysqli_error($link));
-
-                                                for($hasilbaris=0; $hasilbaris<=$baris; $hasilbaris++){
-                                                    while($d_jobcode = mysqli_fetch_assoc($s_code)){
-                                                        echo "<tr>";
-                                                        echo "<td class=\"py-1 px-1\">".$d_jobcode['kode_lembur']."</td>";
-                                                        echo "<td class=\"py-1 px-1\">".$d_jobcode['nama']."</td>";
-                                                        echo "</tr>";
-                                                        
-                                                    }
-                                                }
-                                                if($sisa_kolom > 0 && $hasil_kolom == $i +1){
-                                                    $tambah = $baris - $sisa_kolom;
-                                                    for($tbh=0 ; $tbh<$tambah ; $tbh++){
-                                                        echo "<tr>";
-                                                        echo "<td class=\"py-1 px-1\"> -</td>";
-                                                        echo "<td class=\"py-1 px-1\"> -</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                }
-                                                echo "</tbody></table></td>";
-                                            }
-                                            echo "</tr>";
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                </td>
-                                <th class="py-0 text-center text-white bg-secondary " rowspan="3">
-                                    <?php
-                                    foreach($_GET['kode_ot'] AS $kode_ot){
-                                        ?>
-                                        <h4 class="my-0"><?=$kode_ot?></h4>
-                                        <?php
-                                    }
-                                    ?>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td class="py-0" style="height:50px" colspan="2">Shift</td>
-                                <td class="py-0" style="height:50px" >: <?=$shift_req?></td>
-                                
-                            </tr>
-                            <tr>
-                                <td class="py-0" style="height:50px" colspan="2">Department</td>
-                                <td class="py-0" style="height:50px" >: <?=getOrgName($link, $dept_account,"deptAcc")?></td>
-                                
-                               
-                            </tr>
-                            <tr>
-                                <td class="py-0" colspan="2" style="height:50px" >Hari / Tanggal </td>
-                                <td class="py-0" style="height:50px" >: <?=hari($work_date)?>, <?=tgl($work_date)?></td>
-                                <td class="py-0 text-uppercase text-center" style="height:50px" >Kode</td>
-                            </tr>
-                            <!-- isi table form -->
-                            <!-- <tr>
-                                <td class="py-1" colspan="9" style="border: 1px solid black; height:2px"></td>
-                            </tr> -->
-                            
-                        </tbody>
-                        
-                    
-                    </table>
-                </div>
-            </div>
-        </div>
+        
 
         <div class="row">
             <div class="col-md-12">
@@ -233,132 +106,281 @@ if(isset($_SESSION['user'])){
                 <div class="card shadow-none border rounded-0 " style="background:rgba(201, 201, 201, 0.2)" >
 
                     <div class="card-body  mt-2">
-                    
-                        
                         <div class="row">
                             <div class="col-md-12">
-                            <h6 class="text-uppercase">Doc No : <?=$doc_no?></h6>
-                            <input type="hidden" value="<?=$doc_no?>" name="doc_code" >
-                            <input type="hidden" value="<?=count($_GET['kode_ot'])?>" name="total_activity" >
-                            </div>
-                        </div>
-                        <hr class="mt-0">
-                        <div class="row">
-                        
-                            <div class="col-md-2 pr-1">
-                                <div class="form-group">
-                                    <label for="">Tanggal Kerja</label>
-                                    <input type="date" readonly  name="tanggal_kerja" value="<?=$work_date?>" class=" form-control no-border"  required>
-                                </div>
-                            </div>
-                            <div class="col-md-3 pb-0 d-none">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="">Jenis Overtime</label>
-                                        <div class="form-group">
-                                            <input readonly name="ot_type" type="text" value="<?=$type?>" class="form-control no-border"  required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2 pb-0 pl-1">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="">Shift Karyawan</label>
-                                        <div class="form-group">
-                                            <input type="text" readonly name="shift_request" value="<?=$shift_req?>" class="form-control no-border"  required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                       
-                            <div class="col-md-2 pr-1">
-                                <div class="form-group">
-                                    <label for="">Tanggal Mulai</label>
+                                <div id="accordion" role="tablist" aria-multiselectable="true" class="card-collapse">
                                     
-                                    <input type="date" readonly name="tanggal_mulai" value="<?=$in_date?>" class="form-control no-border"  required>
-                                </div>
-                            </div>
-                            <div class="col-md-2 pl-1">
-                                <div class="form-group">
-                                    <label for="">Waktu Mulai</label>
-                                    <input type="time" readonly   name="waktu_mulai" value="<?=jam($start_time)?>" class="form-control no-border" required>
-                                </div>
-                            </div>
-                            <div class="col-md-2 pr-1">
-                                <div class="form-group">
-                                    <label for="">Tanggal Selesai</label>
-                                    <input type="date" readonly    name="tanggal_selesai"  value="<?=$out_date?>" class=" form-control no-border"  required>
-                                </div>
-                            </div>
-                            <div class="col-md-2 pl-1">
-                                <div class="form-group">
-                                    <label for="">Waktu Selesai</label>
-                                    <input type="time" readonly   name="waktu_selesai" value="<?=jam($end_time)?>" class="form-control no-border"  required>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        <hr class="mt-0">
-                        <div class="row">
-                            <div class="col-md-2  pr-1 d-none">
-                                <label for="">Activity Code</label>
-                                <div class="form-group">
-                                    <input name="ot_code" type="text" readonly class="form-control no-border" value="<?=$kode_ot?>" required>
-                                        
-                                </div>
-                            </div>
-                            <div class="col-md-12 ">
-                                <h6 for="" class="title">Activity Detail :</h6>
-                                
                                     
-                                    <?php
-                                    $i = 0;
-                                    foreach($_GET['kode_ot'] AS $data){
-                                        $start_ = $_GET['start_time'][$i];
-                                        $end_ = $_GET['end_time'][$i];
                                         
-                                        ?>
+                                    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
                                         <div class="row">
-                                            <div class="col-md-1 pr-1">
-                                                <div class="form-group" >
-                                                    <input type="text" readonly name="code_activity<?=$i?>" id="code_activity<?=$i?>" class="form-control" value="<?=$data?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 pl-1 pr-1">
-                                                <div class="form-group">
-                                                    <input type="text"  readonly name="start_activity<?=$i?>" id="start_activity<?=$i?>" class="form-control"  value="<?=$start_?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-1  pr-1 text-center">
-                                                <p class="col-md-1   mt-2   text-muted ">
-                                                    <i class="fas fa-arrow-right px-0"></i>
-                                                </p>
-                                            </div>
-                                            <div class="col-md-2 pl-1 pr-1">
-                                                <div class="form-group">
-                                                    <input type="text" readonly name="end_activity<?=$i?>" id="end_activity<?=$i?>" class="form-control" value="<?=$end_?>">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 pl-1">
-                                                <div class="form-group">
-                                                    <input type="text" name="input_ot_activity<?=$i?>" id="input_ot_activity<?=$i?>" data-id="<?=$i?>" class="form-control input_ot_activity" >
-                                                </div>
-                                            </div>
+                                            <div class="col-md-12 mx-0">
+                                                <div class="table-responsive border">
+                                                    <table class="table border" rules="cols" >
+                                                        
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th style="width: 120px"><img style="width: 100px" src="../../assets/img/logo_daihatsu.png"></th>
+                                                                <th style="font-size: 25px" colspan="7">Surat Perintah Lembur</th>
+                                                                <th style="font-size: 25px; width: 120px"><?=date('Y')?></th>
 
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="py-1" colspan="9" style="height:2px"></td>
+                                                            </tr>
+                                                            <colgroup>
+                                                                <col style="width: 20px">
+                                                                <col style="width: 25px">
+                                                                <col style="width: 150px">
+                                                            </colgroup>
+                                                            <tr>
+                                                                <td class="py-0" colspan="2" style="height:50px">Group</td>
+                                                                <td class="py-0" style="height:50px">: <?=getOrgName($link, $group,"group")?></td>
+                                                                <td class="p-0 text-muted" rowspan="4" colspan="5">
+                                                                <div class="table-responsive text-nowrap">
+                                                                    <table class="table p-0 m-0">
+                                                                        <tbody>
+                                                                        <?php
+                                                                            // kode lembur
+                                                                            $baris = 5;
+                                                                            $q_jobcode = "SELECT * FROM kode_lembur";
+                                                                            $s_jobcode = mysqli_query($link, $q_jobcode)or die(mysqli_error($link));
+                                                                            $jml_row = mysqli_num_rows($s_jobcode);
+                                                                            
+                                                                            $sisa_kolom = $jml_row % $baris; //sisa baris
+                                                                            if($sisa_kolom > 0){
+                                                                                $hasil_kolom = (($jml_row - $sisa_kolom)/$baris)+1;
+                                                                            }else{
+                                                                                $hasil_kolom = ( $jml_row / $baris);
+                                                                            }
+                                                                            
+                                                                            echo "<tr>";
+                                                                            
+                                                                            for($i=0; $i<$hasil_kolom; $i++){
+                                                                                echo "<td class=\"p-0 m-0\"><table class=\"table table-striped\">"
+                                                                                ?>
+                                                                                <colgroup>
+                                                                                    <col style="width: 50px">
+                                                                                    <col style="width: 200px">
+                                                                                
+                                                                                </colgroup>
+
+                                                                                <?php
+                                                                                echo "<thead class=\"p-0 mt-0\">";
+                                                                                echo "<th class=\"py-1 px-1\">Kode</th>";
+                                                                                echo "<th class=\"py-1 px-1\">Activity</th>";
+                                                                                echo "<tbody class=\"p-0 mt-0\">";
+                                                                                
+                                                                                $offset = $i * $baris;
+                                                                                $q_code = "SELECT * FROM kode_lembur LIMIT $offset , $baris";
+                                                                                $s_code = mysqli_query($link, $q_code)or die(mysqli_error($link));
+
+                                                                                for($hasilbaris=0; $hasilbaris<=$baris; $hasilbaris++){
+                                                                                    while($d_jobcode = mysqli_fetch_assoc($s_code)){
+                                                                                        echo "<tr>";
+                                                                                        echo "<td class=\"py-1 px-1\">".$d_jobcode['kode_lembur']."</td>";
+                                                                                        echo "<td class=\"py-1 px-1\">".$d_jobcode['nama']."</td>";
+                                                                                        echo "</tr>";
+                                                                                        
+                                                                                    }
+                                                                                }
+                                                                                if($sisa_kolom > 0 && $hasil_kolom == $i +1){
+                                                                                    $tambah = $baris - $sisa_kolom;
+                                                                                    for($tbh=0 ; $tbh<$tambah ; $tbh++){
+                                                                                        echo "<tr>";
+                                                                                        echo "<td class=\"py-1 px-1\"> -</td>";
+                                                                                        echo "<td class=\"py-1 px-1\"> -</td>";
+                                                                                        echo "</tr>";
+                                                                                    }
+                                                                                }
+                                                                                echo "</tbody></table></td>";
+                                                                            }
+                                                                            echo "</tr>";
+                                                                        ?>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                </td>
+                                                                <th class="py-0 text-center text-white bg-secondary " rowspan="3">
+                                                                    <?php
+                                                                    
+                                                                    foreach($_GET['kode_ot'] AS $kode_ot){
+                                                                        ?>
+                                                                        <h4 class="my-0"><?=$kode_ot?></h4>
+                                                                        <?php
+                                                                    }
+                                                                    ?>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="py-0" style="height:50px" colspan="2">Shift</td>
+                                                                <td class="py-0" style="height:50px" >: <?=$shift_req?></td>
+                                                                
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="py-0" style="height:50px" colspan="2">Department</td>
+                                                                <td class="py-0" style="height:50px" >: <?=getOrgName($link, $dept_account,"deptAcc")?></td>
+                                                                
+                                                            
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="py-0" colspan="2" style="height:50px" >Hari / Tanggal </td>
+                                                                <td class="py-0" style="height:50px" >: <?=hari($work_date)?>, <?=tgl($work_date)?></td>
+                                                                <td class="py-0 text-uppercase text-center" style="height:50px" >Kode</td>
+                                                            </tr>
+                                                            <!-- isi table form -->
+                                                            <!-- <tr>
+                                                                <td class="py-1" colspan="9" style="border: 1px solid black; height:2px"></td>
+                                                            </tr> -->
+                                                            
+                                                        </tbody>
+                                                        
+                                                    
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <?php
-                                        $i++;
-                                    }
-                                    ?>
-<<<<<<< HEAD
+                                    </div>
+                                    <div class="card card-plain">
+                                        <div class="card-header" role="tab" id="headingOne">
+                                            <a data-toggle="collapse"  data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                
+                                                <i class="nc-icon nc-minimal-down btn btn-sm btn-primary btn-icon btn-round"></i>
+                                            </a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                            
+                                            <!-- input data -->
+                                            <div class="row">
+                        
+                                                <div class="col-md-12 mt-2">
+                                                    <h6 class="text-uppercase">Doc No : <?=$doc_no?></h6>
+                                                    <input type="hidden" value="<?=$doc_no?>" name="doc_code" >
+                                                    <input type="hidden" value="<?=count($_GET['kode_ot'])?>" name="total_activity" >
+                                                </div>
+                                            </div>
+                                            <hr class="mt-0">
+                                            <div class="row">
+                                            
+                                                <div class="col-md-2 pr-1">
+                                                    <div class="form-group">
+                                                        <label for="">Tanggal Kerja</label>
+                                                        <input type="date" readonly  name="tanggal_kerja" value="<?=$work_date?>" class=" form-control no-border"  required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 pb-0 d-none">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="">Jenis Overtime</label>
+                                                            <div class="form-group">
+                                                                <input readonly name="ot_type" type="text" value="<?=$type?>" class="form-control no-border"  required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 pb-0 pl-1">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="">Shift Karyawan</label>
+                                                            <div class="form-group">
+                                                                <input type="text" readonly name="shift_request" value="<?=$shift_req?>" class="form-control no-border"  required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>                       
+                                                <div class="col-md-2 pr-1">
+                                                    <div class="form-group">
+                                                        <label for="">Tanggal Mulai</label>
+                                                        
+                                                        <input type="date" readonly name="tanggal_mulai" value="<?=$in_date?>" class="form-control no-border"  required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 pl-1">
+                                                    <div class="form-group">
+                                                        <label for="">Waktu Mulai</label>
+                                                        <input type="time" readonly   name="waktu_mulai" value="<?=jam($start_time)?>" class="form-control no-border" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 pr-1">
+                                                    <div class="form-group">
+                                                        <label for="">Tanggal Selesai</label>
+                                                        <input type="date" readonly    name="tanggal_selesai"  value="<?=$out_date?>" class=" form-control no-border"  required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2 pl-1">
+                                                    <div class="form-group">
+                                                        <label for="">Waktu Selesai</label>
+                                                        <input type="time" readonly   name="waktu_selesai" value="<?=jam($end_time)?>" class="form-control no-border"  required>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <hr class="mt-0">
+                                            <div class="row">
+                                                <div class="col-md-2  pr-1 d-none">
+                                                    <label for="">Activity Code</label>
+                                                    <div class="form-group">
+                                                        <input name="ot_code" type="text" readonly class="form-control no-border" value="<?=$kode_ot?>" required>
+                                                            
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 ">
+                                                    <h6 for="" class="title">Activity Detail :</h6>
+                                                    
+                                                        
+                                                        <?php
+                                                        $i = 0;
+                                                        foreach($_GET['kode_ot'] AS $data){
+                                                            $start_ = $_GET['start_time'][$i];
+                                                            $end_ = $_GET['end_time'][$i];
+                                                            
+                                                            ?>
+                                                            <div class="row">
+                                                                <div class="col-md-1 pr-1">
+                                                                    <div class="form-group" >
+                                                                        <input type="text" readonly name="code_activity<?=$i?>" id="code_activity<?=$i?>" class="form-control" value="<?=$data?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 pl-1 pr-1">
+                                                                    <div class="form-group">
+                                                                        <input type="text"  readonly name="start_activity<?=$i?>" id="start_activity<?=$i?>" class="form-control"  value="<?=$start_?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1  pr-1 text-center">
+                                                                    <p class="col-md-1   mt-2   text-muted ">
+                                                                        <i class="fas fa-arrow-right px-0"></i>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-md-2 pl-1 pr-1">
+                                                                    <div class="form-group">
+                                                                        <input type="text" readonly name="end_activity<?=$i?>" id="end_activity<?=$i?>" class="form-control" value="<?=$end_?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 pl-1">
+                                                                    <div class="form-group">
+                                                                        <input type="text" name="input_ot_activity<?=$i?>" id="input_ot_activity<?=$i?>" data-id="<?=$i?>" class="form-control input_ot_activity" >
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <?php
+                                                            $i++;
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- input data -->
+                                        </div>
+                                    </div>
                                 </div>
-=======
-                               
-                                
-                                    
->>>>>>> c49d0840bbd141772f086430a844f991a4b93ca9
                             </div>
                         </div>
+                        
+                        
+                        
                         
                     </div>
                 </div>
@@ -388,6 +410,12 @@ if(isset($_SESSION['user'])){
                         
                     </tr>
                 </thead>
+                <?php
+                $new_array = (array_count_values(($_GET['kode_ot']))); 
+                arsort($new_array);
+                $max = max($new_array);
+               
+                ?>
                 <tbody class="text-uppercase text-nowrap">
                     <?php
                     $sql_jml = mysqli_query($link, $queryMP)or die(mysqli_error($link));
@@ -411,57 +439,66 @@ if(isset($_SESSION['user'])){
                     $sql = mysqli_query($link, $queryMP.$addOrder.$addLimit)or die(mysqli_error($link));
                    
                                 // print_r($_GET['start_time'])."<br>";
-                                print_r($_GET['end_time'])."<br>";
+                                // print_r($_GET['end_time'])."<br>";
                                 $min_start = min($_GET['start_time']);
                                 $max_end = max($_GET['end_time']);
                                 // print_r($_GET['end_time'])."<br>";
 
-                    if(mysqli_num_rows($sql)>0){
-                        while($data = mysqli_fetch_assoc($sql)){
-                            $disabled = ($data['job_code'] != '')?"disabled":"";
-                            $mp = ($data['job_code'] != '')?"":"mp";
-                            $activity = ($data['activity'] != '')?$data['activity']:"";
-                            $job_code = ($data['job_code'] != '')?$data['job_code']:"";
-                            $text_activity = ($data['job_code'] != '')?'':"ot_activity";
-                            $start = ($data['start'] != '')?jam($data['start']):$min_start;
-                            $end = ($data['end'] != '')?jam($data['end']):$max_end;
-                            
-                            ?>
-                            <tr id="<?=$data['npk']?>" >
-                                <td class="td"><?=$no++?></td>
-                                <td class="td"><?=$data['npk']?></td>
-                                <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
-                                <td style="max-width:100px" class="text-truncate"><?=tgl($work_date)?></td>
-                                <td  class="text-truncate"><?=tgl($in_date)?></td>
-                                
-                                <td  class="text-truncate"><?=$start?></td>
-                                <td  class="text-truncate"><?=tgl($out_date)?></td>
-                                <td  class="text-truncate "><?=$end?></td>
-                                <td  class="text-truncate " style="width:300px"><?=$activity?>
-                                    <?php
-                                    $index = 0;
-                                    foreach($_GET['kode_ot'] AS $input_activity){
-                                        ?>
-                                            <span class="<?=$text_activity.$index?>"></span>
-                                        <?php
-                                        $index++;
-                                    }
-                                    ?>
-                                </td>
-                                <td  class="text-truncate text-right ">  </td>
-                                <td>
-                                    
-                                    <div class="form-check text-right <?=$disabled?>">
-                                        <label class="form-check-label ">
-                                            <input <?=$disabled?> class="form-check-input <?=$mp?> " name="checked[]" type="checkbox" value="<?=$data['npk']?>">
-                                            <span class="form-check-sign"></span>
-                                        </label>
-                                    </div>
-                                </td>
-                                
-                                
-                            </tr>
+                    if(mysqli_num_rows($sql)>0 ){
+                        if($max <= 1){
 
+                            while($data = mysqli_fetch_assoc($sql)){
+                                $disabled = ($data['job_code'] != '')?"disabled":"";
+                                $mp = ($data['job_code'] != '')?"":"mp";
+                                $activity = ($data['activity'] != '')?$data['activity']:"";
+                                $job_code = ($data['job_code'] != '')?$data['job_code']:"";
+                                $text_activity = ($data['job_code'] != '')?'':"ot_activity";
+                                $start = ($data['start'] != '')?jam($data['start']):$min_start;
+                                $end = ($data['end'] != '')?jam($data['end']):$max_end;
+                                
+                                ?>
+                                <tr id="<?=$data['npk']?>" >
+                                    <td class="td"><?=$no++?></td>
+                                    <td class="td"><?=$data['npk']?></td>
+                                    <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
+                                    <td style="max-width:100px" class="text-truncate"><?=tgl($work_date)?></td>
+                                    <td  class="text-truncate"><?=tgl($in_date)?></td>
+                                    
+                                    <td  class="text-truncate"><?=$start?></td>
+                                    <td  class="text-truncate"><?=tgl($out_date)?></td>
+                                    <td  class="text-truncate "><?=$end?></td>
+                                    <td  class="text-truncate " style="width:300px"><?=$activity?>
+                                        <?php
+                                        $index = 0;
+                                        foreach($_GET['kode_ot'] AS $input_activity){
+                                            ?>
+                                                <span class="<?=$text_activity.$index?>"></span>
+                                            <?php
+                                            $index++;
+                                        }
+                                        ?>
+                                    </td>
+                                    <td  class="text-truncate text-right ">  </td>
+                                    <td>
+                                        
+                                        <div class="form-check text-right <?=$disabled?>">
+                                            <label class="form-check-label ">
+                                                <input <?=$disabled?> class="form-check-input <?=$mp?> " name="checked[]" type="checkbox" value="<?=$data['npk']?>">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    
+                                    
+                                </tr>
+    
+                                <?php
+                            }
+                        }else{
+                            ?>
+                            <tr>
+                                <td colspan="14" class="text-center">Pastikan Activity Yang Anda Pilih Unik</td>
+                            </tr>
                             <?php
                         }
                     }else{

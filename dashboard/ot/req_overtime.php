@@ -519,7 +519,39 @@ if(isset($_SESSION['user'])){
         }
         $(document).on('click', '#inputActivity', function(a){
             a.preventDefault()
-            $('#modal_input_npk').modal('show');
+
+            var total_activity = $('.total_activity').val()
+            var kode_ot = [];
+            var start_time = [];
+            var end_time = [];
+            // ot data
+            for(let i = 1; i <= total_activity; i++){
+                
+                var data_kode_ot = $('#ot_code'+i).val();
+                var data_start_time = $('#start_time'+i).val();
+                var data_end_time = $('#end_time'+i).val();
+
+                kode_ot.push(data_kode_ot);
+                start_time.push(data_start_time);
+                end_time.push(data_end_time);
+            }
+
+            console.log(kode_ot);
+            if(kode_ot.includes('')){
+                Swal.fire({
+                    title: 'Kode Overtime Belum Diisi',
+                    text: "Pastikan Semua Data Telah Diinput",
+                    icon: 'error',
+                     timer: 2000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                })
+            }else{
+                 // console.log(data);
+                $('#modal_input_npk').modal('show');
+            }
+            
+           
         })
 
         $(document).on('keyup', '.input_ot_activity', function(){
@@ -771,14 +803,17 @@ if(isset($_SESSION['user'])){
     </script>
     <script>
         $(document).ready(function(){
-            function ot_code(){
-                var code = $('#ot_code').val();
-                $('#ot_code_display').text(code);
+            function ot_code(index_code){
+
+                
+                var code = $('#ot_code'+index_code).val();
+                $('#ot_code_display'+index_code).text(code);
                 // console.log(code)
             }
             ot_code()
-            $(document).on('change', '#ot_code', function(){
-                ot_code();
+            $(document).on('change', '.overtime_code', function(){
+                var index_code = $(this).attr('data-id');
+                ot_code(index_code);
             })
             $(document).on('click', '#allmp', function() {
                 if(this.checked){
@@ -881,8 +916,6 @@ if(isset($_SESSION['user'])){
         $(document).ready(function(){
             $('.view_data').click(function(){
                 var id = $(this).parents("tr").attr("id");
-                
-                
                 $.ajax({
                     url: 'ajax/view.php',	
                     method: 'post',
@@ -900,7 +933,6 @@ if(isset($_SESSION['user'])){
     $(document).on('keyup', '.data-npk',function(){
         
         var npk = $(this).val();
-        
         $.ajax({
             url: 'ajax/get_resource.php',
             method: 'get',

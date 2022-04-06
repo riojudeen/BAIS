@@ -153,11 +153,12 @@ for($i=1 ; $i <= $_GET['count']; $i++){
                             $readOnly_code = "";
                          }
                         ?>
-                        <select  name="ot_code" class="form-control no-border <?=$readOnly_code?> ot_code<?=$i?>" id="ot_code<?=$i?>" >
-                            <option value="" disabled>Kode Overtime</option>
+                        <select data-id="<?=$i?>" name="ot_code" class="form-control no-border overtime_code <?=$readOnly_code?> ot_code<?=$i?>" id="ot_code<?=$i?>" >
+                            <option value="" >Kode Overtime</option>
                             <?php
                             
                                 $query = mysqli_query($link, "SELECT * FROM kode_lembur")or die(mysqli_error($link));
+                                $a = 1;
                                 if(mysqli_num_rows($query) > 0){
                                     while($data=mysqli_fetch_assoc($query)){
                                         if($data['kode_lembur'] == "PROD" && $i == 1){
@@ -171,6 +172,7 @@ for($i=1 ; $i <= $_GET['count']; $i++){
                                         <option  <?=$selected?> value="<?=$data['kode_lembur']?>"><?=$data['nama']?></option>
                                         <?php
                                     }
+                                    $a++;
                                 }
                             ?>
                         </select>
