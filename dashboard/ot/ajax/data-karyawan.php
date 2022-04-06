@@ -189,7 +189,13 @@ if(isset($_SESSION['user'])){
                                 </div>
                                 </td>
                                 <th class="py-0 text-center text-white bg-secondary " rowspan="3">
-                                    <h4><?=$kode_ot?></h4>
+                                    <?php
+                                    foreach($_GET['kode_ot'] AS $kode_ot){
+                                        ?>
+                                        <h4 class="my-0"><?=$kode_ot?></h4>
+                                        <?php
+                                    }
+                                    ?>
                                 </th>
                             </tr>
                             <tr>
@@ -233,6 +239,7 @@ if(isset($_SESSION['user'])){
                             <div class="col-md-12">
                             <h6 class="text-uppercase">Doc No : <?=$doc_no?></h6>
                             <input type="hidden" value="<?=$doc_no?>" name="doc_code" >
+                            <input type="hidden" value="<?=count($_GET['kode_ot'])?>" name="total_activity" >
                             </div>
                         </div>
                         <hr class="mt-0">
@@ -302,15 +309,54 @@ if(isset($_SESSION['user'])){
                             </div>
                             <div class="col-md-12 ">
                                 <h6 for="" class="title">Activity Detail :</h6>
-                                <div class="form-group">
+                                
+                                    
                                     <?php
+                                    $i = 0;
                                     foreach($_GET['kode_ot'] AS $data){
+                                        $start_ = $_GET['start_time'][$i];
+                                        $end_ = $_GET['end_time'][$i];
+                                        
                                         ?>
-                                            <input type="text" max="50" min="5" name="ot_activity" id="ot_activity" class="form-control" >
+                                        <div class="row">
+                                            <div class="col-md-1 pr-1">
+                                                <div class="form-group" >
+                                                    <input type="text" readonly name="code_activity<?=$i?>" id="code_activity<?=$i?>" class="form-control" value="<?=$data?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 pl-1 pr-1">
+                                                <div class="form-group">
+                                                    <input type="text"  readonly name="start_activity<?=$i?>" id="start_activity<?=$i?>" class="form-control"  value="<?=$start_?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1  pr-1 text-center">
+                                                <p class="col-md-1   mt-2   text-muted ">
+                                                    <i class="fas fa-arrow-right px-0"></i>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-2 pl-1 pr-1">
+                                                <div class="form-group">
+                                                    <input type="text" readonly name="end_activity<?=$i?>" id="end_activity<?=$i?>" class="form-control" value="<?=$end_?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 pl-1">
+                                                <div class="form-group">
+                                                    <input type="text" name="input_ot_activity<?=$i?>" id="input_ot_activity<?=$i?>" data-id="<?=$i?>" class="form-control input_ot_activity" >
+                                                </div>
+                                            </div>
+
+                                        </div>
                                         <?php
+                                        $i++;
                                     }
                                     ?>
+<<<<<<< HEAD
                                 </div>
+=======
+                               
+                                
+                                    
+>>>>>>> c49d0840bbd141772f086430a844f991a4b93ca9
                             </div>
                         </div>
                         
@@ -363,7 +409,13 @@ if(isset($_SESSION['user'])){
                     $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
                 
                     $sql = mysqli_query($link, $queryMP.$addOrder.$addLimit)or die(mysqli_error($link));
-                    
+                   
+                                // print_r($_GET['start_time'])."<br>";
+                                print_r($_GET['end_time'])."<br>";
+                                $min_start = min($_GET['start_time']);
+                                $max_end = max($_GET['end_time']);
+                                // print_r($_GET['end_time'])."<br>";
+
                     if(mysqli_num_rows($sql)>0){
                         while($data = mysqli_fetch_assoc($sql)){
                             $disabled = ($data['job_code'] != '')?"disabled":"";
@@ -371,8 +423,8 @@ if(isset($_SESSION['user'])){
                             $activity = ($data['activity'] != '')?$data['activity']:"";
                             $job_code = ($data['job_code'] != '')?$data['job_code']:"";
                             $text_activity = ($data['job_code'] != '')?'':"ot_activity";
-                            $start = ($data['start'] != '')?jam($data['start']):$start_time;
-                            $end = ($data['end'] != '')?jam($data['end']):$end_time;
+                            $start = ($data['start'] != '')?jam($data['start']):$min_start;
+                            $end = ($data['end'] != '')?jam($data['end']):$max_end;
                             
                             ?>
                             <tr id="<?=$data['npk']?>" >
@@ -381,12 +433,24 @@ if(isset($_SESSION['user'])){
                                 <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
                                 <td style="max-width:100px" class="text-truncate"><?=tgl($work_date)?></td>
                                 <td  class="text-truncate"><?=tgl($in_date)?></td>
+                                
                                 <td  class="text-truncate"><?=$start?></td>
                                 <td  class="text-truncate"><?=tgl($out_date)?></td>
                                 <td  class="text-truncate "><?=$end?></td>
-                                <td  class="text-truncate <?=$text_activity?>" style="width:300px"><?=$activity?></td>
-                                <td  class="text-truncate text-right"><?=$job_code?></td>
+                                <td  class="text-truncate " style="width:300px"><?=$activity?>
+                                    <?php
+                                    $index = 0;
+                                    foreach($_GET['kode_ot'] AS $input_activity){
+                                        ?>
+                                            <span class="<?=$text_activity.$index?>"></span>
+                                        <?php
+                                        $index++;
+                                    }
+                                    ?>
+                                </td>
+                                <td  class="text-truncate text-right ">  </td>
                                 <td>
+                                    
                                     <div class="form-check text-right <?=$disabled?>">
                                         <label class="form-check-label ">
                                             <input <?=$disabled?> class="form-check-input <?=$mp?> " name="checked[]" type="checkbox" value="<?=$data['npk']?>">

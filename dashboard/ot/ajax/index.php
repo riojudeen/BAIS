@@ -242,7 +242,7 @@ if(isset($_GET['id'])){
                                                 <div class="row">
                                                     <div class="col-md-10 pr-1">
                                                         <div class="form-group">
-                                                            <input type="number" class="count_more form-control total_activity" value="2">
+                                                            <input type="number" class="count_more form-control total_activity" value="1">
                                                         </div>
 
                                                     </div>
@@ -283,7 +283,22 @@ if(isset($_GET['id'])){
                         </div>
                     </div>
                 </div>
-                
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link navigasi-konfirmasi konfirmasi-active active title" id="TL" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Detail</a>
+                        <a class="nav-item nav-link navigasi-konfirmasi title" id="M" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Bulk </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <hr class="mt-0">
+        <div class="row">
+            <div class="col-md-12">
                 <form class="table-responsive text-nowrap" method="POST" id="form_request">
                     <table class="table table-striped">
                         <thead>
@@ -370,6 +385,161 @@ if(isset($_GET['id'])){
                                         <div class="form-check text-right">
                                             <label class="form-check-label ">
                                                 <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                    
+                                
+                                </tr>
+
+                                <?php
+                            }
+                        }else{
+                            ?>
+                            <tr>
+                                <td colspan="14" class="text-center">Semua Berkas Telah Diajukan</td>
+                            </tr>
+                            <?php
+                        }
+                        
+                        ?>
+                        
+                    </tbody>
+                        <tfoot>
+                           
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="pagination ">
+                <?php
+                // echo $page."<br>";
+                // echo $jumlah_page."<br>";
+                // echo $jumlah_number."<br>";
+                // echo $start_number."<br>";
+                // echo $end_number."<br>";
+                if($page == 1){
+                    echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
+                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
+                } else {
+                    $link_prev = ($page > 1)? $page - 1 : 1;
+                    echo '<li class="page-item halaman" id="1"><a class="page-link" >First</a></li>';
+                    echo '<li class="page-item halaman" id="'.$link_prev.'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
+                }
+
+                for($i = $start_number; $i <= $end_number; $i++){
+                    $link_active = ($page == $i)? ' active page_active' : '';
+                    echo '<li class="page-item halaman '.$link_active.'" id="'.$i.'"><a class="page-link" >'.$i.'</a></li>';
+                }
+
+                if($page == $jumlah_page){
+                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                    echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
+                } else {
+                    $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
+                    echo '<li class="page-item halaman" id="'.$link_next.'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
+                    echo '<li class="page-item halaman" id="'.$jumlah_page.'"><a class="page-link" >Last</a></li>';
+                }
+                ?>
+                </ul>
+            </div>
+            <div class="col-md-6 text-right">
+                <div class="btn btn-sm btn-primary request_ot">Request</div>
+                <div class="btn btn-sm btn-danger del_ot">Delete</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="table-responsive text-nowrap" method="POST" id="form_request">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>NPK</th>
+                                <th>Nama</th>
+                                <th>Shift</th>
+                                <th>Group</th>
+                                <th>Administratif</th>
+                                <th>Tgl Kerja</th>
+                                <th colspan="2">Mulai</th>
+                                <th colspan="2">Selesai</th>
+                                <th>Activity</th>
+                                <th>Kode Job</th>
+                                <th>
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" id="allreq">
+                                        <span class="form-check-sign"></span>
+                                        </label>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-uppercase text-nowrap">
+                        <?php
+                        $sql_jml = mysqli_query($link, $queryMP)or die(mysqli_error($link));
+                        $total_records= mysqli_num_rows($sql_jml);
+                        // echo $total_records;
+
+                        $page = (isset($_GET['page']))? $_GET['page'] : 1;
+                        // echo $page;
+                        $limit = 100; 
+                        $limit_start = ($page - 1) * $limit;
+                        $no = $limit_start + 1;
+                        // echo $limit_start;
+                        $addOrder = " ORDER BY work_date DESC ";
+                        $addLimit = " LIMIT $limit_start, $limit";
+                        // $no = 1*$page;
+
+                        // pagin
+                        $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
+                        
+                        $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
+                        $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
+                        $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
+                        
+                    
+                        $sql_overtime = mysqli_query($link, $queryMP.$addLimit)or die(mysqli_error($link));
+                        
+                        if(mysqli_num_rows($sql_overtime)>0){
+                            while($data = mysqli_fetch_assoc($sql_overtime)){
+                                // $query_group = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
+                                // $group_ = mysqli_fetch_assoc($query_group);
+                                // $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
+                                // $deptAcc = mysqli_fetch_assoc($query_deptAcc);
+                                // $group = $group_['nama_org'];
+                                // $dept_acc = $deptAcc['nama_org'];
+                                // $start = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
+                                // $end = ($data['start'] == '00:00:00')? "-" : jam($data['end']);
+                                // $work_date = $data['work_date'];
+                                // $limit_date = tgl(date('Y-m-t', strtotime($data['work_date'])));
+                                // $str_date = strtotime($work_date);
+                                // $str_limit = strtotime($limit_date);
+                                // $today = date('Y-m-d');//harus diganti tanggal out kerja
+                                // $str_today = strtotime($today);
+                                
+                                ?>
+                                <td class="td"><?=$no++?></td>
+                                    <td class="td"><?=$data['npk']?></td>
+                                    <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
+                                    <td class="td"><?=$data['shift']?></td>
+                                    <td style="max-width:100px" class="text-truncate"></td>
+                                    <td class="td"></td>
+                                    <td class="td"></td>
+                                    <td class="td"></td>
+                                    <td class="td"></td>
+                                    <td class="td"></td>
+                                    <td class="td"></td>
+                                    <td class="td text-truncate" style="max-width:200px"></td>
+                                    <td class="td"></td>
+                                    <td class="td">
+                                        <div class="form-check text-right">
+                                            <label class="form-check-label ">
+                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="">
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
