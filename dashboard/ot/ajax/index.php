@@ -121,7 +121,7 @@ if(isset($_GET['id'])){
             view_req_ot.dept_account,
             view_req_ot.division,
             view_req_ot.plant
-            FROM view_req_ot ";
+            FROM view_req_ot";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -452,6 +452,8 @@ if(isset($_GET['id'])){
                 <div class="btn btn-sm btn-danger del_ot">Delete</div>
             </div>
         </div>
+        <?php
+        /*
         <div class="row">
             <div class="col-md-12">
                 <form class="table-responsive text-nowrap" method="POST" id="form_request">
@@ -481,7 +483,54 @@ if(isset($_GET['id'])){
                         </thead>
                         <tbody class="text-uppercase text-nowrap">
                         <?php
-                        $sql_jml = mysqli_query($link, $queryMP)or die(mysqli_error($link));
+
+                        $qry_ot_new = "SELECT  
+                            lembur._id AS id_ot,
+                            karyawan.npk AS npk,
+                            karyawan.nama AS nama,
+                            karyawan.shift AS shift,
+                            lembur.kode_lembur AS `ot_code`,
+                            lembur.requester AS `requester`,
+                            
+                            lembur.work_date AS work_date,
+                            lembur.in_date AS `in_date`,
+                            lembur.out_date AS `start`,
+                            lembur.max_out AS `out_date`,
+                            lembur.min_in AS `end`,
+                            lembur.kode_job AS `job_code`,
+                            lembur.aktifitas AS `activity`, 
+                            
+                            lembur.status_approve AS `status_approve`,
+                            lembur.status AS `status_progress`,
+                            lembur.tanggal_input AS `req_date`,
+                            org.sub_post AS sub_post,
+                            org.post AS post,
+                            org.grp AS grp,
+                            org.sect AS sect,
+                            org.dept AS dept,
+                            org.dept_account AS dept_account,
+                            org.division AS division,
+                            org.plant AS plant
+                            
+                        FROM (SELECT lembur._id,
+                                lembur.kode_lembur,
+                                lembur.requester,
+                                lembur.npk,
+                                lembur.work_date,
+                                lembur.in_date,
+                                lembur.out_date,
+                                max(lembur.out_lembur) AS max_out, 
+                                min(lembur.in_lembur) AS min_in,
+                                lembur.tanggal_input,
+                                lembur.status_approve, lembur.status ,
+                                    GROUP_CONCAT(aktifitas) AS aktifitas,
+                                    GROUP_CONCAT(kode_job) AS kode_job
+                                FROM lembur GROUP BY lembur.npk,lembur.work_date,lembur._id ) 
+                                AS lembur
+                        JOIN karyawan ON karyawan.npk = lembur.npk
+                        JOIN org ON org.npk = lembur.npk
+                        WHERE lembur.work_date = '2022-04-06' AND CONCAT(lembur.status_approve,lembur.status) IS NULL ";
+                        $sql_jml = mysqli_query($link, $qry_ot_new )or die(mysqli_error($link));
                         $total_records= mysqli_num_rows($sql_jml);
                         // echo $total_records;
 
@@ -503,7 +552,7 @@ if(isset($_GET['id'])){
                         $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
                         
                     
-                        $sql_overtime = mysqli_query($link, $queryMP.$addLimit)or die(mysqli_error($link));
+                        $sql_overtime = mysqli_query($link, $qry_ot_new.$addLimit)or die(mysqli_error($link));
                         
                         if(mysqli_num_rows($sql_overtime)>0){
                             while($data = mysqli_fetch_assoc($sql_overtime)){
@@ -529,13 +578,13 @@ if(isset($_GET['id'])){
                                     <td class="td"><?=$data['shift']?></td>
                                     <td style="max-width:100px" class="text-truncate"></td>
                                     <td class="td"></td>
-                                    <td class="td"></td>
-                                    <td class="td"></td>
-                                    <td class="td"></td>
-                                    <td class="td"></td>
-                                    <td class="td"></td>
-                                    <td class="td text-truncate" style="max-width:200px"></td>
-                                    <td class="td"></td>
+                                    <td class="td"><?=$data['work_date']?></td>
+                                    <td class="td"><?=$data['in_date']?></td>
+                                    <td class="td"><?=$data['start']?></td>
+                                    <td class="td"><?=$data['out_date']?></td>
+                                    <td class="td"><?=$data['end']?></td>
+                                    <td class="td text-truncate" style="max-width:200px"><?=$data['activity']?></td>
+                                    <td class="td"><?=$data['job_code']?></td>
                                     <td class="td">
                                         <div class="form-check text-right">
                                             <label class="form-check-label ">
@@ -607,7 +656,9 @@ if(isset($_GET['id'])){
                 <div class="btn btn-sm btn-danger del_ot">Delete</div>
             </div>
         </div>
+
         <?php
+        */
     }else if($_GET['id'] == 'approve'){
         
         $_GET['prog'] = '';
@@ -1488,6 +1539,9 @@ $(document).ready(function(){
             filterInput()
         })
         $('#ot_type').on('change', function(){
+            filterInput()
+        })
+        $('#work_date').on('change', function(){
             filterInput()
         })
         // filterInput()

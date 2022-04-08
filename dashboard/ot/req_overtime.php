@@ -536,24 +536,56 @@ if(isset($_SESSION['user'])){
                 end_time.push(data_end_time);
             }
 
-            console.log(kode_ot);
+            // console.log(kode_ot);
+            
             if(kode_ot.includes('')){
                 Swal.fire({
                     title: 'Kode Overtime Belum Diisi',
                     text: "Pastikan Semua Data Telah Diinput",
                     icon: 'error',
-                     timer: 2000,
+                    timer: 2000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                })
+            }else if(start_time.includes('') || start_time.includes('00:00')){
+                Swal.fire({
+                    title: 'Jam Mulai Belum Diisi / Salah',
+                    text: "Pastikan Jam Mulai Diisi dengan Benar",
+                    icon: 'error',
+                    timer: 2000,
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                })
+            }else if(end_time.includes('') || end_time.includes('00:00')){
+                Swal.fire({
+                    title: 'Jam Selesai Belum Diisi / Salah',
+                    text: "Pastikan Jam Selesai Diisi dengan Benar",
+                    icon: 'error',
+                    timer: 2000,
                     showCancelButton: false,
                     showConfirmButton: false,
                 })
             }else{
-                 // console.log(data);
+                // console.log(data);
+                
                 $('#modal_input_npk').modal('show');
             }
             
+            
            
         })
-
+        function hide_show(val){
+            if(val == 'show'){
+                $('.hide-show').text('hide')
+            }else{
+                $('.hide-show').text('show')
+            }
+        }
+        $(document).on('click', '.hide-show', function(){
+            var val = $(this).text();
+            hide_show(val)
+            
+        })
         $(document).on('keyup', '.input_ot_activity', function(){
             var id = $(this).attr('data-id');
             var data = $(this).val()
@@ -561,7 +593,7 @@ if(isset($_SESSION['user'])){
             if(index_before >= 0 ){
                 var val_before = $('#input_ot_activity'+index_before).val()
                 if(val_before != '' && data != ''){
-                    var plus = ' + ';
+                    var plus = ' , ';
                 }else{
                     var plus = '';
                 }

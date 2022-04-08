@@ -5,7 +5,7 @@ include("../../config/config.php");
 include("../../config/approval_system.php"); 
 include("../../config/schedule_system.php"); 
 //redirect ke halaman dashboard index jika sudah ada session
-$halaman = "Monitoring Kehadiran";
+$halaman = "Monitoring Overtime";
 if(isset($_SESSION['user'])){
     include_once("../header.php");
     $_SESSION['now'] = $tanggalSekarang = date('Y-m-d');

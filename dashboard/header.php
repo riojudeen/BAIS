@@ -201,28 +201,24 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
       // get_notif_data()
       window.setInterval(function () {
         get_notif_data()
-      }, 5000);
+      }, 1000);
       function get_notif_data(){
         $.ajax({
             type: 'GET',
             url: '<?=base_url()?>/dashboard/notif/index.php',
             success: function (data) {
               var obj = $.parseJSON(data);
+              console.log(obj)
               var total = obj.msg[0].jml;
               var ot = obj.data[0].ot;
               var at = obj.data[0].at;
               var inf = obj.data[0].info;
               if(total > 0){
                 $('#notif-all').text(total)
-                if(at > 0){
-                  $('#notif-app-ot').text(ot)
-                }
-                if(ot > 0){
-                  $('#notif-app-at').text(at)
-                }
-                if(inf > 0){
-                  $('#notif-gen-info').text(inf)
-                }
+                $('#notif-app-ot').text(ot)
+                $('#notif-app-at').text(at)
+                $('#notif-gen-info').text(inf)
+                
               }
             },
         }); 
@@ -939,7 +935,7 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
                     <span class="badge filter badge-primary" data-color="primary" id="notif-app-ot"></span>
                     </a>
                   </a>
-                  <a class="dropdown-item" href="#">New Info
+                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/administrasi/info.php">New Info
                     <span  class="badge filter badge-primary" data-color="primary" id="notif-gen-info"></span>
                     </a>
                   </a>

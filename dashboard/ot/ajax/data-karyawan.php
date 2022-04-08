@@ -112,7 +112,7 @@ if(isset($_SESSION['user'])){
                                     
                                     
                                         
-                                    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+                                    <div id="collapseOne" class="collapse " role="tabpanel" aria-labelledby="headingOne">
                                         <div class="row">
                                             <div class="col-md-12 mx-0">
                                                 <div class="table-responsive border">
@@ -243,136 +243,137 @@ if(isset($_SESSION['user'])){
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card card-plain">
-                                        <div class="card-header" role="tab" id="headingOne">
-                                            <a data-toggle="collapse"  data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                
-                                                <i class="nc-icon nc-minimal-down btn btn-sm btn-primary btn-icon btn-round"></i>
-                                            </a>
+                                    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingTwo">
+                                        
+                                        <!-- input data -->
+                                        <div class="row">
+                    
+                                            <div class="col-md-12 mt-2">
+                                                <h6 class="text-uppercase">Doc No : <?=$doc_no?></h6>
+                                                <input type="hidden" value="<?=$doc_no?>" name="doc_code" >
+                                                <input type="hidden" value="<?=count($_GET['kode_ot'])?>" name="total_activity" >
+                                            </div>
                                         </div>
-                                        <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            
-                                            <!-- input data -->
-                                            <div class="row">
-                        
-                                                <div class="col-md-12 mt-2">
-                                                    <h6 class="text-uppercase">Doc No : <?=$doc_no?></h6>
-                                                    <input type="hidden" value="<?=$doc_no?>" name="doc_code" >
-                                                    <input type="hidden" value="<?=count($_GET['kode_ot'])?>" name="total_activity" >
+                                        <hr class="mt-0">
+                                        <div class="row">
+                                        
+                                            <div class="col-md-2 pr-1">
+                                                <div class="form-group">
+                                                    <label for="">Tanggal Kerja</label>
+                                                    <input type="date" readonly  name="tanggal_kerja" value="<?=$work_date?>" class=" form-control no-border"  required>
                                                 </div>
                                             </div>
-                                            <hr class="mt-0">
-                                            <div class="row">
-                                            
-                                                <div class="col-md-2 pr-1">
-                                                    <div class="form-group">
-                                                        <label for="">Tanggal Kerja</label>
-                                                        <input type="date" readonly  name="tanggal_kerja" value="<?=$work_date?>" class=" form-control no-border"  required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 pb-0 d-none">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label for="">Jenis Overtime</label>
-                                                            <div class="form-group">
-                                                                <input readonly name="ot_type" type="text" value="<?=$type?>" class="form-control no-border"  required>
-                                                            </div>
+                                            <div class="col-md-3 pb-0 d-none">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="">Jenis Overtime</label>
+                                                        <div class="form-group">
+                                                            <input readonly name="ot_type" type="text" value="<?=$type?>" class="form-control no-border"  required>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-2 pb-0 pl-1">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label for="">Shift Karyawan</label>
-                                                            <div class="form-group">
-                                                                <input type="text" readonly name="shift_request" value="<?=$shift_req?>" class="form-control no-border"  required>
-                                                            </div>
+                                            </div>
+                                            <div class="col-md-2 pb-0 pl-1">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="">Shift Karyawan</label>
+                                                        <div class="form-group">
+                                                            <input type="text" readonly name="shift_request" value="<?=$shift_req?>" class="form-control no-border"  required>
                                                         </div>
                                                     </div>
-                                                </div>                       
-                                                <div class="col-md-2 pr-1">
-                                                    <div class="form-group">
-                                                        <label for="">Tanggal Mulai</label>
-                                                        
-                                                        <input type="date" readonly name="tanggal_mulai" value="<?=$in_date?>" class="form-control no-border"  required>
-                                                    </div>
                                                 </div>
-                                                <div class="col-md-2 pl-1">
-                                                    <div class="form-group">
-                                                        <label for="">Waktu Mulai</label>
-                                                        <input type="time" readonly   name="waktu_mulai" value="<?=jam($start_time)?>" class="form-control no-border" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 pr-1">
-                                                    <div class="form-group">
-                                                        <label for="">Tanggal Selesai</label>
-                                                        <input type="date" readonly    name="tanggal_selesai"  value="<?=$out_date?>" class=" form-control no-border"  required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2 pl-1">
-                                                    <div class="form-group">
-                                                        <label for="">Waktu Selesai</label>
-                                                        <input type="time" readonly   name="waktu_selesai" value="<?=jam($end_time)?>" class="form-control no-border"  required>
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                            <hr class="mt-0">
-                                            <div class="row">
-                                                <div class="col-md-2  pr-1 d-none">
-                                                    <label for="">Activity Code</label>
-                                                    <div class="form-group">
-                                                        <input name="ot_code" type="text" readonly class="form-control no-border" value="<?=$kode_ot?>" required>
-                                                            
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 ">
-                                                    <h6 for="" class="title">Activity Detail :</h6>
+                                            </div>                       
+                                            <div class="col-md-2 pr-1">
+                                                <div class="form-group">
+                                                    <label for="">Tanggal Mulai</label>
                                                     
-                                                        
-                                                        <?php
-                                                        $i = 0;
-                                                        foreach($_GET['kode_ot'] AS $data){
-                                                            $start_ = $_GET['start_time'][$i];
-                                                            $end_ = $_GET['end_time'][$i];
-                                                            
-                                                            ?>
-                                                            <div class="row">
-                                                                <div class="col-md-1 pr-1">
-                                                                    <div class="form-group" >
-                                                                        <input type="text" readonly name="code_activity<?=$i?>" id="code_activity<?=$i?>" class="form-control" value="<?=$data?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-2 pl-1 pr-1">
-                                                                    <div class="form-group">
-                                                                        <input type="text"  readonly name="start_activity<?=$i?>" id="start_activity<?=$i?>" class="form-control"  value="<?=$start_?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-1  pr-1 text-center">
-                                                                    <p class="col-md-1   mt-2   text-muted ">
-                                                                        <i class="fas fa-arrow-right px-0"></i>
-                                                                    </p>
-                                                                </div>
-                                                                <div class="col-md-2 pl-1 pr-1">
-                                                                    <div class="form-group">
-                                                                        <input type="text" readonly name="end_activity<?=$i?>" id="end_activity<?=$i?>" class="form-control" value="<?=$end_?>">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 pl-1">
-                                                                    <div class="form-group">
-                                                                        <input type="text" name="input_ot_activity<?=$i?>" id="input_ot_activity<?=$i?>" data-id="<?=$i?>" class="form-control input_ot_activity" >
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                            <?php
-                                                            $i++;
-                                                        }
-                                                        ?>
-                                                    </div>
+                                                    <input type="date" readonly name="tanggal_mulai" value="<?=$in_date?>" class="form-control no-border"  required>
                                                 </div>
                                             </div>
-                                            <!-- input data -->
+                                            <div class="col-md-2 pl-1">
+                                                <div class="form-group">
+                                                    <label for="">Waktu Mulai</label>
+                                                    <input type="time" readonly   name="waktu_mulai" value="<?=jam($start_time)?>" class="form-control no-border" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 pr-1">
+                                                <div class="form-group">
+                                                    <label for="">Tanggal Selesai</label>
+                                                    <input type="date" readonly    name="tanggal_selesai"  value="<?=$out_date?>" class=" form-control no-border"  required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2 pl-1">
+                                                <div class="form-group">
+                                                    <label for="">Waktu Selesai</label>
+                                                    <input type="time" readonly   name="waktu_selesai" value="<?=jam($end_time)?>" class="form-control no-border"  required>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <hr class="mt-0">
+                                        <div class="row">
+                                            <div class="col-md-2  pr-1 d-none">
+                                                <label for="">Activity Code</label>
+                                                <div class="form-group">
+                                                    <input name="ot_code" type="text" readonly class="form-control no-border" value="<?=$kode_ot?>" required>
+                                                        
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 ">
+                                                <h6 for="" class="title">Activity Detail :</h6>
+                                                <label for="" class="text-right">pastikan jam mulai dan jam selasai diinput dengan benar, jika tidak pengajuanmu berpoensi tidak akan diapprove!</label>
+                                                
+                                                    
+                                                    <?php
+                                                    $i = 0;
+                                                    foreach($_GET['kode_ot'] AS $data){
+                                                        $start_ = $_GET['start_time'][$i];
+                                                        $end_ = $_GET['end_time'][$i];
+                                                        
+                                                        ?>
+                                                        <div class="row">
+                                                            <div class="col-md-1 pr-1">
+                                                                <div class="form-group" >
+                                                                    <input type="text" readonly name="code_activity<?=$i?>" id="code_activity<?=$i?>" class="form-control" value="<?=$data?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2 pl-1 pr-1">
+                                                                <div class="form-group">
+                                                                    <input type="text"  readonly name="start_activity<?=$i?>" id="start_activity<?=$i?>" class="form-control"  value="<?=$start_?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-1  pr-1 text-center">
+                                                                <p class="col-md-1   mt-2   text-muted ">
+                                                                    <i class="fas fa-arrow-right px-0"></i>
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-md-2 pl-1 pr-1">
+                                                                <div class="form-group">
+                                                                    <input type="text" readonly name="end_activity<?=$i?>" id="end_activity<?=$i?>" class="form-control" value="<?=$end_?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 pl-1">
+                                                                <div class="form-group">
+                                                                    <input type="text" name="input_ot_activity<?=$i?>" id="input_ot_activity<?=$i?>" data-id="<?=$i?>" class="form-control input_ot_activity" >
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <?php
+                                                        $i++;
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- input data -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-right">
+                                            <a data-toggle="collapse" class="btn btn-sm btn-link hide-show"  data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                Hide
+                                            </a>
+
                                         </div>
                                     </div>
                                 </div>
