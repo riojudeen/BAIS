@@ -99,29 +99,7 @@ if(isset($_GET['id'])){
 
         // $query = "SELECT "
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_req_ot.id_ot,
-            view_req_ot.npk,
-            view_req_ot.nama,
-            view_req_ot.shift,
-            view_req_ot.ot_code,
-            view_req_ot.requester,
-            view_req_ot.in_date,
-            view_req_ot.work_date,
-            view_req_ot.start,
-            view_req_ot.out_date,
-            view_req_ot.end,
-            view_req_ot.job_code,
-            view_req_ot.activity,
-            view_req_ot.status_approve,
-            view_req_ot.status_progress,
-            view_req_ot.post,
-            view_req_ot.grp,
-            view_req_ot.sect,
-            view_req_ot.dept,
-            view_req_ot.dept_account,
-            view_req_ot.division,
-            view_req_ot.plant
-            FROM view_req_ot";
+        
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -137,7 +115,7 @@ if(isset($_GET['id'])){
         // list($status, $req_status) = pecahProg("$_GET[prog]");
         $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL ";
         $filterProg = "";
-        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
+        
         
 
         // data mp
@@ -290,168 +268,16 @@ if(isset($_GET['id'])){
             <div class="col-md-12">
                 <nav>
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link navigasi-konfirmasi konfirmasi-active active title" id="TL" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Detail</a>
-                        <a class="nav-item nav-link navigasi-konfirmasi title" id="M" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Bulk </a>
+                        <a class="nav-item nav-link navigasi-overtime overtime-active active title" id="EO" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Early Overtime / Lembur Awal</a>
+                        <a class="nav-item nav-link navigasi-overtime title" id="PO" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Post Overtime / Lembur Akhir</a>
                     </div>
                 </nav>
             </div>
         </div>
         <hr class="mt-0">
-        <div class="row">
-            <div class="col-md-12">
-                <form class="table-responsive text-nowrap" method="POST" id="form_request">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>NPK</th>
-                                <th>Nama</th>
-                                <th>Shift</th>
-                                <th>Group</th>
-                                <th>Administratif</th>
-                                <th>Tgl Kerja</th>
-                                <th colspan="2">Mulai</th>
-                                <th colspan="2">Selesai</th>
-                                <th>Activity</th>
-                                <th>Kode Job</th>
-                                <th>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" id="allreq">
-                                        <span class="form-check-sign"></span>
-                                        </label>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-uppercase text-nowrap">
-                        <?php
-                        $sql_jml = mysqli_query($link, $query_req_overtime)or die(mysqli_error($link));
-                        $total_records= mysqli_num_rows($sql_jml);
-                        // echo $total_records;
-
-                        $page = (isset($_GET['page']))? $_GET['page'] : 1;
-                        // echo $page;
-                        $limit = 100; 
-                        $limit_start = ($page - 1) * $limit;
-                        $no = $limit_start + 1;
-                        // echo $limit_start;
-                        $addOrder = " ORDER BY work_date DESC ";
-                        $addLimit = " LIMIT $limit_start, $limit";
-                        // $no = 1*$page;
-
-                        // pagin
-                        $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
-                        
-                        $jumlah_number = 1; //jumlah halaman ke kanan dan kiri dari halaman yang aktif
-                        $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
-                        $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
-                        
-                    
-                        $sql = mysqli_query($link, $query_req_overtime.$addOrder.$addLimit)or die(mysqli_error($link));
-                        
-                        if(mysqli_num_rows($sql)>0){
-                            while($data = mysqli_fetch_assoc($sql)){
-                                $query_group = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
-                                $group_ = mysqli_fetch_assoc($query_group);
-                                $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
-                                $deptAcc = mysqli_fetch_assoc($query_deptAcc);
-                                $group = $group_['nama_org'];
-                                $dept_acc = $deptAcc['nama_org'];
-                                $start = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
-                                $end = ($data['start'] == '00:00:00')? "-" : jam($data['end']);
-                                $work_date = $data['work_date'];
-                                $limit_date = tgl(date('Y-m-t', strtotime($data['work_date'])));
-                                $str_date = strtotime($work_date);
-                                $str_limit = strtotime($limit_date);
-                                $today = date('Y-m-d');//harus diganti tanggal out kerja
-                                $str_today = strtotime($today);
-                                
-                                ?>
-                                <td class="td"><?=$no++?></td>
-                                    <td class="td"><?=$data['npk']?></td>
-                                    <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
-                                    <td class="td"><?=$data['shift']?></td>
-                                    <td style="max-width:100px" class="text-truncate"><?=$group?></td>
-                                    <td class="td"><?=$dept_acc ?></td>
-                                    <td class="td"><?=tgl($data['work_date'])?></td>
-                                    <td class="td"><?=tgl($data['in_date'])?></td>
-                                    <td class="td"><?=$start?></td>
-                                    <td class="td"><?=$data['out_date']?></td>
-                                    <td class="td"><?=$end?></td>
-                                    <td class="td text-truncate" style="max-width:200px"><?=$data['activity']?></td>
-                                    <td class="td"><?=$data['job_code']?></td>
-                                    <td class="td">
-                                        <div class="form-check text-right">
-                                            <label class="form-check-label ">
-                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
-                                                <span class="form-check-sign"></span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                    
-                                
-                                </tr>
-
-                                <?php
-                            }
-                        }else{
-                            ?>
-                            <tr>
-                                <td colspan="14" class="text-center">Semua Berkas Telah Diajukan</td>
-                            </tr>
-                            <?php
-                        }
-                        
-                        ?>
-                        
-                    </tbody>
-                        <tfoot>
-                           
-                        </tfoot>
-                    </table>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <ul class="pagination ">
-                <?php
-                // echo $page."<br>";
-                // echo $jumlah_page."<br>";
-                // echo $jumlah_number."<br>";
-                // echo $start_number."<br>";
-                // echo $end_number."<br>";
-                if($page == 1){
-                    echo '<li class="page-item disabled"><a class="page-link" >First</a></li>';
-                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&laquo;</span></a></li>';
-                } else {
-                    $link_prev = ($page > 1)? $page - 1 : 1;
-                    echo '<li class="page-item halaman" id="1"><a class="page-link" >First</a></li>';
-                    echo '<li class="page-item halaman" id="'.$link_prev.'"><a class="page-link" href="#"><span aria-hidden="true">&laquo;</span></a></li>';
-                }
-
-                for($i = $start_number; $i <= $end_number; $i++){
-                    $link_active = ($page == $i)? ' active page_active' : '';
-                    echo '<li class="page-item halaman '.$link_active.'" id="'.$i.'"><a class="page-link" >'.$i.'</a></li>';
-                }
-
-                if($page == $jumlah_page){
-                    echo '<li class="page-item disabled"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
-                    echo '<li class="page-item disabled"><a class="page-link" >Last</a></li>';
-                } else {
-                    $link_next = ($page < $jumlah_page)? $page + 1 : $jumlah_page;
-                    echo '<li class="page-item halaman" id="'.$link_next.'"><a class="page-link" ><span aria-hidden="true">&raquo;</span></a></li>';
-                    echo '<li class="page-item halaman" id="'.$jumlah_page.'"><a class="page-link" >Last</a></li>';
-                }
-                ?>
-                </ul>
-            </div>
-            <div class="col-md-6 text-right">
-                <div class="btn btn-sm btn-primary request_ot">Request</div>
-                <div class="btn btn-sm btn-danger del_ot">Delete</div>
-            </div>
-        </div>
+            <form class="data-draft" method="POST" id="form_request">
+        
+            </form>
         <?php
         /*
         <div class="row">
@@ -659,6 +485,115 @@ if(isset($_GET['id'])){
 
         <?php
         */
+        ?>
+        <script>
+            $(document).ready(function(){
+                draft_Active()
+                $('.navigasi-overtime').on('click', function(){
+                    $('.navigasi-overtime').removeClass('overtime-active');
+                    $(this).addClass('overtime-active');
+                    draft_Active()
+                })
+                $(document).on('click', '.halaman', function(){
+                    var page = $(this).attr("id");
+                    draft_Active(page)
+                });
+                $(document).on('blur', '#cari', function(){
+                    draft_Active()
+                });
+                function draft_Active(page){
+                    var div_id = $('#s_div').val();
+                    var dept_id = $('#s_dept').val();
+                    var section_id = $('#s_section').val();
+                    var group_id = $('#s_goupfrm').val();
+                    var deptAcc_id = $('#s_deptAcc').val();
+                    var shift = $('#s_shift').val();
+                    
+                    var cari = $('#cari').val();
+                    
+                    var conf = $('.overtime-active').attr('id');
+                    var id = $('.data-active').attr('data-id');
+                    var start = $('#startDate').val();
+                    var end = $('#endDate').val();
+                    $.ajax({
+                        url:"ajax/data-draft.php",
+                        method:"GET",
+                        data:{conf:conf, page:page,cari:cari,id:id,start:start,end:end,div:div_id,dept:dept_id,sect:section_id,group:group_id,deptAcc:deptAcc_id,shift:shift,filter:'yes'},
+                        success:function(data){
+                            $('.data-draft').fadeOut('fast', function(){
+                                $(this).html(data).fadeIn('fast');
+                            });
+                            // $('#data-monitoring').html(data)
+                        }
+                    })
+                }
+                $('#modal_input_npk').on('hidden.bs.modal', function (event) {
+                    draft_Active()
+                })
+                $(document).on('click', '.del_ot', function(e){
+                    e.preventDefault();
+                    var getLink = 'proses-req.php?del_req=1';
+                    var form = $('#form_request').serialize()
+                    var page = $('.page_active').attr('id')
+                    Swal.fire({
+                        title: 'Apakah Anda Yakin?',
+                        text: "draft pengajuan akan dihapus dan batal diajukan",
+                        icon: false,
+                        showCancelButton: true,
+                        confirmButtonColor: '#CB4335',
+                        cancelButtonColor: '#B2BABB',
+                        confirmButtonText: 'Delete!'
+                    }).then((result) => {
+                        if (result.value) {
+                            // console.log(form)
+                        
+                            $.ajax({
+                                url:getLink,
+                                method:"POST",
+                                data:form,
+                                success:function(data){
+                                    $('.notifikasi').html(data);
+                                    draft_Active(page)
+                                }
+                            })
+                        }
+                    })
+                
+                });
+                $(document).on('click', '.request_ot', function(e){
+                    e.preventDefault();
+                    var getLink = 'proses-req.php?ot_req=1';
+                    var form = $('#form_request').serialize()
+                    var page = $('.page_active').attr('id')
+                    Swal.fire({
+                        title: 'Ajukan Sekarang?',
+                        text: "draft pengajuan akan diajukan untuk disetujui dan diproses",
+                        icon: false,
+                        showCancelButton: true,
+                        confirmButtonColor: '#1ABC9C',
+                        cancelButtonColor: '#B2BABB',
+                        confirmButtonText: 'Request!'
+                    }).then((result) => {
+                        if (result.value) {
+                        
+                            $.ajax({
+                                url:getLink,
+                                method:"POST",
+                                data:form,
+                                success:function(data){
+                                    $('.notifikasi').html(data);
+                                    draft_Active(page)
+                                }
+                            })
+                        }
+                    })
+                
+                });
+            })
+        </script>
+
+        <?php
+        
     }else if($_GET['id'] == 'approve'){
         
         $_GET['prog'] = '';

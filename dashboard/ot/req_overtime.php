@@ -476,15 +476,7 @@ if(isset($_SESSION['user'])){
             var type = $('#ot_type').val();
             var text_area = $('textarea#text_input').val()
             var shift_req = $('#shift_request').val()
-            // var kode_ot = $('#ot_code').val();
-            // var start_time = $('#start_time').val();
-            // var end_time = $('#end_time').val();
-            // var in_date = $('#date_in_ot').val();
-            // var out_date = $('#date_out_ot').val();
-            // var work_date = $('#work_date').val();
-            // var type = $('#ot_type').val();
-            // var text_area = $('textarea#text_input').val()
-            // var shift_req = $('#shift_request').val()
+            
             $.ajax({
                 url:"ajax/data-karyawan.php",
                 method:"GET",
@@ -567,12 +559,8 @@ if(isset($_SESSION['user'])){
                 })
             }else{
                 // console.log(data);
-                
                 $('#modal_input_npk').modal('show');
             }
-            
-            
-           
         })
         function hide_show(val){
             if(val == 'show'){
@@ -609,6 +597,8 @@ if(isset($_SESSION['user'])){
         // $('#modal_input_npk').on('hidden.bs.modal', function (event) {
         //     dataActive()
         // })
+            
+            
         
 
 
@@ -634,11 +624,11 @@ if(isset($_SESSION['user'])){
             $(this).addClass('data-active');
             dataActive()
         });
-        $(document).on('click', '.halaman', function(){
-            var page = $(this).attr("id");
-            dataActive(page)
-            // console.log(hal)
-        });
+        // $(document).on('click', '.halaman', function(){
+        //     var page = $(this).attr("id");
+        //     dataActive(page)
+        //     // console.log(hal)
+        // });
         $(document).on('click', '.halaman_modal', function(){
             var page = $(this).attr("id");
             inputNpk(page)
@@ -708,12 +698,7 @@ if(isset($_SESSION['user'])){
         $('#s_section').on('change', function(){
             getGroup()
         })
-        $(document).on('blur', '#cari', function(a){
-            a.preventDefault()
-            // var cari = $(this).val()
-            dataActive()
-            // console.log(cari);
-        });
+        
         $('#filterGo').on('click', function(){
             dataActive();
             getSumary()
@@ -750,66 +735,6 @@ if(isset($_SESSION['user'])){
                             dataActive(page)
                             // getSumary()
                             success('Dihapus','data pengajuan telah dihapus, silakan ajukan kembali');
-                        }
-                    })
-                }
-            })
-        
-        });
-        // hapus SPL
-        $(document).on('click', '.del_ot', function(e){
-            e.preventDefault();
-            var getLink = 'proses-req.php?del_req=1';
-            var form = $('#form_request').serialize()
-            var page = $('.page_active').attr('id')
-            Swal.fire({
-                title: 'Apakah Anda Yakin?',
-                text: "draft pengajuan akan dihapus dan batal diajukan",
-                icon: false,
-                showCancelButton: true,
-                confirmButtonColor: '#CB4335',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Delete!'
-            }).then((result) => {
-                if (result.value) {
-                    // console.log(form)
-                   
-                    $.ajax({
-                        url:getLink,
-                        method:"POST",
-                        data:form,
-                        success:function(data){
-                            $('.notifikasi').html(data);
-                            dataActive(page)
-                        }
-                    })
-                }
-            })
-        
-        });
-        $(document).on('click', '.request_ot', function(e){
-            e.preventDefault();
-            var getLink = 'proses-req.php?ot_req=1';
-            var form = $('#form_request').serialize()
-            var page = $('.page_active').attr('id')
-            Swal.fire({
-                title: 'Ajukan Sekarang?',
-                text: "draft pengajuan akan diajukan untuk disetujui dan diproses",
-                icon: false,
-                showCancelButton: true,
-                confirmButtonColor: '#1ABC9C',
-                cancelButtonColor: '#B2BABB',
-                confirmButtonText: 'Request!'
-            }).then((result) => {
-                if (result.value) {
-                   
-                    $.ajax({
-                        url:getLink,
-                        method:"POST",
-                        data:form,
-                        success:function(data){
-                            $('.notifikasi').html(data);
-                            dataActive(page)
                         }
                     })
                 }

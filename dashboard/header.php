@@ -208,7 +208,7 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
             url: '<?=base_url()?>/dashboard/notif/index.php',
             success: function (data) {
               var obj = $.parseJSON(data);
-              console.log(obj)
+              // console.log(obj)
               var total = obj.msg[0].jml;
               var ot = obj.data[0].ot;
               var at = obj.data[0].at;

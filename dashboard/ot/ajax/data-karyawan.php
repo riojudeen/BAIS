@@ -293,7 +293,15 @@ if(isset($_SESSION['user'])){
                                             <div class="col-md-2 pl-1">
                                                 <div class="form-group">
                                                     <label for="">Waktu Mulai</label>
-                                                    <input type="time" readonly   name="waktu_mulai" value="<?=jam($start_time)?>" class="form-control no-border" required>
+                                                    <?php
+                                                    $new_start_time = (min(($_GET['start_time']))); 
+                                                    $new_end_time = (max(($_GET['end_time']))); 
+                                                    // arsort($new_array_start_time);
+                                                    // $start_ = min($new_array_start_time);
+                                                    // echo $start_;
+                                                    // print_r($new_start_time);
+                                                    ?>
+                                                    <input type="time" readonly   name="waktu_mulai" value="<?=jam($new_start_time)?>" class="form-control no-border" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-2 pr-1">
@@ -305,7 +313,7 @@ if(isset($_SESSION['user'])){
                                             <div class="col-md-2 pl-1">
                                                 <div class="form-group">
                                                     <label for="">Waktu Selesai</label>
-                                                    <input type="time" readonly   name="waktu_selesai" value="<?=jam($end_time)?>" class="form-control no-border"  required>
+                                                    <input type="time" readonly   name="waktu_selesai" value="<?=jam($new_end_time)?>" class="form-control no-border"  required>
                                                 </div>
                                             </div>
                                             

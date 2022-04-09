@@ -228,18 +228,29 @@ if(isset($_SESSION['user'])){
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_absen_hr.id_absensi,
-            view_absen_hr.npk,
-            view_absen_hr.nama,
-            view_absen_hr.employee_shift,
-            view_absen_hr.grp,
-            view_absen_hr.dept_account,
-            view_absen_hr.work_date,
-            view_absen_hr.check_in,
-            view_absen_hr.check_out,
-            view_absen_hr.CODE,
-            view_absen_hr.att_alias
-            FROM view_absen_hr ";
+        $origin_query = "SELECT view_req_ot.id_ot,
+            view_req_ot.npk,
+            view_req_ot.nama,
+            view_req_ot.shift,
+            view_req_ot.ot_code,
+            view_req_ot.requester,
+            view_req_ot.in_date,
+            view_req_ot.work_date,
+            view_req_ot.start,
+            view_req_ot.out_date,
+            view_req_ot.end,
+            view_req_ot.job_code,
+            view_req_ot.activity,
+            view_req_ot.status_approve,
+            view_req_ot.status_progress,
+            view_req_ot.post,
+            view_req_ot.grp,
+            view_req_ot.sect,
+            view_req_ot.dept,
+            view_req_ot.dept_account,
+            view_req_ot.division,
+            view_req_ot.plant
+            FROM view_req_ot_bulk";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -250,14 +261,21 @@ if(isset($_SESSION['user'])){
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
-        // view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL OR view_absen_hr.att_alias = '9'
+
+
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
-        // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
-        // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$filterProg;
-        // echo $query_req_absensi;
+        $filterSukses = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) = '100a' ";
+       
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterSukses;
+        
+        echo $query_req_overtime;
+
+        $total_nonProd = " AND job_code <> 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
+        $total_prod = " AND job_code = 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
+
+        
+        /*
         $addWFO = " AND att_alias = '1' ";
         $addTL = " AND att_alias = '2' ";
         $addT = " AND att_alias = '3' ";
@@ -356,6 +374,7 @@ if(isset($_SESSION['user'])){
         </div>
         
         <?php
+        */
     }else if($_GET['id'] == 'modal'){
         $_GET['prog'] = '';
         $data_filter = ($_GET['data'] != '')?" AND att_alias = '$_GET[data]' ":'';
