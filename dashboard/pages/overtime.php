@@ -116,6 +116,7 @@ if(isset($_SESSION['user'])){
     
     <script type="text/javascript">
         $(document).ready(function(){
+            
             function modalActive(data,page){
                 var id = 'modal';
                 var div_id = $('#s_div').val();
@@ -141,6 +142,7 @@ if(isset($_SESSION['user'])){
                 });
             }
             $(document).on('click','.view_data',function(e){
+                e.preventDefault()
                 var data = $(this).attr("id");
                 modalActive(data,'1')
                 

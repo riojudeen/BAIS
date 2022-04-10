@@ -243,13 +243,15 @@ for($i=1 ; $i <= $_GET['count']; $i++){
             var explode = start_val.split(':');
             var jam = Number(explode[0]);
             var menit = Number(explode[1]);
-            if(menit-1 < 0){
-                var jam_str = paddy(jam-1, 2);
-                var menit_str = paddy(60-1, 2);
-            }else{
-                var jam_str = paddy(jam, 2);
-                var menit_str = paddy(menit-1, 2);
-            }
+            // if(menit-1 < 0){
+            //     var jam_str = paddy(jam-1, 2);
+            //     var menit_str = paddy(60-1, 2);
+            // }else{
+            //     var jam_str = paddy(jam, 2);
+            //     var menit_str = paddy(menit-1, 2);
+            // }
+            var jam_str = paddy(jam, 2);
+            var menit_str = paddy(menit, 2);
             
             var before_end_val = jam_str+':'+menit_str
             var before_end = start-1;
@@ -268,13 +270,15 @@ for($i=1 ; $i <= $_GET['count']; $i++){
             var explode = end_val.split(':');
             var jam = Number(explode[0]);
             var menit = Number(explode[1]);
-            if(menit+1 > 60){
-                var jam_str = paddy(jam+1, 2);
-                var menit_str = paddy(0+1, 2);
-            }else{
-                var jam_str = paddy(jam, 2);
-                var menit_str = paddy(menit+1, 2);
-            }
+            // if(menit+1 > 60){
+            //     var jam_str = paddy(jam+1, 2);
+            //     var menit_str = paddy(0+1, 2);
+            // }else{
+            //     var jam_str = paddy(jam, 2);
+            //     var menit_str = paddy(menit+1, 2);
+            // }
+            var jam_str = paddy(jam, 2);
+            var menit_str = paddy(menit, 2);
             
             var next_start_val = jam_str+':'+menit_str
 

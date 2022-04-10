@@ -46,7 +46,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $requester = $npkUser;
             $tgl_input = date('Y-m-d');
             $query = " INSERT INTO lembur (`_id`,`kode_lembur`,`requester`,`npk`,`work_date`,`in_date`,
-            `out_date`,`in_lembur`,`out_lembur`,`kode_job`,`aktifitas`,`tanggal_input`) VALUES";
+            `out_date`,`in_lembur`,`out_lembur`,`kode_job`,`aktifitas`,`tanggal_input`, `over_time`) VALUES";
             
                 
                 for($i = 0 ; $i < $_POST['total_activity']; $i++){
@@ -54,11 +54,20 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                     $waktu_selesai = trim(mysqli_real_escape_string($link,$_POST['end_activity'.$i]));
                     $ot_activity = trim(mysqli_real_escape_string($link,$_POST['input_ot_activity'.$i]));
                     $ot_code = trim(mysqli_real_escape_string($link,$_POST['code_activity'.$i]));
+
+
+                    $str_start_ot = strtotime("$tanggal_mulai $waktu_mulai");
+                    $str_end_ot = strtotime("$tanggal_selesai $waktu_selesai");
+                    $menit_ot  = ($str_end_ot - $str_start_ot)/60;
+                    $menit_break = array_sum(break_time_ot($link, $shift_request, $work_date, $waktu_mulai, $waktu_selesai));
+                    $over_time = $menit_ot - $menit_break ;
+
+
                     for($index = 0; $index < count($_POST['checked']);$index++){
                         $npk_data = $_POST['checked'][$index];
                     
                         $query .= " ('$ot_type','$doc_code','$requester','$npk_data','$work_date','$tanggal_mulai','$tanggal_selesai',
-                        '$waktu_mulai','$waktu_selesai','$ot_code','$ot_activity','$tgl_input'),";
+                        '$waktu_mulai','$waktu_selesai','$ot_code','$ot_activity','$tgl_input',$over_time),";
                     }
                 }
             

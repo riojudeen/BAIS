@@ -1,5 +1,5 @@
 <?php
-include_once('config.php');
+// include_once('config.php');
 function strukturOrg($link, $part, $id_area){
     if($id_area != ''){
         if($part == 'pos'){

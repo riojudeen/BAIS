@@ -872,6 +872,7 @@ if(isset($_SESSION['user'])){
     <script type="text/javascript">
         $(document).ready(function(){
             $('.view_data').click(function(){
+            
                 var id = $(this).parents("tr").attr("id");
                 $.ajax({
                     url: 'ajax/view.php',	

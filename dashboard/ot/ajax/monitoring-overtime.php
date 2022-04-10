@@ -228,28 +228,30 @@ if(isset($_SESSION['user'])){
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_req_ot.id_ot,
-            view_req_ot.npk,
-            view_req_ot.nama,
-            view_req_ot.shift,
-            view_req_ot.ot_code,
-            view_req_ot.requester,
-            view_req_ot.in_date,
-            view_req_ot.work_date,
-            view_req_ot.start,
-            view_req_ot.out_date,
-            view_req_ot.end,
-            view_req_ot.job_code,
-            view_req_ot.activity,
-            view_req_ot.status_approve,
-            view_req_ot.status_progress,
-            view_req_ot.post,
-            view_req_ot.grp,
-            view_req_ot.sect,
-            view_req_ot.dept,
-            view_req_ot.dept_account,
-            view_req_ot.division,
-            view_req_ot.plant
+        $origin_query = "SELECT 
+            -- view_req_ot.id_ot,
+            -- view_req_ot.npk,
+            -- view_req_ot.nama,
+            -- view_req_ot.shift,
+            -- view_req_ot.ot_code,
+            -- view_req_ot.requester,
+            -- view_req_ot.in_date,
+            -- view_req_ot.work_date,
+            -- view_req_ot.start,
+            -- view_req_ot.out_date,
+            -- view_req_ot.end,
+            SUM(view_req_ot_bulk.over_time) AS 'jumlah'
+            -- view_req_ot.job_code,
+            -- view_req_ot.activity,
+            -- view_req_ot.status_approve,
+            -- view_req_ot.status_progress,
+            -- view_req_ot.post,
+            -- view_req_ot.grp,
+            -- view_req_ot.sect,
+            -- view_req_ot.dept,
+            -- view_req_ot.dept_account,
+            -- view_req_ot.division,
+            -- view_req_ot_bulk.plant
             FROM view_req_ot_bulk";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
@@ -265,16 +267,22 @@ if(isset($_SESSION['user'])){
 
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
-        $filterSukses = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) = '100a' ";
+        $filterSukses = " AND CONCAT(view_req_ot_bulk.status_approve, view_req_ot_bulk.status_progress) = '100a' ";
        
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterSukses;
         
-        echo $query_req_overtime;
+        // echo $query_req_overtime;
 
         $total_nonProd = " AND job_code <> 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
         $total_prod = " AND job_code = 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
-
+        $sql_nonProd = mysqli_query($link, $query_req_overtime.$total_nonProd)or die(mysqli_error($link));
+        $sql_prod = mysqli_query($link, $query_req_overtime.$total_prod)or die(mysqli_error($link));
         
+        $data_nonProd = mysqli_fetch_row($sql_nonProd);
+        $data_prod = mysqli_fetch_row($sql_prod);
+        $jml_nonProd = ($data_nonProd['0'] != '')?$data_nonProd['0']:0;
+        $jml_prod = ($data_prod['0'] != '')?$data_prod['0']:0;
+        $jml_tot = $jml_nonProd + $jml_prod;
         /*
         $addWFO = " AND att_alias = '1' ";
         $addTL = " AND att_alias = '2' ";
@@ -305,6 +313,7 @@ if(isset($_SESSION['user'])){
         $totalP = mysqli_num_rows($sql_p);
         $totalWFH = mysqli_num_rows($sql_wfh);
         $totalM = mysqli_num_rows($sql_m);
+        */
         ?>
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6">
@@ -320,12 +329,13 @@ if(isset($_SESSION['user'])){
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
                                     <p class="card-category text-white">Total Overtime</p>
-                                    <p class="card-title"><?=$totalWFO?> MP
+                                    <p class="card-title"><?=$jml_tot?> menit
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="1" ></a> 
+                                    
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="1" ></a> 
                     </div>
                 </div>
             </div>
@@ -341,12 +351,13 @@ if(isset($_SESSION['user'])){
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
                                     <p class="card-category text-white">Overtime Produksi</p>
-                                    <p class="card-title"><?=$totalTL?> MP
+                                    <p class="card-title"><?=$jml_prod?> menit
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="2" ></a> 
+                                     
                                 </div>
                             </div>
                         </div>
+                        <a href="" class="stretched-link view_data text-white" id="2" ></a>
                     </div>
                 </div>
             </div>
@@ -362,19 +373,19 @@ if(isset($_SESSION['user'])){
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
                                     <p class="card-category text-white">Overtime Non Produksi</p>
-                                    <p class="card-title"><?=$totalT?> MP
+                                    <p class="card-title"><?=$jml_nonProd?> menit
                                     <p>
-                                    <a class="stretched-link view_data text-white" id="3" ></a> 
+                                    
                                 </div>
                             </div>
                         </div>
+                        <a  href="" class="stretched-link view_data text-white" id="3" ></a> 
                     </div>
                 </div>
             </div>
         </div>
         
         <?php
-        */
     }else if($_GET['id'] == 'modal'){
         $_GET['prog'] = '';
         $data_filter = ($_GET['data'] != '')?" AND att_alias = '$_GET[data]' ":'';
@@ -384,9 +395,9 @@ if(isset($_SESSION['user'])){
         $end = dateToDB($_GET['end']);
         $today = (strtotime($end) >= strtotime(date('Y-m-d')))?date('Y-m-d'):$end;
 
-        $query_attAlias = mysqli_query($link, "SELECT `name` FROM attendance_alias WHERE id = '$_GET[data]' ")or die(mysqli_error($link));
-        $nama_ = mysqli_fetch_assoc($query_attAlias);
-        $nama = $nama_['name'];
+        // $query_attAlias = mysqli_query($link, "SELECT `name` FROM attendance_alias WHERE id = '$_GET[data]' ")or die(mysqli_error($link));
+        // $nama_ = mysqli_fetch_assoc($query_attAlias);
+        $nama = ($_GET['data'] == '1')?"Monitoring Total Overtime":(($_GET['data'] == '2')?"Montoring Overtime Produksi":(($_GET['data'] == '3')?"Monitoring Overtime Non Produksi":""));
         
         // echo $start;
         $div_filter = $_GET['div'];
@@ -406,18 +417,31 @@ if(isset($_SESSION['user'])){
         $level = $level;
         $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
-        $origin_query = "SELECT view_absen_hr.id_absensi,
-            view_absen_hr.npk,
-            view_absen_hr.nama,
-            view_absen_hr.employee_shift,
-            view_absen_hr.grp,
-            view_absen_hr.dept_account,
-            view_absen_hr.work_date,
-            view_absen_hr.check_in,
-            view_absen_hr.check_out,
-            view_absen_hr.CODE,
-            view_absen_hr.att_alias
-            FROM view_absen_hr ";
+        $origin_query = "SELECT 
+            view_req_ot_bulk.id_ot,
+            view_req_ot_bulk.npk,
+            view_req_ot_bulk.nama,
+            view_req_ot_bulk.shift,
+            view_req_ot_bulk.ot_code,
+            view_req_ot_bulk.requester,
+            view_req_ot_bulk.in_date,
+            view_req_ot_bulk.work_date,
+            view_req_ot_bulk.start,
+            view_req_ot_bulk.out_date,
+            view_req_ot_bulk.end,
+            view_req_ot_bulk.over_time,
+            view_req_ot_bulk.job_code,
+            view_req_ot_bulk.activity,
+            view_req_ot_bulk.status_approve,
+            view_req_ot_bulk.status_progress,
+            view_req_ot_bulk.post,
+            view_req_ot_bulk.grp,
+            view_req_ot_bulk.sect,
+            view_req_ot_bulk.dept,
+            view_req_ot_bulk.dept_account,
+            view_req_ot_bulk.division,
+            view_req_ot_bulk.plant
+            FROM view_req_ot_bulk";
         $access_org = orgAccess($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -428,14 +452,30 @@ if(isset($_SESSION['user'])){
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
-        // view_absen_hr.req_in IS NULL OR view_absen_hr.req_out IS NULL OR view_absen_hr.req_code IS NULL OR view_absen_hr.att_alias = '9'
+
+
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
-        // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$data_filter;
+        $filterSukses = " AND CONCAT(view_req_ot_bulk.status_approve, view_req_ot_bulk.status_progress) = '100a' ";
+        if($_GET['data'] == '1'){
+            $add_filter_type = "";
+        }else if($_GET['data'] == '2'){
+            $add_filter_type = "  AND job_code = 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
+        }else{
+            $add_filter_type = " AND job_code <> 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
+        }
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$add_filter_type.$filterSukses;
+        
+        // echo $query_req_overtime;
+
+        
+        $total_nonProd = " AND job_code <> 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
+        $total_prod = " AND job_code = 'PROD' AND (job_code IS NOT NULL OR job_code = '') ";
+        // $sql_nonProd = mysqli_query($link, $query_req_overtime.$total_nonProd)or die(mysqli_error($link));
+        // $sql_prod = mysqli_query($link, $query_req_overtime.$total_prod)or die(mysqli_error($link));
         
 
-        $sql_jml = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
+        $sql_jml = mysqli_query($link, $query_req_overtime)or die(mysqli_error($link));
         $total_records= mysqli_num_rows($sql_jml);
         // echo $total_records;
  
@@ -445,7 +485,7 @@ if(isset($_SESSION['user'])){
         $limit_start = ($page - 1) * $limit;
         $no = $limit_start + 1;
         // echo $limit_start;
-        $addOrder = " ORDER BY view_absen_hr.work_date DESC ";
+        $addOrder = " ORDER BY view_req_ot_bulk.work_date DESC ";
         $addLimit = " LIMIT $limit_start, $limit";
         // $no = 1*$page;
  
@@ -456,7 +496,7 @@ if(isset($_SESSION['user'])){
         $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
         $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
         
-        $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
+        $sql = mysqli_query($link, $query_req_overtime.$addOrder.$addLimit)or die(mysqli_error($link));
         ?>
             <!-- Modal -->
                     <div class="modal-header">
@@ -481,8 +521,9 @@ if(isset($_SESSION['user'])){
                                                 <th>Administratif</th>
                                                 <th>Tanggal</th>
                                                 <th>in</th>
-                                                <th>out</th>
-                                                <th>Ket</th>
+                                                <th>Mulai</th>
+                                                <th>Selesai</th>
+                                                <th colspan="2">Code</th>
                                             </tr>
                                         </thead>
                                         <tbody class="text-uppercase text-nowrap">
@@ -491,20 +532,23 @@ if(isset($_SESSION['user'])){
                                         if(mysqli_num_rows($sql) > 0){
         
                                             while($dataOT = mysqli_fetch_assoc($sql)){
-                                                $checkIn = ($dataOT['check_in'] == '00:00:00')?'':jam($dataOT['check_in']);
-                                                $checkOut = ($dataOT['check_out'] == '00:00:00')?'':jam($dataOT['check_out']);
+                                                $start = ($dataOT['start'] == '00:00:00')?'':jam($dataOT['start']);
+                                                $end = ($dataOT['end'] == '00:00:00')?'':jam($dataOT['end']);
+                                                $jenis_ot = ($dataOT['id_ot'] = 'EO')?"Overtime Awal":"Overtime Akhir";
                                                 ?>
                                                     <tr id="<?=$dataOT['id_absensi']?>" >
                                                     <td class="td"><?=$no++?></td>
                                                     <td class="td"><?=$dataOT['npk']?></td>
                                                     <td style="max-width:200px" class="text-truncate td"><?=$dataOT['nama']?></td>
-                                                    <td class="td"><?=$dataOT['employee_shift']?></td>
+                                                    <td class="td"><?=$dataOT['shift']?></td>
                                                     <td style="max-width:100px" class="text-truncate"><?=getOrgName($link,  $dataOT['grp'], "group")?></td>
                                                     <td class="td"><?=getOrgName($link, $dataOT['dept_account'], "deptAcc")?></td>
                                                     <td class="td"><?=tgl($dataOT['work_date'])?></td>
-                                                    <td class="td"><?=$checkIn?></td>
-                                                    <td class="td"><?=$checkOut?></td>
-                                                    <td class="td"><?=$dataOT['CODE']?></td>
+                                                    <td class="td"><?=$start?></td>
+                                                    <td class="td"><?=$end?></td>
+                                                    <td class="td"><?=$dataOT['activity']?></td>
+                                                    <td class="td"><?=$dataOT['job_code']?></td>
+                                                    <td class="td"><?=$jenis_ot?></td>
                                                 </tr>
         
                                                 <?php
@@ -667,7 +711,6 @@ if(isset($_SESSION['user'])){
         // echo $limit_start;
         $addOrder = " ORDER BY id_division, id_dept_account, id_dept, id_sect, id_grp, id_post_leader DESC ";
         $addLimit = " LIMIT $limit_start, $limit";
-        
         
         $jumlah_page = (ceil($total_records / $limit)<=0)?1:ceil($total_records / $limit);
         

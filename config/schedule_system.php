@@ -1,4 +1,84 @@
 <?php
+// function untuk get menit istirahat overtime
+include_once('config.php');
+function break_time_ot($link, $shift, $date, $start_ot, $end_ot){
+    $link = $link; //connection
+    // cek Working hours
+    $array_break = array();
+    $array_tot_break = array();
+    $cekWH = mysqli_query($link, "SELECT working_days.ket AS `ket`, working_days.break_id AS `break_id`, working_hours.id, working_hours.start AS `start`,  working_hours.end AS `end`
+        FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));
+    
+    if(mysqli_num_rows($cekWH)>0){
+        $data = mysqli_fetch_assoc($cekWH);
+        $waktuAwal = strtotime("$date $data[start]");
+        $waktuAkhir = strtotime("$date $data[end]"); // bisa juga waktu sekarang now()
+        $wb = $data['break_id']; //
+        // $ket = $data['ket']; // 
+
+        // $start_time = $data['start'];
+        // $end_time = $data['end'];
+
+        $query_break = "SELECT working_break.id AS 'id_break' , working_break.start_time AS 'break_start' , working_break.end_time AS 'break_end'
+        FROM working_break JOIN working_break_shift ON working_break_shift.id_working_break = working_break.id
+        WHERE working_break_shift.break_group_id = '$wb'";
+        $sql_break = mysqli_query($link, $query_break)or die(mysqli_error($link));
+        if(mysqli_num_rows($sql_break)>0){
+            while($data_break = mysqli_fetch_assoc($sql_break)){
+                $time_break = array(
+                    'start_break' => "$data_break[break_start]",
+                    'end_break' => "$data_break[break_end]"
+                );
+                array_push($array_break, $time_break);
+            }
+        }
+        if($waktuAwal > $waktuAkhir){
+            $tglini = ($date);
+            $sesudah = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+            
+            
+        }else{
+            $tglini = $date;
+            $sesudah = $date;
+        }
+
+        $str_start_ot = strtotime("$tglini $start_ot");
+        $str_end_ot = strtotime("$sesudah $end_ot");
+        $total_ot = ($str_end_ot - $str_start_ot)/60;
+        foreach($array_break AS $break => $val_break){
+            $str_start_break = strtotime("$tglini $val_break[start_break]");
+            $str_end_break = strtotime("$sesudah $val_break[end_break]");
+            $total_break = ($str_end_break-$str_start_break)/60;
+            if(($str_start_ot <= $str_start_break && $str_end_ot <= $str_start_break) || ($str_start_ot >= $str_end_break && $str_end_ot >= $str_end_break)){
+                $total_break_time = 0;
+                
+            }else if($str_start_ot >= $str_start_break && $str_end_ot <= $str_end_break){
+                
+                $total_break_time = $total_ot;
+            }else if($str_start_ot >= $str_start_break && $str_end_ot >= $str_end_break){
+                
+                $total_break_time = ($str_end_break - $str_end_ot)/60;
+            }else if($str_start_ot <= $str_start_break && $str_end_ot >= $str_end_break){
+
+                $total_break_time = $total_break;
+            }else if($str_start_ot <= $str_start_break && $str_end_ot <= $str_end_break){
+
+                $total_break_time = ($str_end_ot - $str_start_break)/60;
+            }
+            array_push($array_tot_break, $total_break_time);
+        }
+        
+    }
+    return $array_tot_break;
+    //get working break 
+
+}
+$shift = "N";
+$date = date('Y-m-d');
+$start_ot = '07:00';
+$end_ot = '17:00';
+// print_r(break_time_ot($link, $shift, $date, $start_ot, $end_ot));
+// echo array_sum(break_time_ot($link, $shift, $date, $start_ot, $end_ot));
 // function untuk dapat data date out
 function DateOut($date, $cin, $cout){
     if($date != '' && $cin != '' && $cout != ''){
