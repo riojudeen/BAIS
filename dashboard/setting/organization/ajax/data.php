@@ -232,7 +232,9 @@ if(isset($_SESSION['user'])){
                 $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
                 if($level > 5){
                     // jika administrator , dapat update semua karyawan , jika tidak hanya update rganisasi internal
-                    $queryMP = $queryMP." AND id_plant = '1' ";
+                    $substr = substr($queryMP, 0,-1);
+                    $queryMP = $substr." OR id_plant = '1' )";
+                    // echo $queryMP;
                 }else{
                     $queryMP = $queryMP;
                 }
@@ -274,11 +276,14 @@ if(isset($_SESSION['user'])){
                                 <?php
                                 // print_r($data_npk);
                                 if(count($data_npk)>0 ){
+                                    
                                     if($data_npk[0] != ''){
                                         $no = 1;
+                                        
                                         foreach($data_npk AS $npk){
+                                            // echo $npk;
                                             // $div_filter = $_GET['div'];
-
+                                            // echo $npk;
                                             $queryMP = $queryData." AND npk = '$npk'";
                                             $query = mysqli_query($link, $queryMP)or die(mysqli_error($link));
                                             $jml = mysqli_num_rows($query);
@@ -289,7 +294,8 @@ if(isset($_SESSION['user'])){
                                             // echo $id_area;
                                             $sql = mysqli_fetch_assoc($query);
                                             $data_nama = (isset($sql['nama']))?$sql['nama']:'';
-                                            $data_npk = (isset($sql['npk']))?$sql['npk']:'';
+                                            $data_npk_kary = (isset($sql['npk']))?$sql['npk']:'';
+                                            // echo $data_nama;
                                             $data_status = (isset($sql['status']))?$sql['status']:'';
                                             $data_jabatan = (isset($sql['jabatan']))?$sql['jabatan']:'';
                                             $data_tgl_masuk = (isset($sql['tgl_masuk']))?$sql['tgl_masuk']:'';
@@ -330,7 +336,7 @@ if(isset($_SESSION['user'])){
                                                 ?>
                                                 <tr>
                                                     <td><?=$no?></td>
-                                                    <td><?=$data_npk?></td>
+                                                    <td><?=$npk?></td>
                                                     <td><?=$data_nama?></td>
                                                     <td><?=$data_status?></td>
                                                     <td><?=$data_jabatan?></td>

@@ -104,7 +104,7 @@ include_once('../component/migration-nav.php');
                                         <label for="">Mode Upload</label>
                                         <select class="form-control" name="" id="">
                                             <option value="">Migrasi Absensi</option>
-                                            <option value="">Upload Progress</option>
+                                            <option value="">Migrasi Overtime</option>
                                         </select>
                                     </div>
                                 </div>

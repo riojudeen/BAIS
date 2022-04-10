@@ -70,7 +70,7 @@ if(isset($_SESSION['user'])){
                 if(mysqli_num_rows($qry_leave) > 0){
                     while($leave_aloc = mysqli_fetch_assoc($qry_leave)){
                         $attachment = (isset($leave_aloc))?(($leave_aloc['attachment']==0)?"NO":"YES"):"NO";
-                        $attachment_color = (isset($leave_aloc))?(($leave_aloc['attachment']==0)?"":"text-success"):"";
+                        $attachment_color = (isset($leave_aloc))?(($leave_aloc['attachment']==0)?"":"title"):"";
                         ?>
                         <tr class="<?=$attachment_color?>">
                             <td><?=$no++?></td>
