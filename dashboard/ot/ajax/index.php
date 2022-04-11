@@ -246,6 +246,86 @@ if(isset($_GET['id'])){
                     
                 </div>
                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger" role="alert">
+                            Selama masa testing untuk membantu pengecekan system pengajuan overtime, 
+                            mohon untuk mengupload juga dokumen SPL dengan format dan formulir yang telah disediakan. Terima Kasih!
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="collapse collapse-view show" id="tambah">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card shadow-none border  " style="background:rgba(241, 90, 15, 0.05)" >
+                                        <div class="card-body  mt-2">
+                                            <form method="get" action="">
+                                                <div class="row">
+                                                
+                                                    <div class="col-md-3 pr-1">
+                                                        <div class="form-group">
+                                                            <label for="">Tanggal Kerja</label>
+                                                            <input type="date" name="tanggal_kerja" value="<?=$today?>" class=" form-control no-border" id="work_date_upload" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3 pb-0">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label for="">Shift Karyawan</label>
+                                                                <div class="form-group">
+                                                                    <select name="shift_request" class="form-control no-border" id="shift_request_upload" required>
+                                                                        <?php
+                                                                            $sql_shift2 = mysqli_query($link, $q_group_shift)or die(mysqli_error($link));
+                                                                            if(mysqli_num_rows($sql_shift2)>0){
+                                                                                while($data = mysqli_fetch_assoc($sql_shift2)){
+                                                                                    ?>
+                                                                                    <option value="<?=$data['shift']?>"><?=$data['shift']?></option>
+                                                                                    <?php
+                                                                                }
+                                                                            }else{
+                                                                                ?>
+                                                                                <option value="">Belum Ada data Karyawan untuk shift <?=$shift?></option>
+                                                                                <?php
+                                                                            }
+                                                                        ?>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">
+                                                    
+                                                    <div class="fileinput fileinput-new text-center " data-provides="fileinput">
+                                                        <div class="fileinput-new thumbnail">
+                                                            
+                                                        </div>
+                                                        <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:300px">
+                                                            <input type="text" class="form-control mx-0">
+                                                        </div>
+                                                        <div >
+                                                            <span class="btn btn-sm btn-link btn-round btn-rose btn-file ">
+                                                            <span class="fileinput-new ">Select File</span>
+                                                            <span class="fileinput-exists">Change</span>
+                                                                <input type="file"  name="file_import" id="file_export"/>
+                                                            </span>
+                                                            <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
+                                                <a href="<?=base_url()?>/file/template/Format_upload_SPL.xlsx" type="button" class="btn btn-sm btn-link btn-info"><i class="fas fa-file-excel"></i> download format</a>
+                                                <button type="submit" class="btn btn-sm btn-info float-right" id="inputActivity">Upload</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <h6 class="col-md-6 title">Pengajuan Overtime</h6>
                     <div class="col-md-6">
                         <div class="mr-2 float-right order-3">

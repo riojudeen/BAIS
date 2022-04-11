@@ -346,7 +346,7 @@ if(isset($_SESSION['user'])){
                                                     <td class="text-right">
                                                         <div class="form-check text-right">
                                                             <label class="form-check-label">
-                                                                <input class="form-check-input <?=$check_class?>" <?=$check?> name="checked[]" value="<?=$data_npk?>" type="checkbox" data="<?=$no?>">
+                                                                <input class="form-check-input check" <?=$check?> name="checked[]" value="<?=$data_npk?>" type="checkbox" data="<?=$no?>">
                                                             <span class="form-check-sign"></span>
                                                             </label>
                                                         </div>
