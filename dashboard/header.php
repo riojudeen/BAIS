@@ -714,7 +714,7 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
                       </a>
                     </li>
                     
-                    <li class="menu " data-name="infoport" id="infoport">
+                    <li class="menu d-none" data-name="infoport" id="infoport">
                       <a href="<?=base_url()?>/dashboard/setting/portal.php">
                         <span class="sidebar-mini-icon">TP</span>
                         <span class="sidebar-normal"> Transfer Portal</span>
