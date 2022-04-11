@@ -78,7 +78,7 @@ if(isset($_SESSION['user'])){
         }
         
     }else if(isset($_POST['id_area_posting'])){
-
+        // echo "tes";
         $part_area =  $_POST['part_area_posting'];
         $id_area = $_POST['id_area_posting'];
         list($pos,$group,$section,$dept,$division,$plant,$dept_account)=strukturOrg($link, $part_area, $id_area);
