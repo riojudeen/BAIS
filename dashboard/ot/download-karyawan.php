@@ -7,6 +7,7 @@ require("../../_assets/vendor/autoload.php");
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if(isset($_SESSION['user'])){
+    $npk = $npkUser;
     if($_GET['export'] == "mp" ){
         $tanggal = date('d-M-y');
         $spreadsheet = new Spreadsheet();
@@ -83,7 +84,21 @@ if(isset($_SESSION['user'])){
                 $division = (!empty($data['division']))? $data['division'] : "-"; 
                 $company = $data['plant'];
                 
-    
+
+                // echo $npk."<br>";
+                // echo $nama."<br>";
+                // echo $status."<br>";
+                // echo $jabatan."<br>";
+                // echo $tgl_masuk."<br>";
+                // echo $shift."<br>";
+                // echo $pos_leader."<br>";
+                // echo $groupfrm."<br>";
+                // echo $section."<br>";
+                // echo $department."<br>";
+                // echo $dept_Account."<br>";
+                // echo $division."<br>";
+                // echo $company."<br>";
+                
                 $sheet->setCellValue('A'.$no, $i);
                 $sheet->setCellValue('B'.$no, $npk);
                 $sheet->setCellValue('C'.$no, $nama);
@@ -107,58 +122,58 @@ if(isset($_SESSION['user'])){
 
         }
         
-            //styling
-            $styleArray = [
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                    ],
+        //styling
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
                 ],
-            ];
-            $i = $i+1;
-            $sheet->getStyle('A1:T'.$i)->applyFromArray($styleArray);
-            $color = [
-                'fill' => [
-                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
-                    'rotation' => 90,
-                    'startColor' => [
-                        'argb' => 'FFE800',
-                    ],
-                    'endColor' => [
-                        'argb' => 'FFE800',
-                    ],
+            ],
+        ];
+        $i = $i+1;
+        $sheet->getStyle('A1:M'.$i)->applyFromArray($styleArray);
+        $color = [
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+                'rotation' => 90,
+                'startColor' => [
+                    'argb' => 'FFE800',
                 ],
-                'alignment' => [
-                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                'endColor' => [
+                    'argb' => 'FFE800',
                 ],
-                'font' => [
-                    'bold' => true,
-                    'size' => 12,
-                ],
-            ];
-            $sheet->getStyle('A1:T2')->applyFromArray($color);
-            //lebar kolom
-            $sheet->getColumnDimension('A')->setWidth(3);
-            $sheet->getColumnDimension('B')->setWidth(11);
-            $sheet->getColumnDimension('C')->setWidth(39);
-            $sheet->getColumnDimension('D')->setWidth(11);
-            $sheet->getColumnDimension('E')->setWidth(8);
-            $sheet->getColumnDimension('F')->setWidth(8);
-            $sheet->getColumnDimension('G')->setWidth(15);
-            $sheet->getColumnDimension('H')->setWidth(35);
-            $sheet->getColumnDimension('I')->setWidth(35);
-            $sheet->getColumnDimension('J')->setWidth(35);
-            $sheet->getColumnDimension('K')->setWidth(35);
-            $sheet->getColumnDimension('L')->setWidth(35);
-            $sheet->getColumnDimension('M')->setWidth(35);
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 12,
+            ],
+        ];
+        $sheet->getStyle('A1:M2')->applyFromArray($color);
+        //lebar kolom
+        $sheet->getColumnDimension('A')->setWidth(3);
+        $sheet->getColumnDimension('B')->setWidth(11);
+        $sheet->getColumnDimension('C')->setWidth(39);
+        $sheet->getColumnDimension('D')->setWidth(11);
+        $sheet->getColumnDimension('E')->setWidth(8);
+        $sheet->getColumnDimension('F')->setWidth(8);
+        $sheet->getColumnDimension('G')->setWidth(15);
+        $sheet->getColumnDimension('H')->setWidth(35);
+        $sheet->getColumnDimension('I')->setWidth(35);
+        $sheet->getColumnDimension('J')->setWidth(35);
+        $sheet->getColumnDimension('K')->setWidth(35);
+        $sheet->getColumnDimension('L')->setWidth(35);
+        $sheet->getColumnDimension('M')->setWidth(35);
+        
+        $sheet->mergeCells('A1:C1');
+        $sheet->mergeCells('D1:G1');
+        $sheet->mergeCells('H1:M1');
             
-            $sheet->mergeCells('A1:C1');
-            $sheet->mergeCells('D1:G1');
-            $sheet->mergeCells('H1:M1');
-                
-            //ketika diprint row 1 tetap muncul
-            $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
+        //ketika diprint row 1 tetap muncul
+        $sheet->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 1);
 
 
             
