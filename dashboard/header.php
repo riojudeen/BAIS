@@ -457,13 +457,13 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
                       </a>
                     </li>
                     <li class="menu" data-name="lisbl" id="lisbl">
-                      <a ><!---link halaman request edit MP--->
+                      <a href="<?=base_url()?>/dashboard/document/hospital.php?data=BL"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">BL</span>
                         <span class="sidebar-normal"> BlackListed Hospital </span>
                       </a>
                     </li>
                     <li class="menu" data-name="lisrc" id="lisrc">
-                      <a ><!---link halaman request edit MP--->
+                      <a href="<?=base_url()?>/dashboard/document/hospital.php?data=RH"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">RH</span>
                         <span class="sidebar-normal"> Recomended Hospital </span>
                       </a>

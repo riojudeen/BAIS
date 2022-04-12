@@ -887,6 +887,47 @@ if(isset($_SESSION['user'])){
         });
     </script>
     <script>
+        $(document).on('click', '#upload_ot', function(e){
+            e.preventDefault();
+            const file_import = $('#file_ot').prop('files')[0];
+            const getLink = 'proses-ot-upload.php';
+            let formData = new FormData();
+                formData.append('file_ot', file_import);
+                formData.append('group_ot_name', $('#group_ot_name').val());
+                formData.append('group_ot', $('#group_ot').val());
+                formData.append('shift_ot', $('#shift_ot').val());
+                formData.append('name_requester', $('#name_requester').val());
+                formData.append('tanggal_kerja_ot', $('#tanggal_kerja_ot').val());
+            console.log($('#att_type_upload').val())
+            Swal.fire({
+                title: 'Konfirmasi Pengiriman?',
+                text: "pastikan spl yang dikirim sudah benar !",
+                icon: false,
+                showCancelButton: true,
+                confirmButtonColor: '#1ABC9C',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Kirim!'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url:"proses-ot-upload.php",
+                        dataType: 'text',  // <-- what to expect back from the PHP script, if anything
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+
+                        method:"POST",
+                        data:formData,
+                        success:function(data){
+                            $('.notifikasi').html(data);
+                        }
+                    })
+                }
+            })
+        
+        });
+    </script>
+    <script>
     
     $(document).on('keyup', '.data-npk',function(){
         

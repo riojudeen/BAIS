@@ -829,8 +829,12 @@ function cutName($nama){
     return $singkatan."...";
 }
 function getFoto($npk){
+    $link = $GLOBALS['link'];
+    $query_dir = mysqli_query($link, "SELECT `root` FROM external_directory WHERE keterangan = 'FOTO' ")or die(mysqli_error($link));
+            $sql_dir = mysqli_fetch_assoc($query_dir);
+            $root_path = $sql_dir['root'];
     $path = "//adm-fs/HRD/HRD-Photo/".$npk.".jpg";
-    $newPath = "//adm-fs/BODY/BODY02/Body Plant/BAIS/employee-photo/".$npk.".jpg";
+    $newPath = "$root_path".$npk.".jpg";
     if(file_exists($newPath)){
         
         $type = pathinfo($path, PATHINFO_EXTENSION);

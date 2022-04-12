@@ -222,7 +222,6 @@ if(isset($_GET['id'])){
                                                         <div class="form-group">
                                                             <input type="number" class="count_more form-control total_activity" value="1">
                                                         </div>
-
                                                     </div>
                                                     <div class="col-md-2 text-right pl-1">
                                                         <button type="button" class="btn mt-0 btn-success btn-icon  add_more">
@@ -250,78 +249,7 @@ if(isset($_GET['id'])){
                         <div class="alert alert-danger" role="alert">
                             Selama masa testing untuk membantu pengecekan system pengajuan overtime, 
                             mohon untuk mengupload juga dokumen SPL dengan format dan formulir yang telah disediakan. Terima Kasih!
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="collapse collapse-view show" id="tambah">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card shadow-none border  " style="background:rgba(241, 90, 15, 0.05)" >
-                                        <div class="card-body  mt-2">
-                                            <form method="get" action="">
-                                                <div class="row">
-                                                
-                                                    <div class="col-md-3 pr-1">
-                                                        <div class="form-group">
-                                                            <label for="">Tanggal Kerja</label>
-                                                            <input type="date" name="tanggal_kerja" value="<?=$today?>" class=" form-control no-border" id="work_date_upload" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3 pb-0">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <label for="">Shift Karyawan</label>
-                                                                <div class="form-group">
-                                                                    <select name="shift_request" class="form-control no-border" id="shift_request_upload" required>
-                                                                        <?php
-                                                                            $sql_shift2 = mysqli_query($link, $q_group_shift)or die(mysqli_error($link));
-                                                                            if(mysqli_num_rows($sql_shift2)>0){
-                                                                                while($data = mysqli_fetch_assoc($sql_shift2)){
-                                                                                    ?>
-                                                                                    <option value="<?=$data['shift']?>"><?=$data['shift']?></option>
-                                                                                    <?php
-                                                                                }
-                                                                            }else{
-                                                                                ?>
-                                                                                <option value="">Belum Ada data Karyawan untuk shift <?=$shift?></option>
-                                                                                <?php
-                                                                            }
-                                                                        ?>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                </div>
-                                                <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">
-                                                    
-                                                    <div class="fileinput fileinput-new text-center " data-provides="fileinput">
-                                                        <div class="fileinput-new thumbnail">
-                                                            
-                                                        </div>
-                                                        <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:300px">
-                                                            <input type="text" class="form-control mx-0">
-                                                        </div>
-                                                        <div >
-                                                            <span class="btn btn-sm btn-link btn-round btn-rose btn-file ">
-                                                            <span class="fileinput-new ">Select File</span>
-                                                            <span class="fileinput-exists">Change</span>
-                                                                <input type="file"  name="file_import" id="file_export"/>
-                                                            </span>
-                                                            <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button type="reset" class="btn btn-sm btn-warning reset">Reset</button>
-                                                <a href="<?=base_url()?>/file/template/Format_upload_SPL.xlsx" type="button" class="btn btn-sm btn-link btn-info"><i class="fas fa-file-excel"></i> download format</a>
-                                                <button type="submit" class="btn btn-sm btn-info float-right" id="inputActivity">Upload</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
+                            <div class="btn btn-sm" data-toggle="modal" data-target="#modal_upload_ot">upload</div>
                         </div>
                     </div>
                 </div>
@@ -565,7 +493,133 @@ if(isset($_GET['id'])){
 
         <?php
         */
+
         ?>
+        <div class="modal fade" id="modal_upload_ot" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="row">
+                            <h5 class="modal-title text-left col-md-6" id="exampleModalLabel">Upload dokumen SPL</h5>
+                            <div class="col-md-6">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" id="form_upload" action="proses-ot-upload.php" enctype="multipart/form-data">
+                            <div class="row">
+                                <?php
+                                list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+                                $query_nama = mysqli_query($link, "SELECT npk, nama from karyawan WHERE npk = '$npk' ")or die(mysqli_error($link));
+                                $sql = mysqli_fetch_assoc($query_nama);
+                                if($group == ''){
+                                    if($sect == ''){
+                                        if($dept == ''){
+                                            $data_area = "";
+                                            $name_org = "";
+                                        }else{
+                                            $data_area = $dept;
+                                            $name_org = getOrgName($link, $data_area, "dept");
+                                        }
+                                    }else{
+                                        $data_area = $sect;
+                                        $name_org = getOrgName($link, $data_area, "section");
+                                    }
+                                }else{
+                                    $data_area = $group;
+                                    $name_org = getOrgName($link, $data_area, "group");
+                                }
+                                $data_nama = $sql['nama']."-".$npk;
+                                
+
+                                ?>
+                                <div class="col-md-3 pr-1 d-none">
+                                    <div class="form-group">
+                                        <input type="hidden" name="name_requester" id="name_requester" value="<?=$data_nama?>" class=" form-control no-border"  required readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label for="">Area</label>
+                                        <input type="text" name="group_ot_name" id="group_ot_name" value="<?=$name_org?>" class=" form-control no-border"  required readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label for="">Kode Area</label>
+                                        <input type="text" name="group_ot" id="group_ot" readonly value="<?=$dept?>" class=" form-control no-border" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pr-1">
+                                    <div class="form-group">
+                                        <label for="">Tanggal Kerja</label>
+                                        <input type="date" name="tanggal_kerja_ot" id="tanggal_kerja_ot" value="<?=$today?>" class=" form-control no-border"  required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pb-0">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="">Shift Karyawan</label>
+                                            <div class="form-group">
+                                                <select name="shift_ot" id="shift_ot" class="form-control no-border"  required>
+                                                    <?php
+                                                        $sql_shift2 = mysqli_query($link, $q_group_shift)or die(mysqli_error($link));
+                                                        if(mysqli_num_rows($sql_shift2)>0){
+                                                            while($data = mysqli_fetch_assoc($sql_shift2)){
+                                                                ?>
+                                                                <option value="<?=$data['shift']?>"><?=$data['shift']?></option>
+                                                                <?php
+                                                            }
+                                                        }else{
+                                                            ?>
+                                                            <option value="">Belum Ada data Karyawan untuk shift <?=$shift?></option>
+                                                            <?php
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group rounded py-auto text-center border" style="border:1px dashed rgba(255, 255, 255, 0.4);background:rgba(255, 255, 255, 0.3)">
+                                
+                                <div class="fileinput fileinput-new text-center " data-provides="fileinput">
+                                    <div class="fileinput-new thumbnail">
+                                        
+                                    </div>
+                                    <div class="fileinput-preview fileinput-exists thumbnail mt-4 mx-0" style="min-width:300px">
+                                        <input type="text" class="form-control mx-0">
+                                    </div>
+                                    <div >
+                                        <span class="btn btn-sm btn-link btn-round btn-rose btn-file ">
+                                        <span class="fileinput-new ">Select File</span>
+                                        <span class="fileinput-exists">Change</span>
+                                            <input type="file"  name="file_ot" id="file_ot"/>
+                                        </span>
+                                        <a  href="javascript:;" class="btn btn-danger btn-outline-danger btn-icon btn-round btn-rose btn-file fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="reset" class="btn btn-sm btn-warning ">Reset</button>
+                            <a href="<?=base_url()?>/file/template/Format_SPL_upload.xlsx" type="button" class="btn btn-sm btn-link btn-info"><i class="fas fa-file-excel"></i> download format</a>
+                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="upload_ot" >Upload</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <script>
             $(document).ready(function(){
                 draft_Active()
@@ -629,10 +683,11 @@ if(isset($_GET['id'])){
                         
                             $.ajax({
                                 url:getLink,
+                                
                                 method:"POST",
                                 data:form,
                                 success:function(data){
-                                    $('.notifikasi').html(data);
+                                    $('.info-upload').html(data);
                                     draft_Active(page)
                                 }
                             })
@@ -671,6 +726,8 @@ if(isset($_GET['id'])){
                 });
             })
         </script>
+        <!-- uploda file sementara -->
+        
 
         <?php
         

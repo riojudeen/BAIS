@@ -14,7 +14,10 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         $pecahtanggal = explode("-", $today);
         $extention = '.xls';
         $nama_file = $pecahtanggal[0].$pecahtanggal[1].$extention;
-        $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/".$nama_file;
+        $query_dir = mysqli_query($link, "SELECT `root` FROM external_directory WHERE keterangan = 'CICO' ")or die(mysqli_error($link));
+            $sql_dir = mysqli_fetch_assoc($query_dir);
+            $root_path = $sql_dir['root'];
+        $path = "$root_path".$nama_file;
         
         
         // echo $path;

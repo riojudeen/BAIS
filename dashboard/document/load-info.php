@@ -5,6 +5,10 @@ include("../../config/config.php");
 //redirect ke halaman dashboard index jika sudah ada session
 $halaman = "User Guide";
 if(isset($_SESSION['user'])){
+    $query_dir = mysqli_query($link, "SELECT `root` FROM external_directory WHERE keterangan = 'GUIDE' ")or die(mysqli_error($link));
+            $sql_dir = mysqli_fetch_assoc($query_dir);
+            $root_path = $sql_dir['root'];
+    $folder = $root_path;
     
     switch($_GET['data']){
         case "nav-start":
@@ -29,8 +33,11 @@ if(isset($_SESSION['user'])){
             $dir = 'Documents/';
             break;
     }
-    $folder = '//adm-fs/BODY/BODY02/Body Plant/BAIS/DOCUMENT/MANUALS/';
     $dir = $folder.$dir;
+    if(!file_exists($dir)){
+        mkdir($dir);
+    }
+    
     $getStart =$dir."Getting Started.ppsx";
     $files = array();
     $open    = opendir($dir) or die('Folder tidak ditemukan ...!');

@@ -14,7 +14,11 @@ require_once("../../../config/error.php");
             $image = $_FILES['file_import']['name'];
 
             $dir = $_FILES['file_import']['tmp_name']; //file upload
-            $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/";
+
+            $query_dir = mysqli_query($link, "SELECT `root` FROM external_directory WHERE keterangan = 'INFO' ")or die(mysqli_error($link));
+            $sql_dir = mysqli_fetch_assoc($query_dir);
+            $root_path = $sql_dir['root'];
+            $path = "$root_path";
             
             if (file_exists($path)){
                 // compress image
@@ -24,7 +28,7 @@ require_once("../../../config/error.php");
                 $ImageName      = preg_replace("/\.[^.\s]{3,4}$/", "", $ImageName);
                 $NewImageName   = str_replace(' ', '', $namaGambar.'.'.$ImageExt);
 
-                $newPath = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/$NewImageName"; //direktori penyimpanan
+                $newPath = "$root_path/$NewImageName"; //direktori penyimpanan
                 $source =  $dir;
                 $imgInfo = getimagesize($source); 
                 $mime = $imgInfo['mime'];  

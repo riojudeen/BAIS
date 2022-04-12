@@ -239,6 +239,7 @@ if(isset($_SESSION['user'])){
             </div>
         </div>
     </div>
+    <div class="notifikasi_upload"></div>
 
     <?php
     // include_once('hr_absensi.php');
@@ -249,6 +250,65 @@ if(isset($_SESSION['user'])){
     include_once("../footer.php");
 
     ?>
+    <script>
+        $(document).on('click', '#upload_ot', function(e){
+            e.preventDefault();
+            if($('#att_npk').val() != ''){
+
+                const file_import = $('#file_ot').prop('files')[0];
+                const getLink = 'proses-at-upload.php';
+                let formData = new FormData();
+                    formData.append('file_ot', file_import);
+                    formData.append('group_ot_name', $('#group_ot_name').val());
+                    formData.append('group_ot', $('#group_ot').val());
+                    formData.append('shift_ot', $('#shift_ot').val());
+                    formData.append('name_requester', $('#name_requester').val());
+                    formData.append('tanggal_kerja_ot', $('#tanggal_kerja_ot').val());
+                    formData.append('att_type_upload', $('#att_type_upload').val());
+                    formData.append('att_npk', $('#att_npk').val());
+                // console.log(file_import)
+                Swal.fire({
+                    title: 'Konfirmasi Pengiriman?',
+                    text: "pastikan dokumen pengajuan yang dikirim sudah benar !",
+                    icon: false,
+                    showCancelButton: true,
+                    confirmButtonColor: '#1ABC9C',
+                    cancelButtonColor: '#B2BABB',
+                    confirmButtonText: 'Kirim!'
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url:"proses-at-upload.php",
+                            dataType: 'text',  // <-- what to expect back from the PHP script, if anything
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+    
+                            method:"POST",
+                            data:formData,
+                            success:function(data){
+                                $('.notifikasi_upload').html(data);
+                            }
+                        })
+                    }
+                })
+            }else{
+                Swal.fire({
+                    title: 'Npk Belum Diisi',
+                    text: 'pastikan npk karyawan sudah diisi',
+                    timer: 2000,
+                    
+                    icon: 'warning',
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    confirmButtonColor: '#00B9FF',
+                    cancelButtonColor: '#B2BABB',
+                    
+                })
+            }
+        
+        });
+    </script>
     <script type="text/javascript">
     $(document).ready(function(){
         function getSumary(){

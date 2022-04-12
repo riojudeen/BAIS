@@ -231,7 +231,6 @@ if(isset($_SESSION['user'])){
             $('.upload-info').on('click', function(e){
                 e.preventDefault();
                 upload_data();
-                
             })
             function upload_data(){
                 const file_import = $('#file_import').prop('files')[0];
@@ -258,7 +257,6 @@ if(isset($_SESSION['user'])){
                     formData.append('title_info', $('#title_info').val());
                     formData.append('desc_info', desc);
                     console.log(desc);
-        
                     $.ajax({
                         type: 'POST',
                         url: "proses/prosesInfo.php",

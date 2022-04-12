@@ -7,7 +7,10 @@ $halaman = "Operational Guidance";
 if(isset($_SESSION['user'])){
 
     include("../header.php");
-    $dir = '//adm-fs/BODY/BODY02/Body Plant/BAIS/DOCUMENT/MANUALS/Welcome/';
+    $query_dir = mysqli_query($link, "SELECT `root` FROM external_directory WHERE keterangan = 'GUIDE' ")or die(mysqli_error($link));
+            $sql_dir = mysqli_fetch_assoc($query_dir);
+            $root_path = $sql_dir['root'];
+    $dir = $root_path;
     if(file_exists($dir)){
 
     $getStart =$dir."Getting Started.ppsx";
