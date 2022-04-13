@@ -468,7 +468,7 @@ if(isset($_SESSION['user'])){
                 end_time.push(data_end_time);
             }
 
-            console.log(kode_ot);
+            // console.log(kode_ot);
             var work_date = $('#work_date').val();
             var in_date = $('#date_in_ot').val();
             var out_date = $('#date_out_ot').val();
@@ -597,11 +597,6 @@ if(isset($_SESSION['user'])){
         // $('#modal_input_npk').on('hidden.bs.modal', function (event) {
         //     dataActive()
         // })
-            
-            
-        
-
-
 
         $(document).on('click','#create_ot', function(event){
             event.preventDefault();

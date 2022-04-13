@@ -1,7 +1,7 @@
 <?php
 ?>
     <div class="row">
-        <h5 class="card-title pull-left col-md-6" id="mainpage"><i class="fas fa-car "></i> Line Up Production</h5>
+        <h5 class="card-title text-left text-uppercase col-md-6" id="mainpage"><i class="fas fa-car "></i> Line Up Production</h5>
         <div class="col-md-6 text-right">
             <div class="dropleft ">
                 <button class="btn btn-sm btn-link btn-default btn-outline-default btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,21 +50,21 @@
                     $active = "";
                 }
                 ?>
-                <div class="col-lg-3 col-md-4 col-sm-12 datamodel " ">
-                    <div class="card <?=$tab_active?> shadow-none card-body model" style="max-width: 540px;" id="card<?=$dataModel['id']?>">
+                <div class="col-md-6 col-lg-3 col-sm-12 datamodel " ">
+                    <div class="card <?=$tab_active?> shadow-none card-body model card-plain rounded-lg" style="max-width: 540px;" id="card<?=$dataModel['id']?>">
                         <div class="row no-gutters " >
                             <div class="col-md-4">
                                 <img src="../../../assets/img/unit_model/<?=$dataModel['alias']?>.png" alt="...">
                             </div>
                             <div class="col-md-8 ">
                                 <div class="card-body my-0 py-0">
-                                    <h5 class="card-title py-0 my-0"><?=$dataModel['alias']?></h5>
+                                    <h5 class="card-title text-uppercase py-0 my-0"><?=$dataModel['alias']?></h5>
                                     <p class="card-text py-0 my-0 badge badge-sm badge-pill badge-info"><?=$dataModel['name']?></p>
 
                                     <p class="card-text"><?=$dataModel['nama_dept']?></p>
                                 </div>
                             </div>
-                            <a href="?model=<?=$dataModel['id']?>"  class="mb-0 stretched-link card-category text-right text-white mb-3 model view_data model<?=$dataModel['id']?> <?=$active?>" data-id="<?=$dataModel['alias']?> (<?=$dataModel['name']?>)" id="<?=$dataModel['id']?>"></a>
+                            <a  class="mb-0 stretched-link card-category text-right text-white mb-3 model view_data model<?=$dataModel['id']?> <?=$active?>" data-id="<?=$dataModel['alias']?> (<?=$dataModel['name']?>)" id="<?=$dataModel['id']?>"></a>
                         </div>
                         
                     </div>

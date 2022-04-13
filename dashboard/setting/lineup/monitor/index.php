@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 require_once("../../../../config/config.php"); 
 if(isset($_SESSION['user'])){
+  echo $_GET['model'];
 ?>
 
 <div class="table-hover table-responsive text-nowrap" >
@@ -22,8 +23,6 @@ if(isset($_SESSION['user'])){
             <?php
             $query = mysqli_query($link, "SELECT * FROM view_area_sumary WHERE id_prod_model = '$_GET[model]' AND shift_area = '$_GET[shift]'
             ")or die(mysqli_error($link));
-            
-            
             // $sql_data = mysqli_query($link, $query)or die(mysqli_error($link));
             if(mysqli_num_rows($query)>0){
                 $no = 1;

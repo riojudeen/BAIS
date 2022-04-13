@@ -117,8 +117,8 @@ if(isset($_SESSION['user'])){
             <div class="card">
                 <div class="card-body">
                     <div class="row ">
-                        <div class="col-md-3 col-sm-12 card" style="box-shadow: rgb(223, 220, 220) -5px 0.0px 20px -13px inset;">
-                            <div class="sticker">
+                        <div class="col-md-3 col-sm-12 " >
+                            <div class="">
 
                                 <h5 class="text-uppercase " id="department">Section</h5>
                                 <div class="list_section">
@@ -133,12 +133,7 @@ if(isset($_SESSION['user'])){
                                 </div>
                                 
                                 <div class="col-md-6 text-right">
-                                    <button class="btn btn-sm btn-link btn-primary tambah" disabled id="tambah_one" data-id="1">
-                                        Tambah data
-                                    </button>
-                                    <button class="btn btn-sm btn-link btn-primary tambah" disabled id="tambah_masal" data-id="2">
-                                        Upload Masal
-                                    </button>
+                                    
                                     <span class="dropdown dropleft">
                                         <button class="btn btn-sm btn-primary btn-icon btn-round" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fa fa-ellipsis-v"></i>
@@ -151,7 +146,12 @@ if(isset($_SESSION['user'])){
                                     </span>
                                 </div>
                             </div>
-                            <div class="tampil-data"></div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="tampil-data "></div>
+
+                                </div>
+                            </div>
                             
                         </div>
 
@@ -183,25 +183,101 @@ if(isset($_SESSION['user'])){
             
         });
         </script>
-        <script>
+        
+            <script>
+                $(document).ready(function(){
+                    data_active()
+                    $('.view_data').on('click' , function(e){
+                        e.preventDefault();
+                        var id = $(this).attr('id');
+                        $('.arrangement').removeClass("bg-warning");
+                        $('.view_data').removeClass("data-active");
+                        $('#card'+id).addClass('bg-warning');
+                        $('#'+id).addClass('data-active');
+                        data_active()
+                        
+                    });
+                    function data_active(){
+                        if($(".data-active")[0]){
+                            var id = $('.data-active').attr('id');
+                            $.ajax({
+                                url:"ajax/section.php",
+                                method:"GET",
+                                data:{id:id},
+                                success:function(data){
+                                    $('.list_section').fadeOut('fast', function(){
+                                        $(this).html(data).fadeIn('fast');
+                                        pilihSection()
+                                        
+                                    });
+                                    // $('#data-monitoring').html(data)
+                                }
+                            })
+                            // $('.list_section').load("ajax/section.php?id="+id);
+                            
+                        }
+                    }
+                    
+                    function pilihSection(){
+                        if($(".section-active")[0]){
+                            var name = $('.section-active').attr('data-name');
+                            $('#dept-title').text("Section "+name);
+                            // console.log(name)
+                            var id = $('.section-active').attr('id');
+                            var dept = $('.data-active').attr('id')
+                            $.ajax({
+                                url:"ajax/index.php",
+                                method:"GET",
+                                data:{section:id},
+                                success:function(data){
+                                    $('.tampil-data').html(data).fadeIn('fast');
+                                    // $('#data-monitoring').html(data)
+                                }
+                            })
+                            // $('.tampil-data').load("ajax/index.php?section="+id+"&dept="+dept);
+                        }
+                    }
+                    
+                    $(document).on('click', '.datasect',function(){
+                        var id = $(this).attr('data-id');
+                        // console.log(id)
+                        var dept = $('.data-active').attr('id')
+                        $('.group').addClass('d-none')
+                        $('.group'+id).removeClass('d-none')
+                        $('.datagroup').removeClass('active')
+                        $('.datagroup').removeClass('group-active')
+                        
+                        $('.datasect').removeClass('section-active')
+                        $(this).addClass('section-active')
+                        pilihSection()
+                    })
+                    $(document).on('click','.datagroup', function(){
+                        $('.datagroup').removeClass('group-active')
+                        $(this).addClass('group-active')
+                        get_group()
+                    })
+                    function get_group(){
+                        
+                        if($('.group-active')[0]){
+                            var name = $('.group-active').attr('data-name');
+                            $('#dept-title').text("Group "+name);
+                            var id = $('.group-active').attr('id');
+                            $.ajax({
+                                url:"ajax/index.php",
+                                method:"GET",
+                                data:{group:id},
+                                success:function(data){
+                                    $('.tampil-data').html(data).fadeIn('fast');
+                                    // $('#data-monitoring').html(data)
+                                }
+                            })
+                        }
+                    }
+                })
+            </script>
+        <!-- <script>
             $(document).ready(function(){
                 
-                $('.view_data').click(function(e){
-                    e.preventDefault();
-                    var name = $(this).attr('data-id');
-                    var id = $(this).attr('id');
-                    $('.arrangement').removeClass("bg-warning");
-                    $('.view_data').removeClass("data-active");
-                    $('#card'+id).addClass('bg-warning');
-                    $('#'+id).addClass('data-active');
-                    $('#dept-title').text(name);
-                    $('.list_section').load("ajax/section.php?id="+id);
-                });
-                
-            })
-        </script>
-        <script>
-            $(document).ready(function(){
                 if($(".data-active")[0]){
                     var id = $('.data-active').attr('id');
                     var title = $('.data-active').attr('data-id');
@@ -212,7 +288,7 @@ if(isset($_SESSION['user'])){
                 }
                 
             })
-        </script>
+        </script> -->
         
     <?php
     include_once("../../endbody.php"); 

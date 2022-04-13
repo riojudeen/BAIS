@@ -2,84 +2,88 @@
 ?>
 
  <div class="row rounded flex-row flex-nowrap overflow-auto img_holder" id="b">
-    
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        <div class="card card-stats bg-warning">
-            <div class="card-body "id="4">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-white">
-                            <span class="fa-stack" >
-                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                               
-                                <i class="fas fa-sitemap fa-stack-1x fa-inverse mt-1"></i>
-                            </span>
+    <div class="col-md-12">
+        <div class="owl-carousel">
+            <!-- <div class="col-lg-4 col-md-4 col-sm-12"> -->
+                <div class="card card-stats bg-warning">
+                    <div class="card-body "id="4">
+                        <div class="row">
+                            <div class="col-5 col-md-4">
+                                <div class="icon-big text-center icon-white">
+                                    <span class="fa-stack" >
+                                        <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                       
+                                        <i class="fas fa-sitemap fa-stack-1x fa-inverse mt-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-8">
+                                <div class="numbers ">
+                                    <p class="card-title text-white ">Functional<p>
+                                    <p class="card-category text-right text-white mb-3">Structure</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers ">
-                            <p class="card-title text-white ">Functional<p>
-                            <p class="card-category text-right text-white mb-3">Structure</p>
-                        </div>
-                    </div>
-                </div>
-                <a href="<?=base_url()?>/dashboard/setting/organization/" class="stretched-link card-category text-right text-white mb-3"></a>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        <div class="card card-stats bg-warning">
-            <div class="card-body " id="2">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-white">
-                            <span class="fa-stack" >
-                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i>
-                                <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
-                            </span>
-                    
-                        </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers ">
-                            <p class="card-title text-white ">Inline<p>
-                            <p class="card-category text-right text-white mb-3">production area</p>
-                        </div>
+                        <a href="<?=base_url()?>/dashboard/setting/organization/" class="stretched-link card-category text-right text-white mb-3"></a>
                     </div>
                 </div>
-                <a href="<?=base_url()?>/dashboard/setting/lineup/" class="stretched-link card-category text-right text-white mb-3"></a>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        <div class="card card-stats bg-warning">
-            <div class="card-body " id="3">
-                <div class="row">
-                    <div class="col-5 col-md-4">
-                        <div class="icon-big text-center icon-white">
-                            <span class="fa-stack" >
-                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                <i class="fas fa-hard-hat fa-stack-1x fa-inverse mt-1"></i>
-                            </span>
+            <!-- </div>
+            <div class="col-lg-4 col-md-4 col-sm-12"> -->
+                <div class="card card-stats bg-warning">
+                    <div class="card-body " id="2">
+                        <div class="row">
+                            <div class="col-5 col-md-4">
+                                <div class="icon-big text-center icon-white">
+                                    <span class="fa-stack" >
+                                        <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                        <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i>
+                                        <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                        <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
+                                    </span>
+                            
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-8">
+                                <div class="numbers ">
+                                    <p class="card-title text-white ">Inline<p>
+                                    <p class="card-category text-right text-white mb-3">production area</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-7 col-md-8">
-                        <div class="numbers ">
-                            <p class="card-title text-white ">Man Power<p>
-                            <p class="card-category text-right text-white mb-3">arrangement</p>
-                        </div>
+                        <a href="<?=base_url()?>/dashboard/setting/lineup/" class="stretched-link card-category text-right text-white mb-3"></a>
                     </div>
                 </div>
-                <a href="<?=base_url()?>/dashboard/setting/mp_arrangement/" class="stretched-link card-category text-right text-white mb-3"></a>
-            </div>
+            <!-- </div>
+            <div class="col-lg-4 col-md-4 col-sm-12"> -->
+                <div class="card card-stats bg-warning">
+                    <div class="card-body " id="3">
+                        <div class="row">
+                            <div class="col-5 col-md-4">
+                                <div class="icon-big text-center icon-white">
+                                    <span class="fa-stack" >
+                                        <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                        <i class="fas fa-hard-hat fa-stack-1x fa-inverse mt-1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-8">
+                                <div class="numbers ">
+                                    <p class="card-title text-white ">Man Power<p>
+                                    <p class="card-category text-right text-white mb-3">arrangement</p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="<?=base_url()?>/dashboard/setting/mp_arrangement/" class="stretched-link card-category text-right text-white mb-3"></a>
+                    </div>
+                </div>
+            <!-- </div> -->
+
         </div>
     </div>
     
 </div>
 
-<script>
+<!-- <script>
     var scroller = {};
     scroller.e = document.getElementById("b");
 
@@ -107,4 +111,25 @@
 
         return false;
     }
+</script> -->
+<script>
+    $(document).ready(function(){
+    var owl = $('.owl-carousel');
+        owl.owlCarousel({
+            items:3,
+            loop:true,
+            margin:30,
+            autoplay:false,
+            autoplayTimeout:3000,
+            autoplayHoverPause:true
+        });
+        owl.on('mousewheel', '.owl-stage', function (e) {
+            if (e.deltaY>0) {
+                owl.trigger('next.owl');
+            } else {
+                owl.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    });
 </script>

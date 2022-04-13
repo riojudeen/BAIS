@@ -534,58 +534,113 @@ if(isset($_SESSION['user'])){
     </script>
     <script>
         $(document).ready(function(){
-            $('#posModel').load('filter_data.php?posModel=');
+            function get_pos(){
+                $.ajax({
+                    url: 'filter_data.php',	
+                    method: 'GET',
+                    data:{posModel:""},		
+                    success:function(data){
+                        $('#posModel').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                })
+            }
+            function get_Line(){
+                var id = $('#posModel').val()
+                $.ajax({
+                    url: 'filter_data.php',	
+                    method: 'GET',
+                    data:{posLine:"",data:id},		
+                    success:function(data){
+                        $('#posLine').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                })
+            }
+            function get_Group(){
+                var posLine = $('#posLine').val()
+                var data = $('#posModel').val();
+                $.ajax({
+                    url: 'filter_data.php',	
+                    method: 'GET',
+                    data:{posLine:"",data:data},		
+                    success:function(data){
+                        $('#posGroup').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                })
+            }
+            function get_Type(){
 
-            // line
+                var data = $('#posGroup').val();
+                var posType = $('#posType').val()
+                // $('#posType').load('filter_data.php?posType='+posType+'&data='+data);
+                $.ajax({
+                    url: 'filter_data.php',	
+                    method: 'GET',
+                    data:{posType:"",data:data},	
+                    success:function(data){
+                        $('#posType').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                })
+            }
+            function get_Shift(){
+
+                var data = $('#posType').val();
+                var posType = $('#posType').val()
+                // $('#posType').load('filter_data.php?posType='+posType+'&data='+data);
+                $.ajax({
+                    url: 'filter_data.php',	
+                    method: 'GET',
+                    data:{posShift:"",data:data},	
+                    success:function(data){
+                        $('#posShift').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                })
+            }
+            get_pos()
             $('#posModel').change(function(){
                 var data = $(this).val();
-                $('#posLine').load('filter_data.php?posLine=&data='+data);
-            });
-            $('#posLine').click(function(){
-                var data = $('#posModel').val();
-                var posLine = $(this).val()
-                $('#posLine').load('filter_data.php?posLine='+posLine+'&data='+data);
+                get_Line()
+                get_Group()
+                get_Type()
+                get_Shift()
+                // $('#posLine').load('filter_data.php?posLine=&data='+data);
             });
             // group
             $('#posLine').change(function(){
-                var data = $(this).val();
-                $('#posGroup').load('filter_data.php?posGroup=&data='+data);
-            });
-            $('#posGroup').click(function(){
-                var data = $('#posLine').val();
-                var posGroup = $(this).val()
-                $('#posGroup').load('filter_data.php?posGroup='+posGroup+'&data='+data);
+                get_Group()
+                get_Type()
+                get_Shift()
             });
             // type
             $('#posGroup').change(function(){
-                var data = $(this).val();
-                console.log(data)
-                $('#posType').load('filter_data.php?posType=&data='+data);
-            });
-            $('#posType').click(function(){
-                var data = $('#posGroup').val();
-                var posType = $(this).val()
-                $('#posType').load('filter_data.php?posType='+posType+'&data='+data);
+                get_Type()
+                get_Shift()
             });
             // shift
             $('#posType').change(function(){
-                var data = $(this).val();
-                
-                $('#posShift').load('filter_data.php?posShift=&data='+data);
-            });
-            $('#posShift').click(function(){
-                var posShift = $(this).val()
-                var data = $('#posType').val();
-                $('#posShift').load('filter_data.php?posShift='+posShift+'&data='+data);
+                get_Shift()
             });
             // area produksi
+            function get_area(){
+                var shift = $('#posShift').val();
+                var type = $('#posType').val();
+                var group = $('#posGroup').val();
+                var line = $('#posLine').val();
+                var model = $('#posModel').val();
+                $.ajax({
+                    url: 'filter_data.php',	
+                    method: 'GET',
+                    data:{posAreaProd:"",shift:shift,type:type,group:group,line:line,model:model},
+                    success:function(data){
+                        $('#posAreaProd').html(data);
+                    }
+                })
+            }
             $('#posShift').change(function(){
                 var shift = $('#posShift').val();
                 var type = $('#posType').val();
                 var group = $('#posGroup').val();
                 var line = $('#posLine').val();
                 var model = $('#posModel').val();
-                
                 $('#posAreaProd').load('filter_data.php?posAreaProd=&shift='+shift+'&type='+type+'&group='+group+'&line='+line+'&model='+model);
             });
             $('#posAreaProd').click(function(){
@@ -595,7 +650,6 @@ if(isset($_SESSION['user'])){
                 var group = $('#posGroup').val();
                 var line = $('#posLine').val();
                 var model = $('#posModel').val();
-                
                 $('#posAreaProd').load('filter_data.php?posAreaProd='+posArea+'&shift='+shift+'&type='+type+'&group='+group+'&line='+line+'&model='+model);
             });
             
