@@ -680,7 +680,7 @@ if(isset($_SESSION['user'])){
             }
             get_pos()
             $('#posModel').change(function(){
-                var data = $(this).val();
+                // var data = $(this).val();
                 get_Line()
                 get_Group()
                 get_Type()
@@ -719,23 +719,9 @@ if(isset($_SESSION['user'])){
                 })
             }
             $('#posShift').change(function(){
-                var shift = $('#posShift').val();
-                var type = $('#posType').val();
-                var group = $('#posGroup').val();
-                var line = $('#posLine').val();
-                var model = $('#posModel').val();
-                $('#posAreaProd').load('filter_data.php?posAreaProd=&shift='+shift+'&type='+type+'&group='+group+'&line='+line+'&model='+model);
+                get_area()
             });
-            $('#posAreaProd').click(function(){
-                var posArea = $(this).val()
-                var shift = $('#posShift').val();
-                var type = $('#posType').val();
-                var group = $('#posGroup').val();
-                var line = $('#posLine').val();
-                var model = $('#posModel').val();
-                $('#posAreaProd').load('filter_data.php?posAreaProd='+posArea+'&shift='+shift+'&type='+type+'&group='+group+'&line='+line+'&model='+model);
-            });
-            
+           
         })
     </script>
     <script>
