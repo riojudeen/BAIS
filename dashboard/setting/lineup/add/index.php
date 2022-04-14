@@ -241,60 +241,60 @@ if(isset($_SESSION['user'])){
                                     <div class="card-body  mt-2">
                                         <form  action="" id="add-area" class="form-data">
                                             <div class="row">
-                                                <div class="col-md-5">
+                                                <div class="col-md-4 pr-1">
+                                                    <label for="">Division</label>
+                                                    <div class="form-group-sm" >
+                                                        <select required id="data_division" name="data_division" class="form-control data_division">
+                                                            <option value="">Pilih Division</option>
+                                                            <?php
+                                                            $q_div = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'division'")or die(mysqli_error($ink));
+                                                            if(mysqli_num_rows($q_div)>0){
+                                                                while($data = mysqli_fetch_assoc($q_div)){
+                                                                    ?>
+                                                                    <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
+                                                                    <?php
+                                                                }
+                                                            }else{
+                                                                ?>
+                                                                <option disabled>Belum ada data</option>
+
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 px-1">
                                                     <label for="">Department</label>
                                                     <div class="form-group-sm" >
                                                         <select required id="data_deptAccount" name="data_deptAccount" class="form-control data_deptAccount">
-                                                            <?php
-                                                            $q_group = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'deptAcc'")or die(mysqli_error($ink));
-                                                            if(mysqli_num_rows($q_group)>0){
-                                                                while($data = mysqli_fetch_assoc($q_group)){
-                                                                    ?>
-                                                                    <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
-                                                                    <?php
-                                                                }
-                                                            }else{
-                                                                ?>
-                                                                <option disabled>Belum ada data</option>
-
-                                                                <?php
-                                                            }
-                                                            ?>
+                                                            <option value="">Pilih Department</option>
                                                         </select>
                                                         
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label for="">Group</label>
-                                                    <div class="form-group-sm" >
-                                                        <select required id="data_group" name="data_group" class="form-control data_group">
-                                                            <?php
-                                                            $q_group = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'group'")or die(mysqli_error($ink));
-                                                            if(mysqli_num_rows($q_group)>0){
-                                                                while($data = mysqli_fetch_assoc($q_group)){
-                                                                    ?>
-                                                                    <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
-                                                                    <?php
-                                                                }
-                                                            }else{
-                                                                ?>
-                                                                <option disabled>Belum ada data</option>
-
-                                                                <?php
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                        
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <label for="">Nama Area</label>
-                                                    <div class="form-group-sm" style="background:rgba(255, 255, 255, 0.3)">
-                                                        <input required type="text" class="form-control data_area" name="data_area" id="data_area" placeholder="nama area produksi" autofocus/>
                                                     </div>
                                                 </div>
                                                 
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 pl-1">
+                                                    <label for="">Section</label>
+                                                    <div class="form-group-sm" >
+                                                        <select required id="data_section" name="data_section" class="form-control data_section">
+                                                            <option value="">Pilih Section</option>
+                                                        </select>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 pr-1">
+                                                    <label for="">Group</label>
+                                                    <div class="form-group-sm" >
+                                                        <select required id="data_group" name="data_group" class="form-control data_group">
+                                                            <option value="">Pilih Group</option>
+                                                        </select>
+                                                        
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-4 px-1">
                                                     <label for="">Shift</label>
                                                     <div class="form-group-sm" >
                                                         <select required id="data_shift" name="data_shift" class="form-control data_shift">
@@ -316,7 +316,7 @@ if(isset($_SESSION['user'])){
                                                         
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 pl-1">
                                                     <label for="">Type Produksi</label>
                                                     <div class="form-group-sm">
                                                         <select required name="typeData" id="typeData" name="typeData" class="form-control typeData">
@@ -338,7 +338,7 @@ if(isset($_SESSION['user'])){
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 pr-1">
                                                     <label for="">Line</label>
                                                     <div class="form-group-sm">
                                                         <select required name="lineData" id="lineData" name="lineData" class="form-control lineData">
@@ -360,6 +360,13 @@ if(isset($_SESSION['user'])){
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-8 pl-1">
+                                                    <label for="">Nama Area</label>
+                                                    <div class="form-group-sm" style="background:rgba(255, 255, 255, 0.3)">
+                                                        <input required type="text" class="form-control data_area" name="data_area" id="data_area" placeholder="nama area produksi" autofocus/>
+                                                    </div>
+                                                </div>
+                                                
                                             </div>
                                             
                                             <div class="row">
@@ -380,6 +387,66 @@ if(isset($_SESSION['user'])){
 
                                 </div>
                             </div>
+                            <!--  -->
+                            <script>
+                                $(document).ready(function(){
+                                    $('.data_division').on('change', function(){
+                                        filterDept()
+                                        filterSect()
+                                        filterGroup()
+                                    })
+                                    $('.data_deptAccount').on('change', function(){
+                                        filterSect()
+                                        filterGroup()
+                                    })
+                                    $('.data_section').on('change', function(){
+                                        filterGroup()
+                                    })
+                                    
+                                    function filterDept(){
+                                        var data = $('.data_division').val();
+                                        var area = "dept"
+                                        // console.log("ok");
+                                        $.ajax({
+                                            url: '../ajax/get_area.php',
+                                            type: 'GET',
+                                            data: {data:data, area:area},
+                                            success: function(data) {
+                                               $('.data_deptAccount').html(data)
+                                            }
+                                        });
+                                    }
+                                    
+                                    function filterSect(){
+                                        var data = $('.data_deptAccount').val();
+                                        var area = "section"
+                                        // console.log("ok");
+                                        $.ajax({
+                                            url: '../ajax/get_area.php',
+                                            type: 'GET',
+                                            data: {data:data, area:area},
+                                            success: function(data) {
+                                               $('.data_section').html(data)
+                                            }
+                                        });
+                                    }
+                                    function filterGroup(){
+                                        var data = $('.data_section').val();
+                                        var area = "group"
+                                        // console.log("ok");
+                                        $.ajax({
+                                            url: '../ajax/get_area.php',
+                                            type: 'GET',
+                                            data: {data:data, area:area},
+                                            success: function(data) {
+                                               $('.data_group').html(data)
+                                            }
+                                        });
+                                    }
+                                    
+                                })
+                            </script>
+                            <!--  -->
                             <div class="tab-pane " id="pos" role="tabpanel" aria-expanded="true">
                                 <h6>TAMBAH DATA</h6>
                                 
@@ -437,9 +504,6 @@ if(isset($_SESSION['user'])){
                                                         </select>
                                                     </div>
                                                 </div>
-                                                
-                                                
-                                                
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -513,11 +577,11 @@ if(isset($_SESSION['user'])){
                 loadAjax("data-pos","kelas","../ajax/model.php?tab=pos");
                 var id = $(this).attr('data-id');
                 // console.log(id);
-                $('.data_deptAcc').load('get_data.php?dept_account=');
+                // $('.data_deptAcc').load('get_data.php?dept_account=');
+                // $('.data_group').load('get_data.php?group=');
                 $('.modelData').load('get_data.php?model=');
                 $('.typeData').load('get_data.php?type=');
                 $('.lineData').load('get_data.php?line=');
-                $('.data_group').load('get_data.php?group=');
             })
         })
 
