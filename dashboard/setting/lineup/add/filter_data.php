@@ -8,6 +8,9 @@ if(isset($_SESSION['user'])){
     // $_GET['line'] = '';
     // $_GET['model'] = '';
     if(isset($_GET['posGroup'])){
+        ?>
+        <option value="">Pilih Group Foreman</option>
+        <?php
         $q_group = mysqli_query($link, "SELECT * FROM view_production_area WHERE id_line = '$_GET[data]' GROUP BY id_group ")or die(mysqli_error($ink));
         if(mysqli_num_rows($q_group)>0){
             while($data = mysqli_fetch_assoc($q_group)){
@@ -24,6 +27,9 @@ if(isset($_SESSION['user'])){
         }
     }else if(isset($_GET['posModel'])){
         $q_model = mysqli_query($link, "SELECT * FROM production_model WHERE stats = 'active'")or die(mysqli_error($ink));
+        ?>
+        <option value="">Pilih Model</option>
+        <?php
         if(mysqli_num_rows($q_model)>0){
             while($data = mysqli_fetch_assoc($q_model)){
                 $select = ($_GET['posModel'] == $data['id_model'])?"selected":"";
@@ -40,6 +46,9 @@ if(isset($_SESSION['user'])){
             <?php
         }
     }else if(isset($_GET['posLine'])){
+        ?>
+        <option value="">Pilih Line Produksi</option>
+        <?php
         $q_line = mysqli_query($link, "SELECT * FROM production_line WHERE id_model = '$_GET[data]' " )or die(mysqli_error($ink));
         if(mysqli_num_rows($q_line)>0){
             while($data = mysqli_fetch_assoc($q_line)){

@@ -241,10 +241,27 @@ if(isset($_SESSION['user'])){
                                     <div class="card-body  mt-2">
                                         <form  action="" id="add-area" class="form-data">
                                             <div class="row">
-                                                <div class="col-md-7">
-                                                    <label for="">Nama Area</label>
-                                                    <div class="form-group-sm" style="background:rgba(255, 255, 255, 0.3)">
-                                                        <input required type="text" class="form-control data_area" name="data_area" id="data_area" placeholder="nama area produksi" autofocus/>
+                                                <div class="col-md-5">
+                                                    <label for="">Department</label>
+                                                    <div class="form-group-sm" >
+                                                        <select required id="data_deptAccount" name="data_deptAccount" class="form-control data_deptAccount">
+                                                            <?php
+                                                            $q_group = mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'deptAcc'")or die(mysqli_error($ink));
+                                                            if(mysqli_num_rows($q_group)>0){
+                                                                while($data = mysqli_fetch_assoc($q_group)){
+                                                                    ?>
+                                                                    <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
+                                                                    <?php
+                                                                }
+                                                            }else{
+                                                                ?>
+                                                                <option disabled>Belum ada data</option>
+
+                                                                <?php
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5">
@@ -270,6 +287,13 @@ if(isset($_SESSION['user'])){
                                                         
                                                     </div>
                                                 </div>
+                                                <div class="col-md-7">
+                                                    <label for="">Nama Area</label>
+                                                    <div class="form-group-sm" style="background:rgba(255, 255, 255, 0.3)">
+                                                        <input required type="text" class="form-control data_area" name="data_area" id="data_area" placeholder="nama area produksi" autofocus/>
+                                                    </div>
+                                                </div>
+                                                
                                                 <div class="col-md-4">
                                                     <label for="">Shift</label>
                                                     <div class="form-group-sm" >
@@ -366,16 +390,16 @@ if(isset($_SESSION['user'])){
                                                 <div class="col-md-4">
                                                     <label for="">Model Kendaraan</label>
                                                     <select required name="posModel" id="posModel" name="posModel" class="form-control posModel">
-                                                    <?php
-                                                        // 
-                                                    ?>
+                                                    
+                                                         <option value="">Pilih Model</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="">Line Produksi</label>
                                                     <div class="form-group-sm">
                                                         <select required name="posLine" id="posLine" name="posLine" class="form-control posLine">
-                                                            <option value="">Pilih Data</option>
+                                                        
+                                                            <option value="">Pilih Line Produksi</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -383,7 +407,7 @@ if(isset($_SESSION['user'])){
                                                     <label for="">Group Foreman</label>
                                                     <div class="form-group-sm" >
                                                         <select required id="posGroup" name="posGroup" class="form-control posGroup">
-                                                            <option value="">Pilih Data</option>
+                                                             <option value="">Pilih Group Foreman</option>
                                                         </select>
                                                         
                                                     </div>
@@ -556,21 +580,18 @@ if(isset($_SESSION['user'])){
                 })
             }
             function get_Group(){
-                var posLine = $('#posLine').val()
-                var data = $('#posModel').val();
+                var data = $('#posLine').val();
                 $.ajax({
                     url: 'filter_data.php',	
                     method: 'GET',
-                    data:{posLine:"",data:data},		
+                    data:{posGroup:"",data:data},		
                     success:function(data){
                         $('#posGroup').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
                     }
                 })
             }
             function get_Type(){
-
                 var data = $('#posGroup').val();
-                var posType = $('#posType').val()
                 // $('#posType').load('filter_data.php?posType='+posType+'&data='+data);
                 $.ajax({
                     url: 'filter_data.php',	
@@ -582,9 +603,7 @@ if(isset($_SESSION['user'])){
                 })
             }
             function get_Shift(){
-
                 var data = $('#posType').val();
-                var posType = $('#posType').val()
                 // $('#posType').load('filter_data.php?posType='+posType+'&data='+data);
                 $.ajax({
                     url: 'filter_data.php',	
