@@ -81,20 +81,32 @@ if(isset($_SESSION['user'])){
         // echo "tes";
         $part_area =  $_POST['part_area_posting'];
         $id_area = $_POST['id_area_posting'];
-        list($pos,$group,$section,$dept,$division,$plant,$dept_account)=strukturOrg($link, $part_area, $id_area);
+
+        // echo $part_area."<br>";
+        // echo $id_area."<br>";
+        list($pos,$group,$section,$dept,$division,$plant,$dept_account)= strukturOrg($link, $part_area, $id_area);
         if($_POST['part_area_posting'] == 'pos'){
             $query = "UPDATE  org SET `post` = '$pos' ,`grp` = '$group',`sect` = '$section' ,`dept` = '$dept',`division` = '$division'";
         }else if($_POST['part_area_posting'] == 'group'){
-            $query = "UPDATE  org SET `grp` = '$group',`sect` = '$section' ,`dept` = '$dept',`division` = '$division'";
+            $query = "UPDATE  org SET `post` = NULL , `grp` = '$group',`sect` = '$section' ,`dept` = '$dept',`division` = '$division'";
         }else if($_POST['part_area_posting'] == 'section'){
-            $query = "UPDATE  org SET `sect` = '$section' ,`dept` = '$dept',`division` = '$division'";
+            $query = "UPDATE  org SET `post` = NULL , `grp` = NULL , `sect` = '$section' ,`dept` = '$dept',`division` = '$division'";
         }else if($_POST['part_area_posting'] == 'dept'){
-            $query = "UPDATE  org SET `dept` = '$dept',`division` = '$division'";
+            $query = "UPDATE  org SET `post` = NULL , `grp` = NULL , `sect` = NULL , `dept` = '$dept',`division` = '$division'";
         }else if($_POST['part_area_posting'] == 'division'){
-            $query = "UPDATE  org SET `division` = '$division'";
+            $query = "UPDATE  org SET `post` = NULL , `grp` = NULL , `sect` = NULL , `dept` = NULL, `division` = '$division'";
         }else if($_POST['part_area_posting'] == 'deptacc'){
-            $query = "UPDATE  org SET `dept_account` = '$id_area'";
+            $query = "UPDATE  org SET `dept_account` = '$dept_account'";
         }
+
+        // echo $part_area."<br>";
+        // echo $id_area."<br>";
+        // echo "pos : ".$pos."<br>";
+        // echo "group : ".$group."<br>";
+        // echo "section : ".$section."<br>";
+        // echo "dept : ".$dept."<br>";
+        // echo "division : ".$division."<br>";
+        // echo "plant : ".$plant."<br>";
         // print_r($_POST['checked']);
         $no = 1;
         if(isset($_POST['checked'])){

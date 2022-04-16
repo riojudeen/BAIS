@@ -16,11 +16,11 @@ if(isset($_SESSION['user'])){
     if($level >= 5){
         ?>
         <div class="modal fade" id="modal_upload_ot" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-centered ">
+            <div class="modal-dialog modal-md modal-dialog-centered ">
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="row">
-                            <h5 class="modal-title text-left col-md-6" id="exampleModalLabel">Upload dokumen pengajuan</h5>
+                            <h5 class="modal-title text-left col-md-6" id="exampleModalLabel">Upload Data</h5>
                             <div class="col-md-6">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -92,7 +92,7 @@ if(isset($_SESSION['user'])){
                 <div class="card-header">
                     <div class="row">
                         <h5 class="col-md-6 title">
-                            Black List Hospital
+                            <?=$halaman?>
                         </h5>
                         <div class="col-md-6 text-right">
                             
