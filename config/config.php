@@ -641,10 +641,28 @@ LEFT JOIN shift ON karyawan.shift = shift.id_shift
 LEFT JOIN status_mp ON karyawan.status = status_mp.id
 LEFT JOIN jabatan ON karyawan.jabatan = jabatan.id_jabatan ";
 function data_area($link, $part,$id, $column){
-    $q_area = mysqli_query($link, "SELECT id, nama_org, cord, nama_cord, id_parent, part FROM view_cord_area WHERE part = '$part' AND id = '$id' ")or die(mysqli_error($link));
-    $sql = mysqli_fetch_assoc($q_area);
-    $data = $sql[$column];
-    return $data;
+    if($part == 'plant'){
+        $q_area = mysqli_query($link, "SELECT id_company AS id, nama AS nama_org, npk_cord AS cord  FROM company WHERE id_company = '$id' ")or die(mysqli_error($link));
+        if($column == 'id_company'){
+            $data = "";
+        }else if($column == 'id_parent'){
+            $data = "";
+        }else if($column == 'part'){
+            $data = "";
+        }else if($column == 'nama_cord'){
+            $data = "";
+        }else{
+            $sql = mysqli_fetch_assoc($q_area);
+            $data = $sql[$column];
+        }
+        
+        return $data;
+    }else{
+        $q_area = mysqli_query($link, "SELECT id, nama_org, cord, nama_cord, id_parent, part FROM view_cord_area WHERE part = '$part' AND id = '$id' ")or die(mysqli_error($link));
+        $sql = mysqli_fetch_assoc($q_area);
+        $data = $sql[$column];
+        return $data;
+    }
 }
 function cariID_area($pos,$group,$section,$dept,$division,$plant){
     if($pos==""){
@@ -654,19 +672,19 @@ function cariID_area($pos,$group,$section,$dept,$division,$plant){
                     if($division == ""){
                         $id_area = $plant;
                     }else{
-                        $id_area = $division;
+                        $id_area = "division&&".$division;
                     }
                 }else{
-                    $id_area = $dept;
+                    $id_area = "dept&&".$dept;
                 }
             }else{
-                $id_area = $section;
+                $id_area = "section&&".$section;
             }
         }else{
-            $id_area = $group;
+            $id_area = "group&&".$group;
         }
     }else{
-        $id_area = $pos;
+        $id_area = "pos&&".$pos;
     }
     return $id_area;
 }
@@ -889,5 +907,81 @@ UNION ALL SELECT department.id_dept AS id , department.dept AS nama_org , depart
     UNION ALL SELECT dept_account.id_dept_account AS id , dept_account.department_account AS nama_org , dept_account.npk_dept AS cord , dept_account.id_div AS id_parent, dept_account.part AS part FROM dept_account 
     UNION ALL SELECT section.id_section AS id , section.section AS nama_org , section.npk_cord AS cord , section.id_dept AS id_parent, section.part AS part  FROM section 
     UNION ALL SELECT groupfrm.id_group AS id , groupfrm.nama_group AS nama_org , groupfrm.npk_cord AS cord , groupfrm.id_section AS id_parent, groupfrm.part AS part  FROM groupfrm 
-    UNION ALL SELECT pos_leader.id_post AS id , pos_leader.nama_pos AS nama_org , pos_leader.npk_cord AS cord , pos_leader.id_group AS id_parent, pos_leader.part AS part  FROM pos_leader"
+    UNION ALL SELECT pos_leader.id_post AS id , pos_leader.nama_pos AS nama_org , pos_leader.npk_cord AS cord , pos_leader.id_group AS id_parent, pos_leader.part AS part  FROM pos_leader";
+function cekSubPost($link, $npk){
+    $query = "SELECT sub_post FROM org WHERE npk = '$npk' ";
+    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+    $data = mysqli_fetch_assoc($sql);
+    $id_sub_post = $data['sub_post'];
+    return $id_sub_post;
+}
+function cekIdArea($link, $npk){
+    $query = "SELECT id_area FROM karyawan WHERE npk = '$npk' ";
+    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+    $data = mysqli_fetch_assoc($sql);
+    $id_area = $data['id_area'];
+    return $id_area;
+}
+function cariAtasan($link, $npk, $id_area){
+    
+    if($id_area != ''){
+        $pecah = explode('&&', $id_area);
+        $part = $pecah[0];
+        $id = $pecah[1];
+        $q_atasan = mysqli_query($link, "SELECT cord, nama_cord FROM view_cord_area WHERE id = '$id' AND part = '$part' ");
+        $s_atasan = mysqli_fetch_assoc($q_atasan);
+        $npkAtasan = $s_atasan['cord'];
+        $namaAtasan = $s_atasan['nama_cord'];
+        if($npkAtasan == $npk){
+            $q_kary = mysqli_query($link, "SELECT post , grp, sect, dept_account, dept, division FROM org WHERE npk = '$npk'")or die(mysqli_error($link));
+            $data_kary = mysqli_fetch_assoc($q_kary);
+            $grp = $data_kary['grp'];
+            $sect = $data_kary['sect'];
+            $dept = $data_kary['dept'];
+            $division = $data_kary['division'];
+            $array_cord = array();
+            $array_part = array();
+            if($part != 'division'){
+
+                if($part == 'pos'){
+                    $add = " AND (id = '$grp' OR id = '$sect' OR id = '$dept' OR id = '$division')";
+                }else if($part == 'group'){
+                    $add = " AND (id = '$sect' OR id = '$dept' OR id = '$division')";
+                }else if($part == 'section'){
+                    $add = " AND (id = '$dept' OR id = '$division')";
+                }else if($part == 'dept'){
+                    $add = " AND (id = '$division')";
+                }
+                $query = mysqli_query($link, "SELECT cord , nama_cord, part
+                    FROM view_cord_area 
+                    WHERE part <> '$part' AND part <> 'deptAcc' AND cord <> '$npk' ".$add." ORDER BY id DESC");
+                if(mysqli_num_rows($query)>0){
+                    while($data = mysqli_fetch_assoc($query)){
+                        $npkAtasan = $data['cord'];
+                        $partAtasan = $data['nama_cord'];
+                        array_push($array_cord, $npkAtasan);
+                        array_push($array_part, $partAtasan);
+                    }
+                }
+                $npkAtasan = $array_cord[0];
+                $namaAtasan = $array_part[0];
+            }else{
+                $npkAtasan = "";
+                $namaAtasan = "";
+            }
+        }else{
+            $npkAtasan = $s_atasan['cord'];
+            $namaAtasan = $s_atasan['nama_cord'];
+        }
+    }else{
+        $npkAtasan = "";
+        $namaAtasan = "";
+    }
+    return array($npkAtasan, $namaAtasan);
+    // $query = "SELECT id_area FROM karyawan WHERE npk = '$npk' ";
+    // $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+    // $data = mysqli_fetch_assoc($sql);
+    // $id_area = $data['id_area'];
+    // return $id_area;
+}
 ?>

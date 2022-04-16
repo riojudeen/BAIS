@@ -117,7 +117,7 @@ if(isset($_SESSION['user'])){
     }else if(isset($_POST['edit'])){
         $total = count($_POST['npk']);
         $query = "REPLACE INTO karyawan (`npk`,`nama`,`tgl_masuk`,`jabatan`,`shift`,`status`,`department`,`id_area`) VALUES ";
-        $queryOrg = "REPLACE INTO org (`npk`,`post`,`grp`,`sect`,`dept`,`dept_account`,`division`,`plant`) VALUES ";
+        $queryOrg = "REPLACE INTO org (`npk`,`sub_post`,`post`,`grp`,`sect`,`dept`,`dept_account`,`division`,`plant`) VALUES ";
         for ($i=0; $i<$total;$i++){
             $npk = $_POST['npk'][$i];
             $nama = $_POST['nama'][$i];
@@ -133,7 +133,7 @@ if(isset($_SESSION['user'])){
             $sect = $_POST['sect'][$i];
             $group = $_POST['group'][$i];
             $pos = $_POST['pos'][$i];
-            
+            // echo $plant;
             // echo "$npk<br />";
             // echo "$nama<br />";
             // echo "$nick<br />";
@@ -156,9 +156,11 @@ if(isset($_SESSION['user'])){
             $division = data_area($link, "division",$division, "id");
             $plant = data_area($link, "plant",$plant, "id");
             $id_area = cariID_area($pos,$group,$section,$dept,$division,$plant);
-            
+            $id_sub_post = cekSubPost($link, $npk);
+
             $pass = getPass(dateToDB2($tgl_masuk));
-            // $levelUser = "gu";
+            $levelUser = "gu";
+            // echo "datapos:".$id_sub_post."<br>";
             // echo "datapos:".$pos."<br>";
             // echo "datagroup:".$group."<br>";
             // echo "datasect:".$section."<br>";
@@ -169,8 +171,9 @@ if(isset($_SESSION['user'])){
             // echo "idarea:".cariID_area("",$group,$section,$dept,$division,$plant)."<br>";
             // echo "totaldata:$total<br />---------<br />";
             
+            
             $query .= "('$npk','$nama', '$tgl_masuk', '$jabatan','$shift','$status','$deptAcc','$id_area'),";
-            $queryOrg .= "('$npk','$pos', '$group', '$section','$dept','$deptAcc','$division','$plant'),";
+            $queryOrg .= "('$npk','$id_sub_post','$pos', '$group', '$section','$dept','$deptAcc','$division','$plant'),";
             
             // $sqMp = mysqli_query($link, "UPDATE karyawan SET nama = '$nama' , nama_depan = '$nick', tgl_masuk = '$tgl_masuk' , shift = '$shift' , 
             // jabatan = '$jabatan' , `status` = '$status' , id_area = '$dept' WHERE npk = '$npk'") or die(mysqli_error($link));
@@ -178,6 +181,7 @@ if(isset($_SESSION['user'])){
         }
         $sql = substr($query, 0 , -1); //untuk trim koma terakhir
         $sqlOrg = substr($queryOrg, 0 , -1); //untuk trim koma terakhir
+        // echo $sqlOrg;
         // $sqlUser = substr($queryUser, 0 , -1); //untuk trim koma terakhir
         $s_karyawan = mysqli_query($link, $sql)or die(mysqli_error($link));
         if($s_karyawan){
@@ -185,16 +189,31 @@ if(isset($_SESSION['user'])){
             if($s_org){
                 $_SESSION['info'] = 'Disimpan';
                 $_SESSION['pesan'] = 'Seluruh';
-                echo "<script>document.location.href='../add_karyawan.php'</script>";
+                if(isset($_POST['redirect'])){
+                    $link = $_POST['redirect'];
+                    echo "<script>document.location.href='$link'</script>";
+                }else{
+                    echo "<script>document.location.href='../add_karyawan.php'</script>";
+                }
             }else{
                 $_SESSION['info'] = 'Gagakl Disimpan';
                 $_SESSION['pesan'] = 'Organization';
-                echo "<script>document.location.href='../add_karyawan.php'</script>";
+                if(isset($_POST['redirect'])){
+                    $link = $_POST['redirect'];
+                    echo "<script>document.location.href='$link'</script>";
+                }else{
+                    echo "<script>document.location.href='../add_karyawan.php'</script>";
+                }
             }
         }else{
             $_SESSION['info'] = 'Gagal Disimpan';
             $_SESSION['pesan'] = 'Resource';
-            echo "<script>document.location.href='../add_karyawan.php'</script>";
+            if(isset($_POST['redirect'])){
+                $link = $_POST['redirect'];
+                echo "<script>document.location.href='$link'</script>";
+            }else{
+                echo "<script>document.location.href='../add_karyawan.php'</script>";
+            }
         }
     }else if(isset($_GET['del'])){
         $npk = $_GET['del'];

@@ -5,7 +5,7 @@ require("../../../../config/config.php");
     $q_data = mysqli_query($link, "SELECT id, nama_org, cord nama_cord, id_parent FROM view_cord_area WHERE part = 'division' ")or die(mysqli_error($link));
     if(mysqli_num_rows($q_data)>0){
         ?>
-        <option disabled>Pilih Division</option>
+        <option value="-">Pilih Division</option>
         <?php
         while($data = mysqli_fetch_assoc($q_data)){
             if($_GET['value'] == $data['id']){
@@ -22,7 +22,6 @@ require("../../../../config/config.php");
     <?php
     }else{
         ?>
-        <option value="">Belum Ada Data</option>
         <option value="-">-</option>
         <?php
     }

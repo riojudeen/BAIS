@@ -10,7 +10,7 @@ if(isset($_SESSION['user'])){
 
     include_once("../../header.php");
     ?>
-    
+    <input type="hidden" id="link_go" value="?org=1&id=<?=$id_area?>&part=<?=$part_area?>">
     <div class="row">
         <div class="col-md-12">
             <div class="card" >
@@ -78,7 +78,7 @@ if(isset($_SESSION['user'])){
                     
                 </div>
                 <hr>
-                <form action="proses/prosesOrg.php" method="POST" class="card-body ">
+                <form action="proses/prosesOrg.php" method="POST" name="organization" id="organization" class="card-body ">
                     <div class="card card-plain">
                         <div class="card-body border rounded-lg">
                             <div class="row">
@@ -297,9 +297,10 @@ if(isset($_SESSION['user'])){
                 }
             })
         });
-        $('.editall').on('click', function(e){
+        $(document).on('click', '.editall', function(e){
             e.preventDefault();
-            var getLink = 'proses/editOrg.php';
+            var linkGo = $('#link_go').val()
+            var getLink = '../employee/proses/mass_editMp.php'+linkGo;
 
             document.organization.action = getLink;
             document.organization.submit();

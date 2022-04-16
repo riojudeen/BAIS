@@ -609,8 +609,7 @@ if(isset($_SESSION['user'])){
     <?php
     include_once("../endbody.php");
     }else{
-        $_SESSION['info'] = "Kosong";
-        echo "<script>window.location='organization.php';</script>";
+        header('location: ../data-update.php');
     }
 } else{
     echo "<script>window.location='".base_url('auth/login.php')."';</script>";

@@ -19,13 +19,14 @@ if(isset($_SESSION['user'])){
         <div class="card">
             <div class="card-header row">
                 <h5 class="col-md-6 title">Resource Data (Karyawan & Management)</h5>
-                <div class="col-md-6">
-                    <a href="proses/export.php?export=mp" class="btn btn-sm btn-success pull-right" data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
+                <div class="col-md-6 text-right">
+                    <a href="proses/export.php?export=mp" class="btn btn-sm btn-success " data-toggle="tooltip" data-placement="bottom" title="Export to Excel File">
                         <span class="btn-label">
                             <i class="far fa-file-excel"></i>
                         </span>
                         Export
                     </a>
+                    <a href="<?=base_url()?>/dashboard/pages/addmp.php" class="btn btn-primary btn btn-sm">Tambah Data</a>
 
                 </div>
             </div>

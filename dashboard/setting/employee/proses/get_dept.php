@@ -7,7 +7,7 @@ if(isset($_GET['value']) || isset($_GET['parent']) ){
         
     if(mysqli_num_rows($q_data)>0){
         ?>
-        <option disabled>Pilih Division</option>
+        <option value="-">-</option>
         <?php
         while($data = mysqli_fetch_assoc($q_data)){
             if($_GET['value'] == $data['id']){
@@ -20,11 +20,10 @@ if(isset($_GET['value']) || isset($_GET['parent']) ){
             <?php
         }
     ?>
-    <option value="-">-</option>
+    
     <?php
     }else{
         ?>
-        <option value="">Belum Ada Data</option>
         <option value="-">-</option>
         <?php
     }

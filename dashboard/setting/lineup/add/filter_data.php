@@ -64,8 +64,12 @@ if(isset($_SESSION['user'])){
             <?php
         }
     }else if(isset($_GET['posAreaProd']) || isset($_GET['posAreaProd']) ){
+        ?>
+            <option value="">Pilih Area Produksi</option>
+            <?php
         $q_area = mysqli_query($link, "SELECT * FROM view_production_area WHERE id_prod_type = '$_GET[type]' AND shift = '$_GET[shift]' AND id_group = '$_GET[group]' AND id_line = '$_GET[line]' AND id_model = '$_GET[model]'")or die(mysqli_error($ink));
         if(mysqli_num_rows($q_area)>0){
+            
             while($data = mysqli_fetch_assoc($q_area)){
                 // $select = ($_GET['posAreaProd'] == $data['id'])?"selected":"";
                 ?>
@@ -79,6 +83,9 @@ if(isset($_SESSION['user'])){
             <?php
         }
     }else if(isset($_GET['posType'])){
+        ?>
+            <option value="">Pilih Tipe Produksi</option>
+            <?php
         $q_type = mysqli_query($link, "SELECT * FROM view_production_area WHERE id_group = '$_GET[data]' GROUP BY id_prod_type ")or die(mysqli_error($ink));
         // echo mysqli_num_rows($q_type);
         if(mysqli_num_rows($q_type)>0){
@@ -95,12 +102,15 @@ if(isset($_SESSION['user'])){
             <?php
         }
     }else if(isset($_GET['posShift'])){
+        ?>
+        <option value="">Pilih Shift Produksi</option>
+        <?php
         $q_shift = mysqli_query($link, "SELECT * FROM view_production_area WHERE id_prod_type = '$_GET[data]' GROUP BY shift ")or die(mysqli_error($ink));
         if(mysqli_num_rows($q_shift)>0){
             while($data = mysqli_fetch_assoc($q_shift)){
                 // $select = ($_GET['posShift'] == $data['shift'])?"selected":"";
                 ?>
-                <option <?=$select?> value="<?=$data['shift']?>">Shift <?=$data['shift']?></option>
+                <option  value="<?=$data['shift']?>">Shift <?=$data['shift']?></option>
                 <?php
             }
             ?>
@@ -108,7 +118,7 @@ if(isset($_SESSION['user'])){
             <?php
         }else{
             ?>
-            <option disabled>Masuk</option>
+            <option disabled><?=$_GET['posShift']?></option>
             <?php
         }
     }else if(isset($_GET['posPosLeader'])){

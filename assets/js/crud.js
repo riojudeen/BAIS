@@ -2,10 +2,20 @@
 function loadAjax(kelas,keterangan,url){
     if(keterangan === 'kelas'){
         var target = '.'+kelas;
-    }else{
+    }else if(kelas === 'id'){
         var target = '#'+kelas;
+    }else{
+        var target = kelas;
     }
-    $(target).load(url);
+    $.ajax({
+        url: url,	
+        method: 'GET',
+        data:{posModel:""},		
+        success:function(data){
+            $(target).html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+        }
+    })
+    // $(target).load(url);
 }
 // fungsi kirim form
 function sendForm(id_form,target,keterangan,url,method,load_url){
@@ -28,7 +38,7 @@ function sendForm(id_form,target,keterangan,url,method,load_url){
                         Swal.fire({
                             icon: 'success',
                             title: 'Sukses',
-                            text: 'data Berhasil',
+                            text: 'data Berhasil Disimpan',
                         });
                         
                     });
@@ -45,7 +55,7 @@ function deleteData(elemen,url,urlLoad,method,target,proses){
     $(elemen).on('click', function(e){
         e.preventDefault();
         var id = $(this).attr('data-id');
-        // console.log(id)
+        console.log(urlLoad)
         Swal.fire({
         title: 'Anda Yakin ?',
         text: "ingin menghapus data ini",
@@ -61,21 +71,23 @@ function deleteData(elemen,url,urlLoad,method,target,proses){
                     url: url,
                     method: method,
                     data: {data:id, proses:proses},
-                    success:function(data){
-                        $(target).fadeOut(1000, function(){
-                            $(this).load(urlLoad, function() {
-                                $(this).fadeIn(1000);
-                            });
+                    success:function(){
+                        // $(target).html()
+                        loadAjax(target,'',urlLoad)
+                        // $(target).fadeOut(1000, function(){
+                        //     $(this).load(urlLoad, function() {
+                        //         $(this).fadeIn(1000);
+                        //     });
 
-                        })
+                        // })
                         // $('.data-model').load("../ajax/model.php?tab=model"),function() {
                         //     $(this).fadeIn(1500);  // or another bigger number based on your load time
                         // };
-                        // Swal.fire({
-                        //     icon: 'success',
-                        //     title: 'Sukses',
-                        //     text: 'data Berhasil',
-                        // })
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: 'Data Berhasil Dihapus',
+                        })
                         
                     }
                 })

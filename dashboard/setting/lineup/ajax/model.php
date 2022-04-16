@@ -532,7 +532,6 @@ if(isset($_GET['tab'])){
     echo "tidak ada";
 }
 ?>
-<script src="<?=base_url('assets/js/crud.js')?>"></script>
 <script>
     deleteData('.delete_model','../ajax/model.php','../ajax/model.php?tab=model','get','.data-model','delete_model');
     deleteData('.delete_line','../ajax/model.php','../ajax/model.php?tab=line','get','.data-line','delete_line');

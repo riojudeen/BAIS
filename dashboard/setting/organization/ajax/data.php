@@ -63,6 +63,14 @@ if(isset($_SESSION['user'])){
                 <table class="table table-hover">
                     <thead class="table-warning">
                         <tr>
+                            <th class="text-right first-top-col first-col sticky-col">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input check-all" type="checkbox" id="allmp">
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
                             <th scope="col">No</th>
                             <th scope="col">NPK</th>
                             <th scope="col">Nama</th>
@@ -111,6 +119,14 @@ if(isset($_SESSION['user'])){
                                 
                                 ?>
                                 <tr id="<?=$data['npk']?>" >
+                                    <td class="sticky-col first-col">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input mp check" type="checkbox" name="index[]"  value="<?=$data['npk']?>">
+                                                <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td class="td"><?=$no++?></td>
                                     <td class="td"><?=$data['npk']?></td>
                                     <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
@@ -124,6 +140,7 @@ if(isset($_SESSION['user'])){
                                     <td class="td"><?=$data['section']?></td>
                                     <td class="td"><?=$data['dept']?></td>
                                     <td class="td"><?=$data['dept_account']?></td>
+                                    
                                 </tr>
     
                                 <?php
@@ -145,7 +162,7 @@ if(isset($_SESSION['user'])){
                 </table>
             </div>
             <div class="row">
-                <div class="col-md-12 pull-rigt">
+                <div class="col-md-6 ">
                     <ul class="pagination ">
                     <?php
                     // echo $page."<br>";
@@ -177,6 +194,9 @@ if(isset($_SESSION['user'])){
                     }
                     ?>
                     </ul>
+                </div>
+                <div class="col-md-6 text-right">
+                <a href="" class="btn btn-sm btn-warning editall ">Edit data</a>
                 </div>
             </div>
             <?php

@@ -30,7 +30,7 @@ require_once("../../../config/config.php");
     min-width: 50px;
     max-width: 100px;
     left: 0px;
-    
+    z-index: 600;
     }
 
     .first-top-col {
@@ -41,7 +41,7 @@ require_once("../../../config/config.php");
     z-index: 600;
     }
 
-    .second-col {
+    /* .second-col {
     width: 50px;
     min-width: 50px;
     max-width: 150px;
@@ -80,7 +80,7 @@ require_once("../../../config/config.php");
     max-width: 300px;
     top: 0px;
     z-index: 600;
-    }
+    } */
 
     .first-last-col {
     width: 50px;
@@ -195,7 +195,7 @@ if($id == 'local'){
             <form class="table-responsive" name="proses" method="post">
                 <table class="table table-hover">
                     <thead>
-                        <th class="text-right first-top-col first-col sticky-col">
+                        <th class="text-right first-top-col first-col sticky-col text-left">
                             <div class="form-check">
                                 <label class="form-check-label">
                                     <input class="form-check-input check-all" type="checkbox" id="allmp">
@@ -221,12 +221,14 @@ if($id == 'local'){
                         if(mysqli_num_rows($sql_dataKaryawan)>0){
                             $no = $limit_start +1 ;  
                             while($dataKaryawan = mysqli_fetch_assoc($sql_dataKaryawan)){
-                                $q_atasan = mysqli_query($link, "SELECT id, nama_cord FROM view_cord_area WHERE id = '$dataKaryawan[id_area]' ");
-                                $s_atasan = mysqli_fetch_assoc($q_atasan);
-                                $dataAtasan = (mysqli_num_rows($q_atasan)>0)?$s_atasan['nama_cord']:'';
+                                // $q_atasan = mysqli_query($link, "SELECT id, nama_cord FROM view_cord_area WHERE id = '$dataKaryawan[id_area]' ");
+                                // $s_atasan = mysqli_fetch_assoc($q_atasan);
+                                // $dataAtasan = (mysqli_num_rows($q_atasan)>0)?$s_atasan['nama_cord']:'';
+
+                                list($npkAtasan, $dataAtasan) = cariAtasan($link, $dataKaryawan['npk'], $dataKaryawan['id_area'])
                                 ?>
                                 <tr>
-                                    <td class="sticky-col first-col">
+                                    <td class="sticky-col first-col text-right">
                                         <div class="form-check">
                                             <label class="form-check-label">
                                                 <input class="form-check-input mp check" type="checkbox" name="index[]"  value="<?=$dataKaryawan['npk']?>">
@@ -635,6 +637,8 @@ if($id == 'local'){
                                     $q_atasan = mysqli_query($link, "SELECT id, nama_cord FROM view_cord_area WHERE id = '$dataKaryawan[id_area]' ");
                                     $s_atasan = mysqli_fetch_assoc($q_atasan);
                                     $dataAtasan = (mysqli_num_rows($q_atasan)>0)?$s_atasan['nama_cord']:'';
+
+                                    
     
                                     $q_layoff = mysqli_query($link, "SELECT `id`,`npk`,`update_by`,`emk` FROM `karyawan_layoff` WHERE npk = '$dataKaryawan[npk]' GROUP BY emk DESC LIMIT 1")or die(mysqli_error($link));
                                     $s_layoff = mysqli_fetch_assoc($q_layoff);

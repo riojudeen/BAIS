@@ -66,7 +66,6 @@ if(isset($_SESSION['user'])){
                             <tr>
                                 <td class=""><?=$no?></td>
                                 <td class=""><?=$data['npk']?></td>
-                                <td class=""><?=$data['npk']?></td>
                                 <td class=""><?=$data['nama']?></td>
                                 <td>
                                     <?=$data['nama_group']?>
@@ -83,7 +82,8 @@ if(isset($_SESSION['user'])){
                                 </td>
                                 <td>
                                     <div class="form-group-sm border-none ">
-                                        <select name="inputDataPosLeader-<?=$no?>" required id="inputDataPosLeader-<?=$no?>" class="form-control inputDataArea">
+                                        <select name="inputDataPosLeader-<?=$no?>" id="inputDataPosLeader-<?=$no?>" class="form-control inputDataArea">
+                                            <option value="">Pilih Team</option>
                                             <?php
                                             $queryPosLeader= mysqli_query($link, "SELECT * FROM view_daftar_area WHERE part = 'pos' AND id_parent = '$_GET[idGroup]' ")or die(mysqli_error($link));
                                             if(mysqli_num_rows($queryPosLeader) > 0){
@@ -189,7 +189,13 @@ if(isset($_SESSION['user'])){
                 $('#modalLoadDataArea').modal('hide')
                 $('#modalLoadDataArea').on('hidden.bs.modal', function(){
                     $('.data-pos').load("../ajax/model.php?tab=pos");
+                    Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: 'Data Berhasil Disimpan',
+                        });
                 });
+                
                 
             },
             error:function(error){
