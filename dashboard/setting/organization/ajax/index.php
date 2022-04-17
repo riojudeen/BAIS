@@ -173,7 +173,7 @@ if(isset($_SESSION['user'])){
         $addLimit = " LIMIT $limit_start, $limit";
 
         // total data
-        $total_dataOrg = $qOrg;
+        $total_dataOrg = $qOrg.$filter;
         $jml = mysqli_query($link, $total_dataOrg)or die(mysqli_error($link));
         $total_records= mysqli_num_rows($jml);
 

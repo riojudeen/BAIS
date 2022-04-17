@@ -253,7 +253,7 @@ if(isset($_SESSION['user'])){
                             <h6 class="text-title col-md-8 content-title"></h6>
                             <div class="col-md-4 text-right">
                                 <div class="input-group no-border">
-                                    <input type="text" name="cari" id="pencarian" class="form-control cari" placeholder="Cari NPK atau nama" >
+                                    <input type="text" name="cari" id="pencarian" class="form-control cari" placeholder="Cari nama area, induk area, nama maupun npk kordinator " >
                                     <div class="input-group-append">
                                         <div class="input-group-text">
                                             <i class="nc-icon nc-zoom-split"></i>
