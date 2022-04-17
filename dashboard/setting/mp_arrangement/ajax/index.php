@@ -403,7 +403,7 @@ if(isset($_SESSION['user'])  ){
                         barPercentage: 1.6,
                         gridLines: {
                         drawBorder: false,
-                        color: 'rgba(255,255,255,0.1)',
+                        color: 'rgba(255,255,255,0.0)',
                         zeroLineColor: "transparent"
                         },
                         ticks: {
@@ -678,7 +678,7 @@ if(isset($_SESSION['user'])  ){
             
             gridLines: {
               zeroLineColor: "transparent",
-              display: true,
+              display: false,
               drawBorder: false,
               color: '#9f9f9f',
             }
@@ -822,17 +822,24 @@ if(isset($_SESSION['user'])  ){
             </div>
         </div>
         <hr>
-        <div class="row">
-            <div class="col-md-12">
+        <div class="row px-3">
+            <div class="col-md-12 border rounded-lg" style="background-color:rgba(214, 219, 223, 0.2)">
+                <div class="row mt-2">
+                    <h6 class="category card-title col-md-6 pull-left text-uppercase" >Summary man power</h6>
+                </div>
                 <div class="row">
-                    <div class="col-md-3">
-                        <canvas class="" id="dataArrTot" height="300" ></canvas>
-                    </div>
-                    <div class="graph col-md-9" >
-                        <canvas class="" id="dataArr" width="456" height="150" ></canvas>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <canvas class="" id="dataArrTot" height="300" ></canvas>
+                            </div>
+                            <div class="graph col-md-9" >
+                                <canvas class="" id="dataArr" width="456" height="150" ></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <hr>

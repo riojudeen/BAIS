@@ -53,30 +53,7 @@
                         <a href="<?=base_url()?>/dashboard/setting/lineup/" class="stretched-link card-category text-right text-white mb-3"></a>
                     </div>
                 </div>
-                <div class="card card-stats bg-warning">
-                    <div class="card-body " id="3">
-                        <div class="row">
-                            <div class="col-5 col-md-4">
-                                <div class="icon-big text-center icon-white">
-                                    <span class="fa-stack" >
-                                        <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                        <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i>
-                                        <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                        <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
-                                    </span>
-                            
-                                </div>
-                            </div>
-                            <div class="col-7 col-md-8">
-                                <div class="numbers ">
-                                    <p class="card-title text-white ">Outline<p>
-                                    <p class="card-category text-right text-white mb-3">prod manpower</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="<?=base_url()?>/dashboard/setting/lineup/" class="stretched-link card-category text-right text-white mb-3"></a>
-                    </div>
-                </div>
+                
             <!-- </div>
             <div class="col-lg-4 col-md-4 col-sm-12"> -->
                 <div class="card card-stats bg-warning">
