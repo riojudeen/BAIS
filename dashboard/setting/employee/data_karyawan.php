@@ -125,8 +125,8 @@ $shift = (isset($_GET['shift']))?$_GET['shift']:'';
 $jab = (isset($_GET['jab']))?$_GET['jab']:'';
 $stat = (isset($_GET['stat']))?$_GET['stat']:'';
 $cari = (isset($_GET['cari']))?$_GET['cari']:'';
-
-
+// $sha1 = sha1('admin');
+// mysqli_query($link, " UPDATE data_user SET pass = '$sha1' ")or die(myswli_error($link));
 if($id == 'local'){
     $filter_divisi = ($div != '')?"AND id_division = '$div' ":'';
     $filter_deptAcc = ($deptAcc != '')?"AND id_dept_account = '$deptAcc' ":'';
@@ -188,7 +188,7 @@ if($id == 'local'){
             <h6 >Data Karyawan </h6>
         </div>
         <div class="col-md-6 text-right">
-            <a class="btn btn-sm btn-info" data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="collapseExample">Tambah data</a>
+            <a class="btn btn-sm btn-info" data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="collapseExample">Import data</a>
         </div>
         <div class="col-md-12">
             

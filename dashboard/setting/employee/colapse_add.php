@@ -104,8 +104,9 @@
                                     
                                     <div class="col-md-5">
                                         <label for="">Role User</label>
+                                        
                                         <div class="form-group " style="background:rgba(255, 255, 255, 0.3)">
-                                            <select type="text" class="form-control bg-transparent data-role text-uppercase" name="roleuser" id="roleuser" placeholder="select masal">
+                                            <select type="text"  class="form-control bg-transparent data-role text-uppercase" name="roleuser" id="roleuser"  placeholder="select masal">
                                                 
                                             <?php
                                                 $q_role = mysqli_query($link, "SELECT id_role, role_name FROM user_role  ")or die(mysqli_error($link));
@@ -115,8 +116,9 @@
                                                     <option disabled>Atur Role User</option>
                                                     <?php
                                                     while($dataUser = mysqli_fetch_assoc($q_role)){
+                                                        $select = ($dataUser['id_role'] == 'gu' )?'selected':'disabled';
                                                         ?>
-                                                        <option value="<?=$dataUser['id_role']?>"><?=$dataUser['role_name']?></option>
+                                                        <option <?=$select?> value="<?=$dataUser['id_role']?>"><?=$dataUser['role_name']?></option>
                                                         <?php
                                                     }
                                                 }else{

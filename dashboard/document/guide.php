@@ -11,11 +11,13 @@ if(isset($_SESSION['user'])){
             $sql_dir = mysqli_fetch_assoc($query_dir);
             $root_path = $sql_dir['root'];
     $dir = $root_path;
+    // echo $dir;
     if(file_exists($dir)){
 
-    $getStart =$dir."Getting Started.ppsx";
+    $getStart =$dir."Welcome/";
     $files = array();
-    $open    =opendir($dir) or die('Folder tidak ditemukan ...!');
+    $open    =opendir($getStart) or die('Folder tidak ditemukan ...!');
+    // echo $open;
     while ($file    =readdir($open)) {
         if($file !='.' && $file !='..'){   
             // $files[]=$file;
@@ -24,6 +26,7 @@ if(isset($_SESSION['user'])){
     }
     $jml = count($files);
     // echo $jml;
+    // print_r($files);
     
     ?>
     
@@ -93,8 +96,8 @@ if(isset($_SESSION['user'])){
                             <?php
                             if($jml > 0 ){
                                 foreach($files AS $file_data){
-                                    $type = pathinfo($dir.$file_data, PATHINFO_EXTENSION);
-                                    $dataImage = file_get_contents($dir.$file_data);
+                                    $type = pathinfo($getStart.$file_data, PATHINFO_EXTENSION);
+                                    $dataImage = file_get_contents($getStart.$file_data);
                                     $image = 'data:image/' . $type . ';base64,' . base64_encode($dataImage);
                                     
                                     ?>

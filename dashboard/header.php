@@ -7,6 +7,9 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
   $title = (isset($halaman))? "BAIS | ".$halaman : "Body Administration Information System ";
   // $level = 8;
   // include(base_url()'assets/config/function.php');
+  /*
+  PROGRAM UNTUK GET FOTO LAMA 
+  AMBIL DARI FS HRD-FOTO
   $path = "//adm-fs/HRD/HRD-Photo/".$npkUser.".jpg";
   $type = pathinfo($path, PATHINFO_EXTENSION);
   if (file_exists($path)) {
@@ -19,7 +22,8 @@ $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'da
     // $file = fopen($path, "r");
     // echo "File berhasil dibaca.";
   }
-
+*/
+$base64 = getFoto($npkUser)
 ?>
 
 <?php
