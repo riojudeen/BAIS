@@ -336,7 +336,11 @@ if(isset($_SESSION['user'])){
         }
         getSumary()
         dataActive()
-        
+        $(document).on('click', '.halaman', function(){
+            var page = $(this).attr("id");
+            dataActive(page)
+            // console.log(hal)
+        });
         $(document).on('click','.navigasi-absensi', function(){
             $('.navigasi-absensi').removeClass('data-active');
             $(this).addClass('data-active');

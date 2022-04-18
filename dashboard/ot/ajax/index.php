@@ -628,7 +628,7 @@ if(isset($_GET['id'])){
                     $(this).addClass('overtime-active');
                     draft_Active()
                 })
-                $(document).on('click', '.halaman', function(){
+                $(document).on('click', '.halaman-draft', function(){
                     var page = $(this).attr("id");
                     draft_Active(page)
                 });

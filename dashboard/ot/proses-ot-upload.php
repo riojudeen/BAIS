@@ -16,14 +16,14 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
         $date = $_POST['tanggal_kerja_ot'];
         $temp_path = $_FILES['file_ot']['tmp_name'];
         $ext = pathinfo($_FILES['file_ot']['name'], PATHINFO_EXTENSION);
-        $fileName = $_POST['name_requester']."_".$_POST['group_ot_name']."-".$_POST['shift_ot']."_".$_POST['tanggal_kerja_ot'].".$ext";
+        $fileName = "SPL-".$_POST['name_requester']."_".$_POST['group_ot_name']."-".$_POST['shift_ot']."_".$_POST['tanggal_kerja_ot'].".$ext";
         // echo $fileName;
        $tahun = date('Y', strtotime($date));
        $bulan = date('m', strtotime($date));
        
        $pathTujuan = "$root_path"."$tahun/";
        $pathTujuan1 = "$root_path"."$tahun/$bulan/";
-       echo $pathTujuan ;
+    //    echo $pathTujuan ;
        if(mysqli_num_rows($query)>0){
 
             if(file_exists($root_path)){

@@ -412,6 +412,10 @@ if(isset($_SESSION['user'])){
                 })
             }
         }
+        $(document).on('click', '.halaman', function(){
+            var page = $(this).attr("id");
+            dataActive(page)
+        });
         $(document).on('click', '.sort', function(){
             var div_id = $('#s_div').val();
             var dept_id = $('#s_dept').val();

@@ -424,7 +424,7 @@ if(isset($_SESSION['user'])){
                         <div class="card-header ">
                         <h4 class="card-title pull-left">Edit Structural Org Data</h4>
                             <div class=" box pull-right">
-                                <a href="<?=base_url()?>dashboard/setting/employee/add_karyawan.php" class="btn btn-default "><i
+                                <a href="<?=base_url()?>/dashboard/setting/employee/add_karyawan.php" class="btn btn-default "><i
                                     class="nc-icon nc-minimal-left"></i> Kembali</a>
                             </div>
                         </div>

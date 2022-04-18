@@ -373,7 +373,7 @@ if(isset($_SESSION['user'])){
                         $(this).addClass('konfirmasi-active');
                         data_Active()
                     })
-                    $(document).on('click', '.halaman', function(){
+                    $(document).on('click', '.halaman-konfirmasi', function(){
                         var page = $(this).attr("id");
                         data_Active(page)
                         // console.log(hal)
