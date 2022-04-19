@@ -102,7 +102,7 @@
     // });
 
     $("#heatmap-5").CalendarHeatmap( data, {
-        title: "Heatmap",
+        title: "",
         labels: {
             days: true,
             custom: {

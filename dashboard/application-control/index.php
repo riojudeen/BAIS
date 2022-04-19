@@ -135,7 +135,7 @@ if(isset($_SESSION['user'])){
                                                 <i class="far fa-circle fa-stack-2x text-light mt-1 pb-3"></i>
                                                 <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
                                                 <p class="category label bold text-uppercase "style="margin-top:-70px;font-size:10px" >
-                                                <i class="fas fa-stopwatch-20"></i> <strong>WIB</strong></p>
+                                                <i class="fas fa-stopwatch-20"></i> <strong>times</strong></p>
                                                 </p>
                                                 <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
                                                 <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
