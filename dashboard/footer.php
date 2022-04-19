@@ -629,6 +629,24 @@ if($actual_link != $link_exception){
   }
 }
 </script>
+<script>
+  $(document).ready(function(){
+    $(document).on('click', '.btn', function(){
+      $.ajax({
+        method : 'POST',
+        url : '/BAIS/dashboard/interaction_counter.php',
+        data : {interaction : '1'}
+      })
+    })
+    $(document).on('click', 'a', function(){
+      $.ajax({
+        method : 'POST',
+        url : '/BAIS/dashboard/interaction_counter.php',
+        data : {interaction : '1'}
+      })
+    })
+  })
+</script>
 <?php
 $i = 1;
 $query_notif = "SELECT info, publisher, title, category, stats, date_start, date_end, `image` FROM info 

@@ -198,8 +198,10 @@ $base64 = getFoto($npkUser)
   <link href="<?=base_url('assets/css/csscustom.css')?>" rel="stylesheet"/>
   
   <!-- loading bar -->
+  <!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/dist/loading-bar.css"/>
   <script type="text/javascript" src="<?=base_url()?>/assets/dist/loading-bar.js"></script>
+
   <script>
     $(document).ready(function(){
       // get_notif_data()
@@ -229,7 +231,8 @@ $base64 = getFoto($npkUser)
       }
     })
   </script>
-
+  
+  <!-- heatmap -->
   <!-- date range picker -->
   <style type="text/css">
     .lds-ellipsis {
@@ -845,6 +848,18 @@ $base64 = getFoto($npkUser)
                 </a>
               </li>
               <li>
+                <?php
+            }
+              if($level >= 8){
+                
+              ?>
+              <li class="menu clpse " data-name="appC" id="appC" data-target="appC">
+                <a  href="<?php echo base_url('dashboard/application-control/');?>">
+                <i class="fas fa-compact-disc"></i>
+                  <p>Application Control </p>
+                </a>
+              </li>
+              
                 <?php
             }
 

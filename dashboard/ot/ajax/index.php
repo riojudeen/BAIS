@@ -278,6 +278,7 @@ if(isset($_GET['id'])){
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link navigasi-overtime overtime-active active title" id="EO" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Early Overtime / Lembur Awal</a>
                         <a class="nav-item nav-link navigasi-overtime title" id="PO" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Post Overtime / Lembur Akhir</a>
+                        <a class="nav-item nav-link navigasi-overtime title" id="dm" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-dd" aria-selected="true">Daily Monitoring</a>
                     </div>
                 </nav>
             </div>

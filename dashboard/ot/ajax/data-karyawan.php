@@ -64,6 +64,8 @@ if(isset($_SESSION['user'])){
             view_organization.subpos,
             view_organization.division,
             view_organization.dept_account,
+            absensi.check_in,
+            absensi.check_out,
             view_req_ot.work_date,
             view_req_ot.in_date,
             view_req_ot.out_date,
@@ -73,11 +75,27 @@ if(isset($_SESSION['user'])){
             view_req_ot.activity
 
             FROM view_organization LEFT JOIN 
-                (SELECT view_req_ot.npk, view_req_ot.work_date, view_req_ot.in_date,  view_req_ot.out_date, view_req_ot.start, view_req_ot.end, view_req_ot.job_code, view_req_ot.activity FROM view_req_ot 
+                (SELECT view_req_ot.npk, 
+                    view_req_ot.work_date, 
+                    view_req_ot.in_date,  
+                    view_req_ot.out_date, 
+                    view_req_ot.start, 
+                    view_req_ot.end, 
+                    view_req_ot.job_code, 
+                    view_req_ot.activity 
+                    FROM view_req_ot 
                 WHERE view_req_ot.in_date = '$in_date' 
                 AND view_req_ot.out_date = '$out_date' 
                 AND  view_req_ot.work_date = '$work_date' AND view_req_ot.id_ot = '$type' ) AS view_req_ot 
-                ON  view_organization.npk = view_req_ot.npk";
+                ON  view_organization.npk = view_req_ot.npk
+                
+                LEFT JOIN (SELECT absensi.check_in AS check_in,
+                    absensi.check_out AS check_out,
+                    absensi.npk AS npk_absensi,
+                    absensi.ket AS ket,
+                    absensi.id AS id_absensi FROM absensi
+                    WHERE `date` = '$in_date' ) AS absensi ON
+                        absensi.npk_absensi = view_organization.npk ";
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -404,6 +422,8 @@ if(isset($_SESSION['user'])){
                         <th>NPK</th>
                         <th>Nama</th>
                         <th>Tgl Kerja</th>
+                        <th>In</th>
+                        <th>Out</th>
                         <th colspan="2">Mulai</th>
                         <th colspan="2">Selesai</th>
                         <th>Activity</th>
@@ -464,15 +484,20 @@ if(isset($_SESSION['user'])){
                                 $text_activity = ($data['job_code'] != '')?'':"ot_activity";
                                 $start = ($data['start'] != '')?jam($data['start']):$min_start;
                                 $end = ($data['end'] != '')?jam($data['end']):$max_end;
+                                $ci = ($data['check_in'] != '' && $data['check_in'] != '00:00:00')?jam($data['check_in']):"-";
+                                $co = ($data['check_out'] != '' && $data['check_out'] != '00:00:00')?jam($data['check_out']):"-";
                                 
+                                $td_col = ($ci == '-' || $co == '-' )?"table-danger":"";
                                 ?>
-                                <tr id="<?=$data['npk']?>" >
+                                <tr class="<?=$td_col?>" id="<?=$data['npk']?>" >
                                     <td class="td"><?=$no++?></td>
                                     <td class="td"><?=$data['npk']?></td>
                                     <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
                                     <td style="max-width:100px" class="text-truncate"><?=tgl($work_date)?></td>
-                                    <td  class="text-truncate"><?=tgl($in_date)?></td>
+                                    <td  class="text-truncate"><?=$ci?></td>
+                                    <td  class="text-truncate"><?=$co?></td>
                                     
+                                    <td  class="text-truncate"><?=tgl($in_date)?></td>
                                     <td  class="text-truncate"><?=$start?></td>
                                     <td  class="text-truncate"><?=tgl($out_date)?></td>
                                     <td  class="text-truncate "><?=$end?></td>

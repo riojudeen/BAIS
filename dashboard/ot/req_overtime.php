@@ -277,7 +277,7 @@ if(isset($_SESSION['user'])){
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-info btn-link" id="create_ot" name="create_ot">Create</button>
@@ -291,6 +291,82 @@ if(isset($_SESSION['user'])){
             
         </div>
     </div>
+    <?php
+    "SELECT
+    `lembur`.`_id` AS `id_ot`,
+    `bais_db`.`karyawan`.`npk` AS `npk`,
+    `bais_db`.`karyawan`.`nama` AS `nama`,
+    `bais_db`.`karyawan`.`shift` AS `shift`,
+    `bais_db`.`absensi`.`check_in` AS `check_in`,
+    `bais_db`.`absensi`.`check_out` AS `check_out`,
+    `bais_db`.`absensi`.`ket` AS `ket_abs`,
+    `lembur`.`kode_lembur` AS `ot_code`,
+    `lembur`.`requester` AS `requester`,
+    `lembur`.`work_date` AS `work_date`,
+    `lembur`.`in_date` AS `in_date`,
+    `lembur`.`out_date` AS `out_date`,
+    `lembur`.`over_time` AS `over_time`,
+    `lembur`.`min_in` AS `start`,
+    `lembur`.`max_out` AS `end`,
+    `lembur`.`kode_job` AS `job_code`,
+    `lembur`.`aktifitas` AS `activity`,
+    `lembur`.`status_approve` AS `status_approve`,
+    `lembur`.`status` AS `status_progress`,
+    `lembur`.`tanggal_input` AS `req_date`,
+    `bais_db`.`org`.`sub_post` AS `sub_post`,
+    `bais_db`.`org`.`post` AS `post`,
+    `bais_db`.`org`.`grp` AS `grp`,
+    `bais_db`.`org`.`sect` AS `sect`,
+    `bais_db`.`org`.`dept` AS `dept`,
+    `bais_db`.`org`.`dept_account` AS `dept_account`,
+    `bais_db`.`org`.`division` AS `division`,
+    `bais_db`.`org`.`plant` AS `plant`
+FROM
+(
+    (
+        (
+            (
+            SELECT
+                `bais_db`.`lembur`.`_id` AS `_id`,
+                `bais_db`.`lembur`.`kode_lembur` AS `kode_lembur`,
+                `bais_db`.`lembur`.`requester` AS `requester`,
+                `bais_db`.`lembur`.`npk` AS `npk`,
+                `bais_db`.`lembur`.`work_date` AS `work_date`,
+                `bais_db`.`lembur`.`in_date` AS `in_date`,
+                `bais_db`.`lembur`.`out_date` AS `out_date`,
+                SUM(`bais_db`.`lembur`.`over_time`) AS `over_time`,
+                MAX(`bais_db`.`lembur`.`out_lembur`) AS `max_out`,
+                MIN(`bais_db`.`lembur`.`in_lembur`) AS `min_in`,
+                `bais_db`.`lembur`.`tanggal_input` AS `tanggal_input`,
+                `bais_db`.`lembur`.`status_approve` AS `status_approve`,
+                `bais_db`.`lembur`.`status` AS `status`,
+                GROUP_CONCAT(
+                    `bais_db`.`lembur`.`aktifitas` SEPARATOR ','
+                ) AS `aktifitas`,
+                GROUP_CONCAT(
+                    `bais_db`.`lembur`.`kode_job` SEPARATOR ','
+                ) AS `kode_job`
+            FROM
+                `bais_db`.`lembur`
+            GROUP BY
+                `bais_db`.`lembur`.`npk`,
+                `bais_db`.`lembur`.`work_date`,
+                `bais_db`.`lembur`.`_id`
+        ) `lembur`
+    JOIN `bais_db`.`karyawan` ON
+        (
+            `bais_db`.`karyawan`.`npk` = `lembur`.`npk`
+        )
+        )
+    JOIN `bais_db`.`org` ON
+        (`bais_db`.`org`.`npk` = `lembur`.`npk`)
+    )
+    LEFT JOIN `bais_db`.`absensi` ON
+        (
+            `bais_db`.`absensi`.`id` = CONCAT(`lembur`.`npk`,`lembur`.`work_date`)
+        )
+        )";
+    ?>
     <form method="GET" action="schedule.php">
         <div class="modal fade" id="modal_add" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered ">
