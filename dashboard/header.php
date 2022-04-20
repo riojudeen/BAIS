@@ -844,7 +844,7 @@ $base64 = getFoto($npkUser)
               <li class="menu clpse " data-name="lm" id="lm" data-target="lm">
                 <a href="<?php echo base_url('dashboard/time_lock/');?>">
                 <i class="far fa-clock"></i>
-                  <p>Time-Lock Management </p>
+                  <p>Lock Management </p>
                 </a>
               </li>
               <li>

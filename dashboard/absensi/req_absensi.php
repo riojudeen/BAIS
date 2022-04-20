@@ -42,8 +42,6 @@ if(isset($_SESSION['user'])){
 
         $bln = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","Sepember","Oktober","November","Desember");
         $totalBln = count($bln);
-
-
         
         ?>
     <div class="row">

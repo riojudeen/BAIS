@@ -38,7 +38,7 @@
             date: randomDate( rndStart.valueOf(), current.valueOf() )
         });
     }
-    console.log(data);
+    // console.log(data);
     // $("#heatmap-5").CalendarHeatmap(data, {
     //     title: "Default Layout"
     // });

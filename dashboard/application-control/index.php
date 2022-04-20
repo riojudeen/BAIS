@@ -52,6 +52,23 @@ if(isset($_SESSION['user'])){
     $sql_Int = mysqli_query($link, $queryInt)or die(mysqli_error($link));
     $Data_Int = mysqli_fetch_assoc($sql_Int);
     $totalInt = $Data_Int['tot'];
+    $hour = ($Data_Int['hour'] != '')?$Data_Int['hour']."h":"-";
+    // echo $hour;
+    
+
+
+    $q_user = mysqli_query($link, "SELECT user_role.role_name AS role_name, view_user.npk,view_user.level_user, view_user.nama, view_organization.groupfrm AS grp, view_organization.section AS sect, view_organization.dept AS dept, view_organization.dept_account AS dept_account FROM view_user LEFT JOIN view_organization ON view_organization.npk = view_user.npk 
+                LEFT JOIN user_role ON user_role.id_role = view_user.level_user")or die(mysqli_error($link));
+                $totUser = mysqli_num_rows($q_user);
+
+    $queryUser = "SELECT npk FROM view_user";
+    $queryAct = "SELECT COUNT(id) FROM user_interaction";
+    $sql_Act = mysqli_query($link, $queryAct)or die(mysqli_error($link));
+    $totalAct = mysqli_num_rows($sql_Act);
+
+
+    $avg = ($totUser > 0)?$totalInt/$totUser:0;
+    // $totalAct = $Data_Act['tot_active'];
     // echo $Data_Int['hour'];
     // echo ceil(Round($tbAbsenReq['size']));
         $sql = mysqli_query($link, $query)or die(mysqli_error($link));
@@ -72,14 +89,14 @@ if(isset($_SESSION['user'])){
 <div class="row">
     <div class="col-md-12">
         <h5 class="card-title mb-0"> User Interactions</h5>
-        <p class="card-category mt-0">Size on disk</p>
+        <p class="card-category mt-0"></p>
         <hr class="mt-0">
         <div class="card card-stats">
             <div class="card-body " id="4">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-5 col-md-4">
                                         <div class="icon-big text-center icon-white">
@@ -96,20 +113,20 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </div>
                                     <div class="col-7 col-md-8 ">
-                                        <div class="numbers text-left border-left pl-3">
+                                        <div class="numbers text-left pl-3">
                                             <p class="card-title text-secondary ">Total<p>
                                             <p class="card-category  text-secondary mb-3"> Interaction</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-5 col-md-4">
                                         <div class="icon-big text-center icon-white">
                                         <span class="fa-stack" >
                                                 <i class="far fa-circle fa-stack-2x text-light mt-1 pb-3"></i>
-                                                <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
+                                                <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=$hour?>
                                                 <p class="category label bold text-uppercase "style="margin-top:-70px;font-size:10px" >
                                                 <i class="fas fa-history"></i> <strong>WIB</strong></p>
                                                 </p>
@@ -120,20 +137,20 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </div>
                                     <div class="col-7 col-md-8 ">
-                                        <div class="numbers text-left border-left pl-3">
-                                            <p class="card-title text-secondary ">Higlight<p>
-                                            <p class="card-category  text-secondary mb-3"> Interaction</p>
+                                        <div class="numbers text-left pl-3">
+                                            <p class="card-title text-secondary ">Critical<p>
+                                            <p class="card-category  text-secondary mb-3"> Hour</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="row">
                                     <div class="col-5 col-md-4">
                                         <div class="icon-big text-center icon-white">
                                         <span class="fa-stack" >
                                                 <i class="far fa-circle fa-stack-2x text-light mt-1 pb-3"></i>
-                                                <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
+                                                <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=Round($avg,2)?>
                                                 <p class="category label bold text-uppercase "style="margin-top:-70px;font-size:10px" >
                                                 <i class="fas fa-stopwatch-20"></i> <strong>times</strong></p>
                                                 </p>
@@ -144,9 +161,38 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </div>
                                     <div class="col-7 col-md-8 ">
-                                        <div class="numbers text-left border-left pl-3">
-                                            <p class="card-title text-secondary ">Average<p>
+                                        <div class="numbers text-left pl-3">
+                                            <p class="card-title text-secondary ">Avg<p>
                                             <p class="card-category  text-secondary mb-3"> Click / User</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="row">
+                                    <div class="col-5 col-md-4">
+                                        <?php
+                                        $q_user = mysqli_query($link, "SELECT user_role.role_name AS role_name, view_user.npk,view_user.level_user, view_user.nama, view_organization.groupfrm AS grp, view_organization.section AS sect, view_organization.dept AS dept, view_organization.dept_account AS dept_account FROM view_user LEFT JOIN view_organization ON view_organization.npk = view_user.npk 
+                                        LEFT JOIN user_role ON user_role.id_role = view_user.level_user WHERE stats = '1'")or die(mysqli_error($link));
+                                        $totUserActive = mysqli_num_rows($q_user);
+                                        ?>
+                                        <div class="icon-big text-center icon-white">
+                                        <span class="fa-stack" >
+                                                <i class="far fa-circle fa-stack-2x text-light mt-1 pb-3"></i>
+                                                <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=$totUserActive?> 
+                                                <p class="category label bold text-uppercase "style="margin-top:-70px;font-size:10px" >
+                                                <i class="fas fa-user"></i> <strong>users</strong></p>
+                                                </p>
+                                                <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
+                                                <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                                <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-7 col-md-8 ">
+                                        <div class="numbers text-left  pl-3">
+                                            <p class="card-title text-secondary ">Active<p>
+                                            <p class="card-category  text-secondary mb-3"> of <?=$totUser?> users</p>
                                         </div>
                                     </div>
                                 </div>
@@ -156,14 +202,69 @@ if(isset($_SESSION['user'])){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 pl-0 pr-2 text-right" >
                         
                         <?php
-                        include_once('heatmap.php');
+                        // include_once('heatmap.php');
+                        include_once('cal-heatmap.php');
                         ?>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="card-category">Active User</h5>
+                        <div class="row">
+                            <div class="col-md-12 table-full-width text-uppercase">
+                                <div class="" >
+                                    <table class="table-sm" width="100%">
+                                        <thead class="table-secondary">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Npk</th>
+                                                <th>Name</th>
+                                                <th>Group</th>
+                                                <th>Section</th>
+                                                <th>Dept</th>
+                                                <th>Dept Adm</th>
+                                                <th>Level User</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            
+                                            if(mysqli_num_rows($q_user)>0){
+                                                $no = 1;
+                                                while($data_active = mysqli_fetch_assoc($q_user)){
+                                                    ?>
+                                                    <tr>
+                                                        <td><?=$no++?></td>
+                                                        <td><?=$data_active['npk']?></td>
+                                                        <td><?=$data_active['nama']?></td>
+                                                        <td><?=$data_active['grp']?></td>
+                                                        <td><?=$data_active['sect']?></td>
+                                                        <td><?=$data_active['dept']?></td>
+                                                        <td><?=$data_active['dept_account']?></td>
+                                                        <td><?=$data_active['role_name']?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+
+
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
                 
+            </div>
+            <div class="card-footer">
+
             </div>
         </div>
 
@@ -172,6 +273,7 @@ if(isset($_SESSION['user'])){
 <div class="row">
     <div class="col-md-12">
     <h5 class="card-title">DB Statistics</h5>
+    <p class="card-category mt-0">Measure DB Performances</p>
     <hr class="mt-0">
         <div class="card card-plain">
             <div class="card-body">
@@ -183,7 +285,7 @@ if(isset($_SESSION['user'])){
                                 <div class="card card-plain" >
                                     <div class="card-header ">
                                         
-                                        <p class="card-category">Size on disk</p>
+                                        <p class="card-category">Total Size in Database</p>
                                     </div>
                                     <div class="card-body ">
                                         <canvas id="chartDB" class="ct-chart ct-perfect-fourth" width="456" height="400"></canvas>
@@ -389,7 +491,7 @@ if(isset($_SESSION['user'])){
                         <hr>
                         <div class="card ">
                             <div class="card-header ">
-                                <p class="card-category">Row on Tables</p>
+                                <p class="card-category">Rows on Table</p>
                             </div>
                             <div class="card-body ">
                                 <canvas id="chartTableRow" class="ct-chart ct-perfect-fourth" width="456" height="150"></canvas>
@@ -406,8 +508,43 @@ if(isset($_SESSION['user'])){
 </div>
 <div class="row">
 <div class="col-md-12">
-    <h5 class="card-title">External Directory</h5>
+    <h5 class="card-title ">External Directory</h5>
+    <p class="card-category mt-0">Root folder of external database </p>
     <hr class="mt-0">
+    <div class="card ">
+        <div class="card-body text-uppercase">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Root Directory</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        $q_ext = "SELECT * FROM external_directory";
+                        $sql_ext = mysqli_query($link, $q_ext)or die(mysqli_error($link));
+                        if(mysqli_num_rows($sql_ext)>0){
+                            $no = 1;
+                            while($data_ext = mysqli_fetch_assoc($sql_ext)){
+                                ?>
+                                <tr>
+                                    <td><?=$no++?></td>
+                                    <td><?=$data_ext['root']?></td>
+                                    <td><?=$data_ext['keterangan']?></td>
+                                </tr>
+                                <?php
+                            }
+                        }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <?php
@@ -954,6 +1091,8 @@ if(isset($_SESSION['user'])){
     </script> 
     <?php
     include_once("../endbody.php"); 
+}else{
+    header('location:../../auth/login.php');
 }
    
     
