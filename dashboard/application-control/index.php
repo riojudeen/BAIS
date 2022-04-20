@@ -48,7 +48,8 @@ if(isset($_SESSION['user'])){
     $sqlOtReq = mysqli_query($link, $queryOtReq)or die(mysqli_error($link));
     $tbOtReq = mysqli_fetch_assoc($sqlOtReq);
     // echo $tbAbsenReq['table'];
-    $queryInt = "SELECT count(id) AS tot, max(EXTRACT(HOUR FROM waktu)) AS hour FROM user_interaction ";
+    $queryInt = "SELECT count(user) AS tot,  max(EXTRACT(HOUR FROM waktu)) AS max_hour,  count(EXTRACT(HOUR FROM waktu)) AS hour FROM 
+        user_interaction";
     $sql_Int = mysqli_query($link, $queryInt)or die(mysqli_error($link));
     $Data_Int = mysqli_fetch_assoc($sql_Int);
     $totalInt = $Data_Int['tot'];
