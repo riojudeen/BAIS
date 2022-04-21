@@ -48,11 +48,11 @@ if(isset($_SESSION['user'])){
     $sqlOtReq = mysqli_query($link, $queryOtReq)or die(mysqli_error($link));
     $tbOtReq = mysqli_fetch_assoc($sqlOtReq);
     // echo $tbAbsenReq['table'];
-    $queryInt = "SELECT count(user) AS tot,  max(EXTRACT(HOUR FROM waktu)) AS max_hour,  count(EXTRACT(HOUR FROM waktu)) AS hour FROM 
-        user_interaction";
+    $queryInt = "SELECT hour , (SELECT count(waktu) FROM user_interaction WHERE EXTRACT(HOUR FROM waktu) = hour ) tot_jam , (SELECT count(user) FROM user_interaction )AS total_click  FROM 
+    (SELECT user, EXTRACT(HOUR FROM waktu) AS hour FROM user_interaction GROUP BY hour) AS interaction ORDER BY tot_jam DESC LIMIT 1";
     $sql_Int = mysqli_query($link, $queryInt)or die(mysqli_error($link));
     $Data_Int = mysqli_fetch_assoc($sql_Int);
-    $totalInt = $Data_Int['tot'];
+    $totalInt = $Data_Int['total_click'];
     $hour = ($Data_Int['hour'] != '')?$Data_Int['hour']."h":"-";
     // echo $hour;
     
@@ -105,7 +105,7 @@ if(isset($_SESSION['user'])){
                                                 <i class="far fa-circle fa-stack-2x text-light mt-1 pb-3"></i>
                                                 <p class="title text-secondary" style="margin-top:-20px; font-size:25px"><?=$totalInt?>
                                                 <p class="category label bold text-uppercase "style="margin-top:-70px;font-size:10px" >
-                                                <i class="fas fa-mouse"></i> <strong>click</strong></p>
+                                                <i class="fas fa-mouse"></i> <strong>hits</strong></p>
                                                 </p>
                                                 <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
                                                 <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
@@ -164,7 +164,7 @@ if(isset($_SESSION['user'])){
                                     <div class="col-7 col-md-8 ">
                                         <div class="numbers text-left pl-3">
                                             <p class="card-title text-secondary ">Avg<p>
-                                            <p class="card-category  text-secondary mb-3"> Click / User</p>
+                                            <p class="card-category  text-secondary mb-3"> hits / User</p>
                                         </div>
                                     </div>
                                 </div>
@@ -278,8 +278,135 @@ if(isset($_SESSION['user'])){
     <hr class="mt-0">
         <div class="card card-plain">
             <div class="card-body">
+                
+                <div class="row " >
+                    <div class="col-md-12">
+                            <div class="row rounded flex-row flex-nowrap overflow-auto img_holder" id="b">
+                                <div class="col-md-12">
+                                    <div class="owl-carousel owl-theme">
+                                        <div class="card card-stats  item">
+                                            <div class="card-body " id="4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-5 col-md-4">
+                                                                        <div class="icon-big text-center icon-danger">
+                                                                            <span class="fa-stack" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
+                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="fas fa-save"></i> <strong>mb</strong></p>
+                                                                                </p>
+                                                                                <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                                <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                                                                <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-7 col-md-8 ">
+                                                                        <div class="numbers text-left border-left pl-3">
+                                                                            <p class="card-title text-secondary ">Overtime<p>
+                                                                            <p class="card-category  text-secondary mb-3"> HR Record</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-5 col-md-4">
+                                                                        <div class="icon-big text-center icon-info">
+                                                                        <span class="fa-stack" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
+                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbOtReq['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="fas fa-save"></i> <strong>mb</strong></p>
+                                                                                </p>
+                                                                                <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                                <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                                                                <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-7 col-md-8 ">
+                                                                        <div class="numbers text-left border-left pl-3">
+                                                                            <p class="card-title text-secondary ">Overtime<p>
+                                                                            <p class="card-category  text-secondary mb-3"> Request Record</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card card-stats item">
+                                            <div class="card-body " id="4">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-5 col-md-4">
+                                                                        <div class="icon-big text-center icon-info">
+                                                                        <span class="fa-stack" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
+                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsen['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="fas fa-save"></i> <strong>mb</strong></p>
+                                                                                </p>
+                                                                                <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                                <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                                                                <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-7 col-md-8 ">
+                                                                        <div class="numbers text-left border-left pl-3">
+                                                                            <p class="card-title text-secondary ">Attendance<p>
+                                                                            <p class="card-category  text-secondary mb-3"> HR Record</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="row">
+                                                                    <div class="col-5 col-md-4">
+                                                                        <div class="icon-big text-center icon-info">
+                                                                        <span class="fa-stack" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
+                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsenReq['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="fas fa-save"></i> <strong>mb</strong></p>
+                                                                                </p>
+                                                                                <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                                <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
+                                                                                <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-7 col-md-8 ">
+                                                                        <div class="numbers text-left border-left pl-3">
+                                                                            <p class="card-title text-secondary">Leave<p>
+                                                                            <p class="card-category  text-secondary mb-3"> Request Record</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- </div> -->
 
-                <div class="row pl-3" >
+                                    </div>
+                                </div>
+                                
+                            </div>
+                    </div>
                     <div class="col-md-3 " style="border-radius:20px; background-color:rgba(232, 230, 222, 0.5);">
                         <div class="row">
                             <div class="col-md-12 " >
@@ -301,132 +428,7 @@ if(isset($_SESSION['user'])){
                     </div>
                     <div class="col-md-9">
 
-                        <h5 class="card-title">Table Statistics</h5>
-                        <div class="row rounded flex-row flex-nowrap overflow-auto img_holder" id="b">
-                            <div class="col-md-12">
-                                <div class="owl-carousel owl-theme">
-                                    <div class="card card-stats bg-info item">
-                                        <div class="card-body " id="4">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="row">
-                                                                <div class="col-5 col-md-4">
-                                                                    <div class="icon-big text-center icon-white">
-                                                                    <span class="fa-stack" >
-                                                                            <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                            <p class="text-white title " style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
-                                                                            <p class="category label bold text-uppercase text-white"style="margin-top:-70px;font-size:10px" >
-                                                                            <i class="fas fa-save"></i> <strong>mb</strong></p>
-                                                                            </p>
-                                                                            <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                            <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                                                            <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-7 col-md-8 ">
-                                                                    <div class="numbers text-left border-left pl-3">
-                                                                        <p class="card-title text-white ">Overtime<p>
-                                                                        <p class="card-category  text-white mb-3"> HR Record</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="row">
-                                                                <div class="col-5 col-md-4">
-                                                                    <div class="icon-big text-center icon-white">
-                                                                    <span class="fa-stack" >
-                                                                            <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                            <p class="text-white title " style="margin-top:-20px; font-size:25px"><?=Round($tbOtReq['size'],2)?>
-                                                                            <p class="category label bold text-uppercase text-white"style="margin-top:-70px;font-size:10px" >
-                                                                            <i class="fas fa-save"></i> <strong>mb</strong></p>
-                                                                            </p>
-                                                                            <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                            <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                                                            <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-7 col-md-8 ">
-                                                                    <div class="numbers text-left border-left pl-3">
-                                                                        <p class="card-title text-white ">Overtime<p>
-                                                                        <p class="card-category  text-white mb-3"> Request Record</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card card-stats bg-info item">
-                                        <div class="card-body " id="4">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="row">
-                                                                <div class="col-5 col-md-4">
-                                                                    <div class="icon-big text-center icon-white">
-                                                                    <span class="fa-stack" >
-                                                                            <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                            <p class="text-white title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsen['size'],2)?>
-                                                                            <p class="category label bold text-uppercase text-white"style="margin-top:-70px;font-size:10px" >
-                                                                            <i class="fas fa-save"></i> <strong>mb</strong></p>
-                                                                            </p>
-                                                                            <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                            <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                                                            <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-7 col-md-8 ">
-                                                                    <div class="numbers text-left border-left pl-3">
-                                                                        <p class="card-title text-white ">Attendance<p>
-                                                                        <p class="card-category  text-white mb-3"> HR Record</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="row">
-                                                                <div class="col-5 col-md-4">
-                                                                    <div class="icon-big text-center icon-white">
-                                                                    <span class="fa-stack" >
-                                                                            <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                            <p class="text-white title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsenReq['size'],2)?>
-                                                                            <p class="category label bold text-uppercase text-white"style="margin-top:-70px;font-size:10px" >
-                                                                            <i class="fas fa-save"></i> <strong>mb</strong></p>
-                                                                            </p>
-                                                                            <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                            <!-- <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                                                            <i class="fas fa-cogs fa-stack-1x fa-inverse mt-1"></i> -->
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-7 col-md-8 ">
-                                                                    <div class="numbers text-left border-left pl-3">
-                                                                        <p class="card-title text-white ">Leave<p>
-                                                                        <p class="card-category  text-white mb-3"> Request Record</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- </div> -->
-
-                                </div>
-                            </div>
-                            
-                        </div>
+                        
 
                         <!-- <script>
                             var scroller = {};

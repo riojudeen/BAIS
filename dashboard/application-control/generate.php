@@ -63,7 +63,7 @@ if(isset($_SESSION['user']) && $_POST['data']){
         start: new Date(<?=$minDate?>),
         // minDate: new Date(2022, 5),
         maxDate: new Date(<?=$maxDate?>),
-        legend: [10, 50, 100, 150, 300, 500],
+        legend: [50, 150, 250, 350],
         legendCellSize: 8,
         legendMargin: [10, 0, 0, 10],
         // domainLabelFormat: "%d-%m-%Y",   
