@@ -12,14 +12,14 @@ if(isset($_SESSION['user'])){
 
 <?php
     
-    $queryDB = "SELECT table_schema as 'database', SUM(data_length + index_length) / 1024 / 1024 as 'MB' FROM information_schema.tables   
+    $queryDB = "SELECT table_schema as 'database', SUM(data_length + index_length) / 1024 / 1024 as 'MB',  COUNT(data_length) AS 'total_table' FROM information_schema.tables   
     WHERE table_schema = 'bais_db' GROUP BY table_schema   ORDER BY SUM(data_length + index_length) DESC  ; ";
 
         $sqlDB = mysqli_query($link, $queryDB)or die(mysqli_error($link));
         $dataDB = mysqli_fetch_assoc($sqlDB);
         $DBsize = Round($dataDB['MB'], 2);
         // echo $DBsize."<br>";
-    $query = "SELECT table_name as 'table', engine as 'Engine', table_rows as 'rows', data_length / 1024 / 1024 as 'size'   
+    $query = "SELECT table_name as 'table', engine as 'Engine', table_rows as 'rows',  data_length / 1024 / 1024 as 'size'   
         FROM information_schema.tables   
         where table_schema = 'bais_db'   
         order by data_length desc, table_rows";
@@ -73,19 +73,23 @@ if(isset($_SESSION['user'])){
     // echo $Data_Int['hour'];
     // echo ceil(Round($tbAbsenReq['size']));
         $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+        $total_table = mysqli_num_rows($sql);
         $array_table = array();
         $array_table_size = array();
         $array_table_row = array();
         if(mysqli_num_rows($sql)>0){
+            $total_row = 0;
             while($data = mysqli_fetch_assoc($sql)){
                 array_push($array_table, $data['table']);
                 array_push($array_table_size, Round($data['size'], 2));
                 array_push($array_table_row, $data['rows']);
+                $total_row += (int)$data['rows'];
+
                 // echo $data['table']." :".$data['size']." :".$data['rows']."<br>";
             }
         }
         // print_r($array_table_size)
-
+        // echo $total_row;
     ?>
 <div class="row">
     <div class="col-md-12">
@@ -203,7 +207,7 @@ if(isset($_SESSION['user'])){
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12 pl-0 pr-2 text-right" >
+                    <div class="col-md-12 px-2 text-right" >
                         
                         <?php
                         // include_once('heatmap.php');
@@ -294,9 +298,9 @@ if(isset($_SESSION['user'])){
                                                                     <div class="col-5 col-md-4">
                                                                         <div class="icon-big text-center icon-danger">
                                                                             <span class="fa-stack" >
-                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
-                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3 text-info"></i>
+                                                                                <p class="text-info title " style="margin-top:-20px; font-size:25px"><?=Round($tbOt['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-info"style="margin-top:-70px;font-size:10px" >
                                                                                 <i class="fas fa-save"></i> <strong>mb</strong></p>
                                                                                 </p>
                                                                                 <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
@@ -307,8 +311,8 @@ if(isset($_SESSION['user'])){
                                                                     </div>
                                                                     <div class="col-7 col-md-8 ">
                                                                         <div class="numbers text-left border-left pl-3">
-                                                                            <p class="card-title text-secondary ">Overtime<p>
-                                                                            <p class="card-category  text-secondary mb-3"> HR Record</p>
+                                                                            <p class="card-title text-info">Overtime<p>
+                                                                            <p class="card-category  text-info mb-3"> HR Record</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -318,9 +322,9 @@ if(isset($_SESSION['user'])){
                                                                     <div class="col-5 col-md-4">
                                                                         <div class="icon-big text-center icon-info">
                                                                         <span class="fa-stack" >
-                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbOtReq['size'],2)?>
-                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3 text-info"></i>
+                                                                                <p class="text-info title " style="margin-top:-20px; font-size:25px"><?=Round($tbOtReq['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-info"style="margin-top:-70px;font-size:10px" >
                                                                                 <i class="fas fa-save"></i> <strong>mb</strong></p>
                                                                                 </p>
                                                                                 <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
@@ -331,8 +335,8 @@ if(isset($_SESSION['user'])){
                                                                     </div>
                                                                     <div class="col-7 col-md-8 ">
                                                                         <div class="numbers text-left border-left pl-3">
-                                                                            <p class="card-title text-secondary ">Overtime<p>
-                                                                            <p class="card-category  text-secondary mb-3"> Request Record</p>
+                                                                            <p class="card-title text-info">Overtime<p>
+                                                                            <p class="card-category  text-info mb-3"> Request Record</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -352,9 +356,9 @@ if(isset($_SESSION['user'])){
                                                                     <div class="col-5 col-md-4">
                                                                         <div class="icon-big text-center icon-info">
                                                                         <span class="fa-stack" >
-                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsen['size'],2)?>
-                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3 text-info"></i>
+                                                                                <p class="text-info title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsen['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-info"style="margin-top:-70px;font-size:10px" >
                                                                                 <i class="fas fa-save"></i> <strong>mb</strong></p>
                                                                                 </p>
                                                                                 <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
@@ -365,8 +369,8 @@ if(isset($_SESSION['user'])){
                                                                     </div>
                                                                     <div class="col-7 col-md-8 ">
                                                                         <div class="numbers text-left border-left pl-3">
-                                                                            <p class="card-title text-secondary ">Attendance<p>
-                                                                            <p class="card-category  text-secondary mb-3"> HR Record</p>
+                                                                            <p class="card-title text-info ">Attendance<p>
+                                                                            <p class="card-category  text-info mb-3"> HR Record</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -376,9 +380,9 @@ if(isset($_SESSION['user'])){
                                                                     <div class="col-5 col-md-4">
                                                                         <div class="icon-big text-center icon-info">
                                                                         <span class="fa-stack" >
-                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3"></i>
-                                                                                <p class="text-secondary title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsenReq['size'],2)?>
-                                                                                <p class="category label bold text-uppercase text-secondary"style="margin-top:-70px;font-size:10px" >
+                                                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1 pb-3 text-info"></i>
+                                                                                <p class="text-info title " style="margin-top:-20px; font-size:25px"><?=Round($tbAbsenReq['size'],2)?>
+                                                                                <p class="category label bold text-uppercase text-info"style="margin-top:-70px;font-size:10px" >
                                                                                 <i class="fas fa-save"></i> <strong>mb</strong></p>
                                                                                 </p>
                                                                                 <!-- <i class="fas fa-car fa-stack-1x fa-inverse mt-1"></i> -->
@@ -389,8 +393,8 @@ if(isset($_SESSION['user'])){
                                                                     </div>
                                                                     <div class="col-7 col-md-8 ">
                                                                         <div class="numbers text-left border-left pl-3">
-                                                                            <p class="card-title text-secondary">Leave<p>
-                                                                            <p class="card-category  text-secondary mb-3"> Request Record</p>
+                                                                            <p class="card-title text-info">Leave<p>
+                                                                            <p class="card-category text-info mb-3"> Request Record</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -412,14 +416,42 @@ if(isset($_SESSION['user'])){
                             <div class="col-md-12 " >
                                 <div class="card card-plain" >
                                     <div class="card-header ">
-                                        
                                         <p class="card-category">Total Size in Database</p>
                                     </div>
                                     <div class="card-body ">
                                         <canvas id="chartDB" class="ct-chart ct-perfect-fourth" width="456" height="400"></canvas>
-                                        <div class="legend">
-                                        <i class="fa fa-circle text-primary"></i> size
+                                        <div class="legend text-info">
+                                        <i class="fa fa-circle "></i> size
                                         </div>
+                                        <hr class="">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <ul class="text-secndary" >
+                                                    <li>total table : 
+                                                        <span class="badge badge-sm badge-pill badge-round badge-primary text-right"><?=$total_table?> Tables</span>
+                                                        <hr class="my-1">
+                                                    </li>
+                                                    <li>total rows : 
+                                                        <span class="badge badge-sm badge-pill badge-round badge-primary text-right"><?=$total_row?> rows</span>
+                                                        <hr class="my-1">
+                                                    </li>
+                                                    <li>avg size / table : 
+                                                        <?php
+                                                        $avg = ($DBsize>0)?$DBsize/$total_table:'-';
+                                                        $avg_row = ($total_table>0)?$total_row/$total_table:'-';
+                                                        $avg_size_row = ($total_row>0)?($DBsize*1024*1024)/$total_row:'-';
+                                                        ?>
+                                                        <span class="badge badge-sm badge-pill badge-round badge-primary text-right"><?=round($avg,2)?> MB</span>
+                                                        <hr class="my-1">
+                                                    </li>
+                                                    <li>avg size / rows :
+                                                        <span class="badge badge-sm badge-pill badge-round badge-primary text-right"><?=round($avg_size_row, 2)?> B</span>
+                                                        <hr class="my-1">
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <hr class="">
                                     </div>
                                 </div>
                         
