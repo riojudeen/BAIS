@@ -90,7 +90,6 @@ if(isset($_SESSION['user'])){
         }
         // print_r($array_table_size)
         // echo $total_row;
-
     ?>
 <div class="row">
     <div class="col-md-12">
