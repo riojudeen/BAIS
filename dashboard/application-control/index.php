@@ -96,7 +96,8 @@ if(isset($_SESSION['user'])){
         <h5 class="card-title mb-0"> User Interactions</h5>
         <p class="card-category mt-0"></p>
         <hr class="mt-0">
-        <div class="card card-stats">
+        <div class="card card-stats shadow-none" style="border-radius:20px; background-color:rgba(255,253,168, 0.5);
+background: linear-gradient(180deg, rgba(255,253,168, 1) 0%, rgba(255,253,168, 0.0) 100%, rgba(255,253,168, 0.0) 100%);">
             <div class="card-body " id="4">
                 <div class="row">
                     <div class="col-md-12">
@@ -411,7 +412,8 @@ if(isset($_SESSION['user'])){
                                 
                             </div>
                     </div>
-                    <div class="col-md-3 " style="border-radius:20px; background-color:rgba(232, 230, 222, 0.5);">
+                    <div class="col-md-3 " style="border-radius:20px; background-color:rgba(232, 230, 222, 0.5);
+background: linear-gradient(180deg, rgba(232, 230, 222, 1) 0%, rgba(232, 230, 222, 0.0) 100%, rgba(232, 230, 222, 0.0) 100%);">
                         <div class="row">
                             <div class="col-md-12 " >
                                 <div class="card card-plain" >
@@ -513,18 +515,20 @@ if(isset($_SESSION['user'])){
                                 });
                             });
                         </script>
-                        <div class="card ">
+                        <div class="card shadow-none" style="border-radius:20px; background-color:rgba(255,255,255, 0.5);
+background: linear-gradient(180deg, rgba(255,255,255, 1) 0%, rgba(255,255,255, 0.0) 100%, rgba(255,255,255, 0.0) 100%);">
                             <div class="card-header ">
                                 <p class="card-category">Size on disk</p>
                                 
                             </div>
                             <div class="card-body ">
-                                <canvas id="chartTable" class="ct-chart ct-perfect-fourth" width="456" height="150"></canvas>
+                                <canvas id="chartTable" class="ct-chart ct-perfect-fourth" width="456" height="150" ></canvas>
                             </div>
                             
                         </div>
                         <hr>
-                        <div class="card ">
+                        <div class="card shadow-none" style="border-radius:20px; background-color:rgba(255,255,255, 0.5);
+background: linear-gradient(180deg, rgba(255,255,255, 1) 0%, rgba(255,255,255, 0.0) 100%, rgba(255,255,255, 0.0) 100%);">
                             <div class="card-header ">
                                 <p class="card-category">Rows on Table</p>
                             </div>

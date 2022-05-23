@@ -4,7 +4,7 @@ include("../../config/config.php");
 if(isset($_SESSION['user']) && $_POST['data']){
    
     $today = date('Y-m-d');
-    $minDate = date('Y-m-d', strtotime("-24 days", strtotime($today)));
+    $minDate = date('Y-m-d', strtotime("-29 days", strtotime($today)));
     $pecah_min = explode("-",$minDate);
     $bln_min = $pecah_min['1']-1;
     $tgl_min = $pecah_min['2'];
@@ -51,7 +51,7 @@ if(isset($_SESSION['user']) && $_POST['data']){
 
         itemName: ["hit", "hits"],
         itemSelector: "#cal-heatmap",
-        range: 25,
+        range: 30,
         cellSize: 10,
         domain: "day",
         domainGutter: 0,
