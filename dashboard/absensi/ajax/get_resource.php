@@ -6,16 +6,12 @@ include("../../../config/config.php");
 if($level >=1 && $level <=8){
     require_once("../../../config/approval_system.php");
     
-    $level = 3;
-    // echo $deptAcc_filter;
     $shift = '';
-    // echo $shift;
     $cari = '';
     $npk = $npkUser;
     list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
     // echo $npk.$sub_post.$post.$group.$sect.$dept.$dept_account.$div.$plant;
     
-
     $origin_query = "SELECT 
         view_organization.npk,
         view_organization.nama,

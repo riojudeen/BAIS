@@ -103,7 +103,7 @@ if(mysqli_num_rows($sqlCheck) > 0){
             </div>
             <div class="col-md-12">
                 <label>Keterangan</label>
-                <select <?=$submit?> name="kode_absen[]" class="form-control col-lg-12 text-uppercase col-lg-4" id="" <?=$requiredCode?>>
+                <select <?=$submit?> name="kode_absen[]"  class="form-control col-lg-12 text-uppercase col-lg-4" id="ket_pengajuan" <?=$requiredCode?>>
                 <?php
                 $sqlAbs = mysqli_query($link, "SELECT * FROM attendance_code WHERE `type` = '$_POST[tipe]' ")or die(mysqli_error($link));
                 if($notif > 0 ){

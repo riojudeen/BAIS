@@ -482,12 +482,17 @@ if(isset($_SESSION['user'])){
                                 </div>
                             </div>
                         <?php
-                        }      
+                        }    
+                        if($disabled_in == "readonly" && $disabled_out == "readonly" && $_GET['jenis'] == "SUKET"){
+                            $dsbl_btn = "disabled"; 
+                        }else{
+                            $dsbl_btn = "";
+                        }
                         ?>
                         
                         <div class="row">
                             <div class="col-12">
-                                <input class="btn btn-success float-right" type="submit" name="req_<?=$_GET['jenis']?>" value="Submit <?=$_GET['jenis']?>">
+                                <input class="btn btn-success float-right" <?=$dsbl_btn?> type="submit" name="req_<?=$_GET['jenis']?>" value="Submit <?=$_GET['jenis']?>">
                             </div>
                         </div>
                         

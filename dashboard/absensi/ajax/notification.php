@@ -34,11 +34,11 @@ if(isset($_SESSION['user'])){
         $table_field1 = partAccess($level, "table_field1");
         $table_field2 = partAccess($level, "table_field2");
         $part = partAccess($level, "part");
-        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        // echo $group_filter;
+        $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npkUser, $data_access);
+        // echo $npk;
         
         $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org);
-        // echo $queryMP;
+        // echo $generate;
         $sqlMP = mysqli_query($link, $queryMP." AND npk = '$npk' " )or die(mysqli_error($link));
         $jmlMP = mysqli_num_rows($sqlMP);
         // echo $jmlMP;
@@ -59,6 +59,9 @@ if(isset($_SESSION['user'])){
                 Jika pengajuan masih dalam progress proses admin, pengajuan tidak dapat 
                 diproses
                 */
+                $type_absensi = mysqli_query($link, "SELECT `type` FROM attendance_code WHERE kode = '$_GET[code]' ")or die(mysqli_error($link));
+                $type_abs = mysqli_fetch_assoc($type_absensi);
+                $data_type = $type_abs['type'];
                 if($_GET['code'] != ''){
                 
                     $npk = (isset($_GET['npk']))?$_GET['npk']:'';
@@ -66,7 +69,7 @@ if(isset($_SESSION['user'])){
                     $total = (isset($_GET['total']))?$_GET['total']:'';
                     $code = (isset($_GET['code']))?$_GET['code']:''; //attendance_code
     
-                    // echo $code;
+                    // echo $npk;
                     $tanggal_array = json_decode(loopHari($mulai, $total));
                     $array_data = array();
                     $array_data_absensi = array();
@@ -137,7 +140,7 @@ if(isset($_SESSION['user'])){
                         req_absensi.date_out,
                         req_absensi.check_in,
                         req_absensi.check_out,
-                        req_absensi.keterangan ,
+                        req_absensi.keterangan AS `keterangan` ,
                         req_absensi.requester,
                         req_absensi.status,
                         req_absensi.req_status,
@@ -146,9 +149,9 @@ if(isset($_SESSION['user'])){
                         req_absensi.shift_req,
                         req_absensi.id_absensi ,
                         attendance_code.kode AS `kode`,
-                        attendance_code.kode AS `ket_kode`,
+                        attendance_code.keterangan AS `ket_kode`,
                         attendance_code.type AS `type`
-                        FROM req_absensi JOIN attendance_code ON req_absensi.keterangan = attendance_code.kode WHERE npk = '$npk' AND `date` = '$date' AND  shift_req <> 1 ")or die(mysqli_error($link));
+                        FROM req_absensi JOIN attendance_code ON req_absensi.keterangan = attendance_code.kode WHERE npk = '$npk' AND `date` = '$date' AND  shift_req <> 1 AND attendance_code.type = '$data_type' ")or die(mysqli_error($link));
                         if(mysqli_num_rows($cek_req) > 0){
                             $data_req = mysqli_fetch_assoc($cek_req);
                             $data_npk = $data_req['npk'];
@@ -268,6 +271,7 @@ if(isset($_SESSION['user'])){
     
                             <?php
                         }else{
+                            // print_r($array_data);
                             ?>
                             <div id="notification_result" data-id="0" class="text-uppercase alert alert-warning alert-with-icon alert-dismissible fade show" data-notify="container">
                                 
@@ -325,7 +329,26 @@ if(isset($_SESSION['user'])){
                                 </span>
                             </div>
                         </div>
+                        <?php
+                        $tgl_mulai = $mulai;
+                        $add_day = $total-1;
+                        $tgl_selesai = date('Y-m-d', strtotime("$add_day days", strtotime($tgl_mulai)));;
+                        $qry_alocation = "SELECT leave_alocation.alocation AS 'aloc', attendance_code.addition AS 'add' FROM
+                            attendance_code JOIN leave_alocation ON attendance_code.kode = leave_alocation.id_leave WHERE leave_alocation.effective_date <= '$tgl_mulai' AND leave_alocation.end >= '$tgl_selesai' AND attendance_code.kode = '$_GET[code]'";
+                        $sql_alocation = mysqli_query($link, $qry_alocation)or die(mysqli_error($link));
+                        // echo $qry_alocation;
+                        // echo mysqli_num_rows($sql_alocation);
+                        if(mysqli_num_rows($sql_alocation) >0){
+                            $data_eff = mysqli_fetch_assoc($sql_alocation);
+                            $max_day = $data_eff['aloc']+$data_eff['add'];
+                            ?>
+                            <input type="hidden" id="aloc_day" value="<?=$max_day?>">
                             
+                            <?php
+                        }
+
+                        ?>
+                        
                         <?php
                     }
                 }

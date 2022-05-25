@@ -14,12 +14,12 @@ if(isset($_SESSION['user'])){
         $dataCek = mysqli_fetch_assoc($sqlCheck);
         if(mysqli_num_rows($sqlCheck) > 0){
             $submit = "disabled";
-            $disableOption = "disabled";
+            $disableOption = "readonly";
             $notif = 1;
         }else{
             $submit = "";
             $notif = 0;
-            $disableOption = "";
+            $disableOption = "readonly";
         }
         // echo $_GET['id'];
         ///cari data absensi
@@ -291,7 +291,7 @@ if(isset($_SESSION['user'])){
                         }
 
                         ?>
-                        <form action="proses.php" method="POST">
+                        <form action="proses.php" method="POST"  enctype="multipart/form-data">
                             <div class="row">
                                 <?php
                                     list($npk,$subpost,$post,$group,$sect,$dept,$dept_account,$div,$plant) = dataOrg($link, $dataAbsenHr['npk_']);
@@ -393,7 +393,7 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </div>
                                     <div class="input"></div>
-                                    
+                                    <div class="attachment"></div>
                                     </div>
                                     
                                 
@@ -432,7 +432,7 @@ if(isset($_SESSION['user'])){
         $dataCek = mysqli_fetch_assoc($sqlCheck);
         if(mysqli_num_rows($sqlCheck) > 0){
             $submit = "disabled";
-            $disableOption = "disabled";
+            $disableOption = "readonly";
             $notif = 1;
         }else{
             $submit = "";
@@ -528,7 +528,8 @@ if(isset($_SESSION['user'])){
                         </div>
                         <br>
                         <label>Keterangan</label>
-                        <input type="text" class="form-control col-lg-12 " placeholder="Jam Pulang" value="<?=$dataAbsenHr['ket']?>" readonly >
+                        <input type="text" class="form-control col-lg-12 "  placeholder="Pengajuan" value="<?=$dataAbsenHr['ket']?>" readonly >
+
                         <br />
 
                         
@@ -846,8 +847,24 @@ if(isset($_SESSION['user'])){
     include_once("../footer.php");
     ?>
     <script type="text/javascript">
-
+    
     $(document).ready(function(){
+        function loadAttachment(){
+            var id = $('#ket_pengajuan').val();
+            console.log(id)
+            $.ajax({
+                type : 'post',
+                url : 'load_attachment.php',
+                data: {id:id},
+                success : function(data){
+                $('.attachment').html(data);//menampilkan data ke dalam modal
+                }
+            });
+        }
+        
+        $(document).on('change', '#ket_pengajuan', function(){
+            loadAttachment();
+        })
         function loadPermit(){
             var tipe = $('#tipe_ijin').val();
             var npk = $('#npk').val();
@@ -858,8 +875,10 @@ if(isset($_SESSION['user'])){
                 data: {tipe : tipe, npk:npk, date:date},
                 success : function(data){
                 $('.input').html(data);//menampilkan data ke dalam modal
+                loadAttachment()
                 }
             });
+
         }
         loadPermit();
         $(document).on('change', '#tipe_ijin', function(){

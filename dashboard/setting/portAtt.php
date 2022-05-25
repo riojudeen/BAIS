@@ -69,7 +69,27 @@ include_once('../component/migration-nav.php');
                         <input class="btn btn-icon btn-round" name="sort" value="go">
                     </div> -->
                 </div>
-                
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-12 float-right text-right">
+                            <ul class="nav nav-pills  nav-pills-primary nav-pills-icons justify-content-end" role="tablist">
+                                
+                                <li class="nav-item">
+                                    <a class="nav-link nav-port " data-toggle="tab" id="nav-ot"  href="#link8" role="tablist">
+                                    <i class="nc-icon nc-box"></i> | 
+                                    Overtime
+                                    </a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link nav-port port-active active" id="nav-att" data-toggle="tab" href="#link9" role="tablist">
+                                    <i class="nc-icon nc-touch-id"></i> | 
+                                    Attendace
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
                 
             </div>

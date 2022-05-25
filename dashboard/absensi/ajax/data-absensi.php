@@ -104,9 +104,11 @@ if(isset($_SESSION['user'])){
                     
                 
                     $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
-                    
+                    // echo $query_req_absensi.$addOrder.$addLimit;
                     if(mysqli_num_rows($sql)>0){
+                       
                         while($data = mysqli_fetch_assoc($sql)){
+                            
                             $query_group = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
                             $group_ = mysqli_fetch_assoc($query_group);
                             $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
@@ -116,14 +118,19 @@ if(isset($_SESSION['user'])){
                             $checkIn = ($data['check_in'] == '00:00:00')? "-" : jam($data['check_in']);
                             $checkOut = ($data['check_out'] == '00:00:00')? "-" : jam($data['check_out']);
                             $work_date = $data['work_date'];
-                            $limit_date = tgl(date('Y-m-t', strtotime($data['work_date'])));
-                            $today = date('Y-m-d');//harus diganti tanggal out kerja
-                            $str_date = strtotime($work_date);
+                            $limit_date = date('Y-m-t', strtotime($data['work_date']));
+                            
+                            // echo  $limit_date;
+                            list($tglini, $sesudah) = DateOut2($link, $shift, $data['work_date']);
+                            
+                            // echo $sesudah;
+                            $today = date('Y-m-d');
+                            $str_date = strtotime($sesudah);
                             $str_limit = strtotime($limit_date);
                             $str_today = strtotime($today);
-                            $q_cekReq = mysqli_query($link, "SELECT check_in , check_out, keterangan, requester FROM req_absensi WHERE shift_req <> 1 AND id_absensi = '$data[id_absensi]' ")or die(mysqli_error($link));
+                            $q_cekReq = mysqli_query($link, "SELECT check_in , check_out, keterangan, requester FROM req_absensi WHERE shift_req <> 1 AND id = '$data[id_absensi]' ")or die(mysqli_error($link));
                             
-
+                            
 
                             if($str_today < $str_limit){
                                 $dsbld = "";
@@ -137,6 +144,7 @@ if(isset($_SESSION['user'])){
                                 }
                             }
                             if(mysqli_num_rows($q_cekReq) <= 0 ){
+                                
                                 ?>
                                 <tr id="<?=$data['id_absensi']?>" >
                                     <td class="td"><?=$no++?></td>
@@ -177,13 +185,8 @@ if(isset($_SESSION['user'])){
                                 <?php
                             }
                         }
-                    }else{
-                        ?>
-                        <tr>
-                            <td colspan="14" class="text-center"><?=noData()?></td>
-                        </tr>
-                        <?php
                     }
+                    
                     
                     ?>
                     

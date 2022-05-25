@@ -201,36 +201,44 @@ $base64 = getFoto($npkUser)
   <!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
   <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/dist/loading-bar.css"/>
   <script type="text/javascript" src="<?=base_url()?>/assets/dist/loading-bar.js"></script>
+<!-- untuk notifikasi Supervisor & Admin -->
+<?php
+if($level >= 4){
+  ?>
+    <script>
+        $(document).ready(function(){
+          // get_notif_data()
+          window.setInterval(function () {
+            get_notif_data()
+          }, 1000);
+          function get_notif_data(){
+            $.ajax({
+                type: 'GET',
+                url: '<?=base_url()?>/dashboard/notif/index.php',
+                success: function (data) {
+                  var obj = $.parseJSON(data);
+                  // console.log(obj)
+                  var total = obj.msg[0].jml;
+                  var ot = obj.data[0].ot;
+                  var at = obj.data[0].at;
+                  var inf = obj.data[0].info;
+                  if(total > 0){
+                    $('#notif-all').text(total)
+                    $('#notif-app-ot').text(ot)
+                    $('#notif-app-at').text(at)
+                    $('#notif-gen-info').text(inf)
+                    
+                  }
+                },
+            }); 
+          }
+        })
+      </script>
+  <?php
+}
+?>
 
-  <script>
-    $(document).ready(function(){
-      // get_notif_data()
-      window.setInterval(function () {
-        get_notif_data()
-      }, 1000);
-      function get_notif_data(){
-        $.ajax({
-            type: 'GET',
-            url: '<?=base_url()?>/dashboard/notif/index.php',
-            success: function (data) {
-              var obj = $.parseJSON(data);
-              // console.log(obj)
-              var total = obj.msg[0].jml;
-              var ot = obj.data[0].ot;
-              var at = obj.data[0].at;
-              var inf = obj.data[0].info;
-              if(total > 0){
-                $('#notif-all').text(total)
-                $('#notif-app-ot').text(ot)
-                $('#notif-app-at').text(at)
-                $('#notif-gen-info').text(inf)
-                
-              }
-            },
-        }); 
-      }
-    })
-  </script>
+  
   
   <!-- heatmap -->
   <!-- date range picker -->
@@ -937,29 +945,35 @@ $base64 = getFoto($npkUser)
                   <a class="dropdown-item" href="<?=base_url()?>/dashboard/setting/portBlast.php">Report Issue</a>
                 </div>
               </li>
-              <li class="nav-item btn-rotate dropdown" >
-                <a class="nav-link dropdown-toggle" href="" id="btn-notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="nc-icon nc-bell-55"></i>
-                  <p class="badge-colors">
-                    <span class="d-lg-none d-md-block">Notification</span>
-                    <span class="badge badge-sm category filter badge-primary active" data-color="primary" id="notif-all"></span>
-                    </p>
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-notification" >
-                  <a class="dropdown-item " href="<?=base_url()?>/dashboard/absensi/approval/">Leave Request 
-                  <span class="badge filter badge-primary" data-color="primary" id="notif-app-at" ></span>
-                  </a>
-                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/ot/approval/">Overtime Request
-                    <span class="badge filter badge-primary" data-color="primary" id="notif-app-ot"></span>
+              <?php
+              if($level >=4){
+                ?>
+                  <li class="nav-item btn-rotate dropdown" >
+                    <a class="nav-link dropdown-toggle" href="" id="btn-notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="nc-icon nc-bell-55"></i>
+                      <p class="badge-colors">
+                        <span class="d-lg-none d-md-block">Notification</span>
+                        <span class="badge badge-sm category filter badge-primary active" data-color="primary" id="notif-all"></span>
+                        </p>
+                      </p>
                     </a>
-                  </a>
-                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/administrasi/info.php">New Info
-                    <span  class="badge filter badge-primary" data-color="primary" id="notif-gen-info"></span>
-                    </a>
-                  </a>
-                </div>
-              </li>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btn-notification" >
+                      <a class="dropdown-item " href="<?=base_url()?>/dashboard/absensi/approval/">Leave Request 
+                      <span class="badge filter badge-primary" data-color="primary" id="notif-app-at" ></span>
+                      </a>
+                      <a class="dropdown-item" href="<?=base_url()?>/dashboard/ot/approval/">Overtime Request
+                        <span class="badge filter badge-primary" data-color="primary" id="notif-app-ot"></span>
+                        </a>
+                      </a>
+                      <a class="dropdown-item" href="<?=base_url()?>/dashboard/administrasi/info.php">New Info
+                        <span  class="badge filter badge-primary" data-color="primary" id="notif-gen-info"></span>
+                        </a>
+                      </a>
+                    </div>
+                  </li>
+                <?php
+              }
+              ?>
             </ul>
           </div>
         </div>

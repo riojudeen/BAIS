@@ -33,7 +33,11 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
         
         $no = 1;
         $query = "REPLACE INTO absensi (`id`,`npk`,`shift`,`date`,`date_in`,`date_out`,`check_in`,`check_out`,`ket`,`id_req`,`requester`) VALUES  ";
-
+       
+        $q_replace_overtime =  "REPLACE INTO hr_lembur (`id`,
+                `npk`,`date`,`in_date`,`out_date`,
+                `start`,`end`, `updated_by`) VALUES ";
+        $q_cek_req = "SELECT `npk`, `keterangan`, `date`, `check_in`, `check_out` FROM req_absensi ";
 
         $indexColumn = 4 ;
         $jml_hari = hitungHari($tanggalAwal, $tanggalAkhir);
@@ -110,24 +114,51 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                 */
                 $q_reqAbsensi = mysqli_query($link, "SELECT `shift` FROM req_absensi WHERE npk = '$npk' AND `date` = '$date' AND shift_req = '1' ")or die(mysqli_error($link));
                 
-
-
                 
                 $q_shift = mysqli_query($link, "SELECT shift FROM karyawan WHERE npk = '$npk' ")or die(mysqli_error($link));
-                if(mysqli_num_rows($q_reqAbsensi) > 0){
-                    $data = mysqli_fetch_assoc($q_reqAbsensi);
-                    $shift = $data['shift'];
-                }else if(mysqli_num_rows($q_shift) > 0){
+                if(mysqli_num_rows($q_shift) > 0){
                     $data = mysqli_fetch_assoc($q_shift);
                     $shift = $data['shift'];
                 }else{
                     // menggunakan shift dari dokumen
                     $shift = shift_ubah($shift);
                 }
+                list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
+                
+                $query .= "('$id','$npk','$shift', '$date', '$date_mulai','$date_selesai','$checkin','$checkout','$ket','$id','$npkUser'),";
                 
                 
-                $query .= "('$id','$npk','$shift', '$date', '$date','$date','$checkin','$checkout','$ket','$id','$npkUser'),";
-                
+                // update request 
+                $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
+                if(mysqli_num_rows($q_cekAbs)>0){
+                    // jika ada cek pengajuan
+                    $dataReqAbs = mysqli_fetch_assoc($q_cekAbs);
+                    $ket_reqAbs = $dataReqAbs['keterangan'];
+                    $cin_reqAbs = $dataReqAbs['check_in'];
+                    $cout_reqAbs = $dataReqAbs['check_out'];
+                    // jika request SKTA 
+                    if($ket_reqAbs == "SKTA"){
+                        // jika data in dan out sudah sama maka artinya data SKTA sudah diapprove
+                        // jalankan update
+                        $iin = strtotime("$cin_reqAbs");
+                        $iiin = strtotime("$checkin");
+                        $oot = strtotime("$cout_reqAbs");
+                        $ooot = strtotime("$checkout");
+                        if($iin == $iiin && $oot == $ooot){
+                            mysqli_query($link, "UPDATE req_absensi SET req_status = 'a' , 
+                            `status` = '100' WHERE id_absensi  = '$id' AND shift_req <> '1' AND keterangan = 'SKTA' 
+                            ")or die(mysqli_error($link));
+                        }
+                    }else{
+                        // jika supem dan data absensi sudah sama artinya data sudah diapprove HRD
+                        if($ket_reqAbs == $ket){
+                            // echo "SUPEM sukses";
+                            mysqli_query($link, "UPDATE req_absensi SET req_status = 'a' , 
+                            `status` = '100' WHERE id_absensi  = '$id' AND shift_req <> '1' AND keterangan = '$ket' 
+                            ")or die(mysqli_error($link));
+                        }
+                    }
+                }
                 ?>
                 
                 <?php

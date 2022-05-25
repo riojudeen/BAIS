@@ -155,7 +155,7 @@ if(isset($_SESSION['user'])){
                                                 <div class="col-md-3">
                                                     <label for="">Jumlah Hari</label>
                                                     <div class="input-group">
-                                                        <input type="number" name="count" min="1" class="form-control no-border" id="jumlah_hari" value="1" required>
+                                                        <input type="number" name="count" min="1" max="999" class="form-control no-border" id="jumlah_hari" value="1" required>
                                                         <div class="input-group-append ">
                                                             <span class="input-group-text px-3 py-0">
                                                                 Hari
@@ -522,7 +522,10 @@ if(isset($_SESSION['user'])){
                                     <th>Shift</th>
                                     <th>Group</th>
                                     <th>Administratif</th>
+                                    
                                     <th>Tanggal</th>
+                                    <th>IN</th>
+                                    <th>OUT</th>
                                     <th>Ket</th>
                                     <th>Progress</th>
                                     <th></th>
@@ -568,6 +571,22 @@ if(isset($_SESSION['user'])){
                                     $prs = $data['req_status_absen'];
                                     $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                                     $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
+                                        $sql_absensiHR = mysqli_query($link, "SELECT check_in AS 'in_abs' , check_out AS 'out_abs' FROM absensi WHERE id = '$data[id_absensi]'")or die(mysqli_error($link));
+                                        $data_absensiHR = mysqli_fetch_assoc($sql_absensiHR);
+                                        $in_abs = isset($data_absensiHR['in_abs'])?(($data_absensiHR['in_abs'] != '00:00:00')?jam($data_absensiHR['in_abs']):'-'):'-';
+                                        $out_abs = isset($data_absensiHR['out_abs'])?(($data_absensiHR['out_abs'] != '00:00:00')?jam($data_absensiHR['out_abs']):'-'):'-';
+                                    if($data['req_code'] != 'SKTA'){
+                                        $in = $in_abs;
+                                        $out = $out_abs;
+                                        $clr_in = ($in == "-")?"":"";
+                                        $clr_out = ($out == "-")?"":"";
+                                    }else{
+                                        $in = $checkIn;
+                                        $out = $checkOut;
+                                        $clr_in = ($in_abs == "-")?"text-danger":"";
+                                        $clr_out = ($out_abs == "-")?"text-danger":"";
+                                    }
+                                    
                                     ?>
                                     <tr id="<?=$data['id_absensi']?>" >
                                         <td class="td"><?=$no++?></td>
@@ -577,6 +596,8 @@ if(isset($_SESSION['user'])){
                                         <td style="max-width:100px" class="text-truncate"><?=$group?></td>
                                         <td class="td"><?=$dept_acc ?></td>
                                         <td class="td"><?=tgl_indo($data['req_work_date'])?></td>
+                                        <td class="td <?=$clr_in?>"  ><?=$in?></td>
+                                        <td class="td <?=$clr_out?>"><?=$out?></td>
                                         <td class="td"><?=$data['req_code']?></td>
                                         <td class="td">
                                             <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
@@ -781,6 +802,8 @@ if(isset($_SESSION['user'])){
                                     <th>Group</th>
                                     <th>Administratif</th>
                                     <th>Tanggal</th>
+                                    <th>In</th>
+                                    <th>Out</th>
                                     <th>Ket</th>
                                     <th>Progress</th>
                                     <th></th>
@@ -826,6 +849,21 @@ if(isset($_SESSION['user'])){
                                     $prs = $data['req_status_absen'];
                                     $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                                     $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
+                                        $sql_absensiHR = mysqli_query($link, "SELECT check_in AS 'in_abs' , check_out AS 'out_abs' FROM absensi WHERE id = '$data[id_absensi]'")or die(mysqli_error($link));
+                                        $data_absensiHR = mysqli_fetch_assoc($sql_absensiHR);
+                                        $in_abs = isset($data_absensiHR['in_abs'])?(($data_absensiHR['in_abs'] != '00:00:00')?jam($data_absensiHR['in_abs']):'-'):'-';
+                                        $out_abs = isset($data_absensiHR['out_abs'])?(($data_absensiHR['out_abs'] != '00:00:00')?jam($data_absensiHR['out_abs']):'-'):'-';
+                                    if($data['req_code'] != 'SKTA'){
+                                        $in = $in_abs;
+                                        $out = $out_abs;
+                                        $clr_in = ($in == "-")?"":"";
+                                        $clr_out = ($out == "-")?"":"";
+                                    }else{
+                                        $in = $checkIn;
+                                        $out = $checkOut;
+                                        $clr_in = ($in_abs == "-")?"text-danger":"";
+                                        $clr_out = ($out_abs == "-")?"text-danger":"";
+                                    }
                                     ?>
                                     <tr id="<?=$data['id_absensi']?>" >
                                         <td class="td"><?=$no++?></td>
@@ -835,6 +873,8 @@ if(isset($_SESSION['user'])){
                                         <td style="max-width:100px" class="text-truncate"><?=$group?></td>
                                         <td class="td"><?=$dept_acc ?></td>
                                         <td class="td"><?=tgl_indo($data['req_work_date'])?></td>
+                                        <td class="td <?=$clr_in?>"><?=$in?></td>
+                                        <td class="td <?=$clr_out?>"><?=$out?></td>
                                         <td class="td"><?=$data['req_code']?></td>
                                         <td class="td">
                                             <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
@@ -1032,6 +1072,8 @@ if(isset($_SESSION['user'])){
                                     <th>Group</th>
                                     <th>Administratif</th>
                                     <th>Tanggal</th>
+                                    <th>In</th>
+                                    <th>Out</th>
                                     <th>Ket</th>
                                     <th>Progress</th>
                                     <th></th>
@@ -1077,6 +1119,21 @@ if(isset($_SESSION['user'])){
                                     $prs = $data['req_status_absen'];
                                     $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                                     $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
+                                        $sql_absensiHR = mysqli_query($link, "SELECT check_in AS 'in_abs' , check_out AS 'out_abs' FROM absensi WHERE id = '$data[id_absensi]'")or die(mysqli_error($link));
+                                        $data_absensiHR = mysqli_fetch_assoc($sql_absensiHR);
+                                        $in_abs = isset($data_absensiHR['in_abs'])?(($data_absensiHR['in_abs'] != '00:00:00')?jam($data_absensiHR['in_abs']):'-'):'-';
+                                        $out_abs = isset($data_absensiHR['out_abs'])?(($data_absensiHR['out_abs'] != '00:00:00')?jam($data_absensiHR['out_abs']):'-'):'-';
+                                    if($data['req_code'] != 'SKTA'){
+                                        $in = $in_abs;
+                                        $out = $out_abs;
+                                        $clr_in = ($in == "-")?"":"";
+                                        $clr_out = ($out == "-")?"":"";
+                                    }else{
+                                        $in = $checkIn;
+                                        $out = $checkOut;
+                                        $clr_in = ($in_abs == "-")?"text-danger":"";
+                                        $clr_out = ($out_abs == "-")?"text-danger":"";
+                                    }
                                     ?>
                                     <tr id="<?=$data['id_absensi']?>" >
                                         <td class="td"><?=$no++?></td>
@@ -1086,6 +1143,8 @@ if(isset($_SESSION['user'])){
                                         <td style="max-width:100px" class="text-truncate"><?=$group?></td>
                                         <td class="td"><?=$dept_acc ?></td>
                                         <td class="td"><?=tgl_indo($data['req_work_date'])?></td>
+                                        <td class="td <?=$clr_in?>"><?=$in?></td>
+                                        <td class="td <?=$clr_out?>"><?=$out?></td>
                                         <td class="td"><?=$data['req_code']?></td>
                                         <td class="td">
                                             <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
@@ -1208,15 +1267,19 @@ if(isset($_SESSION['user'])){
             
             function get_notifData(){
                 var data = $('#notification_result').attr('data-id');
-                
+                var max = $('#aloc_day').val()
+                if(max != 'undefined' || max != ''){
+                    console.log(max);
+                    $('#jumlah_hari').attr('max', max)
+                }
                 if(data == '1'){
-                    console.log(data)
+                    // console.log(data)
                     $('#prosesrequest').prop('disabled', false )
                 }else if(data == '0'){
-                    console.log(data)
+                    // console.log(data)
                     $('#prosesrequest').prop('disabled', true )
                 }else{
-                    console.log(data)
+                    // console.log(data)
                     $('#prosesrequest').prop('disabled', true )
                 }
             }
@@ -1246,10 +1309,11 @@ if(isset($_SESSION['user'])){
             $('.cek_data').on('click',  function(e){
                 e.preventDefault();
                 var attCode = $('#attendance_code').val();
+                var npk = $('#npk_karyawan').val();
                 // console.log(attCode)
-                if(attCode == ''){
+                if(attCode == '' || npk == ''){
                     Swal.fire({
-                        title: 'Pengajuan Kosong',
+                        title: 'Form Belum Lengkap',
                         text: 'Pastikan Semua Formulir Telah Diisi',
                         timer: 2000,
                         
@@ -1263,7 +1327,7 @@ if(isset($_SESSION['user'])){
                 }else{
                     $('#npk_karyawan').prop('readonly',true);
                     $('#tanggal_mulai').prop('readonly',true);
-                    $('#jumlah_hari').prop('readonly',true);
+                    // $('#jumlah_hari').prop('readonly',true);
                     $('#attendance_code').attr('readonly',true);
                     $('#attendance_type').attr('readonly',true);
                     $(this).addClass('d-none')
@@ -1295,10 +1359,10 @@ if(isset($_SESSION['user'])){
                     $('#attendance_type').attr('readonly',false);
                 $(this).addClass('d-none')
                 $('.cek_data').removeClass('d-none')
-                get_cek();
+                // get_cek();
+                $('#jumlah_hari').attr('max', 999)
             })
             $('.reset').on('click',  function(){
-                $('.data-npk').val('');
                 $('.data-npk').val('');
                 $('#npk_karyawan').prop('readonly',false);
                 $('#tanggal_mulai').prop('readonly',false);
@@ -1307,7 +1371,9 @@ if(isset($_SESSION['user'])){
                     $('#attendance_type').attr('readonly',false);
                 $(this).addClass('d-none')
                 $('.cek_data').removeClass('d-none')
-                get_cek();
+                $('.change_req').addClass('d-none')
+                // get_cek();
+                $('#jumlah_hari').attr('max', 999)
             })
             att_code();
             att_type();

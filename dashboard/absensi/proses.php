@@ -9,7 +9,8 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
     if(isset($_POST['add'])){
         
         if($_POST['tipe'] == 'SUPEM'){
-            // echo "tes";
+            // pengajuan supem dari konfirmasi absensi
+            
             $shift_req = 0;
             $requester =  $npkUser ;
             $date = dateToDB($_POST['d']);
@@ -23,37 +24,99 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $npk_ = $_POST['npk'];
             $shift = $_POST['shift'];
             $id = $npk_.$date;
-            $id_absensi = $_POST['add'];
-            // echo $date."<br>";
-            // echo $id."<br>";
-            // echo $checkIn."<br>";
-            // echo $checkOut."<br>";
-            // echo $requester."<br>";
-            // echo $date."<br>";
-            // echo $npk_."<br>";
             
-            // echo $status."<br>";
-            // echo $reqStats."<br>";
-            // echo $req_date."<br>";
 
             list($tglini, $sesudah, $cin, $cout, $jml) = WD($link, $shift, $date);
 
 
             $dO = $tglini;
             $dI = $sesudah;
+            // echo $_FILES['attach-upload']['name'];
+            // simpan file upload
+            $file_mimes = array('image/jpeg','image/jpg','image/png');
+            if(isset($_FILES['attach-upload']['name']) && in_array($_FILES['attach-upload']['type'], $file_mimes)) {
+                
+                $ImageName       = $_FILES['attach-upload']['name'];
+                $image = $_FILES['attach-upload']['name'];
+                $dir = $_FILES['attach-upload']['tmp_name']; //file upload
+                // $path = "//adm-fs/BODY/BODY02/Body Plant/BAIS/INFO-SUPPORT/";
+                $path = "image_attachment/";
+                if (file_exists($path)){
+                    // compress image
+                    $namaGambar     = $id_image."_".$tot_tgl."_".$type;
+                    $ImageExt       = substr($ImageName, strrpos($ImageName, '.'));
+                    $ImageExt       = str_replace('.','',$ImageExt); // Extension
+                    $ImageName      = preg_replace("/\.[^.\s]{3,4}$/", "", $ImageName);
+                    $NewImageName   = str_replace(' ', '', $namaGambar.'.'.$ImageExt);
 
-            $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
-                    VALUES ('$id', '$npk_' , '$date', '$shift', '$dI', '$dO' , '$cO' , '$cI' , '$ket', '$requester', '$status', '$reqStats', '$req_date' , '$note', '$shift_req', '$id_absensi' )";
+                    $newPath = $path.$NewImageName; //direktori penyimpanan
+                    // echo $newPath;
+                    $source =  $dir;
+                    // echo $source;
+                    $imgInfo = getimagesize($source); 
+                    $mime = $imgInfo['mime'];  
+                    $quality = 20;
+                    // membuat image baru
+                    switch($mime){ 
+                    // proses kode memilih tipe tipe image 
+                        case 'image/jpeg': 
+                            $image = imagecreatefromjpeg($source); 
+                            break; 
+                        case 'image/jpg': 
+                            $image = imagecreatefromjpeg($source); 
+                            break; 
+                        case 'image/png': 
+                            $image = imagecreatefrompng($source); 
+                            break; 
+                        default: 
+                            $image = imagecreatefromjpeg($source); 
+                    }
+                    imagejpeg($image, $newPath, $quality);
+                    $imageName = "'".$namaGambar.".$ImageExt"."'";
+                }
+                $id_absensi = $imageName;
+                $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
+                    VALUES ('$id', '$npk_' , '$date', '$shift', '$dI', '$dO' , '$cO' , '$cI' , '$ket', '$requester', '$status', '$reqStats', '$req_date' , '$note', '$shift_req', $id_absensi )";
 
-            // echo $query;
-            $sql = mysqli_query($link, $query)or die(mysqli_error($link));
-            if($sql){
-                $_SESSION['info'] = 'Disimpan';
-                echo "<script>document.location.href='req_absensi.php'</script>";
+                $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+                if($sql){
+                    $_SESSION['info'] = 'Disimpan';
+                    header('location: req_absensi.php');
+                }else{
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    
+                    header('location: req_absensi.php');
+                }
             }else{
-                $_SESSION['info'] = 'Gagal Disimpan';
-                echo "<script>document.location.href='req_absensi.php'</script>";
+                // echo "gagal";
+                $cek_attendance_attachement = mysqli_query($link,"SELECT attachment FROM attendance_code WHERE kode = '$ket' ")or die(mysqli_error($link));
+                $data_attachment = mysqli_fetch_assoc($cek_attendance_attachement);
+                $query = substr($query, 0, -1);
+                if(isset($data_attachment['attachment']) && $data_attachment['attachment'] == 1 ){
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = "( Silakan Ulangi Pengajuan dan Pastikan Lampiran diupload dengan format gambar )";
+                    header('location: req_absensi.php');
+                }else{
+                    // echo $ket;
+                    // echo $query;
+                    $id_absensi = "NULL";
+                    $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
+                        VALUES ('$id', '$npk_' , '$date', '$shift', '$dI', '$dO' , '$cO' , '$cI' , '$ket', '$requester', '$status', '$reqStats', '$req_date' , '$note', '$shift_req', $id_absensi )";
+                    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+                    if($sql){
+                        $_SESSION['info'] = 'Disimpan';
+                        header('location: req_absensi.php');
+                    }else{
+                        $_SESSION['info'] = 'Gagal Disimpan';
+                        header('location: req_absensi.php');
+                    }
+                }
+                
             }
+
+
+
+            
         }else if($_POST['tipe'] == 'SUKET'){
 
             $shift_req = 0;
@@ -440,7 +503,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 imagejpeg($image, $newPath, $quality);
                 $imageName = "'".$namaGambar.".$ImageExt"."'";
             }else{
-                $imageName = "'NULL'";
+                $imageName = "NULL";
             }
             $image_judge = 1;
         }else{
@@ -529,7 +592,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $req_date = date('Y-m-d');
             // $co = $_POST['ci'][$i];
             // echo $shift."-".$npk."-".$type."-".$alasan."-".$tgl."-".$ci."-".$co."-".$start_date."-".$end_date."<br>";
-            $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$co' , '$ci' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', '$id_absensi' ),";
+            $query .= "('$id', '$npk' , '$tgl', '$shift', '$start_date', '$end_date' , '$ci' , '$co' , '$type', '$npkUser', '$status', '$reqStats', '$req_date' , '$alasan', '$shift_req', '$id_absensi' ),";
             $i++;
         }
         $query = substr($query, 0, -1);

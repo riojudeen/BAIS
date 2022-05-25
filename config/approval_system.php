@@ -912,7 +912,7 @@ function queryGenerator($level, $table, $field_request, $table_field1, $table_fi
             $query_org = "SELECT $table.$field_request AS `data` FROM $table WHERE $table.$table_field1 = '$npkUser' AND $table.$table_field2 = '$part'  ";
             $sql_org = mysqli_query($link, $query_org);
             if(mysqli_num_rows($sql_org) > 0 ){
-                $query_org = $query_org;
+                $query_org = "$query_org";
             }else{
                 $query_org = " SELECT karyawan.npk AS `data` FROM karyawan WHERE karyawan.npk = '$npkUser' ";
             }

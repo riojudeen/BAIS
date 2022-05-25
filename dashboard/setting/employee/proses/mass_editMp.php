@@ -252,7 +252,7 @@ if(isset($_SESSION['user'])){
                                     }
                                     ?>
                                     <option <?=$selected?> value="<?=$dDiv['id']?>"><?=$dDiv['nama_org']?></option>
-                                        <?php
+                                    <?php
                                 }
                                 ?>                   
                                 </select>
