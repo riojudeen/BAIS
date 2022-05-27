@@ -38,8 +38,11 @@ if(isset($_SESSION['user'])){
                     // echo $file."<br>";
                     
                     $file = substr($data, $jml_char);
-                    if($file !='.' && $file !='..'){   
-                        array_push($files, $file);
+                    if($file !='.' && $file !='..'){
+                        if($file != 'Thumbs.db'){
+                            array_push($files, $file);
+                        }
+                        
                     }
                     
                 }
@@ -49,8 +52,10 @@ if(isset($_SESSION['user'])){
             $cari = '';
             $open    =opendir($dir) or die('Folder tidak ditemukan ...!');
             while ($file    =readdir($open)) {
-                if($file !='.' && $file !='..'){   
-                    $files[]=$file;
+                if($file !='.' && $file !='..' ){
+                    if($file != 'Thumbs.db'){
+                        $files[]=$file;
+                    }
                 }
             }
             

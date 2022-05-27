@@ -55,6 +55,8 @@ if(isset($_SESSION['user'])){
             $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
             $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$exception;
             
+            // echo $group_filter;
+            // echo $add_filter;
             // echo $query_req_absensi;
             // echo $_GET['conf'];
 ?>

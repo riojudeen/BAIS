@@ -247,7 +247,8 @@ if(isset($_SESSION['user'])){
 
         $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $queryOT = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$tanggal_filter;
+        $queryOT = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$tanggal_filter." AND ( `start` <> '00:00:00' OR `end` <> '00:00:00' ) ";
+
         
     //    echo $queryOT ;
 
@@ -272,11 +273,11 @@ if(isset($_SESSION['user'])){
        $start_number = ($page > $jumlah_number)? $page - $jumlah_number : 1;
        $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
        
-
+    //    echo $queryOT.$addOrder.$addLimit;
     //    echo $queryMP.$addLimit;      
         ?>
         <div class="row">
-            <div class="col-md-12">
+            <form name="" class="col-md-12">
 
                 <div class="table-responsive text-nowrap" >
                     <table class="table table-striped text-uppercase" id="tb_absensi" style="width:100%">
@@ -323,7 +324,7 @@ if(isset($_SESSION['user'])){
                                 $today = date('Y-m-d');//harus diganti tanggal out kerja
                                 $str_today = strtotime($today);
                                 ?>
-                                <tr id="<?=$dataOT['id_absensi']?>" >
+                                <tr id="<?=$dataOT['id_ot']?>" >
                                     <td class="td"><?=$no?></td>
                                     <td class="td"><?=$dataOT['npk']?></td>
                                     <td style="max-width:200px" class="text-truncate td"><?=$dataOT['nama']?></td>
@@ -339,7 +340,7 @@ if(isset($_SESSION['user'])){
                                     <td>
                                         <div class="form-check text-right">
                                             <label class="form-check-label">
-                                                <input class="form-check-input check"  name="checked[]" value="<?=$data['npk']?>" type="checkbox" data="<?=$no?>">
+                                                <input class="form-check-input check"  name="checked[]" value="<?=$dataOT['id_ot']?>" type="checkbox" data="<?=$no?>">
                                             <span class="form-check-sign"></span>
                                             </label>
                                         </div>
@@ -350,6 +351,7 @@ if(isset($_SESSION['user'])){
                                     
                                 // }
                                 $no++;
+
                                 
                             }
                         }else{

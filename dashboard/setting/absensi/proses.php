@@ -1,6 +1,8 @@
 <?php
 require_once("../../../config/config.php");
 require "../../../_assets/vendor/autoload.php";
+require_once("../../../config/schedule_system.php");
+require_once("../../../config/approval_system.php");
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;

@@ -6,6 +6,7 @@ if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         require_once("../../../config/approval_system.php");
         $level = $level;
+        $npk = $npkUser;
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
         // echo $level."<br>";
         // echo $npk."<br>";
@@ -47,7 +48,6 @@ if(isset($_SESSION['user'])){
                 <?php
             }
         }else{
-            
             
             if($access_org == 'dept' || $access_org == 'division' || $access_org == 'sect'){
                 $query_org = mysqli_query($link, "SELECT nama_org, id FROM view_daftar_area WHERE part = 'group' AND id_parent = '$_GET[data]' ")or die(mysqli_error($link));

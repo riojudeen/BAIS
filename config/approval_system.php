@@ -1080,23 +1080,13 @@ function filtergeneratorJoinAbsen($link, $level, $generate, $origin_query, $acce
     }
 }
 function filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari){
-    if($div_filter != ''){
-        if($dept_filter != ''){
-            if($sect_filter != ''){
-                if($group_filter != ''){
-                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' AND grp = '$group_filter'";
-                }else{
-                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' ";
-                }
-            }else{
-                $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' ";
-            }
-        }else{
-            $addFilter = " AND division = '$div_filter' ";
-        }
-    }else{
-        $addFilter = "";
-    }
+    
+    $div = ($div_filter != '')?" AND division = '$div_filter'":"";
+    $dept_func = ($dept_filter != '')?" AND dept = '$dept_filter'":"";
+    $sect = ($sect_filter != '')?" AND sect = '$sect_filter'":"";
+    $group = ($group_filter != '')?" AND grp = '$group_filter'":"";
+    $addFilter = $div.$dept_func.$sect.$group;
+       
     // echo $addFilter;
     if($deptAcc_filter != ''){
         $addFilterDeptAcc =" AND dept_account = '$deptAcc_filter'";
@@ -1118,23 +1108,28 @@ function filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $de
 
 }
 function filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari){
-    if($div_filter != ''){
-        if($dept_filter != ''){
-            if($sect_filter != ''){
-                if($group_filter != ''){
-                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' AND grp = '$group_filter'";
-                }else{
-                    $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' ";
-                }
-            }else{
-                $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' ";
-            }
-        }else{
-            $addFilter = " AND division = '$div_filter' ";
-        }
-    }else{
-        $addFilter = "";
-    }
+    // if($div_filter != ''){
+    //     if($dept_filter != ''){
+    //         if($sect_filter != ''){
+    //             if($group_filter != ''){
+    //                 $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' AND grp = '$group_filter'";
+    //             }else{
+    //                 $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' AND sect = '$sect_filter' ";
+    //             }
+    //         }else{
+    //             $addFilter = " AND division = '$div_filter' AND dept = '$dept_filter' ";
+    //         }
+    //     }else{
+    //         $addFilter = " AND division = '$div_filter' ";
+    //     }
+    // }else{
+    //     $addFilter = "";
+    // }
+    $div = ($div_filter != '')?" AND division = '$div_filter'":"";
+    $dept_func = ($dept_filter != '')?" AND dept = '$dept_filter'":"";
+    $sect = ($sect_filter != '')?" AND sect = '$sect_filter'":"";
+    $group = ($group_filter != '')?" AND grp = '$group_filter'":"";
+    $addFilter = $div.$dept_func.$sect.$group;
     // echo $addFilter;
     if($deptAcc_filter != ''){
         $addFilterDeptAcc =" AND dept_account = '$deptAcc_filter'";

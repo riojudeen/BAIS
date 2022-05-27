@@ -122,9 +122,9 @@ include_once('../component/migration-nav.php');
                                 <div class="col-md-4  pr-1 ">
                                     <div class="form-group text-left">
                                         <label for="">Mode Upload</label>
-                                        <select class="form-control" name="" id="">
-                                            <option value="">Migrasi Absensi</option>
-                                            <option value="">Migrasi Overtime</option>
+                                        <select class="form-control" name="" id="upload_cat">
+                                            <option value="absensi_upload">Migrasi Absensi</option>
+                                            <option value="overtime_upload">Migrasi Overtime</option>
                                         </select>
                                     </div>
                                 </div>
@@ -216,7 +216,6 @@ include_once('../component/migration-nav.php');
                                         </div>
                                     </form>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
@@ -232,7 +231,6 @@ include_once('../component/migration-nav.php');
 			<div class="card-header">
 				<h5 class="title pull-left">Database Absensi</h5>
                 <div class="box pull-right">
-                    
                     <button class="btn btn-sm btn-info" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                         <span class="btn-label">
                             <i class="nc-icon nc-cloud-download-93"></i>
@@ -243,7 +241,7 @@ include_once('../component/migration-nav.php');
                     <button  class="btn btn-sm btn-danger  deleteall" >
                         <span class="btn-label">
                             <i class="nc-icon nc-simple-remove" ></i>
-                        </span>    
+                        </span>
                         Delete
                     </button>
                 </div>
@@ -331,8 +329,8 @@ include_once('../component/migration-nav.php');
     //untuk crud masal 
     $('.deleteall').on('click', function(e){
         e.preventDefault();
-        var getLink = 'proses/prosesAtt.php';//
-            
+        var port_active = $('.port-active').attr('id')
+        var getLink = 'proses/prosesAtt.php?manual=1&port='+port_active;//
         Swal.fire({
         title: 'Anda Yakin ?',
         text: "Semua data yang dicheck / centang akan dihapus permanent",
@@ -384,6 +382,7 @@ include_once('../component/migration-nav.php');
                 var file_data = $('#file_import').prop('files')[0]; 
                 var mulai = $('#mulai').val();
                 var selesai = $('#selesai').val();
+                var upload_cat = $('#upload_cat').val();
                
                 // console.log(form_data);
                 if(file_data !== undefined && mulai !== '' && selesai !== ''){
@@ -399,7 +398,7 @@ include_once('../component/migration-nav.php');
                     ajax.addEventListener("load", completeHandler, false);
                     ajax.addEventListener("error", errorHandler, false);
                     ajax.addEventListener("abort", abortHandler, false);
-                    ajax.open("POST", 'absensi/index.php?mulai='+mulai+'&selesai='+selesai);
+                    ajax.open("POST", 'absensi/index.php?mulai='+mulai+'&selesai='+selesai+'&upload_cat='+upload_cat);
                     ajax.send(form_data);
                     ajax.onreadystatechange = function() {
                         if(this.readyState == 4 && this.status == 200) {
@@ -467,7 +466,7 @@ include_once('../component/migration-nav.php');
                     $('#success_message').text('data telah siap 100%');
                     $('.progress-bar').removeClass('bg-success');
                     $('.progress-bar').addClass('bg-info');
-                    loadData();
+                    loadData(1);
                 }
                 function errorHandler(event){
                     $('#success_message').html("Upload Failed");
@@ -482,12 +481,13 @@ include_once('../component/migration-nav.php');
                 $('.data_load').css('display', 'block');
                 $('.reset').css('display', 'none');
             })
-        })
-    </script>
-    <script>
-        $(document).ready(function(){
+            $(document).on('click', '.nav-port', function(){
+                $('.nav-port').removeClass('port-active');
+                $(this).addClass('port-active');
+                loadData();
+            })
             function loadData(page){
-                var data_port = 'nav-att';
+                var data_port = $('.port-active').attr('id');
                 var div_id = $('#s_div').val();
                 var dept_id = $('#s_dept').val();
                 var section_id = $('#s_section').val();

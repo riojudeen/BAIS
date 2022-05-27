@@ -179,8 +179,8 @@ if(isset($_GET['id'])){
                                                         <div class="form-group">
                                                             <select name="ot_type" type="number" class="form-control no-border" id="ot_type" required>
                                                                 <option disabled value="">Pilih Overtime Type</option>
-                                                                <option value="PO" selescted>Post Overtime</option>
-                                                                <option value="EO">Early Overtime</option>
+                                                                <option value="PO" selescted>Lembur Akhir / Post Overtime</option>
+                                                                <option value="EO">Lembur Awal / Early Overtime</option>
                                                                 
                                                             </select>
                                                         </div>
@@ -1617,8 +1617,5 @@ $(document).ready(function(){
         $('#work_date').on('change', function(){
             filterInput()
         })
-        // filterInput()
-        
-        
     })
 </script>
