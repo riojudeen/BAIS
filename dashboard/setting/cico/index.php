@@ -261,7 +261,9 @@ if(isset($_SESSION['user'])){
     //untuk crud masal 
     $('.deleteall').on('click', function(e){
         e.preventDefault();
-        var getLink = 'proses/prosesAtt.php';//
+        var current = location.pathname;
+        var port_active = $('.port-active').attr('id')
+        var getLink = '../proses/prosesAtt.php?manual=0&port='+port_active+'&current='+current;//
             
         Swal.fire({
         title: 'Anda Yakin ?',
@@ -273,8 +275,8 @@ if(isset($_SESSION['user'])){
         confirmButtonText: 'Yes, delete!'
         }).then((result) => {
             if (result.value) {
-                document.proses.action = getLink;
-                document.proses.submit();//proses merubujuk pada atribut name untuk element form
+                document.proses_absensi.action = getLink;
+                document.proses_absensi.submit();//proses merubujuk pada atribut name untuk element form
             }
         })
         

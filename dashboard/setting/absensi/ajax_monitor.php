@@ -87,87 +87,88 @@ if(isset($_SESSION['user'])){
         
     
         ?>
-        <form method="post" name="proses" action="" id="form_absensi">
+        <form method="post" name="proses_absensi"  id="form_absensi">
           
-        <div class="table-responsive">
-            <table class="text-nowrap table table-striped " id="absensi_hr" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>NPK</th>
-                        <th>Nama</th>
-                        <th>Shift</th>
-                        <th>Group</th>
-                        <th>Dept</th>
-                        <th>Tanggal</th>
-                        <th>Masuk</th>
-                        <th>Pulang</th>
-                        <th>In</th>
-                        <th>Out</th>
-                        <th>Ket</th>
-                        <th>Diupdate Oleh</th>
-                        <th class="text-right">
-                            <div class="form-check ">
-                                <label class="form-check-label">
-                                    <input class="form-check-input check-all" type="checkbox" >
-                                <span class="form-check-sign"></span>
-                                </label>
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    if(mysqli_num_rows($sql)>0){
-                        while($data = mysqli_fetch_assoc($sql)){
-                            $dept = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc' ")or die(mysqli_error($link));
-                            $area = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
-                            $sql_area = mysqli_fetch_assoc($area);
-                            $sql_dept = mysqli_fetch_assoc($dept);
-                            $updater = mysqli_query($link, "SELECT absensi.date_in AS `date_in` , absensi.date_out AS `date_out` , karyawan.npk AS `npk`, karyawan.nama AS `nama` FROM absensi LEFT JOIN karyawan ON karyawan.npk = absensi.requester WHERE absensi.id = '$data[id_absensi]' ")or die(mysqli_error($link));
-                            $dataUpdater = mysqli_fetch_assoc($updater);
-                            $namaUpdater = (isset($dataUpdater['nama']))?nick($dataUpdater['nama'])."[$npk]":'';
-                            $ci = (isset($data['check_in'])&& $data['check_in'] != '00:00:00')?jam($data['check_in']):"";
-                            $co = (isset($data['check_out'])&& $data['check_out'] != '00:00:00')?jam($data['check_out']):"";
+            <div class="table-responsive">
+                <table class="text-nowrap table table-striped " id="absensi_hr" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>NPK</th>
+                            <th>Nama</th>
+                            <th>Shift</th>
+                            <th>Group</th>
+                            <th>Dept</th>
+                            <th>Tanggal</th>
+                            <th>Masuk</th>
+                            <th>Pulang</th>
+                            <th>In</th>
+                            <th>Out</th>
+                            <th>Ket</th>
+                            <th>Diupdate Oleh</th>
+                            <th class="text-right">
+                                <div class="form-check ">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input check-all" type="checkbox" >
+                                    <span class="form-check-sign"></span>
+                                    </label>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if(mysqli_num_rows($sql)>0){
+                            while($data = mysqli_fetch_assoc($sql)){
+                                $dept = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc' ")or die(mysqli_error($link));
+                                $area = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
+                                $sql_area = mysqli_fetch_assoc($area);
+                                $sql_dept = mysqli_fetch_assoc($dept);
+                                $updater = mysqli_query($link, "SELECT absensi.date_in AS `date_in` , absensi.date_out AS `date_out` , karyawan.npk AS `npk`, karyawan.nama AS `nama` FROM absensi LEFT JOIN karyawan ON karyawan.npk = absensi.requester WHERE absensi.id = '$data[id_absensi]' ")or die(mysqli_error($link));
+                                $dataUpdater = mysqli_fetch_assoc($updater);
+                                $namaUpdater = (isset($dataUpdater['nama']))?nick($dataUpdater['nama'])."[$npk]":'';
+                                $ci = (isset($data['check_in'])&& $data['check_in'] != '00:00:00')?jam($data['check_in']):"";
+                                $co = (isset($data['check_out'])&& $data['check_out'] != '00:00:00')?jam($data['check_out']):"";
+                                ?>
+                                <tr>
+                                    <td><?=$no++?></td>
+                                    <td><?=$data['npk']?></td>
+                                    <td><?=$data['nama']?></td>
+                                    <td><?=$data['employee_shift']?></td>
+                                    <td><?=$sql_area['nama_org']?></td>
+                                    <td><?=$sql_dept['nama_org']?></td>
+                                    <td><?=tgl($data['work_date'])?></td>
+                                    <td><?=tgl($dataUpdater['date_in'])?></td>
+                                    <td><?=tgl($dataUpdater['date_out'])?></td>
+                                    <td><?=$ci?></td>
+                                    <td><?=$co?></td>
+                                    <td><?=$data['CODE']?></td>
+                                    <td><?=$namaUpdater?></td>
+                                    <td>
+                                        <div class="form-check text-right">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input check"  name="checked[]" value="<?=$data['id_absensi']?>" type="checkbox" data="<?=$no?>">
+                                            <span class="form-check-sign"></span>
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                        }else{
                             ?>
                             <tr>
-                                <td><?=$no++?></td>
-                                <td><?=$data['npk']?></td>
-                                <td><?=$data['nama']?></td>
-                                <td><?=$data['employee_shift']?></td>
-                                <td><?=$sql_area['nama_org']?></td>
-                                <td><?=$sql_dept['nama_org']?></td>
-                                <td><?=tgl($data['work_date'])?></td>
-                                <td><?=tgl($dataUpdater['date_in'])?></td>
-                                <td><?=tgl($dataUpdater['date_out'])?></td>
-                                <td><?=$ci?></td>
-                                <td><?=$co?></td>
-                                <td><?=$data['CODE']?></td>
-                                <td><?=$namaUpdater?></td>
-                                <td>
-                                    <div class="form-check text-right">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input check"  name="checked[]" value="<?=$data['npk']?>" type="checkbox" data="<?=$no?>">
-                                        <span class="form-check-sign"></span>
-                                        </label>
-                                    </div>
-                                </td>
+                                <td colspan="15" class="text-center"><?=noData()?></td>
                             </tr>
                             <?php
                         }
-                    }else{
                         ?>
-                        <tr>
-                            <td colspan="15" class="text-center"><?=noData()?></td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    
-                </tbody>
-            
-            </table>
-        </div>
+                        
+                    </tbody>
+                
+                </table>
+            </div>
+        </form>
         <div class="box pull-right">
             <button  class="btn btn-sm btn-danger  deleteall" >
                 <span class="btn-label">
@@ -277,7 +278,7 @@ if(isset($_SESSION['user'])){
     //    echo $queryMP.$addLimit;      
         ?>
         <div class="row">
-            <form name="" class="col-md-12">
+            <form name="proses_absensi" method="POST" class="col-md-12">
 
                 <div class="table-responsive text-nowrap" >
                     <table class="table table-striped text-uppercase" id="tb_absensi" style="width:100%">
@@ -370,7 +371,7 @@ if(isset($_SESSION['user'])){
                         </tfoot>
                     </table>
                 </div>
-            </div>
+            </form>
         </div>
         <div class="row">
             <div class="col-md-12 pull-rigt">

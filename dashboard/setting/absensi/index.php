@@ -42,6 +42,7 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 `npk`,`date`,`in_date`,`out_date`,
                 `start`,`end`, `updated_by`) VALUES ";
         $q_cek_req = "SELECT `npk`, `keterangan`, `date`, `check_in`, `check_out` FROM req_absensi ";
+        
 
         $indexColumn = 4 ;
         $jml_hari = hitungHari($tanggalAwal, $tanggalAkhir);
@@ -127,13 +128,26 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                     // menggunakan shift dari dokumen
                     $shift = shift_ubah($shift);
                 }
-                list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
                 
+                
+                list($date_mulai, $date_selesai, $ket_wd) = genericOut($link, $date, $shift);
+                if($ket_wd == "HOP"){
+                    $waktuAwal = strtotime("$date $checkin");
+                    $waktuAkhir = strtotime("$date $checkout"); // bisa juga waktu sekarang now()
+                    
+                    if($waktuAwal > $waktuAkhir){
+                        $date_mulai = ($date);
+                        $date_selesai = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+                    }else{
+                        $date_mulai = $date;
+                        $date_selesai = $date;
+                    }
+                }
                 $query .= "('$id','$npk','$shift', '$date', '$date_mulai','$date_selesai','$checkin','$checkout','$ket','$id','$npkUser'),";
-                
                 
                 // update request 
                 $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
+               
                 if(mysqli_num_rows($q_cekAbs)>0){
                     // jika ada cek pengajuan
                     $dataReqAbs = mysqli_fetch_assoc($q_cekAbs);
@@ -246,6 +260,7 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 `start`,`end`, `updated_by`) VALUES ";
         $q_cek_req = "SELECT `npk`, `keterangan`, `date`, `check_in`, `check_out` FROM req_absensi ";
         $q_cek_shift = "SELECT npk , shift FROM karyawan ";
+        $q_cek_reqOt = "SELECT status_approve , `status` FROM lembur ";
 
         $indexColumn = 4 ;
         $jml_hari = hitungHari($tanggalAwal, $tanggalAkhir);
@@ -322,80 +337,35 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 }else{
                     $shift = shift_ubah($sheetData[$i]['3']);
                 }
-                list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
-                
+                list($date_mulai, $date_selesai, $ket_wd) = genericOut($link, $date, $shift);
+                if($ket_wd == "HOP"){
+                    $waktuAwal = strtotime("$date $checkin");
+                    $waktuAkhir = strtotime("$date $checkout"); // bisa juga waktu sekarang now()
+                    
+                    if($waktuAwal > $waktuAkhir){
+                        $date_mulai = ($date);
+                        $date_selesai = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+                    }else{
+                        $date_mulai = $date;
+                        $date_selesai = $date;
+                    }
+                }
+               
                 // echo $iin."-".$iint."-".$iiint."<br>";
                 $q_replace_overtime .= " ('$id','$npk','$date','$date_mulai','$date_selesai','$start','$end','$npkUser'),";
-                // cek apalkah sudah ada pengajuan atau belum
-
-
-
-
-                
-                // $npk = $sheetData[$i]['0'];
-                // $nama = $sheetData[$i]['1'];
-                // $dept = $sheetData[$i]['2'];
-                // $shift = $sheetData[$i]['3'];
-                // // ambil data check ini -out -ket berdasarkan tanggal mulai
-                // $index_mulai = 4 + $index_tanggal; 
-                // $in = $index_mulai;
-                // $out = $index_mulai + 1;
-                // $ket = $index_mulai + 2;
-                // $checkin = $sheetData[$i][$in];
-                // $checkout = $sheetData[$i][$out];
-                // $ket = $sheetData[$i][$ket];
-                // $id= $npk.$date;
-                //  /*
-                // selama belum ada perubahan data shift , 
-                // gunakan shift awal
-                // */
-                // $q_reqAbsensi = mysqli_query($link, "SELECT `shift` FROM req_absensi WHERE npk = '$npk' AND `date` = '$date' AND shift_req = '1' ")or die(mysqli_error($link));
-                
-                
-                // $q_shift = mysqli_query($link, "SELECT shift FROM karyawan WHERE npk = '$npk' ")or die(mysqli_error($link));
-                // if(mysqli_num_rows($q_shift) > 0){
-                //     $data = mysqli_fetch_assoc($q_shift);
-                //     $shift = $data['shift'];
-                // }else{
-                //     // menggunakan shift dari dokumen
-                //     $shift = shift_ubah($shift);
-                // }
-                // list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
-                
-                // $query .= "('$id','$npk','$shift', '$date', '$date_mulai','$date_selesai','$checkin','$checkout','$ket','$id','$npkUser'),";
-                
                 
                 // update request 
-                // $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
-                // if(mysqli_num_rows($q_cekAbs)>0){
-                //     // jika ada cek pengajuan
-                //     $dataReqAbs = mysqli_fetch_assoc($q_cekAbs);
-                //     $ket_reqAbs = $dataReqAbs['keterangan'];
-                //     $cin_reqAbs = $dataReqAbs['check_in'];
-                //     $cout_reqAbs = $dataReqAbs['check_out'];
-                //     // jika request SKTA 
-                //     if($ket_reqAbs == "SKTA"){
-                //         // jika data in dan out sudah sama maka artinya data SKTA sudah diapprove
-                //         // jalankan update
-                //         $iin = strtotime("$cin_reqAbs");
-                //         $iiin = strtotime("$checkin");
-                //         $oot = strtotime("$cout_reqAbs");
-                //         $ooot = strtotime("$checkout");
-                //         if($iin == $iiin && $oot == $ooot){
-                //             mysqli_query($link, "UPDATE req_absensi SET req_status = 'a' , 
-                //             `status` = '100' WHERE id_absensi  = '$id' AND shift_req <> '1' AND keterangan = 'SKTA' 
-                //             ")or die(mysqli_error($link));
-                //         }
-                //     }else{
-                //         // jika supem dan data absensi sudah sama artinya data sudah diapprove HRD
-                //         if($ket_reqAbs == $ket){
-                //             // echo "SUPEM sukses";
-                //             mysqli_query($link, "UPDATE req_absensi SET req_status = 'a' , 
-                //             `status` = '100' WHERE id_absensi  = '$id' AND shift_req <> '1' AND keterangan = '$ket' 
-                //             ")or die(mysqli_error($link));
-                //         }
-                //     }
-                // }
+                $q_cekOt = mysqli_query($link, $q_cek_reqOt." WHERE npk = '$npk' AND `work_date` = '$date'  ")or die(mysqli_error($link));
+                if(mysqli_num_rows($q_cekOt)>0){
+                    // jika ada cek pengajuan
+                    $dataReq = mysqli_fetch_assoc($q_cekOt);
+                    $approve = $dataReq['status_approve'];
+                    $stats = $dataReq['status'];
+                    // jika request SKTA 
+                    mysqli_query($link, "UPDATE lembur SET status_approve = 'a' , 
+                            `status` = '100' WHERE npk  = '$npk' AND work_date = '$date' 
+                            ")or die(mysqli_error($link));
+                }
                 ?>
                 
                 <?php

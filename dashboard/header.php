@@ -514,7 +514,7 @@ if($level >= 4){
                       </a>
                     </li> 
                     <?php
-                    if($level == 3 || $level == 8){
+                    if($level == 3 || $level == 4 || $level == 8){
                       ?> 
                     <li class="menu " data-name="mpu" id="mpu">
                       <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->

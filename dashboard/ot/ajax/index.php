@@ -284,7 +284,7 @@ if(isset($_GET['id'])){
             </div>
         </div>
         <hr class="mt-0">
-            <form class="data-draft" method="POST" id="form_request">
+            <form class="data-draft" method="POST" id="form_request" name="formreq">
         
             </form>
         <?php
@@ -721,6 +721,36 @@ if(isset($_GET['id'])){
                                     draft_Active(page)
                                 }
                             })
+                        }
+                    })
+                
+                });
+                $(document).on('click', '.download_ot', function(e){
+                    e.preventDefault();
+                    var getLink = 'proses-req.php?ot_download=1';
+                    var form = $('#form_request').serialize()
+                    var page = $('.page_active').attr('id')
+                    Swal.fire({
+                        title: 'Dowload Data ?',
+                        text: "download draft pengajuan?",
+                        icon: false,
+                        showCancelButton: true,
+                        confirmButtonColor: '#1ABC9C',
+                        cancelButtonColor: '#B2BABB',
+                        confirmButtonText: 'Download Sekarang!'
+                    }).then((result) => {
+                        if (result.value) {
+                            document.formreq.action = getLink;
+                            document.formreq.submit();
+                            // $.ajax({
+                            //     url:getLink,
+                            //     method:"POST",
+                            //     data:form,
+                            //     success:function(data){
+                            //         $('.notifikasi').html(data);
+                            //         draft_Active(page)
+                            //     }
+                            // })
                         }
                     })
                 

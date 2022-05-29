@@ -72,7 +72,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             $q_replace_overtime =  "REPLACE INTO hr_lembur (`id`,
                 `npk`,`date`,`in_date`,`out_date`,
                 `start`,`end`, `updated_by`) VALUES ";
-            
+            $q_cek_reqOt = "SELECT status_approve , `status` FROM lembur ";
             foreach($array_tgl AS $date){
                 // looping data karyawan
                 $index_tanggal =( date('d', strtotime($date)) - 1)*3;
@@ -104,8 +104,20 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                         $ket = (isset($sheetData[$i][$ket]))?$sheetData[$i][$ket]:'';
                         $id= $npk.$date;
 
-                        list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
                         $q_cekAbs = mysqli_query($link, $q_cek_req." WHERE npk = '$npk' AND `date` = '$date' AND shift_req <> 1 ")or die(mysqli_error($link));
+                        list($date_mulai, $date_selesai, $ket_wd) = genericOut($link, $date, $shift);
+                        if($ket_wd == "HOP"){
+                            $waktuAwal = strtotime("$date $checkin");
+                            $waktuAkhir = strtotime("$date $checkout"); // bisa juga waktu sekarang now()
+                            
+                            if($waktuAwal > $waktuAkhir){
+                                $date_mulai = ($date);
+                                $date_selesai = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+                            }else{
+                                $date_mulai = $date;
+                                $date_selesai = $date;
+                            }
+                        }
                         
                         // echo $iin."-".$iint."-".$iiint."<br>";
                         $q_replace_absensi .= " ('$id','$npk', '$shift', '$date','$date_mulai','$date_selesai','$checkin','$checkout','$ket','$npkUser'),";
@@ -162,11 +174,35 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
                         }else{
                             $shift = shift_ubah($sheetData[$i]['3']);
                         }
-                        list($date_mulai, $date_selesai) = DateOut2($link, $shift, $date);
+                        list($date_mulai, $date_selesai, $ket_wd) = genericOut($link, $date, $shift);
+                        if($ket_wd == "HOP"){
+                            $waktuAwal = strtotime("$date $checkin");
+                            $waktuAkhir = strtotime("$date $checkout"); // bisa juga waktu sekarang now()
+                            
+                            if($waktuAwal > $waktuAkhir){
+                                $date_mulai = ($date);
+                                $date_selesai = date('Y-m-d', strtotime("+1 days", strtotime($date)));
+                            }else{
+                                $date_mulai = $date;
+                                $date_selesai = $date;
+                            }
+                        }
                         
                         // echo $iin."-".$iint."-".$iiint."<br>";
                         $q_replace_overtime .= " ('$id','$npk','$date','$date_mulai','$date_selesai','$start','$end','$npkUser'),";
                         // cek apalkah sudah ada pengajuan atau belum
+                        // update request 
+                        $q_cekOt = mysqli_query($link, $q_cek_reqOt." WHERE npk = '$npk' AND `work_date` = '$date'  ")or die(mysqli_error($link));
+                        if(mysqli_num_rows($q_cekOt)>0){
+                            // jika ada cek pengajuan
+                            $dataReq = mysqli_fetch_assoc($q_cekOt);
+                            $approve = $dataReq['status_approve'];
+                            $stats = $dataReq['status'];
+                            // jika request SKTA 
+                            mysqli_query($link, "UPDATE lembur SET status_approve = 'a' , 
+                                    `status` = '100' WHERE npk  = '$npk' AND work_date = '$date' 
+                                    ")or die(mysqli_error($link));
+                        }
                     }
                     ?>
                     

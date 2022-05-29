@@ -292,7 +292,7 @@ if(isset($_SESSION['user'])){
         $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
         $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$filterProg;
         // echo $query_req_absensi;
-        $addWFO = " AND att_alias = '1' ";
+        $addWFO = " AND att_alias = '1' AND (check_in <> '00:00:00' OR  check_out <> '00:00:00' )";
         $addTL = " AND att_alias = '2' ";
         $addT = " AND att_alias = '3' ";
         $addC = " AND att_alias = '4' ";
@@ -556,8 +556,13 @@ if(isset($_SESSION['user'])){
         $start = dateToDB($_GET['start']);
         $end = dateToDB($_GET['end']);
         $today = (strtotime($end) >= strtotime(date('Y-m-d')))?date('Y-m-d'):$end;
-
         $query_attAlias = mysqli_query($link, "SELECT `name` FROM attendance_alias WHERE id = '$_GET[data]' ")or die(mysqli_error($link));
+        if($_GET['data'] == 1){
+            $add_ = " AND ( check_in <> '00:00:00' OR check_out <> '00:00:00' ) ";
+        }else{
+            $add_ = " ";
+            
+        }
         $nama_ = mysqli_fetch_assoc($query_attAlias);
         $nama = $nama_['name'];
         
@@ -605,7 +610,7 @@ if(isset($_SESSION['user'])){
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
         // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
-        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$data_filter;
+        $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$today' AND '$today' ".$add_filter.$data_filter.$add_;
         
 
         $sql_jml = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
@@ -630,6 +635,7 @@ if(isset($_SESSION['user'])){
         $end_number = ($page < ($jumlah_page - $jumlah_number))? $page + $jumlah_number : $jumlah_page;
         
         $sql = mysqli_query($link, $query_req_absensi.$addOrder.$addLimit)or die(mysqli_error($link));
+        // echo $query_req_absensi.$addOrder.$addLimit;
         ?>
             <!-- Modal -->
                     <div class="modal-header">

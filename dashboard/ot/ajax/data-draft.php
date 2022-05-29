@@ -70,7 +70,7 @@ if(isset($_SESSION['user'])){
         // echo $filter_cari;
         // $filterOtCode = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY ot_code";
+        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY grp, sect, dept, dept_account";
         $filterProg = "";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
         
@@ -86,7 +86,10 @@ if(isset($_SESSION['user'])){
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Kode Overtme</th>
+                                <th>Group</th>
+                                <th>Section</th>
+                                <th>Dept</th>
+                                <th>Dept Admin</th>
                                 <th>Tgl Kerja</th>
                                 <th>Σ MP</th>
                                 <th>Σ Mins</th>
@@ -133,8 +136,15 @@ if(isset($_SESSION['user'])){
                                 $group_ = mysqli_fetch_assoc($query_group);
                                 $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
                                 $deptAcc = mysqli_fetch_assoc($query_deptAcc);
+                                $query_dept = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept]' AND part = 'dept'  ")or die(mysqli_error($link));
+                                $dept_ = mysqli_fetch_assoc($query_dept);
+                                $query_sect = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[sect]' AND part = 'section'  ")or die(mysqli_error($link));
+                                $sect_ = mysqli_fetch_assoc($query_sect);
+                                
                                 $group = $group_['nama_org'];
                                 $dept_acc = $deptAcc['nama_org'];
+                                $dept = $dept_['nama_org'];
+                                $sect = $sect_['nama_org'];
                                 $start = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
                                 $end = ($data['start'] == '00:00:00')? "-" : jam($data['end']);
                                 $work_date = $data['work_date'];
@@ -148,7 +158,10 @@ if(isset($_SESSION['user'])){
                                 
                                 ?>
                                 <td class="td"><?=$no++?></td>
-                                    <td class="td"><?=$ot_code?></td>
+                                    <td class="td"><?=$group?></td>
+                                    <td class="td"><?=$sect?></td>
+                                    <td class="td"><?=$dept?></td>
+                                    <td class="td"><?=$dept_acc?></td>
                                     
                                     <td class="td"><?=tgl($data['work_date'])?></td>
                                     <td class="td"><?=$data['jml']?> </td>
@@ -157,15 +170,12 @@ if(isset($_SESSION['user'])){
                                         <a href="" class="btn btn-primary btn-sm btn-round btn-icon">
                                             <i class="fa fa-download"></i>
                                         </a>
-                                        <a href="" class="btn btn-primary btn-sm btn-round btn-icon">
-                                            <i class="fa fa-download"></i>
-                                        </a>
                                     </td>
                                     
                                     <td class="td">
                                         <div class="form-check text-right">
                                             <label class="form-check-label ">
-                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
+                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['grp']?>&&<?=$data['sect']?>&&<?=$data['dept']?>&&<?=$data['dept_account']?>&&<?=$data['work_date']?>">
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>

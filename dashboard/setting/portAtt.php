@@ -329,8 +329,9 @@ include_once('../component/migration-nav.php');
     //untuk crud masal 
     $('.deleteall').on('click', function(e){
         e.preventDefault();
+        var current = location.pathname;
         var port_active = $('.port-active').attr('id')
-        var getLink = 'proses/prosesAtt.php?manual=1&port='+port_active;//
+        var getLink = 'proses/prosesAtt.php?manual=1&port='+port_active+'&current='+current;//
         Swal.fire({
         title: 'Anda Yakin ?',
         text: "Semua data yang dicheck / centang akan dihapus permanent",
@@ -341,8 +342,8 @@ include_once('../component/migration-nav.php');
         confirmButtonText: 'Yes, delete!'
         }).then((result) => {
             if (result.value) {
-                document.proses.action = getLink;
-                document.proses.submit();//proses merubujuk pada atribut name untuk element form
+                document.proses_absensi.action = getLink;
+                document.proses_absensi.submit();//proses merubujuk pada atribut name untuk element form
             }
         })
         
