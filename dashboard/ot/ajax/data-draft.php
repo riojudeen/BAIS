@@ -70,11 +70,11 @@ if(isset($_SESSION['user'])){
         // echo $filter_cari;
         // $filterOtCode = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY grp, sect, dept, dept_account";
+        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY grp, dept_account";
         $filterProg = "";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
         
-        // echo $query_req_overtime
+        echo $query_req_overtime
                 
         ?>
         <div class="row">
@@ -175,7 +175,7 @@ if(isset($_SESSION['user'])){
                                     <td class="td">
                                         <div class="form-check text-right">
                                             <label class="form-check-label ">
-                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['grp']?>&&<?=$data['sect']?>&&<?=$data['dept']?>&&<?=$data['dept_account']?>&&<?=$data['work_date']?>">
+                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['grp']?>&&<?=$data['dept_account']?>&&<?=$data['work_date']?>">
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
