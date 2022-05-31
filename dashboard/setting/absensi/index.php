@@ -339,8 +339,8 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 }
                 list($date_mulai, $date_selesai, $ket_wd) = genericOut($link, $date, $shift);
                 if($ket_wd == "HOP"){
-                    $waktuAwal = strtotime("$date $checkin");
-                    $waktuAkhir = strtotime("$date $checkout"); // bisa juga waktu sekarang now()
+                    $waktuAwal = strtotime("$date $start");
+                    $waktuAkhir = strtotime("$date $end"); // bisa juga waktu sekarang now()
                     
                     if($waktuAwal > $waktuAkhir){
                         $date_mulai = ($date);

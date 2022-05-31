@@ -70,11 +70,11 @@ if(isset($_SESSION['user'])){
         // echo $filter_cari;
         // $filterOtCode = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY grp, dept_account";
+        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY grp, dept_account, work_date";
         $filterProg = "";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
         
-        echo $query_req_overtime
+        // echo $query_req_overtime
                 
         ?>
         <div class="row">
@@ -93,7 +93,6 @@ if(isset($_SESSION['user'])){
                                 <th>Tgl Kerja</th>
                                 <th>Σ MP</th>
                                 <th>Σ Mins</th>
-                                <th></th>
                                 <th class="text-right">
                                     <div class="form-check">
                                         <label class="form-check-label">
@@ -116,7 +115,7 @@ if(isset($_SESSION['user'])){
                         $limit_start = ($page - 1) * $limit;
                         $no = $limit_start + 1;
                         // echo $limit_start;
-                        $addOrder = "  ORDER BY ot_code DESC ";
+                        $addOrder = " ORDER BY work_date , grp ASC";
                         $addLimit = " LIMIT $limit_start, $limit";
                         // $no = 1*$page;
 
@@ -141,10 +140,10 @@ if(isset($_SESSION['user'])){
                                 $query_sect = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[sect]' AND part = 'section'  ")or die(mysqli_error($link));
                                 $sect_ = mysqli_fetch_assoc($query_sect);
                                 
-                                $group = $group_['nama_org'];
-                                $dept_acc = $deptAcc['nama_org'];
-                                $dept = $dept_['nama_org'];
-                                $sect = $sect_['nama_org'];
+                                $group =( $group_['nama_org'] == '')?"-":$group_['nama_org'];
+                                $dept_acc = ($deptAcc['nama_org'] == '')?"-":$deptAcc['nama_org'];
+                                $dept = ($dept_['nama_org'] == "")?"-":$dept_['nama_org'];
+                                $sect = ($sect_['nama_org'] == "")?"-": $sect_['nama_org'];
                                 $start = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
                                 $end = ($data['start'] == '00:00:00')? "-" : jam($data['end']);
                                 $work_date = $data['work_date'];
@@ -155,7 +154,8 @@ if(isset($_SESSION['user'])){
                                 $str_today = strtotime($today);
                                 $ot_code = $data['ot_code'];
                                 $ot_menit = ($data['overtime'] == '')?"0 mins":"$data[overtime] min";
-                                
+                                $grp_ = ($data['grp'] == '')?"-":$data['grp'];
+                                $dpt_ = ($data['dept_account'] == '')?"-":$data['dept_account'];
                                 ?>
                                 <td class="td"><?=$no++?></td>
                                     <td class="td"><?=$group?></td>
@@ -166,16 +166,11 @@ if(isset($_SESSION['user'])){
                                     <td class="td"><?=tgl($data['work_date'])?></td>
                                     <td class="td"><?=$data['jml']?> </td>
                                     <td class="td text-lowercase"><?=$ot_menit?></td>
-                                    <td class="td text-right">
-                                        <a href="" class="btn btn-primary btn-sm btn-round btn-icon">
-                                            <i class="fa fa-download"></i>
-                                        </a>
-                                    </td>
                                     
                                     <td class="td">
                                         <div class="form-check text-right">
                                             <label class="form-check-label ">
-                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$data['grp']?>&&<?=$data['dept_account']?>&&<?=$data['work_date']?>">
+                                                <input class="form-check-input mp_req " name="request[]" type="checkbox" value="<?=$grp_?>&&<?=$dpt_?>&&<?=$data['work_date']?>">
                                                 <span class="form-check-sign"></span>
                                             </label>
                                         </div>
