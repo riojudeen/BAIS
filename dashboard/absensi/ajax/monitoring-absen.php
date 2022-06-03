@@ -855,7 +855,7 @@ if(isset($_SESSION['user'])){
         <div class="table-responsive table-bordered" >
             <table class="table table-hover  text-uppercase" id="tb_absensi" style="border: #C6C7C8;width:100%">
             
-                <thead class="text-white  table-info" style="border: #C6C7C8">
+                <thead class="  table-info" style="border: #C6C7C8">
                     <tr >
                         <th scope="col" rowspan="2" style="width:50px;border:1px solid white">No</th>
                         <th scope="col" rowspan="2" style="width:100px;border:1px solid white">NPK</th>
@@ -936,6 +936,34 @@ if(isset($_SESSION['user'])){
                             <?php
                             
                             
+                            $qry_absen = $queryAbsen." AND npk = '$data_mon[npk]'";
+                            $qry_M = $qry_absen." AND CODE = 'M' ";
+                            $qry_TL = $qry_absen." AND CODE = 'TL' ";
+                            $qry_C1 = $qry_absen." AND CODE = 'C1' ";
+                            $qry_C2 = $qry_absen." AND CODE = 'C2' ";
+                            $qry_S1 = $qry_absen." AND CODE = 'S1' ";
+                            $qry_S2 = $qry_absen." AND CODE = 'S2' ";
+                            $qry_T1 = $qry_absen." AND CODE = 'T1' ";
+                            $qry_T2 = $qry_absen." AND CODE = 'T2' ";
+                            $qry_T3 = $qry_absen." AND CODE = 'T3' ";
+                            $qry_Oth = $qry_absen." AND CODE <> '' ";
+    
+                            $total_M = mysqli_num_rows(mysqli_query($link, $qry_M));
+                            $total_C1 = mysqli_num_rows(mysqli_query($link, $qry_C1));
+                            $total_C2 = mysqli_num_rows(mysqli_query($link, $qry_C2));
+                            $total_S1 = mysqli_num_rows(mysqli_query($link, $qry_S1));
+                            $total_S2 = mysqli_num_rows(mysqli_query($link, $qry_S2));
+                            $total_T1 = mysqli_num_rows(mysqli_query($link, $qry_T1));
+                            $total_T2 = mysqli_num_rows(mysqli_query($link, $qry_T2));
+                            $total_T3 = mysqli_num_rows(mysqli_query($link, $qry_T3));
+                            $total_TL = mysqli_num_rows(mysqli_query($link, $qry_TL));
+                            $total_Oth = mysqli_num_rows(mysqli_query($link, $qry_Oth));
+                            $other = $total_Oth - ($total_M + $total_C1 + $total_C2 +$total_S1 +$total_S2+$total_T1+$total_T2+$total_T3+$total_TL);
+                            if($total_M > 0 || $total_TL > 0){
+                                $color_indikator = "table-danger";
+                            }else{
+                                $color_indikator = "";
+                            }
                                 
                             foreach($data_tanggal as $tgl_){//looping tanggal request
                                 //ambil array data lembur 
@@ -989,48 +1017,24 @@ if(isset($_SESSION['user'])){
                                 
                                 ?>
                                 
-                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=$check_in?></td>
-                                <td style="min-width:100px ;max-width:100px" class="bg- text-" ><?=$check_out?></td>
-                                <td style="min-width:50px ;max-width:50px" class="bg- text-"  ><?=$dataAbsen['CODE']?></td>
+                                <td style="min-width:100px ;max-width:100px" class="bg- text- <?=$color_indikator?>" ><?=$check_in?></td>
+                                <td style="min-width:100px ;max-width:100px" class="bg- text- <?=$color_indikator?>" ><?=$check_out?></td>
+                                <td style="min-width:50px ;max-width:50px" class="bg- text- <?=$color_indikator?>"  ><?=$dataAbsen['CODE']?></td>
                                 <?php
                                 flush();
                             }
-                            $qry_absen = $queryAbsen." AND npk = '$data_mon[npk]'";
-                            $qry_M = $qry_absen." AND CODE = 'M' ";
-                            $qry_TL = $qry_absen." AND CODE = 'TL' ";
-                            $qry_C1 = $qry_absen." AND CODE = 'C1' ";
-                            $qry_C2 = $qry_absen." AND CODE = 'C2' ";
-                            $qry_S1 = $qry_absen." AND CODE = 'S1' ";
-                            $qry_S2 = $qry_absen." AND CODE = 'S2' ";
-                            $qry_T1 = $qry_absen." AND CODE = 'T1' ";
-                            $qry_T2 = $qry_absen." AND CODE = 'T2' ";
-                            $qry_T3 = $qry_absen." AND CODE = 'T3' ";
-                            $qry_Oth = $qry_absen." AND CODE <> '' ";
-    
-                            $total_M = mysqli_num_rows(mysqli_query($link, $qry_M));
-                            $total_C1 = mysqli_num_rows(mysqli_query($link, $qry_C1));
-                            $total_C2 = mysqli_num_rows(mysqli_query($link, $qry_C2));
-                            $total_S1 = mysqli_num_rows(mysqli_query($link, $qry_S1));
-                            $total_S2 = mysqli_num_rows(mysqli_query($link, $qry_S2));
-                            $total_T1 = mysqli_num_rows(mysqli_query($link, $qry_T1));
-                            $total_T2 = mysqli_num_rows(mysqli_query($link, $qry_T2));
-                            $total_T3 = mysqli_num_rows(mysqli_query($link, $qry_T3));
-                            $total_TL = mysqli_num_rows(mysqli_query($link, $qry_TL));
-                            $total_Oth = mysqli_num_rows(mysqli_query($link, $qry_Oth));
-                            $other = $total_Oth - ($total_M + $total_C1 + $total_C2 +$total_S1 +$total_S2+$total_T1+$total_T2+$total_T3+$total_TL);
-    
     
                             ?>
-                            <td rowspan=""><?=$total_S1?></td>
-                            <td rowspan=""><?=$total_S2?></td>
-                            <td rowspan=""><?=$total_T1?></td>
-                            <td rowspan=""><?=$total_T2?></td>
-                            <td rowspan=""><?=$total_T3?></td>
-                            <td rowspan=""><?=$total_TL?></td>
-                            <td rowspan=""><?=$total_M?></td>
-                            <td rowspan=""><?=$total_C1?></td>
-                            <td rowspan=""><?=$total_C2?></td>
-                            <td rowspan=""><?=$other?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_S1?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_S2?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_T1?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_T2?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_T3?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_TL?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_M?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_C1?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$total_C2?></td>
+                            <td rowspan="" class="<?=$color_indikator?>"><?=$other?></td>
                             
                             <?php
                                     

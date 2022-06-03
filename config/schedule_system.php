@@ -407,4 +407,5 @@ function WD($link, $shift, $tanggal){
 
     return array($tglMasuk, $tglPulang, $checkIn, $checkOut, $jml);
 }
+
 ?>

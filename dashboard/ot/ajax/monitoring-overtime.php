@@ -725,7 +725,7 @@ if(isset($_SESSION['user'])){
         <div class="table-responsive table-bordered" >
             <table class="table table-hover  text-uppercase" id="tb_absensi" style="border: #C6C7C8;width:100%">
             
-                <thead class="text-white  table-info" style="border: #C6C7C8">
+                <thead class="  table-info" style="border: #C6C7C8">
                     <tr >
                         <th scope="col" rowspan="2" style="width:50px;border:1px solid white">No</th>
                         <th scope="col" rowspan="2" style="width:100px;border:1px solid white">NPK</th>

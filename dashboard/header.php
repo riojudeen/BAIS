@@ -179,7 +179,6 @@ $base64 = getFoto($npkUser)
   <link href="<?=base_url('assets/css/bootstrap.min.css" rel="stylesheet')?>"/>
   <link href="<?=base_url('assets/css/paper-dashboard.css?v=2.1.1')?>" rel="stylesheet" />
   <link href="<?=base_url('assets/css/moreicon/moreicon.css')?>" rel="stylesheet" />
-
   <link href="<?=base_url('assets/fontawesome/css/all.css')?>" rel="stylesheet" />
     <!-- CSS Files 
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />-->

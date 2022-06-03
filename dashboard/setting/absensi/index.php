@@ -3,6 +3,7 @@ require_once("../../../config/config.php");
 require "../../../_assets/vendor/autoload.php";
 require_once("../../../config/schedule_system.php");
 require_once("../../../config/approval_system.php");
+require_once("../../../config/summaryMP.php");
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -182,6 +183,8 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 <?php
                 
             }
+            // summaryMP($link, $date);
+            // summaryAtt($link, $date);
         }
         $sql = substr($query, 0 , -1); //untuk trim koma terakhir
         // echo $sql;
@@ -224,7 +227,7 @@ if(($_GET['upload_cat']) == "absensi_upload"){
         echo "data belum masuk";
     }
 }else if(($_GET['upload_cat']) == "overtime_upload"){
-    echo "mantap";
+    // echo "mantap";
     $file_mimes = array('application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     
     if(isset($_FILES['file_import']['name']) && in_array($_FILES['file_import']['type'], $file_mimes)) {
@@ -319,12 +322,15 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 $npk = $sheetData[$i]['0'];
                 $nama = $sheetData[$i]['1'];
                 $dept = $sheetData[$i]['2'];
-
+                
                 // ambil data mulai dan selesai lembur
                 $index_mulai = 4 + $index_tanggal; //index pertama 5
-                $in = $index_mulai + 1;
-                $out = $index_mulai + 2;
-                $ket = $index_mulai + 3;
+                $in = $index_mulai ;
+                $out = $index_mulai + 1;
+                $ket = $index_mulai + 2;
+
+                // $checkin = $sheetData[$i][$in];
+                // $checkout = $sheetData[$i][$out];
 
                 $start = (isset($sheetData[$i][$in]))?(($sheetData[$i][$in] == '')?"00:00:00":$sheetData[$i][$in]):"00:00:00";
                 $end = (isset($sheetData[$i][$out]))?(($sheetData[$i][$out] == '')?"00:00:00":$sheetData[$i][$out]):"00:00:00";
@@ -351,9 +357,8 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                     }
                 }
                
-                // echo $iin."-".$iint."-".$iiint."<br>";
+                // echo $date_mulai."-".$start."-".$end."<br>";
                 $q_replace_overtime .= " ('$id','$npk','$date','$date_mulai','$date_selesai','$start','$end','$npkUser'),";
-                
                 // update request 
                 $q_cekOt = mysqli_query($link, $q_cek_reqOt." WHERE npk = '$npk' AND `work_date` = '$date'  ")or die(mysqli_error($link));
                 if(mysqli_num_rows($q_cekOt)>0){
