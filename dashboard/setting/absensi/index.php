@@ -183,7 +183,7 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 <?php
                 
             }
-            // summaryMP($link, $date);
+            summaryMP($link, $date);
             // summaryAtt($link, $date);
         }
         $sql = substr($query, 0 , -1); //untuk trim koma terakhir

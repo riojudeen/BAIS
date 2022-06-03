@@ -139,9 +139,11 @@ function summaryMP($link, $date){
     // mysqli_query($link, "DELETE karyawan_record");
     $cek = mysqli_query($link, "SELECT `date`  FROM karyawan_record WHERE `date` = '$date' ")or die(mysqli_error($link));
     $q_cek = mysqli_query($link, "SELECT MAX(id) AS id FROM karyawan_record ")or die(mysqli_error($link));
+
     if(mysqli_num_rows($cek) <= 0){
         $sql_cek = mysqli_fetch_assoc($q_cek);
         $id = $sql_cek['id']+1;
+        $q_insert = "INSERT INTO karyawan_record (`id`, `id_area`, `part`, `nama_area`, `id_jabatan`, `id_dept_account`, `date`, `updated` , `mp` ) VALUES ";
         if(mysqli_num_rows($sql_area)>0){ 
             while($data = mysqli_fetch_assoc($sql_area)){ 
                 $id_area = $data['id'];
@@ -153,19 +155,20 @@ function summaryMP($link, $date){
                 $mp = $data['total_karyawan'];
                 $dept_account = $data['dept'];
                 // mysqli_query($link, "UPDATE karyawan_record SET id = '$id', id_area = '$id_area' , part = '$part' , nama_area = '$nama_area', id_jabatan = '$id_jabatan' , `date` = '$date' , updated = '$updated' ")or die(mysqli_error($link));
-                mysqli_query($link, "INSERT INTO karyawan_record (`id`, `id_area`, `part`, `nama_area`, `id_jabatan`, `id_dept_account`, `date`, `updated` , `mp` ) VALUES ('$id' , '$id_area' , '$part' , '$nama_area', '$id_jabatan' , '$dept_account' , '$date', '$updated', '$mp' ) ")or die(mysqli_error($link));
+                $q_insert .= " ('$id' , '$id_area' , '$part' , '$nama_area', '$id_jabatan' , '$dept_account' , '$date', '$updated', '$mp' ) ,";
+                
                 $id++;
             }
         
         } 
+        $q_insert = substr($q_insert, 0, -1);
+        mysqli_query($link, $q_insert)or die(mysqli_error($link));
     
-    }else{
-        echo "ga perlu update";
     }
     
 } 
+// $date = "2022-06-05";
 
-// summaryMP($link, $date);
 function summaryAtt($link, $date){
     $q_absensi = "SELECT (COUNT(view_absen_hr.npk)) AS attends 
         FROM (
@@ -196,6 +199,6 @@ function summaryAtt($link, $date){
         }
     }
 }
-
+// summaryAtt($link, $date);
     
 ?>
