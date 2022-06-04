@@ -85,6 +85,19 @@ if(!isset($_SESSION['user'])){
         </div>
     </div>
     <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                
+            </div>
+            <div class="cad-footer">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
         <div class="row">
             <div class="col-md-12">
              <?php
