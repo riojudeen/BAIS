@@ -75,11 +75,11 @@ if(!isset($_SESSION['user'])){
 </div>
 <div class=" row data-eff"></div>
 <div class="row">
-    <div class="col-md-12 spinner_load_eff_dept" >
+    <div class="col-md-12 spinner_load_eff_dept" style="display:none">
         <div class="card shadow-none">
             <div class="card-body " style="background-image: linear-gradient(to right, rgb(244,243,239) , rgb(255,255,255) , rgb(244,243,239));">
                 <div class=" text-center" style="display:block">
-                    <img id="img-spinner" src="../../assets/img/loading/load.gif" style="height:50px">
+                    <img id="img-spinner2" src="../../assets/img/loading/load.gif" style="height:50px">
                     <label class="label">please wait downloading resources...</label>
                 </div>
             </div>
