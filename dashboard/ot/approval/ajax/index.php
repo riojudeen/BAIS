@@ -58,10 +58,11 @@ if(isset($_SESSION['user'])){
         $part = partAccess($level, "part");
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
         $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
-        $exception = " AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> ''  ";
+        $exception = " AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) <> '100e' ";
         $filterType = ($_GET['att_type'] != '' )?" AND id_ot = '$_GET[att_type]'":"";
         list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '$_GET[prog]' ":"";
+        $prog = ($_GET['prog'] == '-' )?"":$_GET['prog'];
+        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '$prog' ":"";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$filterProg.$exception;
         // echo $_GET['att_type'];
         // echo $generate;
@@ -134,9 +135,15 @@ if(isset($_SESSION['user'])){
                     
                 
                     $sql = mysqli_query($link, $query_req_overtime.$addOrder.$addLimit)or die(mysqli_error($link));
-                    
+                    // echo $query_req_overtime.$addOrder.$addLimit;
                     if(mysqli_num_rows($sql)>0){
                         while($data = mysqli_fetch_assoc($sql)){
+                            $query_absen = mysqli_query($link, "SELECT view_absen_hr.check_in, view_absen_hr.check_in FROM view_absen_hr WHERE npk = '$data[npk]' AND work_date = '$data[work_date]' ")or die(mysqli_error($link));
+                            $data_abs = mysqli_fetch_assoc($query_absen);
+                            $ci = (isset($data_abs['check_in']) AND $data_abs['check_in'] != '00:00:00' )?jam($data_abs['check_in']):"-";
+                            $co = (isset($data_abs['check_out']) AND $data_abs['check_out'] != '00:00:00' )?jam($data_abs['check_out']):"-";
+                            $clr_ci = ($ci == "-" || $co == "-")?"table-danger":"";
+
                             $query_group = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
                             $group_ = mysqli_fetch_assoc($query_group);
                             $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
@@ -149,7 +156,7 @@ if(isset($_SESSION['user'])){
                             $checkIn = ($data['start'] == '00:00:00')? "-" : jam($data['start']);
                             $checkOut = ($data['end'] == '00:00:00')? "-" : jam($data['end']);
                             ?>
-                            <tr id="<?=$data['id_absensi']?>" >
+                            <tr id="<?=$data['id_absensi']?> " class="<?=$clr_ci?>" >
                                 <td class="td"><?=$no++?></td>
                                 <td class="td"><?=$data['npk']?></td>
                                 <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
@@ -157,8 +164,8 @@ if(isset($_SESSION['user'])){
                                 <td style="max-width:100px" class="text-truncate"><?=$group?></td>
                                 <td class="td"><?=$dept_acc ?></td>
                                 <td class="td"><?=tgl_indo($data['work_date'])?></td>
-                                <td class="td"></td>
-                                <td class="td"></td>
+                                <td class="td"><?=$ci?></td>
+                                <td class="td"><?=$co?></td>
                                 <td class="td"><?=$checkIn?></td>
                                 <td class="td"><?=$checkOut?></td>
                                 <td style="max-width:300px" class="text-truncate td"><?=$data['activity']?></td>
@@ -173,10 +180,11 @@ if(isset($_SESSION['user'])){
                                     
                                         
                                         <?php
+                                        /*
                                     $status = $data['status'];
                                     // echo $status;
-                                    list($request,$proses,$return,$stop,$approve,$reject,$delete) = btnProses($level, $status, 'btn' );
-                                    list($request_,$proses_,$return_,$stop_,$approve_,$reject_,$delete_) = btnProses($level, $status, 'btn_visible' );
+                                    list($draft, $request,$proses,$return,$stop,$approve,$reject,$delete) = btnProses2($level, $status, 'btn' );
+                                    list($draft, $request_,$proses_,$return_,$stop_,$approve_,$reject_,$delete_) = btnProses2($level, $status, 'btn_visible' );
                                     // echo $delete;
                                     ?>
                                     <span class="dropleft text-center">
@@ -251,6 +259,9 @@ if(isset($_SESSION['user'])){
                                             
                                         </div>
                                     </span>
+                                    <?php
+                                    */
+                                    ?>
                                 </td>
                                 <td>
                                     <div class="form-check text-right">
@@ -281,7 +292,7 @@ if(isset($_SESSION['user'])){
             </table>
         </form>
         <div class="row">
-            <div class="col-md-12 pull-rigt">
+            <div class="col-md-6">
                 <ul class="pagination ">
                 <?php
                 // echo $page."<br>";
@@ -313,6 +324,12 @@ if(isset($_SESSION['user'])){
                 }
                 ?>
                 </ul>
+            </div>
+            <div class="col-md-6 text-right">
+                <button class="btn btn-sm btn-primary downloadAll" type="button"
+                    data-toggle="tooltip" data-placement="bottom" title="Download Pengajuan">
+                    <i class="nc-icon nc-cloud-download-93"></i> Download Data
+                </button>   
             </div>
         </div>
         

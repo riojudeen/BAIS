@@ -38,6 +38,7 @@ if(isset($_SESSION['user'])){
             view_absen_req.req_in,
             view_absen_req.req_out,
             view_absen_req.shift_req,
+            view_absen_req.note_return,
             view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
             FROM view_absen_req ";
         $access_org = orgAccess($level);
@@ -86,7 +87,8 @@ if(isset($_SESSION['user'])){
                         <th>out</th>
                         <th>Ket</th>
                         <th colspan="2">Progress</th>
-                        <th class="text-right">Action</th>
+                        <th style="min-width:150px;max-width:150px">Catatan</th>
+                        <!-- <th class="text-right">Action</th> -->
                         <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
                             <div class="form-check">
                                 <label class="form-check-label">
@@ -136,6 +138,7 @@ if(isset($_SESSION['user'])){
                             $prs = $data['req_status_absen'];
                             $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                             $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
+                            $note_return = ($data['note_return'] == '')? "" : $data['note_return'];
                             ?>
                             <tr id="<?=$data['id_absensi']?>" >
                                 <td class="td"><?=$no++?></td>
@@ -154,6 +157,11 @@ if(isset($_SESSION['user'])){
                                     </div>
                                 </td>
                                 <td class="td"><?=$stt?></td>
+                                <td class="td">
+                                <marquee><?=$note_return?></marquee>
+                                </td>
+                                <?php
+                                /*
                                 <td class="text-right">
                                     
                                         
@@ -237,6 +245,8 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </span>
                                 </td>
+                                */
+                                ?>
                                 <td>
                                     <div class="form-check text-right">
                                         <label class="form-check-label ">
@@ -266,7 +276,7 @@ if(isset($_SESSION['user'])){
             </table>
         </form>
         <div class="row">
-            <div class="col-md-12 pull-rigt">
+            <div class="col-md-6">
                 <ul class="pagination ">
                 <?php
                 // echo $page."<br>";
@@ -298,6 +308,12 @@ if(isset($_SESSION['user'])){
                 }
                 ?>
                 </ul>
+            </div>
+            <div class="col-md-6 text-right">
+                <button class="btn btn-sm btn-primary downloadAll" type="button"
+                    data-toggle="tooltip" data-placement="bottom" title="Download Pengajuan">
+                    <i class="nc-icon nc-cloud-download-93"></i> Download Data
+                </button>   
             </div>
         </div>
         

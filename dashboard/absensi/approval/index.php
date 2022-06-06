@@ -53,7 +53,89 @@ if(isset($_SESSION['user'])){
             </div>
         </div>
     </form>
-        
+    <div class="modal fade" id="myReturn" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notice">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </button>
+                <h5 class="modal-title" id="myModalLabel">Return Data Pengajuan</h5>
+                </div>
+                <div class="modal-body">
+                   
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="note_return"  id="note_return"  placeholder="catatan pengembalian data">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                    
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-warning btn-round" id="btn-return" data-dismiss="modal">Return!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myReject" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notice">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </button>
+                <h5 class="modal-title">Reject Data Pengajuan</h5>
+                </div>
+                <div class="modal-body">
+                   
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="note_reject"  id="note_reject"  placeholder="alasan penolakan data">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                    
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-danger btn-round" id="btn-reject" data-dismiss="modal">Reject!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myStop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-notice">
+            <div class="modal-content">
+                <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="nc-icon nc-simple-remove"></i>
+                </button>
+                <h5 class="modal-title">Stop Data Pengajuan</h5>
+                <label for="" class="category">menghentikan pengajuan</label>
+                </div>
+                <div class="modal-body">
+                   
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="note_stop"  id="note_stop"  placeholder="catatan untuk data yang ditolak">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                    
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-danger btn-round" id="btn-stop" data-dismiss="modal">Lanjutkan Proses</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <br>
     <form method="GET">
     <div class="row">
@@ -530,10 +612,23 @@ if(isset($_SESSION['user'])){
             })
             
         });
-        // return
-        $(document).on('click','.returnAll', function(){
+        $(document).on('click', '#btn-return', function(a){
+            a.preventDefault()
+            returnData()
+        })
+        $(document).on('click', '#btn-reject', function(a){
+            a.preventDefault()
+            rejectAll()
+        })
+        $(document).on('click', '#btn-stop', function(a){
+            a.preventDefault()
+            stopAll()
+        })
+        function returnData(){
+            var note_return = $('#note_return').val()
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?return_multiple=';
+            var getLink = '../proses.php?return_multiple='+note_return;
+            console.log(note_return)
                 
                 Swal.fire({
                 title: 'Kembalikan Pengajuan?',
@@ -586,12 +681,14 @@ if(isset($_SESSION['user'])){
                 
                 }
             })
-            
-        });
+        }
+        // return
+        
         // stop
-        $(document).on('click','.stopAll', function(){
+        function stopAll(){
+            var note_return = $('#note_stop').val()
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?stop_multiple=';
+            var getLink = '../proses.php?stop_multiple='+note_return;
                 
                 Swal.fire({
                 title: 'Hentikan Pengajuan ?',
@@ -644,8 +741,9 @@ if(isset($_SESSION['user'])){
                 
                 }
             })
-            
-        });
+        }
+        
+
         // approve SPV
         $(document).on('click','.approveAll', function(){
             var page = $('.page_active').attr('id')
@@ -705,9 +803,10 @@ if(isset($_SESSION['user'])){
             
         });
         // reject SPV
-        $(document).on('click','.rejectAll', function(){
+        function rejectAll(){
+            var note_reject = $('#note_reject').val()
             var page = $('.page_active').attr('id')
-            var getLink = '../proses.php?reject_multiple=';
+            var getLink = '../proses.php?reject_multiple='+note_reject;
                 
                 Swal.fire({
                 title: 'Tolak Pengajuan ?',
@@ -760,6 +859,51 @@ if(isset($_SESSION['user'])){
                 
                 }
             })
+        }
+        $(document).on('click', '.downloadAll', function(e){
+            e.preventDefault();
+            var getLink = '../proses.php?at_download=1';
+            var page = $('.page_active').attr('id')
+            Swal.fire({
+                title: 'Dowload Data ?',
+                text: "download draft pengajuan?",
+                icon: false,
+                showCancelButton: true,
+                confirmButtonColor: '#1ABC9C',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Download Sekarang!'
+            }).then((result) => {
+                if (result.value) {
+                    document.proses.action = getLink;
+                    document.proses.submit();
+                    // $.ajax({
+                    //     url:getLink,
+                    //     method:"POST",
+                    //     data:form,
+                    //     success:function(data){
+                    //         $('.notifikasi').html(data);
+                    //         draft_Active(page)
+                    //     }
+                    // })
+                }
+            })
+        
+        });
+        $(document).on('click','.returnAll', function(){
+
+            $('#myReturn').modal("show");	// menampilkan dialog modal nya
+            $('#note_return').val("");	// menampilkan dialog modal nya
+
+        });
+        $(document).on('click','.stopAll', function(){
+
+            $('#myStop').modal("show");	// menampilkan dialog modal nya
+            $('#note_stop').val("");	// menampilkan dialog modal nya
+
+        });
+        $(document).on('click','.rejectAll', function(){
+            $('#myReject').modal("show");	// menampilkan dialog modal nya
+            $('#note_reject').val("");	// menampilkan dialog modal nya
             
         });
         // reject SPV

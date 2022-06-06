@@ -248,8 +248,8 @@ function authColor($code){
     return $color;
 }
 function authText($code){
-    if($code == ""){
-        $text = "Belum Ada Pengajuan";
+    if($code == "" || $code == "-"){
+        $text = "Draft / Belum Diajukan";
     }else if($code == "25a"){
         $text = "Waiting";
     }else if($code == "50a"){
@@ -1192,9 +1192,22 @@ function filterData_joinAbsen($div_filter , $dept_filter, $sect_filter, $group_f
 function pagination($jmlData, $sort, $position){
     
 }
+
 function btnProses($level, $status, $btn){
     if($level == 1){
         switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, foreman tidak bisa akses apapun
@@ -1311,6 +1324,18 @@ function btnProses($level, $status, $btn){
         }
     }else if($level == 2){
         switch($status){
+            case ''://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, foreman tidak bisa akses apapun
@@ -1427,6 +1452,18 @@ function btnProses($level, $status, $btn){
         }
     }else if($level == 3){
         switch($status){
+            case ''://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, foreman tidak bisa akses apapun
@@ -1543,6 +1580,18 @@ function btnProses($level, $status, $btn){
         }
     }else if($level == 4){
         switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, SPV bsa mengakses approve, dan reject
@@ -1659,6 +1708,18 @@ function btnProses($level, $status, $btn){
         }
     }else if($level == 5){
         switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, SPV bsa mengakses approve, dan reject
@@ -1775,6 +1836,18 @@ function btnProses($level, $status, $btn){
         }
     }else if($level == 6){
         switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, admin tidak bisa mengoperasikan tombol manapun
@@ -1896,6 +1969,18 @@ function btnProses($level, $status, $btn){
         }
     }else if($level == 7){
         switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, admin tidak bisa mengoperasikan tombol manapun
@@ -2018,6 +2103,18 @@ function btnProses($level, $status, $btn){
     }else if($level == 8){
         
         switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
             case '25a'://baru diajukan
                 /*
                 ketika pengajuan diajukan, admin tidak bisa mengoperasikan tombol manapun
@@ -2139,6 +2236,7 @@ function btnProses($level, $status, $btn){
         }
     }
     if($btn == 'btn'){
+        $draft = 'disabled';
         $request = $request;
         $proses= $proses;
         $return =  $return;
@@ -2149,6 +2247,7 @@ function btnProses($level, $status, $btn){
         
     }else if($btn == 'btn_visible'){
         if($level == 1){
+            $draft = 0;
             $request = 0;
             $proses= 0;
             $return =  0;
@@ -2157,6 +2256,7 @@ function btnProses($level, $status, $btn){
             $reject = 0;
             $delete = 0;
         }else if($level == 2){
+            $draft = 0;
             $request = 0;
             $proses= 0;
             $return =  0;
@@ -2166,6 +2266,7 @@ function btnProses($level, $status, $btn){
             $delete = 0;
         }else if($level == 3){
             if($status == '100d'){
+                $draft = 0;
                 $request = 1;
                 $proses= 0;
                 $return =  0;
@@ -2174,6 +2275,7 @@ function btnProses($level, $status, $btn){
                 $reject = 0;
                 $delete = 1;
             }else{
+                $draft = 0;
                 $request = 0;
                 $proses= 0;
                 $return =  0;
@@ -2184,6 +2286,7 @@ function btnProses($level, $status, $btn){
             }
             
         }else if($level == 4){
+            $draft = 0;
             $request = 1;
             $proses= 0;
             $return =  0;
@@ -2192,6 +2295,7 @@ function btnProses($level, $status, $btn){
             $reject = 1;
             $delete = 0;
         }else if($level == 5){
+            $draft = 0;
             $request = 0;
             $proses= 0;
             $return =  0;
@@ -2200,6 +2304,7 @@ function btnProses($level, $status, $btn){
             $reject = 0;
             $delete = 0;
         }else if($level == 6){
+            $draft = 0;
             $request = 1;
             $proses= 1;
             $return =  1;
@@ -2208,6 +2313,7 @@ function btnProses($level, $status, $btn){
             $reject = 0;
             $delete = 1;
         }else if($level == 7){
+            $draft = 0;
             $request = 1;
             $proses= 1;
             $return =  1;
@@ -2216,6 +2322,7 @@ function btnProses($level, $status, $btn){
             $reject = 0;
             $delete = 1;
         }else if($level == 8){
+            $draft = 0;
             $request = 1;
             $proses= 1;
             $return =  1;
@@ -2227,6 +2334,1149 @@ function btnProses($level, $status, $btn){
         
     }
     return array($request,$proses,$return,$stop,$approve,$reject,$delete, $btn);
+}
+
+function btnProses2($level, $status, $btn){
+    if($level == 1){
+        switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan diapprove, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan diptoses, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                foreman tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                foreman bisa mengakses tombol return dan proses
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = '';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan approval online, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+        }
+    }else if($level == 2){
+        switch($status){
+            case ''://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan diapprove, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan diptoses, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                foreman tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                foreman bisa mengakses tombol return dan proses
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = '';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan approval online, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+        }
+    }else if($level == 3){
+        switch($status){
+            case ''://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan diapprove, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan diptoses, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                foreman tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                foreman bisa mengakses tombol return dan proses
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = '';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = '';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan approval online, 
+                foreman bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+        }
+    }else if($level == 4){
+        switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, SPV bsa mengakses approve, dan reject
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = '';
+                $reject = '';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan diapprove, SPV tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan diptoses, SPV tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses, SPV tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                SPV tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                SPV tidak bisa apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                SPV tidak bisa melakukan apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan menjadi arsip, 
+                SPV tidak bisa melakukan apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan Approval online, 
+                SPV bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+        }
+    }else if($level == 5){
+        switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, SPV bsa mengakses approve, dan reject
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan diapprove, SPV tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan diptoses, SPV tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses, SPV tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                SPV tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                SPV tidak bisa apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                SPV tidak bisa melakukan apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan menjadi arsip, 
+                SPV tidak bisa melakukan apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan Approval online, 
+                SPV bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+        }
+    }else if($level == 6){
+        switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, admin tidak bisa mengoperasikan tombol manapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan sudah adiapprove SPV, 
+                admin bisa melakukan proses, return , dan stop
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = '';
+                $stop = '';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan sudah diproses , 
+                admin bisa melakukan cancel dengan mengakses tombol return dan stop
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = '';
+                $stop = '';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses , 
+                admin tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                admin tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                admin bisa mengakses tombol return dan proses
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = '';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                admin bisa mengakses tombol approve
+                admin bisa mengakses tombol delete, untuk mendelete pengajuan
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = '';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan arsip, 
+                admin bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan approval online, 
+                admin bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+
+        }
+    }else if($level == 7){
+        switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, admin tidak bisa mengoperasikan tombol manapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan sudah adiapprove SPV, 
+                admin bisa melakukan proses, return , dan stop
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = '';
+                $stop = '';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan sudah diproses , 
+                admin bisa melakukan cancel dengan mengakses tombol return dan stop
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = '';
+                $stop = '';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses , 
+                admin tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                admin tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                admin bisa mengakses tombol return dan proses
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = '';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                admin bisa mengakses tombol approve
+                admin bisa mengakses tombol delete, untuk mendelete pengajuan
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = '';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan arsip, 
+                admin bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan approval online, 
+                admin bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+
+        }
+    }else if($level == 8){
+        
+        switch($status){
+            case ''://baru draft
+                /*
+                ketika pengajuan diajukan, foreman tidak bisa akses apapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '25a'://baru diajukan
+                /*
+                ketika pengajuan diajukan, admin tidak bisa mengoperasikan tombol manapun
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '50a'://approval spv
+                /*
+                ketika pengajuan sudah adiapprove SPV, 
+                admin bisa melakukan proses, return , dan stop
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = '';
+                $stop = '';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '75a':
+                /*
+                ketika pengajuan sudah diproses , 
+                admin bisa melakukan cancel dengan mengakses tombol return dan stop
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = '';
+                $stop = '';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100a':
+                /*
+                ketika pengajuan sukses , 
+                admin tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100b':
+                /*
+                ketika pengajuan ditolak SPV, 
+                admin tidak bisa melakukan apa apa
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100c':
+                /*
+                ketika pengajuan dhentikan Admin, 
+                admin bisa mengakses tombol return dan proses
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = '';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100d':
+                /*
+                ketika pengajuan dikemablikan admin, 
+                admin bisa mengakses tombol approve
+                admin bisa mengakses tombol delete, untuk mendelete pengajuan
+                */
+                $request = 'disabled';
+                $proses= '';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = '';
+                break;
+            case '100e':
+                /*
+                ketika pengajuan arsip, 
+                admin bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+            case '100f':
+                /*
+                ketika pengajuan approval online, 
+                admin bisa melakukan delete pengajuan
+                */
+                $request = 'disabled';
+                $proses= 'disabled';
+                $return = 'disabled';
+                $stop = 'disabled';
+                $approve = 'disabled';
+                $reject = 'disabled';
+                $delete = 'disabled';
+                break;
+
+        }
+    }
+    if($btn == 'btn'){
+        $draft = 'disabled';
+        $request = $request;
+        $proses= $proses;
+        $return =  $return;
+        $stop = $stop ;
+        $approve = $approve;
+        $reject = $reject;
+        $delete = $delete;
+        
+    }else if($btn == 'btn_visible'){
+        if($level == 1){
+            $draft = 0;
+            $request = 0;
+            $proses= 0;
+            $return =  0;
+            $stop = 0 ;
+            $approve = 0;
+            $reject = 0;
+            $delete = 0;
+        }else if($level == 2){
+            $draft = 0;
+            $request = 0;
+            $proses= 0;
+            $return =  0;
+            $stop = 0 ;
+            $approve = 0;
+            $reject = 0;
+            $delete = 0;
+        }else if($level == 3){
+            if($status == '100d'){
+                $draft = 0;
+                $request = 1;
+                $proses= 0;
+                $return =  0;
+                $stop = 0 ;
+                $approve = 0;
+                $reject = 0;
+                $delete = 1;
+            }else{
+                $draft = 0;
+                $request = 0;
+                $proses= 0;
+                $return =  0;
+                $stop = 0 ;
+                $approve = 0;
+                $reject = 0;
+                $delete = 0;
+            }
+            
+        }else if($level == 4){
+            $draft = 0;
+            $request = 1;
+            $proses= 0;
+            $return =  0;
+            $stop = 0 ;
+            $approve = 1;
+            $reject = 1;
+            $delete = 0;
+        }else if($level == 5){
+            $draft = 0;
+            $request = 0;
+            $proses= 0;
+            $return =  0;
+            $stop = 0 ;
+            $approve = 0;
+            $reject = 0;
+            $delete = 0;
+        }else if($level == 6){
+            $draft = 0;
+            $request = 1;
+            $proses= 1;
+            $return =  1;
+            $stop = 1 ;
+            $approve = 0;
+            $reject = 0;
+            $delete = 1;
+        }else if($level == 7){
+            $draft = 0;
+            $request = 1;
+            $proses= 1;
+            $return =  1;
+            $stop = 1 ;
+            $approve = 0;
+            $reject = 0;
+            $delete = 1;
+        }else if($level == 8){
+            $draft = 0;
+            $request = 1;
+            $proses= 1;
+            $return =  1;
+            $stop = 1 ;
+            $approve = 1;
+            $reject = 1;
+            $delete = 1;
+        }
+        
+    }
+    return array($draft, $request,$proses,$return,$stop,$approve,$reject,$delete, $btn);
 }
 function getOrgName($link, $params, $part){
     $query = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$params' AND part = '$part' ")or die(mysqli_error($link));
@@ -2311,8 +3561,15 @@ function pecahID($id_){
     return array($id, $ket, $req_shift);
 }
 function pecahProg($prog){
-    $status = substr($prog, 0, -1);
-    $req_status = substr($prog, -1);
+    if($prog != ''){
+        $status = substr($prog, 0, -1);
+        $req_status = substr($prog, -1);
+
+    }else{
+        $status = '';
+        $req_status = '';
+    }
+    
     
     return array($status, $req_status);
 }
