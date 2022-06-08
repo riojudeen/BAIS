@@ -127,7 +127,7 @@ $q_shift = mysqli_query($link, "SELECT * FROM shift")or die(mysqli_error($link))
             <div class="col-md-3 pl-1">
                 <div class="form-group">
                     <label>Tanggal Selesai :</label>
-                    <input type="date" name="end"  required class="form-control datepicker bg-transparent" value="<?=getOrgName($link, $dept_account, "deptAcc")?>">
+                    <input type="date" name="end"  class="form-control datepicker bg-transparent" value="<?=getOrgName($link, $dept_account, "deptAcc")?>">
                 </div>
             </div>
             

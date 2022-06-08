@@ -31,7 +31,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                     <select class="form-control" name="att_type" id="att_type">
                                         <option value="">Pilih Tipe Pengajuan</option>
                                         <?php
-                                        $q_attType = mysqli_query($link, "SELECT * FROM attendance_type")or die(mysqli_error($link));
+                                        $q_attType = mysqli_query($link, "SELECT * FROM attendance_type WHERE stats = '1' ")or die(mysqli_error($link));
                                         if(mysqli_num_rows($q_attType)){
                                             $collect = array();
                                             while($data = mysqli_fetch_assoc($q_attType)){
@@ -102,7 +102,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                             }
                             if($reject == 1){
                                 ?>
-                                <button class="btn btn-sm btn-danger rejectAll" type="button" 
+                                <button class="btn btn-sm btn-danger rejectAll" data-id="reject" type="button" 
                                         data-toggle="tooltip" data-placement="bottom" title="reject">
                                         <i class="fa fa-ban"></i> Reject
                                 </button>
@@ -118,7 +118,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                             }
                             if($stop == 1){
                                 ?>
-                                <button class="btn btn-sm btn-danger stopAll" type="button" 
+                                <button class="btn btn-sm btn-danger stopAll" data-id="stop" type="button" 
                                         data-toggle="tooltip" data-placement="bottom" title="reject">
                                         <i class="fa fa-ban"></i> Stop
                                 </button>
@@ -126,7 +126,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                             }
                             if($return == 1){
                                 ?>
-                                <button class="btn btn-sm btn-warning returnAll" type="button"
+                                <button class="btn btn-sm btn-warning returnAll" data-id="return" type="button"
                                     data-toggle="tooltip" data-placement="bottom" title="Kembalikan">
                                     <i class="fa fa-undo"></i> Kembalikan
                                 </button>
@@ -138,9 +138,11 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                     data-toggle="tooltip" data-placement="bottom" title="Kembalikan">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
+                                
                                 <?php
                             }
-                        ?>                        
+                        ?>    
+                                         
                     </div>
                 </div>
                 

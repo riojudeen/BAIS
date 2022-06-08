@@ -42,7 +42,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                     <select class="form-control" name="att_type" id="att_progress">
                                         <option value="">Pilih Progress Pengajuan</option>
                                         <?php
-                                            $dataProgress = array('25a','50a','75a','100a','100b','100c','100d','100f');
+                                            $dataProgress = array('-', '25a','50a','75a','100a','100b','100c','100d','100f');
                                             foreach($dataProgress AS $prog){
                                                 ?>
                                                 <option value="<?=$prog?>"><?=authText($prog)?></option>
@@ -107,6 +107,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                 </button>
                                 <?php
                             }
+                            /*
                             if($return == 1){
                                 ?>
                                 <button class="btn btn-sm btn-warning returnAll" type="button"
@@ -115,6 +116,7 @@ list($request,$proses,$return,$stop,$approve,$reject,$delete) = authBtn($level);
                                 </button>
                                 <?php
                             }
+                            */
                             if($delete == 1){
                                 ?>
                                 <button class="btn btn-sm btn-danger deleteAll" type="button"

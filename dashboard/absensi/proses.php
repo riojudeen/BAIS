@@ -2,6 +2,9 @@
 require_once("../../config/config.php");
 require_once("../../config/approval_system.php");
 require_once("../../config/schedule_system.php");
+require("../../_assets/vendor/autoload.php");
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if(isset($_SESSION['user']) && $level >=1 && $level <=8){
     
     // $_GET['return'] = '44131';
@@ -340,27 +343,29 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
        if(count($_POST['checked']) > 0){
            foreach($_POST['checked'] AS $data){
                 list($id, $ket, $req_shift) = pecahID($data);
-               mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
+               mysqli_query($link, "UPDATE req_absensi SET note_return = NULL, `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
            }
        }
     }else if(isset($_GET['return_multiple'])){
         //proses retunr oleh admin
+        $note_return = $_GET['return_multiple'];
         $status = authApprove($level, "status", "return");
         $req_status = authApprove($level, "request", "return");
         if(count($_POST['checked']) > 0){
             foreach($_POST['checked'] AS $data){
                 list($id, $ket, $req_shift) = pecahID($data);
-                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
+                mysqli_query($link, "UPDATE req_absensi SET note_return = '$note_return', `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket' ");
             }
         }
     }else if(isset($_GET['stop_multiple'])){
         //proses reject / stop  oleh admin
+        $note_return = $_GET['stop_multiple'];
         $status = authApprove($level, "status", "stop");
         $req_status = authApprove($level, "request", "stop");
         if(count($_POST['checked']) > 0){
             foreach($_POST['checked'] AS $data){
                 list($id, $ket, $req_shift) = pecahID($data);
-                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
+                mysqli_query($link, "UPDATE req_absensi SET note_return = '$note_return', `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
             }
         }
     }else if(isset($_GET['proses_multiple'])){
@@ -370,18 +375,19 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
         if(count($_POST['checked']) > 0){
             foreach($_POST['checked'] AS $data){
                 list($id, $ket, $req_shift) = pecahID($data);
-                mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
+                mysqli_query($link, "UPDATE req_absensi SET note_return = NULL, `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
             }
         }
         
     }else if(isset($_GET['reject_multiple'])){
        //proses approve oleh admin
+       $note_return = $_GET['reject_multiple'];
        $status = authApprove($level, "status", "rejected");
        $req_status = authApprove($level, "request", "rejected");
        if(count($_POST['checked']) > 0){
            foreach($_POST['checked'] AS $data){
              list($id, $ket, $req_shift) = pecahID($data);
-               mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
+               mysqli_query($link, "UPDATE req_absensi SET note_return = '$note_return', `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
            }
        }
     }else if(isset($_POST['shift_req'])){
@@ -392,13 +398,14 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $_SESSION['pesan'] = "( shift asal dan tujuan sama )";
             echo "<script>document.location.href='shift_request.php'</script>";
         }else{
-            
+            $req_date = date('Y-m-d');
             $requester = $npkUser;
             $npk = $_POST['shift_req'];
             $ket = 'SHIFT';
             $shift_asal = $_POST['shift_asal'];
             $mulai = $_POST['start'];
-            $selesai = $_POST['end'];
+            $selesai = ($_POST['end'] == '' || $_POST['end'] == '0000-00-00')?'0000-00-00':$_POST['end'];
+            // echo $selesai;
             $shift_tujuan = $_POST['shift_tujuan'];
             $status = authApprove($level, "status", "request");
             $req_status = authApprove($level, "request", "request");
@@ -413,42 +420,79 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 $or_id .= " `id` = '$id_or' OR";
                 $or_date .= " `date` = '$date' OR";
             }
-            $or_id = substr($or_id, 0, -2);
-            $or_date = substr($or_date, 0, -2);
+            $s = strtotime($mulai);
+            $e = strtotime($selesai);
 
-            $add_id = ($or_id != '')?" AND ($or_id)":'';
-            $add_date = ($or_date != '')?" AND ($or_date)":'';
-            $req_date = date('Y-m-d');
-            $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` BETWEEN '$mulai' AND '$selesai' ";
-            // echo $q_cek;
-            $cek_request = mysqli_query($link, $q_cek);
-            // echo mysqli_num_rows($cek_request);
-            if(mysqli_num_rows($cek_request)>0){
+            if($s > $e){
+                // echo "tes";
+                $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` = '$mulai' AND date_in = '$mulai' AND date_out = '00:00:00'";
                 // echo $q_cek;
-                $_SESSION['info'] = 'Gagal Disimpan';
-                $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
-                echo "<script>document.location.href='shift_request.php'</script>";
-            }else{
-                $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES";
-                foreach($tanggal AS $date){
-                    $id = $npk.$date;
-                    $query .= " ('$id', '$npk', '$shift_tujuan', '$date', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1'),";
-                }
-                $query = substr($query, 0, -1);
-                $sql = mysqli_query($link, $query);
-                if($sql){
-                    $_SESSION['info'] = 'Request';
-                    $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
-                    echo "<script>document.location.href='shift_request.php'</script>";
+                $cek_request = mysqli_query($link, $q_cek);
+                // echo mysqli_num_rows($cek_request);
+                if(mysqli_num_rows($cek_request)>0){
+                    echo "mantap sudah ada";
                     // echo $q_cek;
-                }else{
-                    $_SESSION['info'] = 'Gagal Request';
-                    $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
                     echo "<script>document.location.href='shift_request.php'</script>";
+                }else{
+                    // echo "OK";
+                    $id = $npk.$mulai;
+                    
+                    $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `date_in` , `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES ('$id', '$npk', '$shift_tujuan', '$mulai', '$mulai', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1')";
+                    // echo $query;
+                    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+                    if($sql){
+                        // echo "OK";
+                        $_SESSION['info'] = 'Request';
+                        $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
+                        echo "<script>document.location.href='shift_request.php'</script>";
+                        // echo $q_cek;
+                    }else{
+                        $_SESSION['info'] = 'Gagal Disimpan';
+                        $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                        echo "<script>document.location.href='shift_request.php'</script>";
+                    }
                 }
+            }else{
+                echo "SALAH";
+                // $or_id = substr($or_id, 0, -2);
+                // $or_date = substr($or_date, 0, -2);
+    
+                // $add_id = ($or_id != '')?" AND ($or_id)":'';
+                // $add_date = ($or_date != '')?" AND ($or_date)":'';
+                
+                // $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` BETWEEN '$mulai' AND '$selesai' ";
+                // // echo $q_cek;
+                // $cek_request = mysqli_query($link, $q_cek);
+                // // echo mysqli_num_rows($cek_request);
+                // if(mysqli_num_rows($cek_request)>0){
+                //     // echo $q_cek;
+                //     $_SESSION['info'] = 'Gagal Disimpan';
+                //     $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
+                //     echo "<script>document.location.href='shift_request.php'</script>";
+                // }else{
+                //     $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES";
+                //     foreach($tanggal AS $date){
+                //         $id = $npk.$date;
+                //         $query .= " ('$id', '$npk', '$shift_tujuan', '$date', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1'),";
+                //     }
+                //     $query = substr($query, 0, -1)or die(mysqli_error($link));
+                //     $sql = mysqli_query($link, $query);
+                //     if($sql){
+                //         $_SESSION['info'] = 'Request';
+                //         $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
+                //         echo "<script>document.location.href='shift_request.php'</script>";
+                //         // echo $q_cek;
+                //     }else{
+                //         $_SESSION['info'] = 'Gagal Disimpan';
+                //         $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                //         echo "<script>document.location.href='shift_request.php'</script>";
+                //     }
+                // }
             }
         }
-     }else if(isset($_POST['req_SUPEM'])){
+     }else if(isset($_POST['req_SUPEM']) || isset($_POST['req_CUTI']) ){
         $shift_req = 0;
         $query = $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
              VALUES ";
@@ -710,6 +754,189 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
               list($id, $ket, $req_shift) = pecahID($data);
                 mysqli_query($link, "UPDATE req_absensi SET `status` = '$status' , req_status = '$req_status' WHERE id = '$id' AND shift_req = '$req_shift' AND keterangan = '$ket'  ");
             }
+        }
+     }else if(isset($_GET['at_download'])){
+        if(count($_POST['checked']) > 0){
+            $filter_id = '';
+            $filter_ket = '';
+            $filter_req_shift = '';
+            foreach($_POST['checked'] AS $data){
+                list($id, $ket, $req_shift) = pecahID($data);
+                $filter_id .= " view_absen_req.id_absensi = '$id' OR";
+                $filter_ket .= " view_absen_req.req_code = '$ket' OR";
+                $filter_req_shift .= " view_absen_req.shift_req = '$req_shift' OR";
+            }
+            
+            $filter_id = substr($filter_id, 0, -2);
+            $filter_ket = substr($filter_ket, 0, -2);
+            $filter_req_shift = substr($filter_req_shift, 0, -2);
+            
+            $filter_id = ($filter_id == '' )?'':" AND ($filter_id) ";
+            $filter_ket = ($filter_ket == '' )?'':" AND ($filter_ket) ";
+            $filter_req_shift = ($filter_req_shift == '' )?'':" AND ($filter_req_shift) ";
+            
+            
+            // echo $filter_id;
+            
+
+
+            $year = date('Y');
+            
+
+            $level = $level;
+            $npk = $npkUser;
+            list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+            $origin_query = "SELECT view_absen_req.id_absensi,
+                view_absen_req.npk,
+                view_absen_req.nama,
+                view_absen_req.employee_shift, 
+                view_absen_req.grp,
+                view_absen_req.dept_account,
+                view_absen_req.req_work_date,
+                view_absen_req.req_date_in,
+                view_absen_req.req_date_out,
+                view_absen_req.req_in,
+                view_absen_req.req_out,
+                view_absen_req.shift_req,
+                view_absen_req.att_type,
+                view_absen_req.keterangan,
+                view_absen_req.note_return,
+                view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
+                FROM view_absen_req ";
+            
+            $access_org = orgAccess($level);
+            $data_access = generateAccess($link,$level,$npk);
+            $table = partAccess($level, "table");
+            $field_request = partAccess($level, "field_request");
+            $table_field1 = partAccess($level, "table_field1");
+            $table_field2 = partAccess($level, "table_field2");
+            $part = partAccess($level, "part");
+            $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
+            // $add_filter = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+            $exception = " AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' AND req_date IS NOT NULL  AND shift_req = '0' ";
+
+            $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org).$exception.$filter_id.$filter_ket.$filter_req_shift;
+            $status = authApprove($level, "status", "approved");
+            $req_status = authApprove($level, "request", "approved");
+
+            $sql = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
+            
+
+            // file download
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load("../../file/template/format_absensi.xlsx");
+            // // // //change it
+            $sheet = $spreadsheet->getActiveSheet(); 
+            $styleArray = [
+                'borders' => array(
+                    'outline' => array(
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        // 'color' => array('argb' => 'FFFF0000'),
+                    ),
+                ),
+            ];
+            $sheet->setCellValue('AP3', $year);
+            $sheet->setCellValue('J7', $namaUser);
+            $sheet->setCellValue('J8', $npk);
+            $sheet->setCellValue('J9', getOrgName($link, $dept_account, "deptAcc"));
+            $sheet->setCellValue('J10', getOrgName($link, $div, "division"));
+            $sheet->mergeCells('J8:M8');
+            
+            if(mysqli_num_rows($sql)>0){
+                $i = 1;
+                $no = 15;
+
+                while($data = mysqli_fetch_assoc($sql)){
+                    $query_group = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
+                    $group_ = mysqli_fetch_assoc($query_group);
+                    $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
+                    $deptAcc = mysqli_fetch_assoc($query_deptAcc);
+                    $group = $group_['nama_org'];
+                    $dept_acc = $deptAcc['nama_org'];
+                    $clr = authColor($data['req_status']);
+                    $stt = authText($data['status']);
+                    $prs = $data['req_status_absen'];
+                    $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
+                    $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
+                    $note_return = ($data['note_return'] == '')? "" : $data['note_return'];
+
+                    // $sheet->setCellValue('E5', $queryMP);
+                    // echo $i."<br>";
+                    // echo $year."<br>";
+                    // echo $data['npk']."<br>";
+                    // echo $data['nama']."<br>";
+                    // echo $data['req_work_date']."<br>";
+                    // echo $data['req_date_out']."<br>";
+                    // echo $checkIn."<br>";
+                    // echo $checkOut."<br>";
+                    // echo $data['keterangan']."<br>";
+                    // echo $data['att_type']."<br>";
+                    
+                    $sheet->setCellValue('C'.$no, $i);
+                    $sheet->setCellValue('E'.$no, $data['npk']);
+                    $sheet->setCellValue('G'.$no, $data['nama']);
+                    $sheet->setCellValue('O'.$no, $data['req_work_date']);
+                    $sheet->setCellValue('T'.$no, $data['req_date_out']);
+                    $sheet->setCellValue('Y'.$no, $checkIn);
+                    $sheet->setCellValue('AD'.$no, $checkOut);
+                    $sheet->setCellValue('AI'.$no, $data['keterangan']);
+                    $sheet->setCellValue('AP'.$no, $data['att_type']);
+                    
+
+                    $sheet->getStyle('C'.$no.':D'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('E'.$no.':F'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('G'.$no.':N'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('O'.$no.':S'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('T'.$no.':X'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('Y'.$no.':AC'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('AD'.$no.':AH'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('AI'.$no.':AO'.$no)->applyFromArray($styleArray);
+                    $sheet->getStyle('AP'.$no.':AT'.$no)->applyFromArray($styleArray);
+
+                    $sheet->mergeCells('G'.$no.':N'.$no);
+                    $sheet->mergeCells('E'.$no.':F'.$no);
+
+
+                    
+                    $no++;
+                    $i++;
+                
+                    
+                    
+                }
+            }
+            $styleArray1 = array(
+                'borders' => array(
+                    'outline' => array(
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                        // 'color' => array('argb' => 'FFFF0000'),
+                    ),
+                ),
+            );
+
+            $no1 = $no +1;
+            $no2 = $no1 +1;
+
+            $sheet->getStyle('C13:AT'.$no1)->applyFromArray($styleArray1);
+            $sheet->getStyle('B2:AU'.$no2)->applyFromArray($styleArray1);
+
+
+            $date = date('d-m-y-'.substr((string)microtime(), 1, 8));
+            $date = str_replace(".", "", $date);
+            $filename = "Pengajuan_".$date.".xlsx";
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($filename);
+            $content = file_get_contents($filename);
+
+            //redirect dan download file
+            header("Content-Disposition: attachment; filename=".$filename);
+            
+            unlink($filename);
+            exit($content);
+            
+        }else{
+            $_SESSION['info'] = 'Kosong';
+            header('location:approval/index.php');
         }
      }else{
         $_SESSION['info'] = 'Kosong';

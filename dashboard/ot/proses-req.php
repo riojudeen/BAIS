@@ -250,6 +250,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $sheet->getStyle('D'.$no3++.':E'.$no5)->applyFromArray($styleArray);
             $sheet->getStyle('H'.$no3.':I'.$no5)->applyFromArray($styleArray);
             
+            
             // savng file
             $writer = new Xlsx($spreadsheet);
             $writer->save($filename);

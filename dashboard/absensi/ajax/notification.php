@@ -338,9 +338,10 @@ if(isset($_SESSION['user'])){
                         $sql_alocation = mysqli_query($link, $qry_alocation)or die(mysqli_error($link));
                         // echo $qry_alocation;
                         // echo mysqli_num_rows($sql_alocation);
-                        if(mysqli_num_rows($sql_alocation) >0){
+                        if(mysqli_num_rows($sql_alocation) > 0){
                             $data_eff = mysqli_fetch_assoc($sql_alocation);
-                            $max_day = $data_eff['aloc']+$data_eff['add'];
+                            $add = ($data_eff['add'] == '')?0:$data_eff['add'];
+                            $max_day = $data_eff['aloc']+$add;
                             ?>
                             <input type="hidden" id="aloc_day" value="<?=$max_day?>">
                             

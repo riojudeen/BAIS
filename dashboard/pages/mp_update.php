@@ -15,7 +15,7 @@ if(isset($_SESSION['user'])){
         $cek_area = mysqli_query($link, "SELECT cord FROM view_daftar_area WHERE cord = '$npkUser' AND part <> 'pos' ")or die(mysqli_error($link));
         // echo mysqli_num_rows($cek_area);
         // if(mysqli_num_rows($cek_area) > 0){
-
+            
             if(isset($_GET['org'])){
                 // jika akses dari admin
                 $q_area_cord = mysqli_query($link, "SELECT * FROM view_cord_area WHERE part = '$_GET[part]' AND id = '$_GET[org]' ")or die(mysqli_error($link));
@@ -276,7 +276,6 @@ if(isset($_SESSION['user'])){
             }
             ?>
             
-            
             <div class="jumbotron jumbotron-fluid bg-white pattern" style="height:200px;background-image:linear-gradient(to bottom, rgba(244,243,239, 1) 20%, rgba(244,243,239, 0) 80%) , url(../../assets/img/bg/header_otomotif.jpg);background-size: cover;background-attachment:fixed">
                 <div class="container " >
                    
@@ -284,60 +283,11 @@ if(isset($_SESSION['user'])){
                     <input type="hidden" name="level" id="level" value="<?=$level?>">
                 </div>
             </div>
-            <div class="row" style="margin-top:-100px">
-                <div class="col-md-4" >
-                    <div class="row">
-                        <div class="col-md-12 pl-5">
-                            <div class="card card-user " >
-                                <div class="card-body">
-                                    <div class="author">
-                                        <a href="#">
-                                            <img class="avatar border-gray" src="<?=$base64?>" alt="...">
-                                            <h5 class="title text-uppercase"><?=$namaUser?></h5>
-                                        </a>
-                                        <p class="description text-uppercase">
-                                            <?=$mes?>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row rounded flex-row flex-nowrap overflow-auto img_holder d-none" id="b">
-    
-                        <div class="col-md-12 col-sm-12 pl-5">
-                            <div class="card card-stats bg-info">
-                                <div class="card-body "id="4">
-                                    <div class="row">
-                                        <div class="col-5 col-md-4">
-                                            <div class="icon-big text-center icon-white">
-                                                <span class="fa-stack" >
-                                                <i class="far fa-circle fa-stack-2x fa-inverse mt-1"></i>
-                                                <i class="fa fa-info fa-stack-1x fa-inverse mt-1"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-7 col-md-8">
-                                            <div class="numbers ">
-                                                <p class="card-title text-white " id="sumary" >-<p>
-                                                <p class="card-category text-right text-white mb-3">MP Layoff</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="<?=base_url()?>/dashboard/manpower/layoff.php" class="stretched-link card-category text-right text-white mb-3"></a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                    </div>
-                </div>
-                <div class="col-md-8 ">
+            <div class="row" >
+                
+                <div class="col-md-12 ">
                     <div class="row ">
-                        <div class="col-md-12 pr-5">
+                        <div class="col-md-12 ">
                             
                             <div class="row ">
                                 <div class="col-md-12 ">
@@ -482,7 +432,109 @@ if(isset($_SESSION['user'])){
                 </div>
                 
             </div>
-            
+            <?php
+                $q_trf = "SELECT 
+                * FROM view_org_trf
+                ";
+                $queryTrf = filtergenerator($link, $level, $generate, $q_trf, $access_org).$add_filter;
+                // echo $queryTrf;
+                
+                $q_transfer = mysqli_query($link, $queryTrf )or die(mysqli_error($link));
+                    
+                if(mysqli_num_rows($q_transfer)>0){
+            ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Transfer In - Out MP</h5>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th >#</th>
+                                            <th >NPK</th>
+                                            <th >Nama</th>
+                                            <th>Group </th>
+                                            <th>Section </th>
+                                            <th>Dept </th>
+                                            <th>Dept Adm </th>
+                                            <th>Division </th>
+                                            <th>Diajukan </th>
+                                            <th></th>
+                                            <th class="text-right">Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                            $no_ = 1;
+                                            while($data_transfer = mysqli_fetch_assoc($q_transfer)){
+                                                $tb_clr = ($data_transfer != '')?"table-info":"table-success";
+                                                $tb_dsbld = ($data_transfer != '' && $level < 6 )?"disabled":"";
+                                                ?>
+                                                <tr class="<?=$tb_clr?>">
+                                                    <td><?=$no_++?></td>
+                                                    <td>
+                                                        <?=$data_transfer['npk']?>
+                                                        
+                                                    </td>
+                                                    <td><?=$data_transfer['nama']?></td>
+                                                    <td>
+                                                        <?=$data_transfer['groupfrm']?>
+                                                        <div class="category">
+                                                            <?=getOrgName($link,($data_transfer['tf_grp']),"group")?>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?=$data_transfer['section']?>
+                                                        <div class="category">
+                                                            <?=getOrgName($link,($data_transfer['tf_sect']),"section")?>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?=$data_transfer['dept']?>
+                                                        <div class="category">
+                                                            <?=getOrgName($link,($data_transfer['tf_dept']),"dept")?>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?=$data_transfer['dept_account']?>
+                                                        <div class="category">
+                                                            <?=getOrgName($link,($data_transfer['tf_dept_account']),"deptAcc")?>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <?=$data_transfer['division']?>
+                                                        <div class="category">
+                                                            <?=getOrgName($link,($data_transfer['tf_division']),"division")?>
+                                                        </div>
+                                                    </td>
+                                                    <td><?=$data_transfer['req_date']?></td>
+                                                    <td><?=$data_transfer['requester']?></td>
+                                                    <td class="text-right">
+                                                        <a <?=$tb_dsbld?> href="<?=base_url()?>/dashboard/setting/proses/proses.php?proccess_tf=<?=$data_transfer['npk']?>"  role="button" aria-expanded="true"  class="btn btn-sm  btn-success">
+                                                            Proses
+                                                        </a>
+                                                        <a <?=$tb_dsbld?> href="<?=base_url()?>/dashboard/setting/proses/proses.php?del_tf=<?=$data_transfer['npk']?>"  role="button" aria-expanded="true"  class="btn btn-sm  btn-danger">
+                                                            Hapus
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                   
+                                                <?php
+
+                                            }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php
+                }
+                ?>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -490,27 +542,14 @@ if(isset($_SESSION['user'])){
                             <div class="row">
                                 <div class="col-md-6">
                                     <h4 class="text-uppercase title "><?=$part.$headerGroup?></h4>
-                                    <a class="btn btn-sm btn-info" data-toggle="collapse" href="#collapsesummary" role="button" aria-expanded="true" aria-controls="collapsesummary">Data Sumary</a>
+                                    
                                 </div>
                                 <div class="col-md-6 text-right pt-4 mb-0">
-                                    
-                                <?php
-                                if($edit == 1){
-                                    ?>
-                                    <form name="regist" action="../setting/organization/proses/add.php" method="POST">
-                                    
-                                        <input type="hidden" name="count" value="1">
-                                        <input type="hidden" name="frm" value="1">
-                                        <input type="submit" class="btn btn-sm btn-success mb-0 register" value="Register Organisasi">
-                                    </form>
-                                    <?php
-                                }else{
-                                    ?>
-                                        <a  href="../setting/organization/" class="btn btn-sm mb-0"> Kembali </a>
-                                    <?php
-                                }
-                                ?>
+                                    <a class="btn btn-sm btn-info" data-toggle="collapse" href=".collapsesummary" role="button" aria-expanded="true" >Data Sumary</a>
+                                    <div class="btn btn-sm btn-success register"  role="button" aria-expanded="true" >Register</div>
+                                   
                                 </div>
+
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
@@ -557,196 +596,210 @@ if(isset($_SESSION['user'])){
                                 </div>
                                 
                             </div>
-                            <div class="collapse " id="collapsesummary">
-                                <div class=" table-striped table-full-width text-uppercase" >
-                                    <table class="table-sm" style="width:100%">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Area</th>
-                                                <th>Jml Emp</th>
-                                                <th>FRM</th>
-                                                <th>TL</th>
-                                                <th>TM</th>
-                                                <th class="table-warning">TM K1</th>
-                                                <th class="table-warning">TM K2</th>
-                                                <th class="table-warning">TM P</th>
-                                                <th class="text-right">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            if(mysqli_num_rows($sql_group)>0){
-                                                $no = 1;
-                                                while($data = mysqli_fetch_assoc($sql_group)){
-                                                    $part = $part;
-                                                    $color = ($data[$sub] == '')?"text-danger ":"";
-                                                    $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
-                                                    $addSub = " AND $sub $filter_sub";
-                                                    $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
-                                                    $total = mysqli_num_rows($query_total);
-                                                    // echo $addSub;
-                                                    // if($no == 1){
-                                                    //     echo $queryMP.$addPermanent.$addSub;
-                                                    // }
-                                                    $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
-                                                    $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
-                                                    $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
-                                                    $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
-                                                    $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
-                                                    $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
-                                                    $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
-                                                    
-                                                    $jm_permanen = mysqli_num_rows($permanent);
-                                                    $jm_kontrak1 = mysqli_num_rows($kontrak1);
-                                                    $jm_kontrak2 = mysqli_num_rows($kontrak2);
-                                                    $jm_TM = mysqli_num_rows($TM);
-                                                    $jm_TL = mysqli_num_rows($TL);
-                                                    $jm_FRM = mysqli_num_rows($FRM);
-                                                    // echo $queryMP.$addMng;
-                                                    ?>
-                                                    <tr class="<?=$color?>">
-                                                        <td><?=$no++?></td>
-                                                        <td><?=$nama_area?></td>
-                                                        <td><?=$total?></td>
-                                                        
-                                                        <td><?=$jm_FRM?></td>
-                                                        <td><?=$jm_TL?></td>
-                                                        <td><?=$jm_TM?></td>
-                                                        <td class="table-warning"><?=$jm_kontrak1?></td>
-                                                        <td class="table-warning"><?=$jm_kontrak2?></td>
-                                                        <td class="table-warning"><?=$jm_permanen?></td>
-                                                        <td class="text-right">
-                                                            <?php
-                                                            if($data[$sub] != ''){
-                                                                ?>
-                                                                <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
-                                                                <?php
-                                                            }
-                                                            ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                            }
-                                            ?>
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                             
                         </div>
                         <hr class="my-0">
                         <div class="card-body">
                             <div class="row">
-                                <h5 class="title col-md-6"></h5>
-                                <div class="col-md-6 ">
-                                    <div class="my-2 mr-2 float-right order-3">
-                                        <div class="input-group bg-transparent">
-                                            <input type="text" name="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." id="cari">
-                                            <div class="input-group-append bg-transparent">
-                                                <div class="input-group-text bg-transparent">
-                                                    <i class="nc-icon nc-zoom-split"></i>
+                                <div class="col-md-12">
+                                    <div class="collapse collapsesummary" id="collapsesummary">
+                                        <div class=" table-striped table-full-width text-uppercase" >
+                                            <table class="table-sm" style="width:100%">
+                                                <thead class="table-warning">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Area</th>
+                                                        <th>Jml Emp</th>
+                                                        <th>FRM</th>
+                                                        <th>TL</th>
+                                                        <th>TM</th>
+                                                        <th class="table-warning">TM K1</th>
+                                                        <th class="table-warning">TM K2</th>
+                                                        <th class="table-warning">TM P</th>
+                                                        <th class="text-right">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    if(mysqli_num_rows($sql_group)>0){
+                                                        $no = 1;
+                                                        while($data = mysqli_fetch_assoc($sql_group)){
+                                                            $part = $part;
+                                                            $color = ($data[$sub] == '')?"text-danger ":"";
+                                                            $filter_sub = ($data[$sub] == '')?" IS NULL":" = '$data[$sub]'";
+                                                            $addSub = " AND $sub $filter_sub";
+                                                            $query_total = mysqli_query($link, $queryMP.$add_filter.$addSub)or die(mysqli_error($link));
+                                                            $total = mysqli_num_rows($query_total);
+                                                            // echo $addSub;
+                                                            // if($no == 1){
+                                                            //     echo $queryMP.$addPermanent.$addSub;
+                                                            // }
+                                                            $nama_area = ($data[$sub] != '')?getOrgName($link, $data[$sub], $sub_part):'belum diregister';
+                                                            $permanent = mysqli_query($link, $queryMP.$addPermanent.$addSub)or die(mysqli_error($link));
+                                                            $kontrak1 = mysqli_query($link, $queryMP.$addK1.$addSub)or die(mysqli_error($link));
+                                                            $kontrak2 = mysqli_query($link, $queryMP.$addK2.$addSub)or die(mysqli_error($link));
+                                                            $TM = mysqli_query($link, $queryMP.$addTtm.$addSub)or die(mysqli_error($link));
+                                                            $FRM = mysqli_query($link, $queryMP.$addFrm.$addSub)or die(mysqli_error($link));
+                                                            $TL = mysqli_query($link, $queryMP.$addTl.$addSub)or die(mysqli_error($link));
+                                                            
+                                                            $jm_permanen = mysqli_num_rows($permanent);
+                                                            $jm_kontrak1 = mysqli_num_rows($kontrak1);
+                                                            $jm_kontrak2 = mysqli_num_rows($kontrak2);
+                                                            $jm_TM = mysqli_num_rows($TM);
+                                                            $jm_TL = mysqli_num_rows($TL);
+                                                            $jm_FRM = mysqli_num_rows($FRM);
+                                                            // echo $queryMP.$addMng;
+                                                            ?>
+                                                            <tr class="<?=$color?>">
+                                                                <td><?=$no++?></td>
+                                                                <td><?=$nama_area?></td>
+                                                                <td><?=$total?></td>
+                                                                
+                                                                <td><?=$jm_FRM?></td>
+                                                                <td><?=$jm_TL?></td>
+                                                                <td><?=$jm_TM?></td>
+                                                                <td class="table-warning"><?=$jm_kontrak1?></td>
+                                                                <td class="table-warning"><?=$jm_kontrak2?></td>
+                                                                <td class="table-warning"><?=$jm_permanen?></td>
+                                                                <td class="text-right">
+                                                                    <?php
+                                                                    if($data[$sub] != ''){
+                                                                        ?>
+                                                                        <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
+                                                                        <?php
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="collapse show collapsesummary" >
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        
+                                        <div class="row">
+                                            <h5 class="title col-md-6"></h5>
+                                            <div class="col-md-6 ">
+                                                <div class="my-2 mr-2 float-right order-3">
+                                                    <div class="input-group bg-transparent">
+                                                        <input type="text" name="cari" class="form-control bg-transparent" placeholder="Cari nama atau npk.." id="cari">
+                                                        <div class="input-group-append bg-transparent">
+                                                            <div class="input-group-text bg-transparent">
+                                                                <i class="nc-icon nc-zoom-split"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group no-border">
+                                            
+                                            <select class="form-control" name="div" id="s_div">
+                                                <option value="">Pilih Divisi</option>
+                                            </select>
+                                            <select class="form-control" name="dept" id="s_dept">
+                                                <option value="">Pilih Department</option>
+                                                <option value="" disabled>Pilih Division Terlebih Dahulu</option>
+                                            </select>
+                                            <select class="form-control" name="section" id="s_section">
+                                                <option value="">Pilih Section</option>
+                                                <option value="" disabled>Pilih Department Terlebih Dahulu</option>
+                                            </select>
+                                            <select class="form-control" name="groupfrm" id="s_goupfrm">
+                                                <option value="">Pilih Group</option>
+                                                <option value="" disabled>Pilih Section Terlebih Dahulu</option>
+                                            </select>
+                                            <select class="form-control" name="shift" id="s_shift">
+                                                <option value="">Pilih Shift</option>
+                                                
+                                                <?php
+                                                    $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
+                                                    if(mysqli_num_rows($query_shift)>0){
+                                                        while($data = mysqli_fetch_assoc($query_shift)){
+                                                            ?>
+                                                            <option value="<?=$data['id_shift']?>"><?=$data['shift']?> - <?=$data['id_shift']?></option>
+                                                            <?php
+                                                        }
+                                                    }else{
+                                                        ?>
+                                                        <option value="">Belum Ada Data Shift</option>
+                                                        <?php
+                                                    }
+                                                ?>
+                                            </select>
+                                            <select class="form-control" name="deptacc" id="s_deptAcc">
+                                                <option value="">Pilih Department Administratif</option>
+                                                <?php
+                                                    $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
+                                                    if(mysqli_num_rows($q_div) > 0){
+                                                        while($data = mysqli_fetch_assoc($q_div)){
+                                                        ?>
+                                                        <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
+                                                        <?php
+                                                        }
+                                                    }else{
+                                                        ?>
+                                                        <option value="">Belum Ada Data Department Administratif</option>
+                                                        <?php
+                                                    }
+                                                ?>
+                                                </select>
+                                            <div class="input-group-append ">
+                                                <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-    
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="input-group no-border">
-                                        
-                                        <select class="form-control" name="div" id="s_div">
-                                            <option value="">Pilih Divisi</option>
-                                        </select>
-                                        <select class="form-control" name="dept" id="s_dept">
-                                            <option value="">Pilih Department</option>
-                                            <option value="" disabled>Pilih Division Terlebih Dahulu</option>
-                                        </select>
-                                        <select class="form-control" name="section" id="s_section">
-                                            <option value="">Pilih Section</option>
-                                            <option value="" disabled>Pilih Department Terlebih Dahulu</option>
-                                        </select>
-                                        <select class="form-control" name="groupfrm" id="s_goupfrm">
-                                            <option value="">Pilih Group</option>
-                                            <option value="" disabled>Pilih Section Terlebih Dahulu</option>
-                                        </select>
-                                        <select class="form-control" name="shift" id="s_shift">
-                                            <option value="">Pilih Shift</option>
-                                            
-                                            <?php
-                                                $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
-                                                if(mysqli_num_rows($query_shift)>0){
-                                                    while($data = mysqli_fetch_assoc($query_shift)){
-                                                        ?>
-                                                        <option value="<?=$data['id_shift']?>"><?=$data['shift']?> - <?=$data['id_shift']?></option>
-                                                        <?php
-                                                    }
-                                                }else{
-                                                    ?>
-                                                    <option value="">Belum Ada Data Shift</option>
-                                                    <?php
-                                                }
-                                            ?>
-                                        </select>
-                                        <select class="form-control" name="deptacc" id="s_deptAcc">
-                                            <option value="">Pilih Department Administratif</option>
-                                            <?php
-                                                $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
-                                                if(mysqli_num_rows($q_div) > 0){
-                                                    while($data = mysqli_fetch_assoc($q_div)){
-                                                    ?>
-                                                    <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
-                                                    <?php
-                                                    }
-                                                }else{
-                                                    ?>
-                                                    <option value="">Belum Ada Data Department Administratif</option>
-                                                    <?php
-                                                }
-                                            ?>
-                                            </select>
-                                        <div class="input-group-append ">
-                                            <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                <div class="row">
+                                    <div class="col-md-12" id="data-monitoring">
+                                        <div class="table-responsive" style="height:200">
+                                            <table class="table table-striped table-hover text-nowrap" id="table_mp">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">No</th>
+                                                        <th scope="col">NPK</th>
+                                                        <th scope="col">Nama</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Jabatan</th>
+                                                        <th scope="col">Tanggal Masuk</th>
+                                                        <th scope="col">Shift</th>
+                                                        <th scope="col">Area / Pos</th>
+                                                        <th scope="col">Group</th>
+                                                        <th scope="col">Section</th>
+                                                        <th scope="col">Dept</th>
+                                                        <th scope="col">Dept Adm</th>
+                                                        <th scope="col">Action</th>
+                                                        <th scope="col">
+                                                            <input type="checkbox" name="select_all" id="select_all" value="">
+                                                        </th>
+                    
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <td colspan="14" class="text-center"><?=noData()?></td>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12" id="data-monitoring">
-                                    <div class="table-responsive" style="height:200">
-                                        <table class="table table-striped table-hover text-nowrap" id="table_mp">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">No</th>
-                                                    <th scope="col">NPK</th>
-                                                    <th scope="col">Nama</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col">Jabatan</th>
-                                                    <th scope="col">Tanggal Masuk</th>
-                                                    <th scope="col">Shift</th>
-                                                    <th scope="col">Area / Pos</th>
-                                                    <th scope="col">Group</th>
-                                                    <th scope="col">Section</th>
-                                                    <th scope="col">Dept</th>
-                                                    <th scope="col">Dept Adm</th>
-                                                    <th scope="col">Action</th>
-                                                    <th scope="col">
-                                                        <input type="checkbox" name="select_all" id="select_all" value="">
-                                                    </th>
-                
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <td colspan="14" class="text-center"><?=noData()?></td>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                                
                         </div>
                     </div>
                 </div>
@@ -925,9 +978,9 @@ if(isset($_SESSION['user'])){
                 $(document).ready(function(){
                 var owl = $('.owl-carousel');
                     owl.owlCarousel({
-                        items:2,
+                        items:3,
                         loop:true,
-                        margin:30,
+                        margin:10,
                         autoplay:true,
                         autoplayTimeout:3000,
                         autoplayHoverPause:true
@@ -944,6 +997,7 @@ if(isset($_SESSION['user'])){
                         a.preventDefault();
                         $('#regist').modal('show');
                     })
+                    
                 });
             </script>
 

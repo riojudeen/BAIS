@@ -87,6 +87,7 @@ if(isset($_SESSION['user'])){
                         <th>Shift Asal</th>
                         <th>Shift Tujuan</th>
                         <th>Tanggal Pindah</th>
+                        <th>Pindah Permanent</th>
                         <th>Tanggal Pengajuan</th>
                         <th colspan="2">Progress</th>
                         <th scope="col" class="sticky-col first-last-col first-last-top-col text-right">
@@ -127,6 +128,13 @@ if(isset($_SESSION['user'])){
                     
                     if(mysqli_num_rows($sql)>0){
                         while($data = mysqli_fetch_assoc($sql)){
+                            if($data['req_date_in'] != "0000-00-00"){
+                                $clr_tb = "table-info";
+                                $permanent = "YES";
+                            }else{
+                                $clr_tb = "";
+                                $permanent = "-";
+                            }
                             $query_group = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[grp]' AND part = 'group' ")or die(mysqli_error($link));
                             $group_ = mysqli_fetch_assoc($query_group);
                             $query_deptAcc = mysqli_query($link, "SELECT nama_org FROM view_daftar_area WHERE id = '$data[dept_account]' AND part = 'deptAcc'  ")or die(mysqli_error($link));
@@ -139,7 +147,7 @@ if(isset($_SESSION['user'])){
                             $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                             $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
                             ?>
-                            <tr id="<?=$data['id_absensi']?>" >
+                            <tr id="<?=$data['id_absensi']?>" class="<?=$clr_tb?>" >
                                 <td class="td"><?=$no++?></td>
                                 <td class="td"><?=$data['npk']?></td>
                                 <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
@@ -149,6 +157,7 @@ if(isset($_SESSION['user'])){
                                 <td class="td">Shift <?=$data['employee_shift']?></td>
                                 <td class="td">Shift <?=$data['req_shift']?></td>
                                 <td class="td"><?=tgl_indo($data['req_work_date'])?></td>
+                                <td class="td"><?=$permanent?></td>
                                 <td class="td"><?=tgl_indo($data['req_date'])?></td>
                                 
                                 <td class="td">

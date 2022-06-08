@@ -629,6 +629,35 @@ if(isset($_SESSION['user'])){
             
         });
         // return
+        $(document).on('click', '.downloadAll', function(e){
+            e.preventDefault();
+            var getLink = '../proses-approval.php?ot_download=1';
+            var page = $('.page_active').attr('id')
+            Swal.fire({
+                title: 'Dowload Data ?',
+                text: "download draft pengajuan?",
+                icon: false,
+                showCancelButton: true,
+                confirmButtonColor: '#1ABC9C',
+                cancelButtonColor: '#B2BABB',
+                confirmButtonText: 'Download Sekarang!'
+            }).then((result) => {
+                if (result.value) {
+                    document.proses.action = getLink;
+                    document.proses.submit();
+                    // $.ajax({
+                    //     url:getLink,
+                    //     method:"POST",
+                    //     data:form,
+                    //     success:function(data){
+                    //         $('.notifikasi').html(data);
+                    //         draft_Active(page)
+                    //     }
+                    // })
+                }
+            })
+        
+        });
         $(document).on('click','.returnAll', function(){
             var page = $('.page_active').attr('id')
             var getLink = '../proses-approval.php?return_multiple=';

@@ -22,6 +22,7 @@ if(isset($_POST['addMaster'])){
         $sql = substr($sql, 0 , -1); //untuk trim koma terakhir
         $add = mysqli_query($link, $sql);
         // echo $sql;
+        echo $sql;
         if($add){
             $_SESSION['info'] = 'Disimpan';
             // echo "ok";
@@ -45,8 +46,8 @@ if(isset($_POST['addMaster'])){
             $sql .= "('$code' , '$ijin', '$type'),";
         }
         $sql = substr($sql, 0 , -1); //untuk trim koma terakhir
-        // echo $sql;
-        $add = mysqli_query($link, $sql);
+        echo $sql;
+        $add = mysqli_query($link, $sql)or die(mysqli_error($link));
         if($add){
             $_SESSION['info'] = 'Disimpan';
             echo "<script>document.location.href='../master.php?tab=$tab'</script>";
