@@ -54,6 +54,30 @@ if(isset($_SESSION['user'])){
             </script>
             <?php
         }
+    }else if($_POST['data_npk']){
+        $npk = $_POST['data_npk'];
+        if($npk == $npkUser){
+            $back = $npkUser;
+        }else{
+            $back = $npk;
+        }
+        $domisili = $_POST['domisili'];
+        $hp = $_POST['handphone'];
+        $birth = dateToDB($_POST['birth']);
+        echo $npk;
+        $cek = mysqli_query($link,"SELECT npk FROM karyawan_profile WHERE npk = '$npk' ")or die(mysqli_error($link));
+        if(mysqli_num_rows($cek)>0){
+            $sql = mysqli_query($link, "UPDATE karyawan_profile SET birth = '$birth', handphone = '$hp' , domisili = '$domisili' WHERE npk = '$npk' ")or die(mysqli_error($link));
+        }else{
+            $sql = mysqli_query($link, "INSERT INTO karyawan_profile (`npk`, `birth`, `handphone`, `domisili`) VALUES ('$npk', '$birth', '$hp', '$domisili' )")or die(mysqli_error($link));
+        }
+        if($sql){
+            $_SESSION['info'] = "Disimpan";
+            header("location:index.php?profile=$back");
+        }else{
+            $_SESSION['info'] = "Gagal Disimpan";
+            header("location:index.php?profile=$back");
+        }
     }
 	
 } else{

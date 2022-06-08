@@ -6,7 +6,7 @@ if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         require_once("../../../config/approval_system.php");
         $level = $level;
-        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npkUser);
         // echo $level."<br>";
         // echo $npk."<br>";
         // echo $sub_post."<br>";

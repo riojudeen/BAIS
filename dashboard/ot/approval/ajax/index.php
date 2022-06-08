@@ -62,8 +62,13 @@ if(isset($_SESSION['user'])){
         $filterType = ($_GET['att_type'] != '' )?" AND id_ot = '$_GET[att_type]'":"";
         list($status, $req_status) = pecahProg("$_GET[prog]");
         $prog = ($_GET['prog'] == '-' )?"":$_GET['prog'];
-        $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '$prog' ":"";
-        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$filterProg.$exception;
+        if($_GET['prog'] == '-' ){
+            $filterProg = " AND (CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '' OR CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) IS NULL) ";
+        }else{
+            $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_req_ot.status_approve,view_req_ot.status_progress) = '$_GET[prog]' ".$exception:"";
+        }
+        
+        $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterType.$filterProg;
         // echo $_GET['att_type'];
         // echo $generate;
         
@@ -75,7 +80,8 @@ if(isset($_SESSION['user'])){
         //     $query_req_overtime = $query_req_overtime;
         // }
         // echo $filter;
-        // echo $query_req_overtime;
+        echo $query_req_overtime;
+        echo (mysqli_num_rows(mysqli_query($link, $query_req_overtime)));
         $status = authApprove($level, "status", "approved");
         $req_status = authApprove($level, "request", "approved");
         // echo $status.$req_status;

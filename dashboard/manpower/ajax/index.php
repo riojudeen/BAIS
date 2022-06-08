@@ -22,7 +22,7 @@ if(isset($_SESSION['user'])){
         $cari = $_GET['cari'];
         $npk = $_GET['npk'];
         $level = $_GET['level'];
-        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npkUser);
         $origin_query = "SELECT 
             view_organization.npk,
             view_organization.nama,
@@ -65,6 +65,7 @@ if(isset($_SESSION['user'])){
         
         
         ?>
+        
         <div class="table-responsive" >
             <table class="table table-hover">
                 <thead class="table-warning">
@@ -82,6 +83,10 @@ if(isset($_SESSION['user'])){
                         <th scope="col">Section</th>
                         <th scope="col">Dept</th>
                         <th scope="col">Dept Adm</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">
+
+                        </th>
                         
                     </tr>
                 </thead>
@@ -118,6 +123,7 @@ if(isset($_SESSION['user'])){
                             ?>
                             <tr id="<?=$data['npk']?>" >
                                 <td class="td"><?=$no++?></td>
+                                
                                 <td class="td"><?=$data['npk']?></td>
                                 <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
                                 <td style="max-width:100px" class="text-truncate"><?=$data['status']?></td>
@@ -130,6 +136,17 @@ if(isset($_SESSION['user'])){
                                 <td class="td"><?=$data['section']?></td>
                                 <td class="td"><?=$data['dept']?></td>
                                 <td class="td"><?=$data['dept_account']?></td>
+                                <td class="td text-right">
+                                    
+                                    <a href="<?=base_url()?>/dashboard/profile/index.php?profile=<?=$data['npk']?>" class="btn btn-sm btn-icon btn-link btn-round btn-outline-info btn-info ">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="<?=base_url()?>/dashboard/setting/edit_mp.php?transfer=<?=$data['npk']?>"  role="button" aria-expanded="true"  class="btn btn-sm btn-icon btn-link btn-round btn-outline-warning btn-warning transfer">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    
+                                </td>
+                                <td class="td"></td>
                                 
                                 
                             </tr>
@@ -200,11 +217,11 @@ if(isset($_SESSION['user'])){
         // echo $shift;
         $cari = $_GET['cari'];
         $npk = $_GET['npk'];
-        $level = $_GET['level'];
+        $level = $level;
         $eval = $_GET['eval'];
         $filter_eval = ($eval == '')?'':" AND `status` = '$eval' ";
         // echo $npk;
-        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
+        list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npkUser);
        
         $tgl_eval = date('Y-m-t');
         

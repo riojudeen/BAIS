@@ -134,7 +134,7 @@ if(isset($_SESSION['lock']) && $cekUser == sha1($_SESSION['lock'])){
                 <div class="col-lg-4 col-md-6 ml-auto mr-auto">
                     <div class="card card-lock text-center">
                         <div class="card-header ">
-                            <img src="<?=$base64?>" alt="profile" style="">
+                            <img src="<?=getFoto($_npk)?>" alt="profile" style="">
                         </div>
                         <div class="card-body ">
                             <h4 class="card-title"><?=$nama?></h4>

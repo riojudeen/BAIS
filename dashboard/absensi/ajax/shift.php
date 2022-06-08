@@ -349,7 +349,7 @@ if(isset($_GET['id'])){
      
      $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
      $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$add_filter_monitor.$add_tanggal.$filterProg.$gabungProses;
-    //   echo $queryMP;
+      echo $queryMP;
         ?>
         <div class="row">
 
@@ -431,8 +431,10 @@ if(isset($_GET['id'])){
                                 <th>Group</th>
                                 <th>Administratif</th>
                                 <th>Shift Asal</th>
+                                
                                 <th> Pindah Shift</th>
                                 <th> Tanggal</th>
+                                <th>PERMANENT</th>
                                 <th class="">Progress</th>
                                 
                             </tr>
@@ -465,11 +467,18 @@ if(isset($_GET['id'])){
                         
                         if(mysqli_num_rows($sql)>0){
                             while($data = mysqli_fetch_assoc($sql)){
+                                if($data['req_date_in'] != "0000-00-00"){
+                                    $clr_tb = "table-info";
+                                    $permanent = "YES";
+                                }else{
+                                    $clr_tb = "";
+                                    $permanent = "-";
+                                }
                                 $clr = authColor($data['req_status']);
                                 $stt = authText($data['status']);
                                 $prs = $data['req_status_absen'];
                                 ?>
-                                <tr >
+                                <tr class="<?=$clr_tb?>">
                                     <td class="td"><?=$no++?></td>
                                     <td class="td"><?=$data['npk']?></td>
                                     <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
@@ -478,6 +487,7 @@ if(isset($_GET['id'])){
                                     <td class="td">Shift <?=$data['employee_shift']?></td>
                                     <td class="td">Shift <?=$data['req_shift']?></td>
                                     <td class="td"><?=tgl($data['req_work_date'])?></td>
+                                    <td class="td"><?=$permanent?></td>
                                     <td class="td">
                                         <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
                                             <div class="progress-bar progress-bar-animated progress-bar-<?=$clr?> progress-bar-striped" role="progressbar" style="width: <?=$prs?>%" aria-valuenow="<?=$prs?>" aria-valuemin="0" aria-valuemax="100"></div>
@@ -679,6 +689,7 @@ if(isset($_GET['id'])){
                                 <th>Shift Asal</th>
                                 <th> Pindah Shift</th>
                                 <th> Tanggal</th>
+                                <th> PERMANENT</th>
                                 <th class="" colspan="2">Progress</th>
                                 
                             </tr>
@@ -711,11 +722,18 @@ if(isset($_GET['id'])){
                         
                         if(mysqli_num_rows($sql)>0){
                             while($data = mysqli_fetch_assoc($sql)){
+                                if($data['req_date_in'] != "0000-00-00"){
+                                    $clr_tb = "table-info";
+                                    $permanent = "YES";
+                                }else{
+                                    $clr_tb = "";
+                                    $permanent = "-";
+                                }
                                 $clr = authColor($data['req_status']);
                                 $stt = authText($data['status']);
                                 $prs = $data['req_status_absen'];
                                 ?>
-                                <tr >
+                                <tr class="<?=$clr_tb?>">
                                     <td class="td"><?=$no++?></td>
                                     <td class="td"><?=$data['npk']?></td>
                                     <td style="max-width:200px" class="text-truncate td"><?=$data['nama']?></td>
@@ -724,6 +742,7 @@ if(isset($_GET['id'])){
                                     <td class="td">Shift <?=$data['employee_shift']?></td>
                                     <td class="td">Shift <?=$data['req_shift']?></td>
                                     <td class="td"><?=tgl($data['req_work_date'])?></td>
+                                    <td class="td"><?=$permanent?></td>
                                     <td class="td">
                                         <div class="progress" style="border-radius: 50px; width: 100px; height: 20px; margin: 0px">
                                             <div class="progress-bar progress-bar-animated progress-bar-<?=$clr?> progress-bar-striped" role="progressbar" style="width: <?=$prs?>%" aria-valuenow="<?=$prs?>" aria-valuemin="0" aria-valuemax="100"></div>

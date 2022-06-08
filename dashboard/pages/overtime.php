@@ -36,6 +36,58 @@ if(isset($_SESSION['user'])){
     $bln = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","Sepember","Oktober","November","Desember");
     $totalBln = count($bln);
     
+    // $qry = "SELECT view_req_ot.id AS id, 
+    // view_req_ot.npk AS npk,
+    // view_req_ot.nama AS nama,
+    // view_req_ot.shift AS shift,
+    // view_req_ot.sub_post AS sub_post,
+    // view_req_ot.post AS post,
+    // view_req_ot.grp AS grp,
+    // view_req_ot.sect AS sect,
+    // view_req_ot.dept AS dept,
+    // view_req_ot.dept_account AS dept_account,
+    // view_req_ot.division AS division,
+    // view_req_ot.plant AS plant,
+    // view_req_ot.work_date AS work_date,
+    // view_req_ot.in_date AS in_date,
+    // view_req_ot.out_date AS out_date,
+    // view_req_ot.start AS `start`,
+    // view_req_ot.end AS `end`,
+    // view_req_ot.status_approve AS `status_approve`,
+    // view_req_ot.status_progress AS `status_progress`
+    // FROM 
+    // (SELECT CONCAT(npk, work_date) AS id , npk,
+    //     nama,
+    //     shift,
+    //     sub_post,
+    //     post,
+    //     grp,
+    //     sect,
+    //     dept,
+    //     dept_account,
+    //     division,
+    //     plant,
+    //     work_date,
+    //     in_date,
+    //     out_date,
+    //     status_approve,
+    //     status_progress,
+    //     IF(
+    //         in_date < out_date, 
+    //             (
+    //                 MIN(`end`)
+    //             ),
+    //             (
+    //                 MAX(`end`)
+    //             )
+    //     ) AS `end`,
+    //     MIN(`start`) AS `start`
+        
+    //     FROM `view_req_ot` GROUP BY work_date, npk) AS `view_req_ot` JOIN view_hr_ot ON view_req_ot.id = view_hr_ot.id_ot ";
+    // $query = mysqli_query($link, $qry)or die(mysqli_error($link));
+    // while($data = mysqli_fetch_assoc($query)){
+    //     echo $data['id']." - ".$data['start']." - ".$data['end']."<br>";
+    // }
 
 ?>
 

@@ -398,13 +398,14 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $_SESSION['pesan'] = "( shift asal dan tujuan sama )";
             echo "<script>document.location.href='shift_request.php'</script>";
         }else{
-            
+            $req_date = date('Y-m-d');
             $requester = $npkUser;
             $npk = $_POST['shift_req'];
             $ket = 'SHIFT';
             $shift_asal = $_POST['shift_asal'];
             $mulai = $_POST['start'];
-            $selesai = $_POST['end'];
+            $selesai = ($_POST['end'] == '' || $_POST['end'] == '0000-00-00')?'0000-00-00':$_POST['end'];
+            // echo $selesai;
             $shift_tujuan = $_POST['shift_tujuan'];
             $status = authApprove($level, "status", "request");
             $req_status = authApprove($level, "request", "request");
@@ -419,39 +420,76 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 $or_id .= " `id` = '$id_or' OR";
                 $or_date .= " `date` = '$date' OR";
             }
-            $or_id = substr($or_id, 0, -2);
-            $or_date = substr($or_date, 0, -2);
+            $s = strtotime($mulai);
+            $e = strtotime($selesai);
 
-            $add_id = ($or_id != '')?" AND ($or_id)":'';
-            $add_date = ($or_date != '')?" AND ($or_date)":'';
-            $req_date = date('Y-m-d');
-            $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` BETWEEN '$mulai' AND '$selesai' ";
-            // echo $q_cek;
-            $cek_request = mysqli_query($link, $q_cek);
-            // echo mysqli_num_rows($cek_request);
-            if(mysqli_num_rows($cek_request)>0){
+            if($s > $e){
+                // echo "tes";
+                $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` = '$mulai' AND date_in = '$mulai' AND date_out = '00:00:00'";
                 // echo $q_cek;
-                $_SESSION['info'] = 'Gagal Disimpan';
-                $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
-                echo "<script>document.location.href='shift_request.php'</script>";
-            }else{
-                $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES";
-                foreach($tanggal AS $date){
-                    $id = $npk.$date;
-                    $query .= " ('$id', '$npk', '$shift_tujuan', '$date', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1'),";
-                }
-                $query = substr($query, 0, -1);
-                $sql = mysqli_query($link, $query);
-                if($sql){
-                    $_SESSION['info'] = 'Request';
-                    $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
-                    echo "<script>document.location.href='shift_request.php'</script>";
+                $cek_request = mysqli_query($link, $q_cek);
+                // echo mysqli_num_rows($cek_request);
+                if(mysqli_num_rows($cek_request)>0){
+                    echo "mantap sudah ada";
                     // echo $q_cek;
-                }else{
-                    $_SESSION['info'] = 'Gagal Request';
-                    $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                    $_SESSION['info'] = 'Gagal Disimpan';
+                    $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
                     echo "<script>document.location.href='shift_request.php'</script>";
+                }else{
+                    // echo "OK";
+                    $id = $npk.$mulai;
+                    
+                    $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `date_in` , `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES ('$id', '$npk', '$shift_tujuan', '$mulai', '$mulai', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1')";
+                    // echo $query;
+                    $sql = mysqli_query($link, $query)or die(mysqli_error($link));
+                    if($sql){
+                        // echo "OK";
+                        $_SESSION['info'] = 'Request';
+                        $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
+                        echo "<script>document.location.href='shift_request.php'</script>";
+                        // echo $q_cek;
+                    }else{
+                        $_SESSION['info'] = 'Gagal Disimpan';
+                        $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                        echo "<script>document.location.href='shift_request.php'</script>";
+                    }
                 }
+            }else{
+                echo "SALAH";
+                // $or_id = substr($or_id, 0, -2);
+                // $or_date = substr($or_date, 0, -2);
+    
+                // $add_id = ($or_id != '')?" AND ($or_id)":'';
+                // $add_date = ($or_date != '')?" AND ($or_date)":'';
+                
+                // $q_cek = "SELECT npk FROM req_absensi WHERE npk = '$npk' AND shift_req = '1' AND `date` BETWEEN '$mulai' AND '$selesai' ";
+                // // echo $q_cek;
+                // $cek_request = mysqli_query($link, $q_cek);
+                // // echo mysqli_num_rows($cek_request);
+                // if(mysqli_num_rows($cek_request)>0){
+                //     // echo $q_cek;
+                //     $_SESSION['info'] = 'Gagal Disimpan';
+                //     $_SESSION['pesan'] = "( pengajuan sudah pernah dibuat ) ";
+                //     echo "<script>document.location.href='shift_request.php'</script>";
+                // }else{
+                //     $query = " INSERT INTO req_absensi (`id`, `npk`, `shift`, `date`, `keterangan`, `requester` , `status`, `req_status`, `req_date`, `shift_req` ) VALUES";
+                //     foreach($tanggal AS $date){
+                //         $id = $npk.$date;
+                //         $query .= " ('$id', '$npk', '$shift_tujuan', '$date', '$ket', '$requester' , '$status', '$req_status', '$req_date', '1'),";
+                //     }
+                //     $query = substr($query, 0, -1)or die(mysqli_error($link));
+                //     $sql = mysqli_query($link, $query);
+                //     if($sql){
+                //         $_SESSION['info'] = 'Request';
+                //         $_SESSION['pesan'] = "( pengajuan perpindahan shift telah diteruskan ) ";
+                //         echo "<script>document.location.href='shift_request.php'</script>";
+                //         // echo $q_cek;
+                //     }else{
+                //         $_SESSION['info'] = 'Gagal Disimpan';
+                //         $_SESSION['pesan'] = "(".mysqli_error($link).")";
+                //         echo "<script>document.location.href='shift_request.php'</script>";
+                //     }
+                // }
             }
         }
      }else if(isset($_POST['req_SUPEM']) || isset($_POST['req_CUTI']) ){

@@ -489,13 +489,13 @@ if($level >= 4){
                 // }
               ?>         
               <?php 
-              if($level > 2 && $level != 5){
+              if($level > 2 ){
                 ?>
               <li class="clpse " data-name="mntrg" id="mntrg" data-target="monitoring">
                 <a data-toggle="collapse" href="#monitoring" aria-expanded="false">
                   <i class="nc-icon nc-layout-11"></i>
                   <p>
-                    Organization Data <b class="caret"></b>
+                    Achievement Area <b class="caret"></b>
                   </p>
                 </a>
                 <div class="collapse " id="monitoring" >
@@ -531,6 +531,12 @@ if($level >= 4){
                       <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">MR</span>
                         <span class="sidebar-normal"> Employee Update Request </span>
+                      </a>
+                    </li>
+                    <li class="menu" data-name="acharea" id="acharea">
+                      <a href="<?=base_url()?>/dashboard/pages/achievement.php"><!---link halaman request edit MP--->
+                        <span class="sidebar-mini-icon">AA</span>
+                        <span class="sidebar-normal"> Achievement </span>
                       </a>
                     </li>
                     

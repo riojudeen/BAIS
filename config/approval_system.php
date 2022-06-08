@@ -3575,23 +3575,48 @@ function pecahProg($prog){
 }
 
 function filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari){
-    if($div_filter != ''){
-        if($dept_filter != ''){
-            if($sect_filter != ''){
-                if($group_filter != ''){
-                    $addFilter = " AND id_division = '$div_filter' AND id_dept = '$dept_filter' AND id_sect = '$sect_filter' AND id_grp = '$group_filter'";
-                }else{
-                    $addFilter = " AND id_division = '$div_filter' AND id_dept = '$dept_filter' AND id_sect = '$sect_filter' ";
-                }
-            }else{
-                $addFilter = " AND id_division = '$div_filter' AND id_dept = '$dept_filter' ";
-            }
-        }else{
-            $addFilter = " AND id_division = '$div_filter' ";
-        }
-    }else{
-        $addFilter = "";
-    }
+    // if($div_filter != ''){
+    //     if($dept_filter != ''){
+    //         if($sect_filter != ''){
+    //             if($group_filter != ''){
+    //                 $addFilter = " AND id_division = '$div_filter' AND id_dept = '$dept_filter' AND id_sect = '$sect_filter' AND id_grp = '$group_filter'";
+    //             }else{
+    //                 $addFilter = " AND id_division = '$div_filter' AND id_dept = '$dept_filter' AND id_sect = '$sect_filter' ";
+    //             }
+    //         }else{
+    //             $addFilter = " AND id_division = '$div_filter' AND id_dept = '$dept_filter' ";
+    //         }
+    //     }else{
+    //         $addFilter = " AND id_division = '$div_filter' ";
+    //     }
+    // }else{
+    //     $addFilter = "";
+    // }
+    // // echo $addFilter;
+    // if($deptAcc_filter != ''){
+    //     $addFilterDeptAcc =" AND id_dept_account = '$deptAcc_filter'";
+    // }else{
+    //     $addFilterDeptAcc ="";
+    // }
+    // if($shift != ''){
+    //     $addFilterShift = " AND shift = '$shift'";
+    // }else{
+    //     $addFilterShift = "";
+    // }
+    // if($cari != ''){
+    //     $addFilterCari = " AND  (npk LIKE '%$cari%' OR nama LIKE '%$cari%') ";
+    // }else{
+    //     $addFilterCari = '';
+    // }
+    // $gabung = $addFilter.$addFilterDeptAcc.$addFilterShift.$addFilterCari;
+    // return $gabung;
+
+    $div = ($div_filter != '')?" AND id_division = '$div_filter'":"";
+    $dept_func = ($dept_filter != '')?" AND id_dept = '$dept_filter'":"";
+    $sect = ($sect_filter != '')?" AND id_sect = '$sect_filter'":"";
+    $group = ($group_filter != '')?" AND id_grp = '$group_filter'":"";
+    $addFilter = $div.$dept_func.$sect.$group;
+       
     // echo $addFilter;
     if($deptAcc_filter != ''){
         $addFilterDeptAcc =" AND id_dept_account = '$deptAcc_filter'";
@@ -3604,12 +3629,13 @@ function filterDataOrg($div_filter , $dept_filter, $sect_filter, $group_filter, 
         $addFilterShift = "";
     }
     if($cari != ''){
-        $addFilterCari = " AND  (npk LIKE '%$cari%' OR nama LIKE '%$cari%') ";
+        $addFilterCari = " AND  ( npk LIKE '%$cari%' OR nama LIKE '%$cari%' )";
     }else{
         $addFilterCari = '';
     }
     $gabung = $addFilter.$addFilterDeptAcc.$addFilterShift.$addFilterCari;
     return $gabung;
+
 
 }
 function filtergeneratorOrg($link, $level, $generate, $origin_query, $access_org){

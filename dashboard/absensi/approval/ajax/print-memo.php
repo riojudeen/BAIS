@@ -73,12 +73,16 @@ if(isset($_SESSION['user'])){
                 <?php
                     
                         $filter_id = ($id_req != '')?" AND (".substr($id_req, 0, -2).")":'';
-                        $query = mysqli_query($link, "SELECT MIN(`req_work_date`) AS mulai, MAX(`req_work_date`) AS selesai, req_work_date, npk, nama, req_shift, employee_shift FROM view_absen_req WHERE shift_req = '1' AND req_code = 'SHIFT'  $filter_id GROUP BY nama, npk, req_shift")or die(mysqli_error($link));
+                        $query = mysqli_query($link, "SELECT MIN(`req_work_date`) AS mulai, IF(req_date_in = '0000-00-00', (MAX(`req_work_date`)), '-') AS selesai, 
+                            req_work_date, npk, nama, req_shift, employee_shift 
+                            FROM view_absen_req WHERE shift_req = '1' 
+                            AND req_code = 'SHIFT'  $filter_id GROUP BY nama, npk, req_shift, req_date_in")or die(mysqli_error($link));
                         while($data = mysqli_fetch_assoc($query)){
                             $npk = $data['npk'];
                             $nama = $data['nama'];
                             $start = $data['mulai'];
-                            $end = $data['selesai'];
+                            $end = ($data['selesai'] != "-")?tgl($data['selesai']):"BELUM DITENTUKAN";
+                            
                             ?>
 
                             <tr class="py-0">
@@ -95,7 +99,7 @@ if(isset($_SESSION['user'])){
                                 <?=tgl($start)?>
                                 </td>
                                 <td  style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">
-                                <?=tgl($end)?>
+                                <?=$end?>
                                 </td>
                                 <td  style="border:1px solid #D6DBDF; width:20px;text-align: center; padding:2px">
                                 <?=$data['employee_shift']?>
@@ -115,11 +119,11 @@ if(isset($_SESSION['user'])){
             <tbody >
                 <tr class="py-0">
                     <td class="text-center" style="padding-bottom:100px; width:50%;">
-                        Diketahui
+                    Disetujui
                     </td>
                     <td>    </td>
                     <td class="text-center"  style="padding-bottom:100px; width:50%"  >
-                        Disetujui
+                        
                     </td>
                     
                 </tr>
@@ -129,7 +133,7 @@ if(isset($_SESSION['user'])){
                     </td>
                     <td style="padding-left:50px">   </td>
                     <td style="border-top: 1px dotted black; padding-top:10px; font-style: italic;"  >
-                        (Department Head)
+                        (HRO Department)
                     </td>
                     
                 </tr>

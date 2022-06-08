@@ -31,6 +31,25 @@ if(isset($_SESSION['user'])){
         
         list($npk, $sub_post, $post, $group, $sect,$dept,$dept_account,$div,$plant) = dataOrg($link,$npk);
         
+        // $origin_query = "SELECT `id_ot`,
+        // `npk`,
+        // `nama`,
+        // `shift`,
+        // `sub_post`,
+        // `post`,
+        // `grp`,
+        // `sect`,
+        // `dept`,
+        // `dept_account`,
+        // `division`,
+        // `plant`,
+        // `work_date`,
+        // `in_date`,
+        // `out_date`,
+        // `start`,
+        // `end` FROM `view_hr_ot`
+        // ";
+        // $tanggal_filter = " AND work_date BETWEEN '$start' AND '$end' ";
         $origin_query = "SELECT `id_ot`,
         `npk`,
         `nama`,
@@ -47,8 +66,13 @@ if(isset($_SESSION['user'])){
         `in_date`,
         `out_date`,
         `start`,
-        `end` FROM `view_hr_ot`
-        ";
+        `end`,
+        `start_req`,
+        `end_req`,
+        `status_approve`,
+        `status_progress`,
+        CONCAT(`status_approve`, `status_progress`) AS `stats`
+         FROM `view_hr_ot`";
         $tanggal_filter = " AND work_date BETWEEN '$start' AND '$end' ";
        
         // echo $tanggal_filter;
@@ -119,9 +143,31 @@ if(isset($_SESSION['user'])){
                         if(mysqli_num_rows($sql)>0){
                             
                             while($dataOT = mysqli_fetch_assoc($sql)){
+                                $start_req = ($dataOT['start_req'] == "00:00:00" || $dataOT['start_req'] == "")?"":jam($dataOT['start_req']);
+                                $end_req = ($dataOT['end_req'] == "00:00:00" || $dataOT['end_req'] == "")?"":jam($dataOT['end_req']);
+                                $checkIn = ($dataOT['start'] == '00:00:00')? $start_req : jam($dataOT['start']);
+                                $checkOut = ($dataOT['end'] == '00:00:00')? $end_req : jam($dataOT['end']);
+                                $code = $dataOT['stats'];
+                                if(($dataOT['start'] == '' OR $dataOT['start'] == '00:00:00') && $start_req != ''){
+                                    // if($start_req != ''){
+                                    
+                                    if($code == "75a"){
+                                        $tb_clr = "table-warning";
+                                    }else if($code == "50a"){
+                                        $tb_clr = "table-success";
+                                    }else if($code == "75a"){
+                                        $tb_clr = "table-info";
+                                    }else{
+                                        $tb_clr = "";
+                                    }
+                                    // }else{
+                                    //     $tb_clr = "";
+                                    // }
+                                }else{
+                                    $tb_clr = "";
+                                }
+
                                 
-                                $checkIn = ($dataOT['start'] == '00:00:00')? "-" : jam($dataOT['start']);
-                                $checkOut = ($dataOT['end'] == '00:00:00')? "-" : jam($dataOT['end']);
                                 $work_date = $dataOT['work_date'];
                                 $limit_date = tgl(date('Y-m-t', strtotime($dataOT['work_date'])));
                                 $str_date = strtotime($work_date);
@@ -129,7 +175,7 @@ if(isset($_SESSION['user'])){
                                 $today = date('Y-m-d');//harus diganti tanggal out kerja
                                 $str_today = strtotime($today);
                                 ?>
-                                <tr id="<?=$dataOT['id_absensi']?>" >
+                                <tr id="<?=$dataOT['id_absensi']?>" class="<?=$tb_clr?>" >
                                     <td class="td"><?=$no?></td>
                                     <td class="td"><?=$dataOT['npk']?></td>
                                     <td style="max-width:200px" class="text-truncate td"><?=$dataOT['nama']?></td>
@@ -678,7 +724,31 @@ if(isset($_SESSION['user'])){
         `in_date`,
         `out_date`,
         `start`,
-        `end` FROM `view_hr_ot`";
+        `end`,
+        `start_req`,
+        `end_req`,
+        `status_approve`,
+        `status_progress`,
+        CONCAT(`status_approve`, `status_progress`) AS `stats`
+         FROM `view_hr_ot`";
+
+        // $origin_query_overtime = "SELECT `id_ot`,
+        // `npk`,
+        // `nama`,
+        // `shift`,
+        // `sub_post`,
+        // `post`,
+        // `grp`,
+        // `sect`,
+        // `dept`,
+        // `dept_account`,
+        // `division`,
+        // `plant`,
+        // `work_date`,
+        // `in_date`,
+        // `out_date`,
+        // `start`,
+        // `end` FROM `view_req_ot`";
 
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
@@ -791,20 +861,41 @@ if(isset($_SESSION['user'])){
                                 
                             foreach($data_tanggal as $tgl_){//looping tanggal request
                                 //ambil array data lembur 
-                                $qry_ot = $queryOT." AND work_date = '$tgl_' ";
+                                $qry_ot = $queryOT." AND work_date = '$tgl_' AND npk = '$data_mon[npk]'";
                                 
                                 $sqlOT = mysqli_query($link, $qry_ot)or die(mysqli_error($link));
                                 $dataOT = mysqli_fetch_assoc($sqlOT);
-    
-                                $check_in = ($dataOT['start'] == "00:00:00" || $dataOT['start'] == "")?"":jam($dataOT['start']);
-                                $check_out = ($dataOT['end'] == "00:00:00") || $dataOT['end'] == ""?"":jam($dataOT['end']);
+                                
+                                $start_req = ($dataOT['start_req'] == "00:00:00" || $dataOT['start_req'] == "")?"":jam($dataOT['start_req']);
+                                $end_req = ($dataOT['end_req'] == "00:00:00" || $dataOT['end_req'] == "")?"":jam($dataOT['end_req']);
+                                $check_in = ($dataOT['start'] == "00:00:00" || $dataOT['start'] == "")?$start_req:jam($dataOT['start']);
+                                $check_out = ($dataOT['end'] == "00:00:00" || $dataOT['end'] == "")?$end_req:jam($dataOT['end']);
+                                $code = $dataOT['stats'];
+                                if(($dataOT['start'] == '' OR $dataOT['start'] == '00:00:00') && $start_req != ''){
+                                    // if($start_req != ''){
+                                    
+                                    if($code == "75a"){
+                                        $tb_clr = "table-warning";
+                                    }else if($code == "50a"){
+                                        $tb_clr = "table-success";
+                                    }else if($code == "75a"){
+                                        $tb_clr = "table-info";
+                                    }else{
+                                        $tb_clr = "";
+                                    }
+                                    // }else{
+                                    //     $tb_clr = "";
+                                    // }
+                                }else{
+                                    $tb_clr = "";
+                                }
                                 $hari = hari_singkat($tgl_);
                                 $color = ($hari == "Sab" || $hari == "Min" ) ? "background: rgba(228, 227, 227, 0.5)" : "";
     
                                 ?>
                                 
-                                <td style="min-width:100px ;max-width:100px; <?=$color?>" class="bg- text-" ><?=$check_in?></td>
-                                <td style="min-width:100px ;max-width:100px; <?=$color?>" class="bg- text-" ><?=$check_out?></td>
+                                <td style="min-width:100px ;max-width:100px; <?=$color?>" class="bg-  <?=$tb_clr?>" ><?=$check_in?></td>
+                                <td style="min-width:100px ;max-width:100px; <?=$color?>" class="bg- text- <?=$tb_clr?>" ><?=$check_out?></td>
                                 <?php
                                 flush();
                             }
