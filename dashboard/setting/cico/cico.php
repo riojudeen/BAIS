@@ -31,7 +31,7 @@ if(isset($_SESSION['user'])){
     $a = "";
     $c = "";
 
-include_once('../../component/migration-nav.php');
+
 
 ?>
 <!-- halaman utama -->

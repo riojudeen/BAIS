@@ -80,8 +80,8 @@ if(isset($_SESSION['user'])){
         //     $query_req_overtime = $query_req_overtime;
         // }
         // echo $filter;
-        echo $query_req_overtime;
-        echo (mysqli_num_rows(mysqli_query($link, $query_req_overtime)));
+        // echo $query_req_overtime;
+        // echo (mysqli_num_rows(mysqli_query($link, $query_req_overtime)));
         $status = authApprove($level, "status", "approved");
         $req_status = authApprove($level, "request", "approved");
         // echo $status.$req_status;
@@ -186,6 +186,19 @@ if(isset($_SESSION['user'])){
                                     
                                         
                                         <?php
+                                        if($level < 6){
+                                            if($stt == "waiting" || "draft / belum diajukan"){
+                                                $disable_select = "";
+                                                $disable_mp = "mp";
+                                            }else{
+                                                $disable_select = "disabled";
+                                                $disable_mp = "";
+                                            }
+                                        }else{
+                                            $disable_select = "";
+                                            $disable_mp = "mp";
+                                        }
+                                        /*
                                         /*
                                     $status = $data['status'];
                                     // echo $status;
@@ -270,9 +283,9 @@ if(isset($_SESSION['user'])){
                                     ?>
                                 </td>
                                 <td>
-                                    <div class="form-check text-right">
+                                    <div class="form-check text-right <?=$disable_select?>" >
                                         <label class="form-check-label ">
-                                            <input class="form-check-input mp " name="checked[]" type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
+                                            <input class="form-check-input <?=$disable_mp?> " name="checked[]" <?=$disable_select?> type="checkbox" value="<?=$data['id_ot']?>&&<?=$data['npk']?>&&<?=$data['work_date']?>">
                                             <span class="form-check-sign"></span>
                                         </label>
                                     </div>

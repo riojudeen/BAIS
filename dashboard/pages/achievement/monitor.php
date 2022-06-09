@@ -6,28 +6,43 @@ if(isset($_SESSION['user'])){
     if($level >= 2){
         if($_GET['data'] == 'mp'){
 
-            $_GET['start'] = '01/06/2022';
-            $_GET['end'] = '30/06/2022';
+            $mulai = $_GET['start'];
+            $selesai = $_GET['end'];
+            // echo  $_GET['end'];
             $today = date('Y-m-d');
-            $mulai = dateToDB($_GET['start']);
-            $selesai = dateToDB($_GET['end']);
+            
             $part = partAccess($level, "part");
-            // echo $mulai."<br>";
             $data_tanggal = json_decode(get_date($mulai, $selesai));
-            // var_dump($data_tanggal);
             $filter_date = '';
             
-            $data_dept = array(); //penampung data dept account id
-            $data_masuk = array(); //penampung data jumlah karyawan masuk
-            $data_ijin = array(); //penampung data jumlah karyawan masuk
+            $data_area= array(); 
+            $data_total = array(); 
+            $data_ijin = array(); 
+            $data_jabatan = array(); 
+            $data_id_jab = array(); 
+
+            $qry_area = "SELECT SUM(mp) AS mp FROM karyawan_record";
+            $qry_jabatan = "SELECT id_jabatan, jabatan FROM jabatan";
+            $sql_jabatan = mysqli_query($link, $qry_jabatan)or die(mysqli_error($link));
+            if(mysqli_num_rows($sql_jabatan)>0){
+                while($jab = mysqli_fetch_assoc($sql_jabatan)){
+                    array_push($data_jabatan, $jab['jabatan'] );
+                    array_push($data_id_jab, $jab['id_jabatan'] );
+                }
+            }
             foreach( $data_tanggal AS $date){
-                // echo $date."<br>";
-                // $filter_date .= " date = '$date' OR";
-                $qry = "SELECT SUM(mp) AS mp FROM karyawan_record WHERE part = '$part' AND `date` = '$date' " ;
+                // get mp total
+                $qry = $qry_area." WHERE part = '$part' AND `date` = '$date' " ;
                 $sql = mysqli_query($link, $qry)or die(mysqli_error($link));
                 $data = mysqli_fetch_assoc($sql);
-                array_push($data_masuk, $data['mp'] );
+                array_push($data_total, $data['mp'] );
+
+                //get mp / jabatan
+                
+
+
             }
+
             $filter_date = substr($filter_date , 0,-2);
             // echo $filter_date;
             $filter_date = ($filter_date != "")?" AND ($filter_date) ": "";
@@ -35,16 +50,17 @@ if(isset($_SESSION['user'])){
             $sql = mysqli_query($link, $qry)or die(mysqli_error($link));
 
             
+            
             // while($data = mysqli_fetch_assoc($sql)){
             //     // echo " $data[id] - $data[id_area] - $data[nama_area] - $data[part] - $data[id_jabatan] - $data[mp] <br>";
-            //     array_push($data_masuk, $part);
+            //     array_push($data_total, $part);
             // }
             //
             ?>
             <div class="row">
                 <div class="col-md-7">
                     <h5 class="">MP Arrangement </h5>
-                    <p class="card-category">periode : <?=tgl(dateToDB($_GET['start']))?> - <?=tgl(dateToDB($_GET['end']))?></p>
+                    <p class="card-category">periode : <?=tgl($mulai)?> - <?=tgl(($selesai))?></p>
                 </div>
             </div>
             <div class="row">
@@ -121,7 +137,7 @@ if(isset($_SESSION['user'])){
                             // foreach($data_dept AS $dept => $val){
                             //     $dept = getOrgName($link, $dept, "deptAcc");
                                 $masuk = '';
-                                foreach($data_masuk AS $total){
+                                foreach($data_total AS $total){
                                     $masuk .= $total.",";
                                     // echo $val[0][$tgl]['masuk']."-".$val[0][$tgl]['ijin']."<br>";
                                 }

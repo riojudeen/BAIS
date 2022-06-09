@@ -195,13 +195,13 @@ if(isset($_GET['del'])){
         }else{
             $sql = mysqli_query($link, "INSERT INTO org_transfer (`npk`,`post`,`grp`,`sect`,`dept`,`dept_account`,`division`,`plant`, `stats`, `req_date`, `requester`) VALUES
             ('$npk', $dis_pos, $dis_group, $dis_sect, $dis_dept, $dis_dept_acc,$dis_division, '1' , '1', '$date' , '$npkUser' ) ")or die(mysqli_error($link));
-            // if($sql){
-            //     $_SESSION['info'] = "Disimpan";
-            //      header("location:../edit_mp.php?transfer=$npk");
-            // }else{
-            //     $_SESSION['info'] = "Gagal Disimpan";
-            //      header("location:../edit_mp.php?transfer=$npk");
-            // }
+            if($sql){
+                $_SESSION['info'] = "Disimpan";
+                 header("location:../edit_mp.php?transfer=$npk");
+            }else{
+                $_SESSION['info'] = "Gagal Disimpan";
+                 header("location:../edit_mp.php?transfer=$npk");
+            }
         }
     }
    

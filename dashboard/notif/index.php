@@ -11,7 +11,7 @@ if(isset($_SESSION['user']) && $level < 10){
         $prog = "50a";
     }
     $_GET['prog'] = '';
-
+    // $prog = $_GET['prog'];
         // $_GET['cari'] = '';
         $_GET['att_type'] = '';
         $start = date('Y-m-01');
@@ -52,20 +52,22 @@ if(isset($_SESSION['user']) && $level < 10){
         $add_filter = filterDataOt($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
         
         $filter_cari = ($add_filter != '')?"( $add_filter)":'';
-        $filter = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) = '$prog' ";
+        $filter = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) = '$prog' AND work_date BETWEEN '$start' AND '$end' ";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$filter;
+        // echo $query_req_overtime;
+
         // absensi data
         $origin_query_at = "SELECT view_absen_req.id_absensi,
             view_absen_req.npk
             FROM view_absen_req ";
        
         $generate = queryGenerator($level, $table, $field_request, $table_field1, $table_field2, $part, $npk, $data_access);
-        $add_filter_at = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari);
+        $add_filter_at = filterData($div_filter , $dept_filter, $sect_filter, $group_filter, $deptAcc_filter, $shift, $cari)." AND `req_work_date` BETWEEN '$start' AND '$end' ";
         $exception = " AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$prog'
             AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) <> '100e' 
             AND req_date IS NOT NULL  AND shift_req = '0' ";
         $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query_at, $access_org).$add_filter_at.$exception;
-
+        // ECHO $query_req_absensi;
         // informasi
         $query_info = "SELECT info FROM info WHERE (category = 'ext' 
             OR category = 'int' 
@@ -73,6 +75,7 @@ if(isset($_SESSION['user']) && $level < 10){
             OR category = 'oth' ) AND `stats` = '1' AND ((date_start BETWEEN '$start' AND '$end') OR (date_end BETWEEN '$start' AND '$end'))";
         $sql_info = mysqli_query($link, $query_info)or die(mysqli_error($link));
         
+
         $jml_info = mysqli_num_rows($sql_info);
         $sql_at = mysqli_query($link, $query_req_absensi)or die(mysqli_error($link));
         $jml_at = mysqli_num_rows($sql_at);
@@ -100,6 +103,7 @@ if(isset($_SESSION['user']) && $level < 10){
         $stats = json_encode($notifikasi);
         $output = "{\"data\":".$dataJSON.",\"msg\":".$stats."}";
         echo $output;
+        
 } else{
     $data = array();
     $notifikasi = array();
@@ -122,6 +126,7 @@ if(isset($_SESSION['user']) && $level < 10){
     $stats = json_encode($notifikasi);
     $output = "{\"data\":".$dataJSON.",\"msg\":".$stats."}";
     echo $output;
+    // var_dump (json_decode($stats));
 }
   
 

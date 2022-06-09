@@ -12,6 +12,8 @@ $halaman = "Achievement Area";
 if(isset($_SESSION['user'])){
 
     include("../header.php");
+    $startDate = date('Y-m-01');
+    $endDate = date('Y-m-t');
     if($level >=1 && $level <=8){
         ?>
         <div class="row">
@@ -54,9 +56,9 @@ if(isset($_SESSION['user'])){
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group ">
-                                            <input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DDD">
-                                            <input type="text" disabled class="form-control text-center" value="to" style="max-width:50px">
-                                            <input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DDD">
+                                            <input type="text" class="form-control datepicker" id="start_date" data-date-format="YYYY-MM-DD" value="<?=$startDate?>">
+                                            <input type="text" disabled class="form-control text-center"  value="to" style="max-width:50px">
+                                            <input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" id="end_date" value="<?=$endDate?>">
                                             
                                             
                                             <div class="input-group-append ">
@@ -248,6 +250,8 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
                 var group_id = $('#s_goupfrm').val();
                 var deptAcc_id = $('#s_deptAcc').val();
                 var shift = $('#s_shift').val();
+                var start = $('#start_date').val();
+                var end = $('#end_date').val();
                 
                 var cari = $('#cari').val();
     
@@ -261,14 +265,10 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
                 }else if(id == 'ot'){
                     var url = "achievement/monitor-overtime.php"; 
                 }
-
-                var start = $('#startDate').val();
-                var end = $('#endDate').val();
-            
                 $.ajax({
                     url:url,
                     method:"GET",
-                    data:{data:'mp'},
+                    data:{data:'mp',div_id : div_id, dept_id : dept_id, section_id:section_id,group_id:group_id,deptAcc_id:deptAcc_id,shift:shift,start:start,end:end},
                     success:function(data){
                         // $('#load_data').fadeOut('fast', function(){
                         //     $(this).html(data).fadeIn('fast');
@@ -279,6 +279,9 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
             }
         }
         $('#filterGo').on('click', function(){
+            dataActive();
+        })
+        $('#filterDate').on('click', function(){
             dataActive();
         })
     })

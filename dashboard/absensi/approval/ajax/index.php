@@ -161,6 +161,18 @@ if(isset($_SESSION['user'])){
                                 <marquee><?=$note_return?></marquee>
                                 </td>
                                 <?php
+                                if($level < 6){
+                                    if($stt == "waiting"){
+                                        $disable_select = "";
+                                        $disable_mp = "mp";
+                                    }else{
+                                        $disable_select = "disabled";
+                                        $disable_mp = "";
+                                    }
+                                }else{
+                                    $disable_select = "";
+                                    $disable_mp = "mp";
+                                }
                                 /*
                                 <td class="text-right">
                                     
@@ -248,9 +260,9 @@ if(isset($_SESSION['user'])){
                                 */
                                 ?>
                                 <td>
-                                    <div class="form-check text-right">
+                                    <div class="form-check text-right <?=$disable_select?>">
                                         <label class="form-check-label ">
-                                            <input class="form-check-input mp " name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
+                                            <input class="form-check-input <?=$disable_mp?> " <?=$disable_select?> name="checked[]" type="checkbox" value="<?=$data['id_absensi']?>&&<?=$data['req_code']?>&&<?=$data['shift_req']?>">
                                             <span class="form-check-sign"></span>
                                         </label>
                                     </div>
