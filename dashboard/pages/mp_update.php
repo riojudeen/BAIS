@@ -69,7 +69,7 @@ if(isset($_SESSION['user'])){
             }
             // echo $npkCord;
             if($npkUser == $npkCord){
-                $disabled = ($level == 3)?"":"disabled";
+                $disabled = ($level <= 5)?"":"disabled";
                 $mes = "koordinator area";
                 $edit = 1;
             }else{
@@ -134,7 +134,7 @@ if(isset($_SESSION['user'])){
             
             // echo $group_filter;
             $deptAcc_filter = '';
-            $add_filter = $sect_filter.$group_filter;
+            $add_filter = $sect_filter.$group_filter." AND npk <> $npk";
             // echo $data_access_org;
             $access_org = orgAccessOrg($level);
             // echo $access_org;
@@ -433,14 +433,18 @@ if(isset($_SESSION['user'])){
                 
             </div>
             <?php
-                $q_trf = "SELECT 
-                * FROM view_org_trf
-                ";
+                $q_trf = "SELECT * FROM view_org_trf ";
+                if($level < 6){
+                    $add_filter = $add_filter;
+                }else{
+                    $add_filter = "";
+                }
                 $queryTrf = filtergenerator($link, $level, $generate, $q_trf, $access_org).$add_filter;
                 // echo $queryTrf;
                 
                 $q_transfer = mysqli_query($link, $queryTrf )or die(mysqli_error($link));
-                    
+                
+                
                 if(mysqli_num_rows($q_transfer)>0){
             ?>
             <div class="row">
@@ -469,8 +473,12 @@ if(isset($_SESSION['user'])){
                                         <?php
                                             $no_ = 1;
                                             while($data_transfer = mysqli_fetch_assoc($q_transfer)){
-                                                $tb_clr = ($data_transfer != '')?"table-info":"table-success";
-                                                $tb_dsbld = ($data_transfer != '' && $level < 6 )?"disabled":"";
+                                                
+                                                $q_nama = mysqli_query($link, "SELECT nama FROM karyawan WHERE npk = '$data_transfer[requester]' ")or die(mysqli_error($link));
+                                                $d_nama = mysqli_fetch_assoc($q_nama);
+                                                $nama = $d_nama['nama'];
+                                                $tb_clr = ($data_transfer['review'] != '')?"table-info":"table-success";
+                                                $tb_dsbld = ($data_transfer['review'] != '' && $level < 6 )?"disabled":"";
                                                 ?>
                                                 <tr class="<?=$tb_clr?>">
                                                     <td><?=$no_++?></td>
@@ -509,8 +517,8 @@ if(isset($_SESSION['user'])){
                                                             <?=getOrgName($link,($data_transfer['tf_division']),"division")?>
                                                         </div>
                                                     </td>
-                                                    <td><?=$data_transfer['req_date']?></td>
-                                                    <td><?=$data_transfer['requester']?></td>
+                                                    <td><?=$data_transfer['requester']?> - <?=nick($nama)?></td>
+                                                    <td><?=tgl($data_transfer['req_date'])?></td>
                                                     <td class="text-right">
                                                         <a <?=$tb_dsbld?> href="<?=base_url()?>/dashboard/setting/proses/proses.php?proccess_tf=<?=$data_transfer['npk']?>"  role="button" aria-expanded="true"  class="btn btn-sm  btn-success">
                                                             Proses
@@ -567,7 +575,7 @@ if(isset($_SESSION['user'])){
                                                             $query_total = mysqli_query($link, $queryMP.$add_filter." AND $sub = '$dataPos[id]' ")or die(mysqli_error($link));
                                                             if(mysqli_num_rows($query_total) == 0){
                                                                 ?>
-                                                                <tr class="table-danger">
+                                                                <tr class="table-primary">
                                                                     
                                                                     
                                                                     <td class="text-danger pl-4 title">
@@ -579,7 +587,10 @@ if(isset($_SESSION['user'])){
                                                                         <div class="badge badge-pill">Data Karyawan belum diposting. Klik Update untuk melakukan seting</div>
                                                                     </td>
                                                                     <td class="text-right pr-4">
-                                                                        <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-round btn-outline-danger btn-success">Update</a>
+                                                                        <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$dataPos['id']?>&part=<?=$sub_part?>" class="btn btn-sm btn-link btn-info">Update</a>
+                                                                        <a   href="../setting/organization/proses/proses.php?del_area=<?=$dataPos['id']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-link btn-icon btn-danger">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </a>
                                                                     </td>
                                                                 </tr>
                                                                 <?php
@@ -593,10 +604,10 @@ if(isset($_SESSION['user'])){
                                             ?>
                                         </table>
                                     </div>
+                                    
                                 </div>
                                 
                             </div>
-                            
                         </div>
                         <hr class="my-0">
                         <div class="card-body">
@@ -649,6 +660,7 @@ if(isset($_SESSION['user'])){
                                                             $jm_TL = mysqli_num_rows($TL);
                                                             $jm_FRM = mysqli_num_rows($FRM);
                                                             // echo $queryMP.$addMng;
+                                                            $disabled_hapus = ($total == 0)?"":"disabled";
                                                             ?>
                                                             <tr class="<?=$color?>">
                                                                 <td><?=$no++?></td>
@@ -658,14 +670,17 @@ if(isset($_SESSION['user'])){
                                                                 <td><?=$jm_FRM?></td>
                                                                 <td><?=$jm_TL?></td>
                                                                 <td><?=$jm_TM?></td>
-                                                                <td class="table-warning"><?=$jm_kontrak1?></td>
-                                                                <td class="table-warning"><?=$jm_kontrak2?></td>
-                                                                <td class="table-warning"><?=$jm_permanen?></td>
+                                                                <td class="table-info"><?=$jm_kontrak1?></td>
+                                                                <td class="table-info"><?=$jm_kontrak2?></td>
+                                                                <td class="table-info"><?=$jm_permanen?></td>
                                                                 <td class="text-right">
                                                                     <?php
                                                                     if($data[$sub] != ''){
                                                                         ?>
                                                                         <a  <?=$disabled ?> href="../setting/organization/data-update.php?id=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-success">Update</a>
+                                                                        <a  <?=$disabled_hapus ?> href="../setting/organization/proses/proses.php?del_area=<?=$data['id_post_leader']?>&part=<?=$sub_part?>&frm=group" class="btn btn-sm btn-icon btn-danger">
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </a>
                                                                         <?php
                                                                     }
                                                                     ?>
@@ -798,11 +813,14 @@ if(isset($_SESSION['user'])){
                                         </div>
                                     </div>
                                 </div>
+                                <br>
                             </div>
                                 
                         </div>
+                        <hr>
                     </div>
                 </div>
+                
             </div>
             <?php
             // }else{

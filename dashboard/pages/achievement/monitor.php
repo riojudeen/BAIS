@@ -52,6 +52,14 @@ if(isset($_SESSION['user'])){
                     <canvas id="attendancerate" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>MP Position</h5>
+                </div>
+                <div class="col-md-12">
+                    <h5>MP Position</h5>
+                </div>
+            </div>
 
             <script>
                 $(document).ready(function(){

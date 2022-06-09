@@ -352,9 +352,7 @@ if(isset($_SESSION['user'])){
                 var group_id = $('#s_goupfrm').val();
                 var deptAcc_id = $('#s_deptAcc').val();
                 var shift = $('#s_shift').val();
-                
                 var cari = $('#cari').val();
-
                 var id = $('.data-active').attr('data-id');
                 var start = $('#startDate').val();
                 var end = $('#endDate').val();

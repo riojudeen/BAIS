@@ -60,7 +60,7 @@ if(isset($_SESSION['user'])){
                                             
                                             
                                             <div class="input-group-append ">
-                                                <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                                <span id="filterDate" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
                                             </div>
                                         </div>
                                     </div>
@@ -170,21 +170,118 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
     include_once("../footer.php");
     ?>
     <script>
-    dataActive()
-    function dataActive(){
-        
-        $.ajax({
-            url:"achievement/monitor.php",
-            method:"GET",
-            data:{data:'mp'},
-            success:function(data){
-                $('#load_data').fadeOut('fast', function(){
-                    $(this).html(data).fadeIn('fast');
+        $(document).ready(function(){
+            function getDiv(){
+                console.log("tes");
+                var data = $('#s_div').val()
+                $.ajax({
+                    url: '../absensi/ajax/get_div.php',
+                    method: 'GET',
+                    data: {data:data},		
+                    success:function(data){
+                        $('#s_div').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        
+                    }
                 });
-                // $('#data-monitoring').html(data)
             }
+            function getDept(){
+                var data = $('#s_div').val()
+                $.ajax({
+                    url: '../absensi/ajax/get_dept.php',	
+                    method: 'GET',
+                    data: {data:data},
+                    success:function(data){
+                        $('#s_dept').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        // console.log(data)
+                    }
+                });
+            }
+            function getSect(){
+                var data = $('#s_dept').val()
+                $.ajax({
+                    url: '../absensi/ajax/get_sect.php',	
+                    method: 'GET',
+                    data: {data:data},		
+                    success:function(data){
+                        $('#s_section').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                        
+                    }
+                });
+            }
+            function getGroup(){
+                var data = $('#s_section').val()
+                $.ajax({
+                    url: '../absensi/ajax/get_group.php',
+                    method: 'GET',
+                    data: {data:data},
+                    success:function(data){
+                        $('#s_goupfrm').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
+                    }
+                });
+            }
+            getDiv()
+            $('#s_div').on('change', function(){
+                getDept()
+                getSect()
+                getGroup()
+            })
+            $('#s_dept').on('change', function(){
+                getSect()
+                getGroup()
+            })
+            $('#s_section').on('change', function(){
+                getGroup()
+            })
+            
+        dataActive()
+        $(document).on('click','.navigasi-absensi', function(){
+            $('.navigasi-absensi').removeClass('data-active');
+            $(this).addClass('data-active');
+            dataActive()
+        });
+        function dataActive(){
+            if($(".data-active")[0]){
+
+                var div_id = $('#s_div').val();
+                var dept_id = $('#s_dept').val();
+                var section_id = $('#s_section').val();
+                var group_id = $('#s_goupfrm').val();
+                var deptAcc_id = $('#s_deptAcc').val();
+                var shift = $('#s_shift').val();
+                
+                var cari = $('#cari').val();
+    
+                var id = $('.data-active').attr('data-id');
+                if(id == 'mp'){
+                    var url = "achievement/monitor.php"; 
+                }else if(id == 'at'){
+                    var url = "achievement/monitor-attendance.php"; 
+                }else if(id == 'sc'){
+                    var url = "achievement/monitor-salary.php"; 
+                }else if(id == 'ot'){
+                    var url = "achievement/monitor-overtime.php"; 
+                }
+
+                var start = $('#startDate').val();
+                var end = $('#endDate').val();
+            
+                $.ajax({
+                    url:url,
+                    method:"GET",
+                    data:{data:'mp'},
+                    success:function(data){
+                        // $('#load_data').fadeOut('fast', function(){
+                        //     $(this).html(data).fadeIn('fast');
+                        // });
+                        $('#load_data').html(data)
+                    }
+                })
+            }
+        }
+        $('#filterGo').on('click', function(){
+            dataActive();
         })
-    }
+    })
     </script>
     <?php
     include_once("../endbody.php");

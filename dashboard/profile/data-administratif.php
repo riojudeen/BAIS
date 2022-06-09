@@ -7,6 +7,7 @@ include("../../config/schedule_system.php");
 
 //redirect ke halaman dashboard index jika sudah ada session
 if(isset($_SESSION['user'])){
+    
     $npk = $_GET['npk'];
     $start = $_GET['start'];
     $end = $_GET['end'];

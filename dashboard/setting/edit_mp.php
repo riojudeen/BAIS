@@ -9,7 +9,7 @@ if(isset($_SESSION['user'])){
     
     if(isset($_GET['transfer'])){
         $npk = $_GET['transfer'];
-        echo $level;
+        // echo $level;
         $sMp = mysqli_query($link, "SELECT view_organization.npk AS npk,
             view_organization.nama AS nama,
             view_organization.tgl_masuk AS tgl_masuk,

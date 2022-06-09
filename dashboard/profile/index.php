@@ -36,6 +36,7 @@ if(isset($_SESSION['user'])){
 		$user_levQuery = mysqli_query($link, "SELECT role_name FROM user_role WHERE id_role = '$data_akun[level_user]' ")or die(mysqli_error($link));
 		$data_userLevel = mysqli_fetch_assoc($user_levQuery);
 		if($_GET['profile'] != 'me'){
+			
 			?>
 			<div class="row">
 				<div class="col-md-12">
@@ -44,7 +45,7 @@ if(isset($_SESSION['user'])){
 							<i class="nc-icon nc-simple-remove"></i>
 						</button>
 						<span data-notify="icon" class="nc-icon nc-satisfied"></span>
-						<span data-notify="message">Anda Bisa Menambahkan data profile dan organisasi karyawan</span>
+						<span data-notify="message">Anda Bisa Menambahkan dan memperbaharui data profile karyawan</span>
 					</div>
 				</div>
 			</div>

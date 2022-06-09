@@ -4,6 +4,12 @@ require_once("../../../../config/config.php");
 if(isset($_SESSION['user'])){
     // add
     if(isset($_POST['add'])){
+        if($level > 5){
+            $url="../index.php";
+        }else{
+            $url=base_url()."/dashboard/pages/mp_update.php";
+        }
+        // if(isset($_POST['area_org']))
         $qry_pos = "INSERT INTO `pos_leader`(`id_post`, `nama_pos`, `npk_cord`, `id_group`, `part`) VALUES ";
         $qry_grp = "INSERT INTO `groupfrm`(`id_group`, `nama_group`, `npk_cord`, `id_section`, `part`) VALUES ";
         $qry_sct = "INSERT INTO `section`(`id_section`, `section`, `npk_cord`, `id_dept`, `part`) VALUES ";
@@ -35,18 +41,14 @@ if(isset($_SESSION['user'])){
             
             if($sql){
                 // echo "tes";
-                if($level > 5){
-                    $url="../index.php";
-                }else{
-                    $url=base_url()."/dashboard/pages/mp_update.php";
-                }
+                
                 $_SESSION['tab'] = "pos";
                 $_SESSION['info'] = "Disimpan";
-                echo "<script>window.location='../index.php';</script>";
+                echo "<script>window.location='".$url."';</script>";
             }else{
                 $_SESSION['tab'] = "pos";
                 $_SESSION['info'] = "Gagal Disimpan";
-                echo "<script>window.location='../index.php';</script>";
+                echo "<script>window.location='".$url."';</script>";
             }
         }else if(isset($_POST['kode_group'])){
             $qry_code = mysqli_query($link, "SELECT max(SUBSTRING(`id_group`, -3)) AS `group` FROM groupfrm")or die(mysqli_error($link));
@@ -72,11 +74,11 @@ if(isset($_SESSION['user'])){
             if($sql){
                 $_SESSION['tab'] = "group";
                 $_SESSION['info'] = "Disimpan";
-                echo "<script>window.location='../index.php';</script>";
+                echo "<script>window.location='".$url."';</script>";
             }else{
                 $_SESSION['tab'] = "group";
                 $_SESSION['info'] = "Gagal Disimpan";
-                echo "<script>window.location='../index.php';</script>";
+                echo "<script>window.location='".$url."';</script>";
             }
             // echo "group";
         }else if(isset($_POST['kode_section'])){
@@ -282,6 +284,29 @@ if(isset($_SESSION['user'])){
             echo "<script>window.location='../index.php';</script>";
         }
 
+    }else if(isset($_GET['del_area'])){
+        $id = $_GET['del_area'];
+        $part = $_GET['part'];
+        
+        if($part == 'pos'){
+            $del = mysqli_query($link, "DELETE FROM pos_leader WHERE id_post = '$id' ")or die(mysqli_error($link));
+            if($del){
+                $_SESSION['info'] = "Disimpan";
+                echo "<script>window.location='".base_url()."/dashboard/pages/mp_update.php';</script>";
+            }else{
+                $_SESSION['info'] = "Gagal Disimpan";
+                echo "<script>window.location='".base_url()."/dashboard/pages/mp_update.php';</script>";
+            }
+        }else if($part == 'group'){
+            $del = mysqli_query($link, "DELETE FROM groupfrm WHERE id_group = '$id' ")or die(mysqli_error($link));
+            if($del){
+                $_SESSION['info'] = "Disimpan";
+                echo "<script>window.location='".base_url()."/dashboard/pages/mp_update.php';</script>";
+            }else{
+                $_SESSION['info'] = "Gagal Disimpan";
+                echo "<script>window.location='".base_url()."/dashboard/pages/mp_update.php';</script>";
+            }
+        }
     }
 
 } else{

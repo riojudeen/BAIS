@@ -5,7 +5,11 @@ include("../../../config/config.php");
 if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8 && $_GET['id'] == 'mp'){
         require_once("../../../config/approval_system.php");
+        $cek_cord = mysqli_query($link, "SELECT cord, part FROM view_daftar_area WHERE cord = '$npkUser' AND part <> 'pos' ")or die(mysqli_error($link));
+        $data_cord = mysqli_fetch_assoc($cek_cord);
         
+        $cord = $data_cord['cord'];
+        // echo $data_cord['part'];
         $filter = $_GET['filter'];
         $div_filter = $_GET['div'];
         // echo $div;
@@ -119,7 +123,7 @@ if(isset($_SESSION['user'])){
                     
                     if(mysqli_num_rows($sql)>0){
                         while($data = mysqli_fetch_assoc($sql)){
-                            
+                            $btn_tf = ($cord == $data['npk'])?"disabled":"";
                             ?>
                             <tr id="<?=$data['npk']?>" >
                                 <td class="td"><?=$no++?></td>
@@ -141,7 +145,7 @@ if(isset($_SESSION['user'])){
                                     <a href="<?=base_url()?>/dashboard/profile/index.php?profile=<?=$data['npk']?>" class="btn btn-sm btn-icon btn-link btn-round btn-outline-info btn-info ">
                                         <i class="fa fa-eye"></i>
                                     </a>
-                                    <a href="<?=base_url()?>/dashboard/setting/edit_mp.php?transfer=<?=$data['npk']?>"  role="button" aria-expanded="true"  class="btn btn-sm btn-icon btn-link btn-round btn-outline-warning btn-warning transfer">
+                                    <a <?=$btn_tf?> href="<?=base_url()?>/dashboard/setting/edit_mp.php?transfer=<?=$data['npk']?>"  role="button" aria-expanded="true"  class="btn btn-sm btn-icon btn-link btn-round btn-outline-warning btn-warning transfer">
                                         <i class="fa fa-edit"></i>
                                     </a>
                                     
