@@ -551,15 +551,22 @@ include_once('../../component/migration-nav.php');
             var load = 0;
             var approval_num = setInterval(function ()
                 { 
-                    const load1 = 6 * 60 + 30;
-                        const load2 =  7 * 60 + 0;                 
-                    const load3 = 7 * 60 + 30;
-                        const load4 =  8 * 60 + 30;
-                    const load5 = 9 * 60 + 0;
+                    const load1 = 6 * 60 + 15;
+                        const load2 =  6 * 60 + 30;   
+
+                    const load3 = 6 * 60 + 45;
+                        const load4 =  7 * 60 + 0;
+
+                    const load5 = 7 * 60 + 30;
+
+                    
+
                         const load6 =  16 * 60 + 0;
-                    const load7 = 16 * 60 + 30;
-                        const load8 =  17 * 60 + 0;
-                    const load9 = 17 * 60 + 30;
+                    const load7 = 16 * 60 + 15;
+
+                        const load8 =  16 * 60 + 30;
+                    const load9 = 16 * 60 + 45;
+
                         const load10 =  18 * 60 + 0;
                     const load11 = 18 * 60 + 30;
                         const load12 =  19 * 60 + 0;                 
