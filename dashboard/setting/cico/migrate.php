@@ -74,10 +74,11 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
             `npk`,`date`,`in_date`,`out_date`,
             `start`,`end`, `updated_by`) VALUES ";
         $q_cek_reqOt = "SELECT status_approve , `status` FROM lembur ";
+        $index_increment = 0;
         foreach($array_tgl AS $date){
             // looping data karyawan
-            $index_tanggal =( date('01', strtotime($date)) - 1)*3;
-            
+            $index_tanggal =($index_increment)*3;
+            $index_increment++;
             for($i = 3;$i < count($sheetData);$i++){
                 // menangkap nilai data apakah absen atau lembur
                 $scope = $sheetData[$i]['4'];

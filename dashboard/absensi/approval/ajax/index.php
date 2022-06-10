@@ -162,7 +162,7 @@ if(isset($_SESSION['user'])){
                                 </td>
                                 <?php
                                 if($level < 6){
-                                    if($stt == "waiting"){
+                                    if($stt == "Waiting"){
                                         $disable_select = "";
                                         $disable_mp = "mp";
                                     }else{

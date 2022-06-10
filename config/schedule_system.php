@@ -151,8 +151,9 @@ function genericOut($link, $date, $shift){
     $cekWH = mysqli_query($link, "SELECT working_days.ket AS `ket`, working_hours.start AS `start`,  working_hours.end AS `end`
     FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));
     $data = mysqli_fetch_assoc($cekWH);
+
     $waktuAwal = strtotime("$date $data[start]");
-    $waktuAkhir = strtotime("$date $data[end]"); // bisa juga waktu sekarang now()
+    $waktuAkhir = strtotime("$date $data[end]"); // bisa juga waktu sekarang now() 
     $ket = $data['ket'];
     
     if(mysqli_num_rows($cekWH)>0){
