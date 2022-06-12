@@ -7,13 +7,13 @@ if(isset($_SESSION['user'])){
         ?>
         <div class="row">
             <div class="col-md-12">
-                <h6>Salary Rate</h6>
+                <h5>Request Overview</h6>
             </div>
             <div class="col-md-12">
-                <h5>Production Result</h5>
+                <h6>Overtime</h6>
             </div>
             <div class="col-md-12">
-                <h5>Cost Achievement</h5>
+                <h6>Leave & Permit</h6>
             </div>
             
         </div>

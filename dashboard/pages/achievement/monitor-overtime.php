@@ -10,16 +10,19 @@ if(isset($_SESSION['user'])){
                 <h6>Overtime Rate</h6>
             </div>
             <div class="col-md-12">
-                <h5>Efficiency</h5>
-            </div>
-            <div class="col-md-12">
                 <h5>Working Days</h5>
             </div>
             <div class="col-md-12">
-                <h5>Overtime</h5>
+                <h5>Production Effeciency</h5>
             </div>
             <div class="col-md-12">
-                <h5>Non Production Overtime</h5>
+                <h5>Overtime in Minutes</h5>
+            </div>
+            <div class="col-md-12">
+                <h6>Production Overtime</h6>
+            </div>
+            <div class="col-md-12">
+                <h6>Non Production Overtime</h6>
             </div>
             
         </div>

@@ -28,17 +28,17 @@ if(isset($_SESSION['user'])){
                                     <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left" role="tablist">
                                         <!--  -->
                                         <li class="nav-item ">
-                                            <a class="btn  btn-link btn-round btn-info org navigasi-absensi active data-active"  data-toggle="tab" data-id="mp" href="#mp" role="tab" aria-expanded="true"></i>MP Movement</a>
+                                            <a class="btn  btn-link btn-round btn-info org navigasi-absensi active data-active"  data-toggle="tab" data-id="mp" href="#mp" role="tab" aria-expanded="true"></i>Employee Movement</a>
                                         </li>
                                         
                                         <li class="nav-item ">
                                             <a class="btn  btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="at" href="#at" role="tab" aria-expanded="true">Attendance Rate</a>
                                         </li>
                                         <li class="nav-item ">
-                                            <a class="btn btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="sc" href="#sc" role="tab" aria-expanded="true">Salary Cost</a>
+                                            <a class="btn btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="ot" href="#ot" role="tab" aria-expanded="true">Overtime Achievement</a>
                                         </li>
                                         <li class="nav-item ">
-                                            <a class="btn btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="ot" href="#ot" role="tab" aria-expanded="true">Overtime Cost</a>
+                                            <a class="btn btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="sc" href="#sc" role="tab" aria-expanded="true">Request Overview</a>
                                         </li>
                                         
                                     </ul>
@@ -52,7 +52,7 @@ if(isset($_SESSION['user'])){
                                 
                                 <div class="row">
                                     <div class="col-md-6">
-                                    <h5 class="title">Area</h5>
+                                    <h5 class="title title-page">Area</h5>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="input-group ">
@@ -127,33 +127,45 @@ if(isset($_SESSION['user'])){
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-md-12 spinner_load " style="display:none">
+                                        <div class="card shadow-none">
+                                            <div class="card-body " style="background-image: linear-gradient(to right, rgb(255,255,255), rgb(244,243,239)  ,rgb(255,255,255));">
+                                                <div class="text-center" >
+                                                    <img id="img-spinner" src="../../assets/img/loading/load.gif" style="height:50px">
+                                                    <label class="label">please be patient , your request is being downloaded and may take a minutes...</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <?php
-// $today = date('Y-m-d');
+                                    // $today = date('Y-m-d');
 
-// print_r($data_tanggal);
-$q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
-$q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
-$q_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
-$shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND absensi.shift = '$_GET[shift]' ":'';
-$org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
-// echo mysqli_num_rows($q_div);
+                                    // print_r($data_tanggal);
+                                    $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
+                                    $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
+                                    $q_div = mysqli_query($link, $q_div )or die(mysqli_error($link));
+                                    $shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND absensi.shift = '$_GET[shift]' ":'';
+                                    $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_GET[shift]' ":'';
+                                    // echo mysqli_num_rows($q_div);
 
 
-?>
-        <!-- divisi efficiency -->
-        <div class="col-md-12">
-            <div class="card card-plain">
-                
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="load_data"></div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                    ?>
+                                    <!-- divisi efficiency -->
+                                    <div class="col-md-12">
+                                        <div class="card card-plain">
+                                            
+                                            <div class="card-body ">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div id="load_data"></div>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
                                 </div>
@@ -180,7 +192,9 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
                     url: '../absensi/ajax/get_div.php',
                     method: 'GET',
                     data: {data:data},		
+                    
                     success:function(data){
+
                         $('#s_div').html(data);	// mengisi konten dari -> <div class="modal-body" id="data_siswa">
                         
                     }
@@ -243,7 +257,8 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
         });
         function dataActive(){
             if($(".data-active")[0]){
-
+                var title = $('.data-active').text();
+                $('.title-page').text(title);
                 var div_id = $('#s_div').val();
                 var dept_id = $('#s_dept').val();
                 var section_id = $('#s_section').val();
@@ -269,11 +284,13 @@ $org_shift =  (isset($_GET['shift']) && $_GET['shift'] != '')?" AND shift = '$_G
                     url:url,
                     method:"GET",
                     data:{data:'mp',div_id : div_id, dept_id : dept_id, section_id:section_id,group_id:group_id,deptAcc_id:deptAcc_id,shift:shift,start:start,end:end},
+                    beforeSend:function(){$(".spinner_load").css("display","block").fadeIn('slow');},
                     success:function(data){
                         // $('#load_data').fadeOut('fast', function(){
                         //     $(this).html(data).fadeIn('fast');
                         // });
                         $('#load_data').html(data)
+                        $(".spinner_load").css("display","none")
                     }
                 })
             }

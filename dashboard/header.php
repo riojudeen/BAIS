@@ -513,7 +513,7 @@ if($level >= 4){
                       </a>
                     </li> 
                     <?php
-                    if($level == 3 || $level == 4 || $level == 8){
+                    if($level >= 3 ){
                       ?> 
                     <li class="menu " data-name="mpu" id="mpu">
                       <a href="<?=base_url()?>/dashboard/pages/mp_update.php"><!---link halaman request edit MP--->
@@ -527,6 +527,10 @@ if($level >= 4){
                         <span class="sidebar-normal"> Evaluation Employee </span>
                       </a>
                     </li>
+                    <?php
+                    if($level == 8){
+                      ?>
+
                     <li class="menu d-none" data-name="reqmp" id="reqmp">
                       <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">MR</span>
@@ -539,6 +543,9 @@ if($level >= 4){
                         <span class="sidebar-normal"> Achievement </span>
                       </a>
                     </li>
+                      <?php
+                    }
+                    ?>
                     
                     <?php
                       }else if($level >= 6 ){

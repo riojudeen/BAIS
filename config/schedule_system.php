@@ -124,6 +124,34 @@ function whwithket($link, $shift, $date){
     }
     return array($tglini, $sesudah, $start_time, $end_time, $ket, $wb);
 }
+
+
+function getShiftByTime($link, $date, $time){
+    $str_time = "$time";
+
+    sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
+    $time = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+    // 
+    // echo "curr : ".$time."<br>";
+    $qWH = "SELECT 
+            working_days.ket AS `ket`, 
+            working_days.break_id AS `break_id`,working_days.shift AS `shift`, working_hours.id, TIME_TO_SEC(working_hours.start) AS `start`,  working_hours.end AS `end`
+            FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date'";
+    $cekKet =  mysqli_query($link, $qWH." GROUP BY ket ")or die(mysqli_error($link));
+    $dataKet = mysqli_fetch_assoc($cekKet);
+    $ket = $dataKet['ket'];
+
+    $cekWH = mysqli_query($link, $qWH." AND TIME_TO_SEC(working_hours.start) <= '$time' ")or die(mysqli_error($link));
+    $shift = "";
+    if(mysqli_num_rows($cekWH)>0){
+        while($data = mysqli_fetch_assoc($cekWH)){
+            $shift .= "employee_shift = '$data[shift]' OR ";
+        }
+    }
+    $shift = substr($shift, 0 ,-3);
+    return array($ket, $shift);
+    // return array($tglini, $sesudah, $start_time, $end_time, $ket, $wb);
+}
 function workingHours($link, $shift, $date){
     $cekWH = mysqli_query($link, "SELECT working_hours.id, working_hours.start AS `start`,  working_hours.end AS `end`
     FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));

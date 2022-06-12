@@ -15,7 +15,7 @@ if(isset($_SESSION['user'])){
             $part = partAccess($level, "part");
             $access_org = orgAccess($level);
             $data_access = generateAccess($link,$level,$npkUser);
-            echo $data_access ;
+            // echo $data_access ;
 
             $data_tanggal = json_decode(get_date($mulai, $selesai));
             $filter_date = '';
@@ -139,13 +139,13 @@ if(isset($_SESSION['user'])){
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h5>MP Position</h5>
+                    <h6>Employee Position Movement</h6>
                 </div>
                 <div class="col-md-12">
                     <canvas id="mpTotal-jab" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                 </div>
                 <div class="col-md-12">
-                    <h5>MP Position</h5>
+                    <h6>Employee in Dept Movement</h6>
                 </div>
                 <div class="col-md-12">
                     <canvas id="mpTotal-dept" class="ct-chart ct-perfect-fourth"  height="90"></canvas>

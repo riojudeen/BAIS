@@ -230,7 +230,7 @@ if(isset($_SESSION['user'])){
         $tgl_eval = date('Y-m-t');
         
         $akhir_eval = date('Y-m-t');
-        $mulai_eval = date('Y-m-1', strtotime('-3 months', strtotime($akhir_eval)));
+        $mulai_eval = date('Y-m-1', strtotime('-1 months', strtotime($akhir_eval)));
 
         // echo $akhir_eval;
 
@@ -244,7 +244,10 @@ if(isset($_SESSION['user'])){
             `id_plant`,`id_area`
             FROM `view_organization` ";
 
-        $filter_layoff = " AND id_plant = '1' AND ((SELECT count(`npk`) AS `exp` FROM expatriat WHERE npk = view_organization.npk ) = 0) AND (`status` <> 'P' ) AND (DATE_SUB(ADDDATE(tgl_masuk,INTERVAL '1' YEAR), INTERVAL '1' DAY)  BETWEEN DATE_SUB(tgl_masuk, INTERVAL '3' MONTH ) AND '$akhir_eval' )";
+        $filter_layoff = " AND id_plant = '1' AND ((SELECT count(`npk`) AS `exp` FROM expatriat WHERE npk = view_organization.npk ) = 0) AND (`status` <> 'P' ) AND 
+        (DATE_SUB(ADDDATE(tgl_masuk,INTERVAL '1' YEAR), INTERVAL '1' DAY) 
+        -- tgl_masuk
+         BETWEEN DATE_SUB(tgl_masuk, INTERVAL '1' MONTH ) AND '$akhir_eval' )";
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);
         $table = partAccess($level, "table");
@@ -257,7 +260,7 @@ if(isset($_SESSION['user'])){
 
         $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$filter_layoff.$filter_eval;
         
-        // echo $queryMP;
+        echo $queryMP;
 
         $page = (isset($_GET['page']) && $_GET['page'] != 'undefined')? $_GET['page'] : 1;
         // echo $page;
@@ -308,7 +311,7 @@ if(isset($_SESSION['user'])){
                             <th class="text-nowrap">Jabatan</th>
                             <th class="text-nowrap">Status</th>
                             <th class="text-nowrap sticky-col second-col second-top-col"></th>
-                            <th class="text-nowrap" colspan="2">Status EMK</th>
+                            <!-- <th class="text-nowrap" colspan="2">Status EMK</th> -->
                         </thead>
                         <tbody class="text-nowrap">
                             <?php
@@ -382,11 +385,15 @@ if(isset($_SESSION['user'])){
                                             <td><?=DBtoForm($tgl_eval)?></td>
                                             <td><?=$dataKaryawan['jabatan']?></td>
                                             <td><?=$stats_kontrak?></td>
+                                            
                                             <td>
                                                 <span  class="badge badge-pill badge-<?=$clr?>"><?=$stats?></span>
                                             </td>
+                                            <?php
+                                            /*
                                             <td class="text-<?=$clr?>"><?=$stats_emk?></td>
-                                            
+                                            */
+                                            ?>
                                             
                                         </tr>
         
