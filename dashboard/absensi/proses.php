@@ -696,7 +696,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
                 }else{
                     
                 }
-                return $text;
+                // return $text;
             }
         }
      }else if(isset($_GET['shift_delete_multiple'])){

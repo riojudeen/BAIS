@@ -923,6 +923,7 @@ if(isset($_SESSION['user'])){
                 if (result.value) {
                     if(totalCheck('.mp:checked') > 0){
                         var form = $("#formAbsensi").serialize()
+                        console.log(form);
                         $.ajax({
                             
                             url:getLink,
