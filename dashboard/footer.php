@@ -1,6 +1,7 @@
 <?php
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $link_exception = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/cico/index.php";
+$link_exception2 = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/cico/cico1.php";
 $time_lock = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/time_lock/";
 
 ?>
@@ -491,7 +492,7 @@ $(document).ready(function(){
     });
 </script>
 <?php
-if($actual_link != $link_exception){
+if($actual_link != $link_exception || $actual_link != $link_exception2 ){
     ?>
     <script>
     var autoLockTimer;
