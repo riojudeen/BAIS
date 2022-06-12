@@ -2,8 +2,12 @@
 //////////////////////////////////////////////////////////////////////
 require_once("../../../config/config.php"); 
 if(isset($_SESSION['user'])){
+    $npkUser = $npkUser;
+}else{
+    $npkUser = '0';
+}
     $halaman = "Portal Data Absensi";
-    include_once("../../header.php");
+    include_once("../../header-nomenu.php");
     
     $_SESSION['start'] = (isset($_POST['start']))? dateToDB($_POST['start']) : date('Y-m-1');
     $_SESSION['end'] = (isset($_POST['end']))? dateToDB($_POST['end']) : date('Y-m-d');
@@ -31,7 +35,7 @@ if(isset($_SESSION['user'])){
     $a = "";
     $c = "";
 
-include_once('../../component/migration-nav.php');
+// include_once('../../component/migration-nav.php');
 
 ?>
 <!-- halaman utama -->
@@ -87,73 +91,12 @@ include_once('../../component/migration-nav.php');
         </div>
     </div>
 </div>
-
-<form method="POST">
-<div class="row">
-    <div class="col-md-12" >
-        <div class="card bg-transparent" >
-            <div class="card-body bg-transparent">
-            <div class="row">
-                <div class="col-md-6 border-2">
-                    <div class="input-group border-2 bg-transparent no-border">
-                        <div class="input-group-prepend ">
-                            <div class="input-group-text bg-transparent">
-                                <i class="nc-icon nc-calendar-60"></i>
-                            </div>
-                        </div>
-                        <!-- <input  type="text" name="tahun" class=" form-control datepicker" data-date-format="MM-YYYY"> -->
-                        <input type="text" id="start_date" value="<?=DBtoForm($sM)?>" name="start" data-date-format="DD/MM/YYYY" class="form-control bg-transparent datepicker" >
-                        
-                        <div class="input-group-prepend ml-0 bg-transparent">
-                            <div class="input-group-text px-2 bg-transparent">
-                                <i>to</i>
-                            </div>
-                        </div>
-                        <input type="text" name="end" id="end_date"  value="<?=DBtoForm($eM)?>" data-date-format="DD/MM/YYYY" class="form-control bg-transparent datepicker" >
-                        
-                        <input type="submit" name="sort" class="btn-icon btn btn-round p-0 ml-2 my-auto " value="go" >
-                        
-                    </div>
-                    
-                    <!-- <div class="col-4">
-                        <input class="btn btn-icon btn-round" name="sort" value="go">
-                    </div> -->
-                </div>
-                <div class="col-md-6">
-                    <div class="row">
-                        <div class="col-md-12 float-right text-right">
-                            <ul class="nav nav-pills  nav-pills-primary nav-pills-icons justify-content-end" role="tablist">
-                                
-                                <li class="nav-item">
-                                    <a class="nav-link nav-port " data-toggle="tab" id="nav-ot"  href="#link8" role="tablist">
-                                    <i class="nc-icon nc-box"></i> | 
-                                    Overtime
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link nav-port port-active active" id="nav-att" data-toggle="tab" href="#link9" role="tablist">
-                                    <i class="nc-icon nc-touch-id"></i> | 
-                                    Attendace
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-                
-            </div>
-        </div>
-    </div>
-</div>
-</form>
 <div class="row ">
 
 	<div class="col-md-12 ">
 		<div class="card">
 			<div class="card-header">
-				<h5 class="title pull-left">Database Absensi</h5>
+				<h5 class="title pull-left">Downloader</h5>
                 <div class="box pull-right">
                     
                     <button class="btn btn-sm btn-info" data-toggle="modal" href="#modalExample" role="button" aria-expanded="false" aria-controls="modalExample">
@@ -162,92 +105,14 @@ include_once('../../component/migration-nav.php');
                         </span>
                     Import
                     </button>
-                    <button  class="btn btn-sm btn-danger  deleteall" >
-                        <span class="btn-label">
-                            <i class="nc-icon nc-simple-remove" ></i>
-                        </span>    
-                        Delete
-                    </button>
+                    
                 </div>
 			</div>
-			<div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group no-border">
-                            <select class="form-control" name="div" id="s_div">
-                                <option value="">Pilih Divisi</option>
-                            </select>
-                            <select class="form-control" name="dept" id="s_dept">
-                                <option value="">Pilih Department</option>
-                                <option value="" disabled>Pilih Division Terlebih Dahulu</option>
-                            </select>
-                            <select class="form-control" name="section" id="s_section">
-                                <option value="">Pilih Section</option>
-                                <option value="" disabled>Pilih Department Terlebih Dahulu</option>
-                            </select>
-                            <select class="form-control" name="groupfrm" id="s_goupfrm">
-                                <option value="">Pilih Group</option>
-                                <option value="" disabled>Pilih Section Terlebih Dahulu</option>
-                            </select>
-                            <select class="form-control" name="shift" id="s_shift">
-                                <option value="">Pilih Shift</option>
-                                <?php
-                                    $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
-                                    if(mysqli_num_rows($query_shift)>0){
-                                        while($data = mysqli_fetch_assoc($query_shift)){
-                                            ?>
-                                            <option value="<?=$data['id_shift']?>"><?=$data['shift']?></option>
-                                            <?php
-                                        }
-                                    }else{
-                                        ?>
-                                        <option value="">Belum Ada Data Shift</option>
-                                        <?php
-                                    }
-                                ?>
-                            </select>
-                            <select class="form-control" name="deptacc" id="s_deptAcc">
-                                <option value="">Pilih Department Administratif</option>
-                                <?php
-                                    $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
-                                    if(mysqli_num_rows($q_div) > 0){
-                                        while($data = mysqli_fetch_assoc($q_div)){
-                                        ?>
-                                        <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
-                                        <?php
-                                        }
-                                    }else{
-                                        ?>
-                                        <option value="">Belum Ada Data Department Administratif</option>
-                                        <?php
-                                    }
-                                ?>
-                                </select>
-                            <div class="input-group-append ">
-                                <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="data_preview"></div>
-
-                    </div>
-                </div>
-                <div class="row">
-                    
-                    <div class="col-md-12">
-                        <div class="data-monitor">Belum Ada Data</div>
-
-                    </div>
-                </div>
+            <div class="card-body">
+                <img src="<?=base_url()?>/assets/img/Ilustrasi-astronaut.jpg" alt="" class="vw-100">
             </div>
-            <div class="card-footer">
-                
-            </div>
-		
-		</div>
+        </div>
+			
 	</div>
 </div>
 <!-- halaman utama end -->
@@ -713,7 +578,5 @@ include_once('../../component/migration-nav.php');
     <?php
     
     include_once("../../endbody.php"); 
-} else{
-    echo "<script>window.location='".base_url('auth/login.php')."';</script>";
-  }
+
 ?>

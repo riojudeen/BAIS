@@ -245,7 +245,7 @@ if(isset($_GET['id'])){
                     
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 d-none">
                         <div class="alert alert-danger" role="alert">
                             Selama masa testing untuk membantu pengecekan system pengajuan overtime, 
                             mohon untuk mengupload juga dokumen SPL dengan format dan formulir yang telah disediakan. Terima Kasih!
