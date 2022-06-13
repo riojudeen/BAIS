@@ -635,14 +635,14 @@ if($actual_link != $link_exception || $actual_link != $link_exception2 ){
     $(document).on('click', '.btn', function(){
       $.ajax({
         method : 'POST',
-        url : '/BAIS/dashboard/interaction_counter.php',
+        url : '<?=base_url()?>/dashboard/interaction_counter.php',
         data : {interaction : '1'}
       })
     })
     $(document).on('click', 'a', function(){
       $.ajax({
         method : 'POST',
-        url : '/BAIS/dashboard/interaction_counter.php',
+        url : '<?=base_url()?>/dashboard/interaction_counter.php',
         data : {interaction : '1'}
       })
     })

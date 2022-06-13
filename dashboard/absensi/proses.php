@@ -615,13 +615,13 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
         $query = $query = "INSERT req_absensi (`id` , `npk`, `date` , `shift` , `date_in`, `date_out`, `check_in`, `check_out`, `keterangan` , `requester`,`status`, `req_status`, `req_date`, `note`, `shift_req`, `id_absensi` ) 
              VALUES ";
 
-        $npk = $_POST['npk'];
-        $shift = $_POST['shift'][0];
-        $type = $_POST['code'];
-        $alasan = $_POST['note'];
-        $i = 0;
-        $reqStats = 'a';
-        $status = '25';
+            $npk = $_POST['npk'];
+            $shift = $_POST['shift'][0];
+            $type = $_POST['code'];
+            $alasan = $_POST['note'];
+            $i = 0;
+            $reqStats = 'a';
+            $status = '25';
         
         foreach($_POST['sd'] AS $tgl){
             
