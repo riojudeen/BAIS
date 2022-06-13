@@ -8,8 +8,8 @@ if(isset($_SESSION['user'])){
         
         if($_GET['data'] == 'mp'){
 
-            $mulai = $_GET['start'] = '2022-06-01' ;
-            $selesai = $_GET['end'] ='2022-06-30' ;
+            $mulai = $_GET['start'] ;
+            $selesai = $_GET['end']  ;
             // echo  $_GET['end'];
             $today = date('Y-m-d');
             
@@ -142,13 +142,14 @@ if(isset($_SESSION['user'])){
             `bais_db`.`absensi`.`check_in` AS `check_in`,
             `bais_db`.`absensi`.`check_out` AS `check_out`,
             `bais_db`.`absensi`.`ket` AS `CODE`,
+            `req_absensi`.`req_date` AS `req_date`,
+            `req_absensi`.`keterangan` AS `req_code`,
             `bais_db`.`attendance_code`.`keterangan` AS `keterangan`,
             `bais_db`.`attendance_code`.`type` AS `att_type`,
             `bais_db`.`attendance_code`.`alias` AS `att_alias`, 
             
-            IF(req_absens.date <= req_absens.date , '1' 
-                , '0' 
-            ) AS schedule
+            IF(req_absensi.req_date <= req_absensi.date , '1', '0' 
+            ) AS `schedule`
 
             
         FROM `bais_db`.`absensi`
@@ -301,8 +302,225 @@ if(isset($_SESSION['user'])){
                 <div class="col-md-12">
                     <canvas id="mpTotal-mangkir" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                 </div>
-            </div>
+                <div class="col-md-12">
+                    <canvas id="mp-telat" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
+                </div>
+                <div class="col-md-12">
+                    <canvas id="chartHours" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
+                </div>
+                <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script> -->
+<!-- <canvas id="myChart"></canvas> -->
 
+            </div>
+            <script>
+                $(document).ready(function(){
+                    chartColor = "#FFFFFF";
+
+    ctx = document.getElementById('chartHours').getContext("2d");
+
+    myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct"],
+        datasets: [{
+            borderColor: "#6bd098",
+            backgroundColor: "#6bd098",
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            borderWidth: 3,
+            data: [300, 310, 316, 322, 330, 326, 333, 345, 338, 354]
+          },
+          {
+            borderColor: "#f17e5d",
+            backgroundColor: "#f17e5d",
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            borderWidth: 3,
+            data: [320, 340, 365, 360, 370, 385, 390, 384, 408, 420]
+          },
+          {
+            borderColor: "#fcc468",
+            backgroundColor: "#fcc468",
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            borderWidth: 3,
+            data: [370, 394, 415, 409, 425, 445, 460, 450, 478, 484]
+          }
+        ]
+      },
+      options: {
+
+        legend: {
+
+          display: false
+        },
+
+        tooltips: {
+          enabled: false
+        },
+
+        scales: {
+          yAxes: [{
+
+            ticks: {
+              fontColor: "#9f9f9f",
+              beginAtZero: false,
+              maxTicksLimit: 5,
+              //padding: 20
+            },
+            gridLines: {
+              drawBorder: false,
+              zeroLineColor: "transparent",
+              color: 'rgba(255,255,255,0.05)'
+            }
+
+          }],
+
+          xAxes: [{
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: 'rgba(255,255,255,0.1)',
+              zeroLineColor: "transparent",
+              display: false,
+            },
+            ticks: {
+              padding: 20,
+              fontColor: "#9f9f9f"
+            }
+          }]
+        },
+      }
+    });
+
+                })
+            </script>
+            <script>
+                $(document).ready(function(){
+//                     var labels = ['2018-12-20 14:00', '2018-12-20 15:00', '2018-12-20 16:00', '2018-12-20 17:00', '2018-12-20 18:00', '2018-12-20 19:00', '2018-12-20 23:00'];
+// var data = [256,24,14,12,154,123,23,254,145,123,11,255];
+
+// var ctx = document.getElementById("myChart").getContext('2d');
+// var myChart = new Chart(ctx, {
+//    type: 'line',
+//    data: {
+//       labels: labels,
+//       datasets: [{
+//          label: 'Tickets selling',
+//          data: data,
+//          borderWidth: 1
+//       }]
+//    },
+//    options: {
+//       scales: {
+//          xAxes: [{
+//             ticks: {
+//                 autoSkip: true,
+//                 maxTicksLimit: 20,
+//                 maxRotation: 0,
+//             },
+//             type: 'time',
+//             time: {
+//                unit: 'hour',
+//                displayFormats: {
+//                   hour: 'HH:mm'
+//                }
+//             }
+//          }]
+//       },
+//    }
+// });
+
+
+                    var s1 = {
+                    label: 'Nama Karyawan',
+                    borderColor: '#335e5',
+                    data: [{
+                        x: '2017-01-06 00:00:30',
+                        y: '2017-01-06 04:15:30'
+                        },
+                        {
+                        x: '2017-01-07 00:00:00',
+                        y: '2017-01-06 07:39:30'
+                        },
+                        {
+                        x: '2017-01-08 00:00:00',
+                        y: '2017-01-06 06:39:30'
+                        },
+                        {
+                        x: '2017-01-09 00:00:00',
+                        y: '2017-01-06 08:00:30'
+                        },
+                        {
+                        x: '2017-01-10 00:00:00',
+                        y: '2017-01-06 05:39:30'
+                        },
+                        {
+                        x: '2017-01-11 00:00:00',
+                        y: '2017-01-06 09:39:30'
+                        },
+                        {
+                        x: '2017-01-06 00:00:30',
+                        y: '2017-01-06 04:15:30'
+                        },
+                        {
+                        x: '2017-01-07 00:00:00',
+                        y: '2017-01-06 07:39:30'
+                        },
+                        {
+                        x: '2017-01-08 00:00:00',
+                        y: '2017-01-06 06:39:30'
+                        },
+                        {
+                        x: '2017-01-09 00:00:00',
+                        y: '2017-01-06 08:00:30'
+                        },
+                        {
+                        x: '2017-01-10 00:00:00',
+                        y: '2017-01-06 05:39:30'
+                        },
+                        {
+                        x: '2017-01-11 00:00:00',
+                        y: '2017-01-06 09:39:30'
+                        },
+                    ]
+                    };
+                    var ctx = document.getElementById('mp-telat').getContext('2d');
+                    var chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [s1]
+                    },
+                    options: {
+                        legend: {
+                        display: false
+                        },
+                        scales: {
+                        xAxes: [{
+                            type: 'time',
+                            weight: 0,
+                            time: {
+                            unit: 'day'
+                            }
+                        }],
+                        yAxes: [{
+                            type: 'time',
+                            time: {
+                            unit: 'hour'
+                            },
+                            ticks: {
+                            // reverse: true,
+                            beginAtZero: true
+                            }
+                        }]
+                        }
+                    }
+                    });
+
+                    chart.canvas.parentNode.style.height = '380px';
+                    chart.canvas.parentNode.style.width = '700px';
+                })
+            </script>
             <script>
                 $(document).ready(function(){
                 
