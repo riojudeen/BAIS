@@ -101,7 +101,7 @@ if(isset($_SESSION['lock']) && $cekUser == sha1($_SESSION['lock'])){
           <li class="nav-item ">
             <a href="<?=base_url('')?>" class="nav-link">
               <i class="nc-icon nc-book-bookmark"></i>
-              General Informasi
+              CAIS
             </a>
           </li>
          

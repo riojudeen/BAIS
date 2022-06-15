@@ -15,7 +15,7 @@ include("../../../config/config.php");
         // echo $tanggal;
         $dept_account = ($_GET['dept_account'] != '')?" AND org.dept_account = '$_GET[dept_account]' ":'';
         $shift = ($_GET['shift'] != '')?" AND karyawan.shift = '$_GET[shift]'" :'' ;
-        echo $dept_account;
+        // echo $dept_account;
         $q_org = "SELECT `id`,`nama_org`,`cord`,`nama_cord`,`id_parent`,`part` FROM view_cord_area ";
         $q_div = $q_org." WHERE id_parent = '1' AND part = 'division'";
         $s_div = mysqli_query($link, $q_div )or die(mysqli_error($link));

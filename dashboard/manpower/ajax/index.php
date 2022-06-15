@@ -260,7 +260,7 @@ if(isset($_SESSION['user'])){
 
         $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$filter_layoff.$filter_eval;
         
-        echo $queryMP;
+        // echo $queryMP;
 
         $page = (isset($_GET['page']) && $_GET['page'] != 'undefined')? $_GET['page'] : 1;
         // echo $page;

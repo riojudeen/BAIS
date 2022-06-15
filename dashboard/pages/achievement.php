@@ -17,7 +17,15 @@ if(isset($_SESSION['user'])){
     if($level >=1 && $level <=8){
         ?>
         <div class="row">
-
+            <div class="col-md-12">
+                <div class="alert alert-info alert-with-icon alert-dismissible fade show" data-notify="container">
+                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                    <i class="nc-icon nc-simple-remove"></i>
+                    </button>
+                    <span data-notify="icon" class="nc-icon nc-bell-55"></span>
+                    <span data-notify="message">Under Optimizing</span>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-3">

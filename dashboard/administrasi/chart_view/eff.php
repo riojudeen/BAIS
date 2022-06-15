@@ -33,24 +33,30 @@ include("../../../config/approval_system.php");
               foreach($data_tanggal AS $tgl ){
                 $hariIni = strtotime(date('Y-m-d'));
                 $date_str = strtotime($date);
-                list($ket, $shift) = getShiftByTime($link, $date, date('H:i:s'));
+                list($ket, $shift) = getShiftByTime2($link, $date, date('H:i:s'));
                 if($date_str == $hariIni ){
                     if($shift != ''){
-                        $add_shift = " AND ( $shift ) ";
+                        $shift = " AND ( $shift ) ";
                     }else{
-                        $add_shift = '';
+                        $shift = '';
                     }
                 }else{
-                    $add_shift = '';
+                    $shift = '';
                 }
-
+                // echo "SELECT absensi.npk FROM absensi 
+                // LEFT JOIN attendance_code 
+                // ON attendance_code.kode = absensi.ket 
+        
+                // LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
+                // JOIN org ON org.npk = absensi.npk 
+                // WHERE  absensi.date = '$tgl' AND org.division = '$div[id]' AND org.dept_account = '$data_dept_account[id]' ".$add_shift;
                 $q_abs_dept ="SELECT absensi.npk FROM absensi 
                     LEFT JOIN attendance_code 
                     ON attendance_code.kode = absensi.ket 
             
                     LEFT JOIN attendance_alias ON attendance_alias.id = attendance_code.alias 
                     JOIN org ON org.npk = absensi.npk 
-                    WHERE  absensi.date = '$tgl' AND org.division = '$div[id]' AND org.dept_account = '$data_dept_account[id]' ".$add_shift;
+                    WHERE  absensi.date = '$tgl' AND org.division = '$div[id]' AND org.dept_account = '$data_dept_account[id]' ";
                 $q_masuk_dept = " AND ( absensi.ket = '' OR attendance_alias.id = '1' OR attendance_alias.id = '2' 
                     OR attendance_alias.id = '3')";
                 $q_ijin_dept = " AND ( attendance_alias.id = '4' OR attendance_alias.id = '5' 
@@ -349,7 +355,7 @@ include("../../../config/approval_system.php");
                                 
                             </div>
                             <div class="card-footer my-0">
-                            <a href="?dept=<?=$dept['id']?>" class="stretched-link"></a>
+                            <!-- <a href="?dept=<?=$dept['id']?>" class="stretched-link"></a> -->
                             </div>
                         </div>
                     </div>

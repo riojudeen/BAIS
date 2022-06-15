@@ -44,7 +44,10 @@ if(isset($_SESSION['user'])){
     while ($file    =readdir($open)) {
         if($file !='.' && $file !='..'){   
             // $files[]=$file;
-            array_push($files, $file);
+            if($file != 'Thumbs.db'){
+                array_push($files, $file);
+            }
+            // array_push($files, $file);
         }
     }
     $jml = count($files);

@@ -273,6 +273,8 @@ function authText($code){
     }
     return $text;
 }
+
+
 function authApprove($level, $request, $app){
     // jika meminta approve
     if($app == "approved"){

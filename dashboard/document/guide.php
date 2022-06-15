@@ -46,16 +46,16 @@ if(isset($_SESSION['user'])){
                                             Getting Started!
                                             </a>
                                         </li>
-                                        <li class="nav-item">
+                                        <!-- <li class="nav-item">
                                             <a class="nav-link nav-port " data-toggle="tab" id="nav-dashboard"  href="#link8" role="tablist">
                                             <i class="nc-icon nc-box"></i> | 
                                             Dashboard
                                             </a>
-                                        </li>
+                                        </li> -->
                                         <li class="nav-item">
                                             <a class="nav-link nav-port " data-toggle="tab" id="nav-org"  href="#link8" role="tablist">
                                             <i class="nc-icon nc-box"></i> | 
-                                            Organization
+                                            Employee Data
                                             </a>
                                         </li>
                                         <li class="nav-item">
@@ -70,18 +70,18 @@ if(isset($_SESSION['user'])){
                                             Overtime
                                             </a>
                                         </li>
-                                        <li class="nav-item ">
+                                        <!-- <li class="nav-item ">
                                             <a class="nav-link nav-port port-active " id="nav-administrator" data-toggle="tab" href="#link9" role="tablist">
                                             <i class="nc-icon nc-touch-id"></i> | 
                                             Control Setings
                                             </a>
-                                        </li>
-                                        <li class="nav-item ">
+                                        </li> -->
+                                        <!-- <li class="nav-item ">
                                             <a class="nav-link nav-port port-active " id="nav-document" data-toggle="tab" href="#link9" role="tablist">
                                             <i class="nc-icon nc-touch-id"></i> | 
                                             Documents & Forms
                                             </a>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </div>
                             </div>

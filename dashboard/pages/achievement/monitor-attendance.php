@@ -81,7 +81,7 @@ if(isset($_SESSION['user'])){
             // list($status, $req_status) = pecahProg("$_GET[prog]");
             $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
             $query_req_absensi = filtergenerator($link, $level, $generate, $origin_query, $access_org);
-            echo $query_req_absensi;
+            // echo $query_req_absensi;
             "SELECT
             `bais_db`.`absensi`.`id` AS `id_absensi`,
             `bais_db`.`absensi`.`npk` AS `npk`,
@@ -302,10 +302,10 @@ if(isset($_SESSION['user'])){
                 <div class="col-md-12">
                     <canvas id="mpTotal-mangkir" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 d-none">
                     <canvas id="mp-telat" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-12 d-none">
                     <canvas id="chartHours" class="ct-chart ct-perfect-fourth"  height="90"></canvas>
                 </div>
                 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script> -->

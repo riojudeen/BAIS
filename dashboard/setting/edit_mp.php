@@ -26,7 +26,7 @@ if(isset($_SESSION['user'])){
             view_organization.id_area AS area
             FROM view_organization WHERE npk = '$npk' ")or die(mysqli_error($link));
         $dMp = mysqli_fetch_assoc($sMp);
-        echo $dMp['division'];
+        // echo $dMp['division'];
         // explod nick name
         $pecah_nick = explode(" " , $dMp['nama']);
         $nick = $pecah_nick[0];

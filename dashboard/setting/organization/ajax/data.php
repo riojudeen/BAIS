@@ -196,7 +196,14 @@ if(isset($_SESSION['user'])){
                     </ul>
                 </div>
                 <div class="col-md-6 text-right">
-                <a href="" class="btn btn-sm btn-warning editall ">Edit data</a>
+                    <?php
+                    if($level >= 6){
+                        ?>
+                        <a href="" class="btn btn-sm btn-warning editall ">Edit data</a>
+                        <?php
+                    }
+                    ?>
+                    
                 </div>
             </div>
             <?php

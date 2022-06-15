@@ -16,6 +16,7 @@ if(!isset($_SESSION['user'])){
     
 ?>
 <div class="row">
+    
     <div class="col-md-2">
         <div class="form-group-sm pr-1">
             <select name="show_dept" id="show_dept" class="form-control">
@@ -59,14 +60,24 @@ if(!isset($_SESSION['user'])){
             <span class=" col-md-2 nav-link text-danger btn-magnify mt-0 mx-0 px-2"> <i class="fas fa-th-large"></i></span>
         </div>
     </div>
+    
 </div>
 <hr class="my-1">
 <div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info alert-with-icon alert-dismissible fade show" data-notify="container">
+            <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="nc-icon nc-simple-remove"></i>
+            </button>
+            <span data-notify="icon" class="nc-icon nc-bell-55"></span>
+            <span data-notify="message">Under Optimizing</span>
+        </div>
+    </div>
     <div class="col-md-12 spinner_load " style="display:none">
         <div class="card shadow-none">
             <div class="card-body " style="background-image: linear-gradient(to right, rgb(244,243,239) , rgb(255,255,255) , rgb(244,243,239));">
                 <div class="text-center" >
-                    <img id="img-spinner" src="../../assets/img/loading/load.gif" style="height:50px">
+                    <img id="img-spinner" src="../../assets/img/loading/load.gif" style="height:20px">
                     <label class="label">please wait downloading resources...</label>
                 </div>
             </div>
@@ -86,6 +97,7 @@ if(!isset($_SESSION['user'])){
         </div>
     </div>
 </div>
+
 <div class="row data-dept-eff"></div>
 <?php
     include_once("../footer.php");
@@ -105,11 +117,12 @@ if(!isset($_SESSION['user'])){
                     beforeSend:function(){$(".spinner_load").css("display","block").fadeIn('slow');},
                     success:function(data){
                        
-                        $('.data-eff').fadeOut('slow', function(){
+                        // $('.data-eff').fadeOut('slow', function(){
                             $(".spinner_load").css("display","none")
-                            $(this).html(data).fadeIn('slow');
+                            $('.data-eff').html(data);
+                            // $(this).html(data).fadeIn('slow');
                             
-                        });
+                        // });
                     }
                 })
             }

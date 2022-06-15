@@ -528,15 +528,9 @@ if($level >= 4){
                       </a>
                     </li>
                     <?php
-                    if($level == 8){
+                    if($level > 3){
                       ?>
 
-                    <li class="menu d-none" data-name="reqmp" id="reqmp">
-                      <a href="<?=base_url()?>/dashboard/manpower/req_manpower.php"><!---link halaman request edit MP--->
-                        <span class="sidebar-mini-icon">MR</span>
-                        <span class="sidebar-normal"> Employee Update Request </span>
-                      </a>
-                    </li>
                     <li class="menu" data-name="acharea" id="acharea">
                       <a href="<?=base_url()?>/dashboard/pages/achievement.php"><!---link halaman request edit MP--->
                         <span class="sidebar-mini-icon">AA</span>
@@ -951,10 +945,10 @@ if($level >= 4){
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Personal Site</a>
-                  <a class="dropdown-item" href="#">HRIS</a>
-                  <a class="dropdown-item" href="#">MOS</a>
-                  <a class="dropdown-item" href="<?=base_url()?>/dashboard/setting/portBlast.php">Report Issue</a>
+                  <a class="dropdown-item"  target="blank" href="http://hrd.daihatsu.astra.co.id/hrd-site/index.php">Personal Site</a>
+                  <a class="dropdown-item" target="blank" href="https://adm-hrd.daihatsu.astra.co.id/PM2/Default.aspx">HRIS</a>
+                  <a class="dropdown-item" target="blank" href="//10.59.12.51/CAIS">CAIS</a>
+                  <a class="dropdown-item" target="blank" href="<?=base_url()?>/dashboard/setting/portBlast.php">Report Issue</a>
                 </div>
               </li>
               <?php

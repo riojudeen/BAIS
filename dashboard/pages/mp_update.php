@@ -314,7 +314,7 @@ if(isset($_SESSION['user'])){
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="fr"></a>
+                                                    <!-- <a href="" class="stretched-link view_data" id="fr"></a> -->
                                                 </div>
                                             </div>
                                         <!-- </div>
@@ -337,7 +337,7 @@ if(isset($_SESSION['user'])){
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="tl"></a>
+                                                    <!-- <a href="" class="stretched-link view_data" id="tl"></a> -->
                                                 </div>
                                             </div>
                                         <!-- </div>
@@ -360,7 +360,7 @@ if(isset($_SESSION['user'])){
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="p"></a>
+                                                    <!-- <a href="" class="stretched-link view_data" id="p"></a> -->
                                                 </div>
                                             </div>
                                         <!-- </div>
@@ -383,7 +383,7 @@ if(isset($_SESSION['user'])){
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="k2"></a>
+                                                    <!-- <a href="" class="stretched-link view_data" id="k2"></a> -->
                                                 </div>
                                             </div>
                                         <!-- </div>
@@ -406,7 +406,7 @@ if(isset($_SESSION['user'])){
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <a href="" class="stretched-link view_data" id="k1"></a>
+                                                    <!-- <a href="" class="stretched-link view_data" id="k1"></a> -->
                                                 </div>
                                             </div>
                                         <!-- </div> -->
