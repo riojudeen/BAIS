@@ -472,14 +472,14 @@ if($level >= 4){
                     </li>
                     <li class="menu" data-name="lisbl" id="lisbl">
                       <a href="<?=base_url()?>/dashboard/document/hospital.php?data=BL"><!---link halaman request edit MP--->
-                        <span class="sidebar-mini-icon">BL</span>
-                        <span class="sidebar-normal"> BlackListed Hospital </span>
+                        <span class="sidebar-mini-icon">CB</span>
+                        <span class="sidebar-normal"> Clinic Blacklist </span>
                       </a>
                     </li>
                     <li class="menu" data-name="lisrc" id="lisrc">
                       <a href="<?=base_url()?>/dashboard/document/hospital.php?data=RH"><!---link halaman request edit MP--->
-                        <span class="sidebar-mini-icon">RH</span>
-                        <span class="sidebar-normal"> Recomended Hospital </span>
+                        <span class="sidebar-mini-icon">CR</span>
+                        <span class="sidebar-normal"> Clinic Recomendation </span>
                       </a>
                     </li>
                   </ul>

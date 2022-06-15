@@ -11,7 +11,7 @@ if(isset($_SESSION['user']) && $level >=1 && $level <=8){
             $ot_activity = trim(mysqli_real_escape_string($link,$_POST['input_ot_activity'.$i]));
             array_push($input_activity,$ot_activity);
         }
-        print_r($input_activity);
+        // print_r($input_activity);
         if((in_array('', $input_activity)) ){
             
             ?>

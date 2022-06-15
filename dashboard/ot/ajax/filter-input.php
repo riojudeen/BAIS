@@ -98,7 +98,7 @@ for($i=1 ; $i <= $_GET['count']; $i++){
         
         <div class="col-md-3 pr-1">
             <div class="form-group">
-                <label for="">Waktu Mulai</label>
+                <label for="">Waktu Mulai #<?=$i?></label>
                 <?php
                     if($type == 'EO'){
                         if($i == $_GET['count']){
@@ -136,7 +136,7 @@ for($i=1 ; $i <= $_GET['count']; $i++){
         </p>
         <div class="col-md-3 pr-1">
             <div class="form-group">
-                <label for="">Waktu Selesai <?=$_GET['count']?> <?=$i?></label>
+                <label for="">Waktu Selesai #<?=$i?></label>
                 <input type="time" <?=$disabled_end?> name="waktu_selesai<?=$i?>" value="<?=jam($end_time)?>" data-id="<?=$i?>" class="form-control no-border end_time" id="end_time<?=$i?>" required>
             </div>
         </div>

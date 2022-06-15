@@ -57,7 +57,7 @@ if(isset($_SESSION['user'])){
     }else if($_POST['data_npk']){
         $npk = $_POST['data_npk'];
         if($npk == $npkUser){
-            $back = $npkUser;
+            $back = 'me';
         }else{
             $back = $npk;
         }

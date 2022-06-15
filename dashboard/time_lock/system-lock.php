@@ -62,7 +62,7 @@ $redirect_lock = $redirect_lock;
 
     $queryLock = mysqli_query($link, $time_query." AND (`type` = '$part_lock') ")or die(mysqli_error($link));
     
-    echo $part_lock;
+    // echo $part_lock;
     
     if(mysqli_num_rows($queryLock_redirect)>0 && $level < 6){
         ?>

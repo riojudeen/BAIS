@@ -349,7 +349,7 @@ if(isset($_GET['id'])){
      
      $filterProg = ($_GET['prog'] != '' )?" AND CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) = '$_GET[prog]' ":"";
      $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$add_filter_monitor.$add_tanggal.$filterProg.$gabungProses;
-      echo $queryMP;
+    //   echo $queryMP;
         ?>
         <div class="row">
 
