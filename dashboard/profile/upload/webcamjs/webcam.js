@@ -573,12 +573,12 @@ var Webcam = {
 			if ((args[0] instanceof FlashError) || (args[0] instanceof WebcamError)) {
 				message = args[0].message;
 			} else {
-				message = "Could not access webcam: " + args[0].name + ": " + 
+				message = "Device anda harus ganti biar ada webcam nya wkwkw :): " + args[0].name + ": " + 
 					args[0].message + " " + args[0].toString();
 			}
 
 			// default error handler if no custom one specified
-			alert("Webcam.js Error: " + message);
+			alert("Error : " + message);
 		}
 		
 		return false; // no hook defined

@@ -559,7 +559,7 @@ if(isset($_SESSION['user'])){
 				
 			})
 		</script>
-		<script type="text/javascript" src="upload/webcamjs/webcam.min.js"></script>
+		<script type="text/javascript" src="upload/webcamjs/webcam.js"></script>
 
 <!-- Code to handle taking the snapshot and displaying it locally -->
 		<script language="JavaScript">
@@ -574,6 +574,7 @@ if(isset($_SESSION['user'])){
 					jpeg_quality: 90
 				});
 				Webcam.attach( '#my_camera' );
+				
 			}
 			// A button for taking snaps
 			
