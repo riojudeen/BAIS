@@ -462,4 +462,17 @@ function WD($link, $shift, $tanggal){
 
     return array($tglMasuk, $tglPulang, $checkIn, $checkOut, $jml);
 }
+$q = "SELECT SUM(jml_ot) AS jm_ot,  working_days.id,working_days.date,working_days.wh,working_days.shift,working_days.ket,working_days.break_id FROM working_days 
+LEFT JOIN (
+    SELECT npk , SUM(over_time) AS jml_ot, COUNT(npk) AS mp_ot, work_date,  sub_post, post, grp, sect, dept, dept_account , division, plant FROM view_req_ot_bulk GROUP BY npk, work_date , sub_post, post, grp, sect, dept, dept_account , division, plant
+) view_req_ot_bulk  ON view_req_ot_bulk.work_date = working_days.date GROUP BY working_days.date, view_req_ot_bulk.sub_post, view_req_ot_bulk.post, view_req_ot_bulk.grp, view_req_ot_bulk.sect, view_req_ot_bulk.dept, view_req_ot_bulk.dept_account , view_req_ot_bulk.division, view_req_ot_bulk.plant ";
+$sql = mysqli_query($link, $q)or die(mysqli_error($link));
+if(mysqli_num_rows($sql)>0){
+    while($data = mysqli_fetch_assoc($sql)){
+        echo $data['date']."-".$data['jm_ot']."<br>";
+    }
+}else{
+    echo "tidak ada data";
+}
+echo "tes";
 ?>
