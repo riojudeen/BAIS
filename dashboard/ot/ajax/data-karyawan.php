@@ -109,7 +109,7 @@ if(isset($_SESSION['user'])){
         // echo $group_filter;
         
         $queryMP = filtergenerator($link, $level, $generate, $origin_query, $access_org).$add_filter.$npk_karyawan.$filter_shift;
-        // echo $queryMP;
+        echo $queryMP;
         
         $init_group = initial(getOrgName($link, $group, 'group'));
         $init_div = initial(getOrgName($link, $div, 'division'));

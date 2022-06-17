@@ -71,16 +71,30 @@ if(!$link){
 
 //membuat base url , biasanya digunakan jika project diupload di web hosting sehingga base url akan sesuai//
 function base_url($url = null){
-    $base_url = "/BAIS";
+    if($_SERVER['HTTP_HOST'] !== '10.59.12.51' ){
+        $base_url = "/BAIS";
     //jika ada url /url = null //
-    if($url != null){
-        //maka url akan berubah menjadi http://localhost/BAIS + /url direktori//
-        return $base_url."/".$url;
+        if($url != null){
+            //maka url akan berubah menjadi http://localhost/BAIS + /url direktori//
+            return $base_url."/".$url;
+        }
+            //jika tidak ada url , maka url akan berubah menjadi http://localhost/BAIS saja
+        else {
+            return $base_url;
+        }
+    }else{
+        $base_url = "/CAIS/BAIS";
+        //jika ada url /url = null //
+        if($url != null){
+            //maka url akan berubah menjadi http://localhost/BAIS + /url direktori//
+            return $base_url."/".$url;
+        }
+            //jika tidak ada url , maka url akan berubah menjadi http://localhost/BAIS saja
+        else {
+            return $base_url;
+        }
     }
-        //jika tidak ada url , maka url akan berubah menjadi http://localhost/BAIS saja
-    else {
-        return $base_url;
-    }
+    
 }
 function shift_ubah($shift_){
     $shiftHR = $shift_ ;
@@ -983,5 +997,8 @@ function cariAtasan($link, $npk, $id_area){
     // $data = mysqli_fetch_assoc($sql);
     // $id_area = $data['id_area'];
     // return $id_area;
+}
+if($_SERVER['HTTP_HOST'] === '10.59.12.51' ){
+    error_reporting(0);
 }
 ?>

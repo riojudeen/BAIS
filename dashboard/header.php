@@ -1,5 +1,6 @@
 <?php
-// error_reporting(0);
+
+
 // untuk sidebar dan active color
 $sidebar_color = (isset($_SESSION['sidebar_color']))?$_SESSION['sidebar_color']:'default';
 $active_color = (isset($_SESSION['active_color']))?$_SESSION['active_color']:'danger';
@@ -1006,4 +1007,19 @@ if($level >= 4){
             </div>
 
         </div>
+        <?php
+        if($_SERVER['HTTP_HOST'] !== '10.59.12.51' ){
+            ?>
+            <div class="alert alert-danger alert-with-icon alert-dismissible fade show" data-notify="container">
+              <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                <i class="nc-icon nc-simple-remove"></i>
+              </button>
+              <span data-notify="icon" class="nc-icon nc-bell-55"></span>
+              <span data-notify="message">Saat ini anda mengakses Server BAIS versi ALPHA.. <br> untuk mengakses BAIS X.1.2 (B E T A) di server utama , klik 
+              <a href="10.59.12.51/CAIS" class="text-upeercase title" >10.59.12.51/CAIS</a> dan login dengan akun CAIS anda!!! </span>
+              
+            </div>
+            <?php
+        }
+        ?>
         

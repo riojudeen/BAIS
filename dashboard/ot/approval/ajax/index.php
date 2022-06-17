@@ -144,7 +144,7 @@ if(isset($_SESSION['user'])){
                     // echo $query_req_overtime.$addOrder.$addLimit;
                     if(mysqli_num_rows($sql)>0){
                         while($data = mysqli_fetch_assoc($sql)){
-                            $query_absen = mysqli_query($link, "SELECT view_absen_hr.check_in, view_absen_hr.check_in FROM view_absen_hr WHERE npk = '$data[npk]' AND work_date = '$data[work_date]' ")or die(mysqli_error($link));
+                            $query_absen = mysqli_query($link, "SELECT view_absen_hr.check_in, view_absen_hr.check_out FROM view_absen_hr WHERE npk = '$data[npk]' AND work_date = '$data[work_date]' ")or die(mysqli_error($link));
                             $data_abs = mysqli_fetch_assoc($query_absen);
                             $ci = (isset($data_abs['check_in']) AND $data_abs['check_in'] != '00:00:00' )?jam($data_abs['check_in']):"-";
                             $co = (isset($data_abs['check_out']) AND $data_abs['check_out'] != '00:00:00' )?jam($data_abs['check_out']):"-";
