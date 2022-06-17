@@ -563,7 +563,6 @@ if(isset($_SESSION['user'])){
 
 <!-- Code to handle taking the snapshot and displaying it locally -->
 		<script language="JavaScript">
-			
 			// Configure a few settings and attach camera
 			function configure(){
 				$('.upload-foto').prop('disabled', true)
