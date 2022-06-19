@@ -19,11 +19,11 @@ if(isset($_POST['add'])){
     // echo $sql;
     if($add){
         $_SESSION['info'] = 'Disimpan';
-        echo "<script>document.location.href='../index.php#ws'</script>";
+        echo "<script>document.location.href='../index.php?tab=ws'</script>";
     }else{
         
         $_SESSION['info'] = 'Gagal Disimpan';
-        echo "<script>document.location.href='../index.php#ws'</script>";
+        echo "<script>document.location.href='../index.php?tab=ws'</script>";
     }
 }else if(isset($_GET['del'])){
     $query = "DELETE FROM working_day_shift WHERE  id = '$_GET[del]'";
@@ -31,10 +31,10 @@ if(isset($_POST['add'])){
     if($sql){
 
         $_SESSION['info'] = 'Dihapus'; 
-        echo "<script>document.location.href='../index.php#ws'</script>";
+        echo "<script>document.location.href='../index.php?tab=ws'</script>";
     }else{
         $_SESSION['info'] = 'Gagal Dihapus'; 
-        echo "<script>document.location.href='../index.php#ws'</script>";
+        echo "<script>document.location.href='../index.php?tab=ws'</script>";
     }
     
 }else if(isset($_POST['edit'])){
@@ -46,10 +46,10 @@ if(isset($_POST['add'])){
     
     if($sql){
         $_SESSION['info'] = 'Disimpan'; 
-        echo "<script>document.location.href='../index.php#wh'</script>";    
+        echo "<script>document.location.href='../index.php?tab=ws'</script>";    
     }else{
         $_SESSION['info'] = 'Gagal Disimpan';
-        echo "<script>document.location.href='../index.php#wh'</script>";    
+        echo "<script>document.location.href='../index.php?tab=ws'</script>";    
     }
     
 

@@ -681,6 +681,31 @@ if($actual_link != $link_exception2){
   })
 </script>
 <?php
+// $qry_SPL = mysqli_query($link, "SELECT SUM(npk) FROM view_req_ot WHERE ")
+?>
+<script>
+    // showNotification5('bottom','right')
+    function showNotification5(from, align){
+    color = 1;
+    // 4 danger //untuk notifikasi pengajuan bermasalah
+    // 3 warning //untuk reminder pengajuan
+    // 1 info //informasi 
+    // 2 success
+    $.notify({
+      icon: 'far fa-calendar-check',
+      message: '<h6><strong>Anda belum Membuat SPL hari ini</strong></h6><i><em>notifikasi hilang anda sudah membuat dan mengajukan spl hari ini</em></i>'
+
+    },{
+      type: type[1],
+      timer: false,
+      placement: {
+        from: from,
+        align: align
+      }
+    });
+  }
+</script>
+<?php
 $i = 1;
 $query_notif = "SELECT info, publisher, title, category, stats, date_start, date_end, `image` FROM info 
 WHERE (category = 'at' 
@@ -735,7 +760,7 @@ if(mysqli_num_rows($sqlNotif)>0 ){
 
           },{
             type: type[<?=$color?>],
-            timer: 5000,
+            timer: 1000,
             placement: {
               from: from,
               align: align

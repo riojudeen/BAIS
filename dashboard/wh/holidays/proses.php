@@ -23,15 +23,15 @@ if(isset($_POST['add'])){
     
     if($add){
         $_SESSION['info'] = 'Disimpan';
-        echo "<script>document.location.href='../index.php#holiday'</script>";
+        echo "<script>document.location.href='../index.php?tab=holidays'</script>";
     }else{
         $_SESSION['info'] = 'Gagal Disimpan';
-        echo "<script>document.location.href='../index.php#holiday'</script>";
+        echo "<script>document.location.href='../index.php?tab=holidays'</script>";
     }
 }else if(isset($_GET['del'])){
     mysqli_query($link, "DELETE FROM holidays WHERE  id = '$_GET[del]' ");
     $_SESSION['info'] = 'Dihapus';
-    echo "<script>document.location.href='../index.php#hd'</script>";
+    echo "<script>document.location.href='../index.php?tab=holidays'</script>";
 }else if(isset($_POST['edit'])){
    
     $date = trim(mysqli_real_escape_string($link, $_POST['date'][0]));
@@ -42,7 +42,7 @@ if(isset($_POST['add'])){
     $sql = mysqli_query($link,"UPDATE holidays SET `type` = '$type' , `date` = '$date', ket = '$ket' WHERE id = '$id' " );
     if($sql){
         $_SESSION['info'] = 'Disimpan'; 
-        echo "<script>document.location.href='../index.php#holiday'</script>";    
+        echo "<script>document.location.href='../index.php?tab=holidays'</script>";    
     }
 
 }else if(isset($_POST['addholidays'])){
@@ -68,19 +68,19 @@ if(isset($_POST['add'])){
         $add = mysqli_query($link, $sql)or die(mysqli_error($link));
         if($add){
             $_SESSION['info'] = 'Disimpan'; 
-            echo "<script>document.location.href='../index.php#holiday'</script>";   
+            echo "<script>document.location.href='../index.php?tab=holidays'</script>";   
         }else{
             $_SESSION['info'] = 'Gagal Disimpan'; 
-            echo "<script>document.location.href='../index.php#holiday'</script>";   
+            echo "<script>document.location.href='../index.php?tab=holidays'</script>";   
         }
 
     }else{
         $_SESSION['info'] = 'Kosong'; 
-        echo "<script>document.location.href='../index.php#holiday'</script>";   
+        echo "<script>document.location.href='../index.php?tab=holidaysy'</script>";   
     }
 }else{
     $_SESSION['info'] = 'Kosong'; 
-    echo "<script>document.location.href='../index.php#holiday'</script>";   
+    echo "<script>document.location.href='../index.php?tab=holidays'</script>";   
 }
 
 /////////////

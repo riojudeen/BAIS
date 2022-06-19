@@ -23,16 +23,16 @@ if(isset($_SESSION['user'])){
         
         if($add){
             $_SESSION['info'] = 'Disimpan';
-            echo "<script>document.location.href='../index.php#ws'</script>";
+            echo "<script>document.location.href='../index.php?tab=wh'</script>";
         }else{
             
             $_SESSION['info'] = 'Gagal Disimpan';
-            echo "<script>document.location.href='../index.php#ws'</script>";
+            echo "<script>document.location.href='../index.php?tab=wh'</script>";
         }
     }else if(isset($_GET['del'])){
         mysqli_query($link, "DELETE FROM working_hours WHERE  id = '$_GET[del]' ");
         $_SESSION['info'] = 'Dihapus';  
-        echo "<script>document.location.href='../index.php#wh'</script>";
+        echo "<script>document.location.href='../index.php?tab=wh'</script>";
     }else if(isset($_POST['edit'])){
         $i = 0;
         $code = trim(mysqli_real_escape_string($link, $_POST['name_code'][$i]));
@@ -44,17 +44,17 @@ if(isset($_SESSION['user'])){
         $sql = mysqli_query($link,"UPDATE working_hours SET code_name = '$code' , `start` = '$start', `end` = '$end', `ket` = '$ket' WHERE id = '$id' ") or die(mysqli_error($link));
         if($sql){
             $_SESSION['info'] = 'Disimpan'; 
-            echo "<script>document.location.href='../index.php#wh'</script>";    
+            echo "<script>document.location.href='../index.php?tab=wh'</script>";    
         }else{
             $_SESSION['info'] = 'Gagal Disimpan';
-            echo "<script>document.location.href='../index.php#wh'</script>";    
+            echo "<script>document.location.href='../index.php?tab=wh'</script>";    
         }
         
 
 
     }else{
         $_SESSION['info'] = 'Kosong'; 
-        echo "<script>document.location.href='../index.php'</script>";   
+        echo "<script>document.location.href='../index.php?tab=wh'</script>";   
         // echo "tes";
     }
 

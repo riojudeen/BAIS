@@ -10,6 +10,65 @@ if(isset($_SESSION['user'])){
     }else{
         $year = date('Y');
     }
+    if(isset($_GET['tab'])){
+        if($_GET['tab'] == 'shift'){
+            $tab_shift = 'data-active active';
+            $tab_wh = '';
+            $tab_wb = '';
+            $tab_wbs = '';
+            $tab_holidays = '';
+            $tab_wd = '';
+        }else if($_GET['tab'] == 'wh'){
+            $tab_shift = '';
+            $tab_wh = 'data-active active';
+            $tab_wb = '';
+            $tab_wbs = '';
+            $tab_holidays = '';
+            $tab_wd = '';
+        }else if($_GET['tab'] == 'wb'){
+            $tab_shift = '';
+            $tab_wh = '';
+            $tab_wb = 'data-active active';
+            $tab_wbs = '';
+            $tab_holidays = '';
+            $tab_wd = '';
+        }else if($_GET['tab'] == 'wbs'){
+            $tab_shift = '';
+            $tab_wh = '';
+            $tab_wb = '';
+            $tab_wbs = 'data-active active';
+            $tab_holidays = '';
+            $tab_wd = '';
+        }else if($_GET['tab'] == 'holidays'){
+            $tab_shift = '';
+            $tab_wh = '';
+            $tab_wb = '';
+            $tab_wbs = '';
+            $tab_holidays = 'data-active active';
+            $tab_wd = '';
+        }else if($_GET['tab'] == 'wd'){
+            $tab_shift = '';
+            $tab_wh = '';
+            $tab_wb = '';
+            $tab_wbs = '';
+            $tab_holidays = '';
+            $tab_wd = 'data-active active';
+        }else{
+            $tab_shift = 'data-active active';
+            $tab_wh = '';
+            $tab_wb = '';
+            $tab_wbs = '';
+            $tab_holidays = '';
+            $tab_wd = '';
+        }
+    }else{
+        $tab_shift = 'data-active active';
+        $tab_wh = '';
+        $tab_wb = '';
+        $tab_wbs = '';
+        $tab_holidays = '';
+        $tab_wd = '';
+    }
     
 ?>
 <?php
@@ -95,22 +154,22 @@ if(isset($_SESSION['user'])){
                             <div class="nav-tabs-wrapper">
                                 <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left" role="tablist">
                                     <li class="nav-item ">
-                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-ws data-active active" data-name="Working Shift"  data-toggle="tab" data-id="ws" href="#ws" role="tab" aria-expanded="true">Working Shift</a>
+                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wc navigasi-ws <?=$tab_shift?>" data-name="Working Shift"  data-toggle="tab" data-id="ws" href="#ws" role="tab" aria-expanded="true">Working Shift</a>
                                     </li>
                                     <li class="nav-item ">
-                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wh " data-name="Working Hours"  data-toggle="tab" data-id="wh" href="#wh" role="tab" aria-expanded="true">Working Hours</a>
+                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wc navigasi-wh <?=$tab_wh?>" data-name="Working Hours"  data-toggle="tab" data-id="wh" href="#wh" role="tab" aria-expanded="true">Working Hours</a>
                                     </li>
                                     <li class="nav-item ">
-                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-b " data-name="Working Break" data-toggle="tab" data-id="b" href="#b" role="tab" aria-expanded="true">Working Break</a>
+                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wc navigasi-b <?=$tab_wb?>" data-name="Working Break" data-toggle="tab" data-id="b" href="#b" role="tab" aria-expanded="true">Working Break</a>
                                     </li>
                                     <li class="nav-item ">
-                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wb " data-name="Working Break" data-toggle="tab" data-id="wb" href="#wb" role="tab" aria-expanded="true">Working Break / Shift</a>
+                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wc navigasi-wb <?=$tab_wbs?>" data-name="Working Break / Shift" data-toggle="tab" data-id="wb" href="#wb" role="tab" aria-expanded="true">Working Break / Shift</a>
                                     </li>
                                     <li class="nav-item ">
-                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-hl" data-name="Holidays" data-toggle="tab" data-id="holiday" href="#holiday" role="tab" aria-expanded="true">Holidays</a>
+                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wc navigasi-hl <?=$tab_holidays?>" data-name="Holidays" data-toggle="tab" data-id="holiday" href="#holiday" role="tab" aria-expanded="true">Holidays</a>
                                     </li>
                                     <li class="nav-item ">
-                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wd" data-name="Working Days" data-toggle="tab" data-id="wd" href="#wd" role="tab" aria-expanded="true">Working Days</a>
+                                         <a class="btn btn-sm btn-link btn-round btn-info org navigasi-wc navigasi-wd <?=$tab_wd?>" data-name="Working Days" data-toggle="tab" data-id="wd" href="#wd" role="tab" aria-expanded="true">Working Days</a>
                                     </li>
                                 </ul>
                             </div>
@@ -230,55 +289,89 @@ if(isset($_SESSION['user'])){
 </script>
 <script>
     $(document).ready(function(){
-        if($(".data-active")[0]){
-            var name = $(".data-active").attr('data-name');
-            var id = $(".data-active").attr('data-id');
-            console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("shiftsettings/working_shift.php?id="+id);
+        dataActive()
+        // if($(".data-active")[0]){
+        //     var name = $(".data-active").attr('data-name');
+        //     var id = $(".data-active").attr('data-id');
+        //     console.log(id)
+        //     $('.pagename').text(name);
+        //     $('#monitor').load("shiftsettings/working_shift.php?id="+id);
+        // }
+        $(document).on('click','.navigasi-wc', function(){
+            $('.navigasi-wc').removeClass('data-active');
+            $(this).addClass('data-active');
+            dataActive()
+        });
+        function dataActive(){
+            if($(".data-active")[0]){
+                var name = $(".data-active").attr('data-name');
+                var id = $(".data-active").attr('data-id');
+                // console.log(id)
+                $('.pagename').text(name);
+                if(id == 'ws'){
+                    $('#monitor').load("shiftsettings/working_shift.php?id="+id);
+                }else if(id == 'wh'){
+                    $('#monitor').load("workingHour/index.php?id="+id);
+                }else if(id == 'b'){
+                    $('#monitor').load("workingbreak/working_break.php?id="+id);
+                }else if(id == 'holiday'){
+                    $('#monitor').load("holidays/index.php?id="+id);
+                }else if(id == 'wb'){
+                    $('#monitor').load("workingbreak/index.php?id="+id);
+                }else if(id == 'wd'){
+                    $('#monitor').load("wd/wd.php?id="+id);
+                }
+                
+            }
         }
-        $('.navigasi-ws').click(function(){
-            var name = $(this).attr('data-name');
-            var id = $(this).attr('data-id');
-            // console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("shiftsettings/working_shift.php?id="+id);
-        })
-        $('.navigasi-hl').click(function(){
-            var name = $(this).attr('data-name');
-            var id = $(this).attr('data-id');
-            // console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("holidays/index.php?id="+id);
-        })
-        $('.navigasi-wh').click(function(){
-            var name = $(this).attr('data-name');
-            var id = $(this).attr('data-id');
-            // console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("workingHour/index.php?id="+id);
-        })
-        $('.navigasi-b').click(function(){
-            var name = $(this).attr('data-name');
-            var id = $(this).attr('data-id');
-            // console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("workingbreak/working_break.php?id="+id);
-        })
-        $('.navigasi-wb').click(function(){
-            var name = $(this).attr('data-name');
-            var id = $(this).attr('data-id');
-            // console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("workingbreak/index.php?id="+id);
-        })
-        $('.navigasi-wd').click(function(){
-            var name = $(this).attr('data-name');
-            var id = $(this).attr('data-id');
-            // console.log(id)
-            $('.pagename').text(name);
-            $('#monitor').load("wd/wd.php?id="+id);
-        })
+        // $('.navigasi-ws').click(function(){
+        //     dataActive()
+        //     // var name = $(this).attr('data-name');
+        //     // var id = $(this).attr('data-id');
+        //     // // console.log(id)
+        //     // $('.pagename').text(name);
+        //     // $('#monitor').load("shiftsettings/working_shift.php?id="+id);
+        // })
+        // $('.navigasi-hl').click(function(){
+        //     dataActive()
+        //     // var name = $(this).attr('data-name');
+        //     // var id = $(this).attr('data-id');
+        //     // // console.log(id)
+        //     // $('.pagename').text(name);
+        //     // $('#monitor').load("holidays/index.php?id="+id);
+        // })
+        // $('.navigasi-wh').click(function(){
+        //     dataActive()
+        //     // var name = $(this).attr('data-name');
+        //     // var id = $(this).attr('data-id');
+        //     // // console.log(id)
+        //     // $('.pagename').text(name);
+        //     // $('#monitor').load("workingHour/index.php?id="+id);
+        // })
+        // $('.navigasi-b').click(function(){
+        //     dataActive()
+        //     // var name = $(this).attr('data-name');
+        //     // var id = $(this).attr('data-id');
+        //     // // console.log(id)
+        //     // $('.pagename').text(name);
+        //     // $('#monitor').load("workingbreak/working_break.php?id="+id);
+        // })
+        // $('.navigasi-wb').click(function(){
+        //     dataActive()
+        //     // var name = $(this).attr('data-name');
+        //     // var id = $(this).attr('data-id');
+        //     // // console.log(id)
+        //     // $('.pagename').text(name);
+        //     // $('#monitor').load("workingbreak/index.php?id="+id);
+        // })
+        // $('.navigasi-wd').click(function(){
+        //     dataActive()
+        //     // var name = $(this).attr('data-name');
+        //     // var id = $(this).attr('data-id');
+        //     // // console.log(id)
+        //     // $('.pagename').text(name);
+        //     // $('#monitor').load("wd/wd.php?id="+id);
+        // })
        
     })
 </script>

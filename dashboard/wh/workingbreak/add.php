@@ -15,7 +15,7 @@ if(isset($_SESSION['user'])){
                 <div class="card">
                     <div class="card-header">
                         <h5 class="title pull-left">Add Master Data</h5>
-                        <a href="../index.php" class="btn pull-right">
+                        <a href="../index.php?tab=wb" class="btn pull-right">
                             Back
                             <span class="btn-label btn-label-right">
                                 <i class="nc-icon nc-minimal-right"></i>
@@ -106,7 +106,7 @@ if(isset($_SESSION['user'])){
                 <div class="card">
                     <div class="card-header">
                         <h5 class="title pull-left">Add Seting Data Break / Shift</h5>
-                        <a href="../index.php" class="btn pull-right">
+                        <a href="../index.php?tab=wbs" class="btn pull-right">
                             Back
                             <span class="btn-label btn-label-right">
                                 <i class="nc-icon nc-minimal-right"></i>

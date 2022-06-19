@@ -29,17 +29,17 @@ if(isset($_SESSION['user'])){
         
         if($add){
             $_SESSION['info'] = 'Disimpan';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wb'</script>";
         }else{
             
             $_SESSION['info'] = 'Gagal Disimpan';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wb'</script>";
         }
     }else if(isset($_GET['del'])){
         
         mysqli_query($link, "DELETE FROM working_break WHERE  id = '$_GET[del]' ");
         $_SESSION['info'] = 'Dihapus';  
-        echo "<script>document.location.href='../index.php#b'</script>";
+        echo "<script>document.location.href='../index.php?tab=wb'</script>";
     }else if(isset($_POST['edit'])){
         $i = 0;
         $code = trim(mysqli_real_escape_string($link, $_POST['skema'][$i]));
@@ -51,10 +51,10 @@ if(isset($_SESSION['user'])){
         $sql = mysqli_query($link,"UPDATE working_break SET scheme_name = '$code' , `start_time` = '$start', `end_time` = '$end', `effective_date` = '$ket' WHERE id = '$id' ") or die(mysqli_error($link));
         if($sql){
             $_SESSION['info'] = 'Disimpan'; 
-            echo "<script>document.location.href='../index.php#b'</script>";    
+            echo "<script>document.location.href='../index.php?tab=wb'</script>";    
         }else{
             $_SESSION['info'] = 'Gagal Disimpan';
-            echo "<script>document.location.href='../index.php#wh'</script>";    
+            echo "<script>document.location.href='../index.php?tab=wb'</script>";    
         }
         
     }else if(isset($_POST['addbreakshift'])){
@@ -72,11 +72,11 @@ if(isset($_SESSION['user'])){
         $add = mysqli_query($link, $sql);
         if($add){
             $_SESSION['info'] = 'Disimpan';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }else{
             
             $_SESSION['info'] = 'Gagal Disimpan';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }
 
     }else if(isset($_GET['delbreak'])){
@@ -88,11 +88,11 @@ if(isset($_SESSION['user'])){
         // echo $sql;
         if($del){
             $_SESSION['info'] = 'Dihapus';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }else{
             
             $_SESSION['info'] = 'Gagal Dihapus';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }
     }else if(isset($_POST['previewBrakShift'])){
         $sql = "DELETE FROM working_break_shift WHERE break_group_id = '$_POST[previewBrakShift]'";
@@ -102,11 +102,11 @@ if(isset($_SESSION['user'])){
         // echo $sql;
         if($del){
             $_SESSION['info'] = 'Dihapus';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }else{
             
             $_SESSION['info'] = 'Gagal Dihapus';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }
     }else if(isset($_POST['editbreakshift'])){
         // echo $_POST['editbreakshift'];
@@ -126,11 +126,11 @@ if(isset($_SESSION['user'])){
         $add = mysqli_query($link, $sql);
         if($add){
             $_SESSION['info'] = 'Disimpan';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }else{
             
             $_SESSION['info'] = 'Gagal Disimpan';
-            echo "<script>document.location.href='../index.php#b'</script>";
+            echo "<script>document.location.href='../index.php?tab=wbs'</script>";
         }
     }else{
         $_SESSION['info'] = 'Kosong'; 

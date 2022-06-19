@@ -27,7 +27,7 @@ if(isset($_SESSION['user'])){
     while($data = mysqli_fetch_assoc($queryBreak)){
         array_push($dataArray, $data['id_break']);
     }
-    var_dump($dataArray);
+    // var_dump($dataArray);
     // echo $dataShift;
 ?>
 <!-- halaman utama -->
@@ -40,7 +40,7 @@ if(isset($_SESSION['user'])){
         <div class="card">
             <div class="card-header">
                 <h5 class="title pull-left">Edit Seting Data Break / Shift</h5>
-                <a href="../index.php" class="btn pull-right">
+                <a href="../index.php?tab=wbs" class="btn pull-right">
                     Back
                     <span class="btn-label btn-label-right">
                         <i class="nc-icon nc-minimal-right"></i>

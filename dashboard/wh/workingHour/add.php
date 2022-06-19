@@ -14,7 +14,7 @@ if(isset($_SESSION['user'])){
         <div class="card">
             <div class="card-header">
                 <h5 class="title pull-left">Add Data</h5>
-                <a href="../index.php" class="btn pull-right">
+                <a href="../index.php?tab=wh" class="btn pull-right">
                     Back
                     <span class="btn-label btn-label-right">
                         <i class="nc-icon nc-minimal-right"></i>

@@ -50,9 +50,10 @@ $hari = array("Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu");
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col md-12">
-        <div class="collapse  collapse-view" >
+        <div class="collapse collapse-view" >
             <div class="row">
                 <div class="col-md-12">
                     
@@ -117,8 +118,6 @@ $hari = array("Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu");
             <div class="row">
                 <div class="col-md-6">
                 </div>
-                
-            
             </div>
             <div class="collapse show collapse-view" id="tambah">
                 <div class="row">
@@ -199,7 +198,7 @@ $hari = array("Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu");
                                             
                                             <?php
                                                 foreach($hari AS $dataHari ){
-                                                    $select = ($dataHari == 'Minggu')?"selected":"";
+                                                    $select = ($dataHari == 'Minggu')?"selected":"disabled";
                                                     ?>
                                                         <option  <?=$select?> value="<?=$dataHari?>"><?=$dataHari?></option>
                                                     <?php
@@ -210,8 +209,8 @@ $hari = array("Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu");
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12 text-right">
-                                                    <a  class="btn btn-sm btn-info " data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="#tambah"> Generate</a>
-    
+                                                <a  class="btn btn-sm btn-info " data-toggle="collapse" href=".tambah" role="button" aria-expanded="true" aria-controls="#tambah"> Generate</a>
+                                                
                                             </div>
                                         </div>
                                     </div>

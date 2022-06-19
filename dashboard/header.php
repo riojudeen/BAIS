@@ -975,7 +975,7 @@ if($level >= 4){
                       <a class="dropdown-item" href="<?=base_url()?>/dashboard/administrasi/info.php">New Info
                         <span  class="badge filter badge-primary" data-color="primary" id="notif-gen-info"></span>
                         </a>
-                      </a>
+                      
                     </div>
                   </li>
                 <?php
@@ -1016,7 +1016,7 @@ if($level >= 4){
               </button>
               <span data-notify="icon" class="nc-icon nc-bell-55"></span>
               <span data-notify="message">Saat ini anda mengakses Server BAIS versi ALPHA.. <br> untuk mengakses BAIS X.1.2 (B E T A) di server utama , klik 
-              <a href="10.59.12.51/CAIS" class="text-upeercase title" >10.59.12.51/CAIS</a> dan login dengan akun CAIS anda!!! </span>
+              <a href="//10.59.12.51/CAIS" class="text-upeercase title" >10.59.12.51/CAIS</a> dan login dengan akun CAIS anda!!! </span>
               
             </div>
             <?php

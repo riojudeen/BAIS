@@ -31,10 +31,10 @@ if(isset($_SESSION['user'])){
             $add = mysqli_query($link, $sql);
             if($add){
                 $_SESSION['info'] = 'Disimpan';
-                echo "<script>document.location.href='../index.php#b'</script>";
+                echo "<script>document.location.href='../index.php?tab=wd'</script>";
             }else{
                 $_SESSION['info'] = 'Gagal Disimpan';
-                echo "<script>document.location.href='../index.php#b'</script>";
+                echo "<script>document.location.href='../index.php?tab=wd'</script>";
             }
         }
     }else if(isset($_POST['generate'])){
@@ -126,14 +126,14 @@ if(isset($_SESSION['user'])){
             $sql_update = mysqli_query($link, $query)or die(mysqli_error($link));
             if($sql_update){
                 $_SESSION['info'] = 'Disimpan';
-                echo "<script>document.location.href='../index.php#b'</script>";
+                echo "<script>document.location.href='../index.php?tab=wd'</script>";
             }else{
                 $_SESSION['info'] = 'Gagal Disimpan';
-                echo "<script>document.location.href='../index.php#b'</script>";
+                echo "<script>document.location.href='../index.php?tab=wd'</script>";
             }
         }else{
             $_SESSION['info'] = 'Gagal Disimpan';
-                echo "<script>document.location.href='../index.php#b'</script>";
+                echo "<script>document.location.href='../index.php?tab=wd'</script>";
         }
 
     }
