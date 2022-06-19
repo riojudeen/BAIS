@@ -1001,4 +1001,116 @@ function cariAtasan($link, $npk, $id_area){
 if($_SERVER['HTTP_HOST'] === '10.59.12.51' ){
     error_reporting(0);
 }
+// view_karyawan_record
+"SELECT
+`working_days`.`date` AS `date`,
+`bais_db`.`karyawan_record`.`mp` AS `mp`,
+`bais_db`.`karyawan_record`.`id_area` AS `id_area`,
+`bais_db`.`karyawan_record`.`part` AS `part`,
+`bais_db`.`karyawan_record`.`id_jabatan` AS `id_jabatan`,
+`bais_db`.`karyawan_record`.`nama_area` AS `nama_area`,
+`bais_db`.`karyawan_record`.`id_dept_account` AS `id_dept_account`
+FROM
+(
+    (
+    SELECT
+        `bais_db`.`working_days`.`date` AS `date`
+    FROM
+        `bais_db`.`working_days`
+    GROUP BY
+        `bais_db`.`working_days`.`date`
+) `working_days`
+LEFT JOIN `bais_db`.`karyawan_record` ON
+(
+    `bais_db`.`karyawan_record`.`date` = `working_days`.`date`
+)
+)";
+//view_organization_mp
+"SELECT
+COUNT(`view_organization`.`npk`) AS `jml_mp`,
+`view_organization`.`shift` AS `shift`,
+`view_organization`.`id_sub_pos` AS `id_sub_pos`,
+`view_organization`.`id_post_leader` AS `id_post_leader`,
+`view_organization`.`id_grp` AS `id_grp`,
+`view_organization`.`id_sect` AS `id_sect`,
+`view_organization`.`id_dept` AS `id_dept`,
+`view_organization`.`id_dept_account` AS `id_dept_account`,
+`view_organization`.`id_division` AS `id_division`,
+`view_organization`.`id_plant` AS `id_plant`
+FROM
+`bais_db`.`view_organization`
+GROUP BY
+`view_organization`.`shift`,
+`view_organization`.`id_sub_pos`,
+`view_organization`.`id_post_leader`,
+`view_organization`.`id_grp`,
+`view_organization`.`id_sect`,
+`view_organization`.`id_dept`,
+`view_organization`.`id_dept_account`,
+`view_organization`.`id_division`,
+`view_organization`.`id_plant`";
+//view_prod_overtime
+"SELECT
+`bais_db`.`working_days`.`date` AS `date`,
+SUM(`view_req_ot_bulk`.`jml_ot`) AS `jm_ot`,
+COUNT(`view_req_ot_bulk`.`mp_ot`) AS `jm_mp`,
+`bais_db`.`working_days`.`id` AS `id`,
+`bais_db`.`working_days`.`wh` AS `wh`,
+`bais_db`.`working_days`.`shift` AS `shift`,
+`bais_db`.`working_days`.`ket` AS `ket`,
+`bais_db`.`working_days`.`break_id` AS `break_id`,
+`view_req_ot_bulk`.`sub_post` AS `sub_post`,
+`view_req_ot_bulk`.`post` AS `post`,
+`view_req_ot_bulk`.`grp` AS `grp`,
+`view_req_ot_bulk`.`sect` AS `sect`,
+`view_req_ot_bulk`.`dept` AS `dept`,
+`view_req_ot_bulk`.`dept_account` AS `dept_account`,
+`view_req_ot_bulk`.`division` AS `division`,
+`view_req_ot_bulk`.`plant` AS `plant`
+FROM
+(
+    `bais_db`.`working_days`
+LEFT JOIN(
+    SELECT
+        `view_req_ot_bulk`.`npk` AS `npk`,
+        SUM(`view_req_ot_bulk`.`over_time`) AS `jml_ot`,
+        COUNT(`view_req_ot_bulk`.`npk`) AS `mp_ot`,
+        `view_req_ot_bulk`.`work_date` AS `work_date`,
+        `view_req_ot_bulk`.`sub_post` AS `sub_post`,
+        `view_req_ot_bulk`.`post` AS `post`,
+        `view_req_ot_bulk`.`grp` AS `grp`,
+        `view_req_ot_bulk`.`sect` AS `sect`,
+        `view_req_ot_bulk`.`dept` AS `dept`,
+        `view_req_ot_bulk`.`dept_account` AS `dept_account`,
+        `view_req_ot_bulk`.`division` AS `division`,
+        `view_req_ot_bulk`.`plant` AS `plant`
+    FROM
+        `bais_db`.`view_req_ot_bulk`
+    GROUP BY
+        `view_req_ot_bulk`.`npk`,
+        `view_req_ot_bulk`.`work_date`,
+        `view_req_ot_bulk`.`sub_post`,
+        `view_req_ot_bulk`.`post`,
+        `view_req_ot_bulk`.`grp`,
+        `view_req_ot_bulk`.`sect`,
+        `view_req_ot_bulk`.`dept`,
+        `view_req_ot_bulk`.`dept_account`,
+        `view_req_ot_bulk`.`division`,
+        `view_req_ot_bulk`.`plant`
+) `view_req_ot_bulk`
+ON
+(
+    `view_req_ot_bulk`.`work_date` = `bais_db`.`working_days`.`date`
+)
+)
+GROUP BY
+`bais_db`.`working_days`.`date`,
+`view_req_ot_bulk`.`sub_post`,
+`view_req_ot_bulk`.`post`,
+`view_req_ot_bulk`.`grp`,
+`view_req_ot_bulk`.`sect`,
+`view_req_ot_bulk`.`dept`,
+`view_req_ot_bulk`.`dept_account`,
+`view_req_ot_bulk`.`division`,
+`view_req_ot_bulk`.`plant`";
 ?>
