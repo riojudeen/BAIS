@@ -178,6 +178,32 @@ function getShiftByTime2($link, $date, $time){
     return array($ket, $shift);
     // return array($tglini, $sesudah, $start_time, $end_time, $ket, $wb);
 }
+function getShiftByTime3($link, $date, $time){
+    $str_time = "$time";
+
+    sscanf($str_time, "%d:%d:%d", $hours, $minutes, $seconds);
+    $time = isset($seconds) ? $hours * 3600 + $minutes * 60 + $seconds : $hours * 60 + $minutes;
+    // 
+    // echo "curr : ".$time."<br>";
+    $qWH = "SELECT 
+            working_days.ket AS `ket`, 
+            working_days.break_id AS `break_id`,working_days.shift AS `shift`, working_hours.id, TIME_TO_SEC(working_hours.start) AS `start`,  working_hours.end AS `end`
+            FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date'";
+    $cekKet =  mysqli_query($link, $qWH." GROUP BY ket ")or die(mysqli_error($link));
+    $dataKet = mysqli_fetch_assoc($cekKet);
+    $ket = $dataKet['ket'];
+
+    $cekWH = mysqli_query($link, $qWH." AND TIME_TO_SEC(working_hours.start) <= '$time' ")or die(mysqli_error($link));
+    $shift = "";
+    if(mysqli_num_rows($cekWH)>0){
+        while($data = mysqli_fetch_assoc($cekWH)){
+            $shift .= " shift = '$data[shift]' OR ";
+        }
+    }
+    $shift = substr($shift, 0 ,-3);
+    return array($ket, $shift);
+    // return array($tglini, $sesudah, $start_time, $end_time, $ket, $wb);
+}
 function workingHours($link, $shift, $date){
     $cekWH = mysqli_query($link, "SELECT working_hours.id, working_hours.start AS `start`,  working_hours.end AS `end`
     FROM working_days JOIN working_hours ON working_hours.id = working_days.wh WHERE working_days.date = '$date' AND working_days.shift = '$shift' ")or die(mysqli_error($link));
@@ -462,17 +488,92 @@ function WD($link, $shift, $tanggal){
 
     return array($tglMasuk, $tglPulang, $checkIn, $checkOut, $jml);
 }
-// $q = "SELECT SUM(jml_ot) AS jm_ot,  working_days.id,working_days.date,working_days.wh,working_days.shift,working_days.ket,working_days.break_id FROM working_days 
-// LEFT JOIN (
-//     SELECT npk , SUM(over_time) AS jml_ot, COUNT(npk) AS mp_ot, work_date,  sub_post, post, grp, sect, dept, dept_account , division, plant FROM view_req_ot_bulk GROUP BY npk, work_date , sub_post, post, grp, sect, dept, dept_account , division, plant
-// ) view_req_ot_bulk  ON view_req_ot_bulk.work_date = working_days.date GROUP BY working_days.date, view_req_ot_bulk.sub_post, view_req_ot_bulk.post, view_req_ot_bulk.grp, view_req_ot_bulk.sect, view_req_ot_bulk.dept, view_req_ot_bulk.dept_account , view_req_ot_bulk.division, view_req_ot_bulk.plant ";
-// $sql = mysqli_query($link, $q)or die(mysqli_error($link));
-// if(mysqli_num_rows($sql)>0){
-//     while($data = mysqli_fetch_assoc($sql)){
-//         echo $data['date']."-".$data['jm_ot']."<br>";
-//     }
-// }else{
-//     echo "tidak ada data";
-// }
+function arrayMP($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $add_shift, $absensi){
+    
+    $filter_shift = '';
+    list($ket, $shift) = getShiftByTime3($link, date('Y-m-d'), date('H:i:s'));
+    if($absensi == 'absensi'){
+        if($add_shift != ''){
+            $filter_shift = "AND ($shift) ";
+        }
+    }
+    
+    $ket = $ket;
+    if($id_part == 'division'){
+        $addFilter = "WHERE id_division = '$id_area' ";
+        $addFilterOt = " AND division = '$id_area' ";
+        
+    }else if($id_part == 'dept'){
+        $addFilter = "WHERE id_dept = '$id_area' ";
+        $addFilterOt = " AND dept = '$id_area' ";
+    }else if($id_part == 'section'){
+        $addFilter = "WHERE id_sect = '$id_area' ";
+        $addFilterOt = " AND sect = '$id_area' ";
+    }else if($id_part == 'group'){
+        $addFilter = "WHERE id_grp = '$id_area' ";
+        $addFilterOt = " AND grp = '$id_area' ";
+    }else{
+        $addFilter = '';
+        $addFilterOt = '';
+    }
+    //jml mp hari ini
+    $qryMp = "SELECT SUM(jml_mp) AS jml_mp
+        FROM view_organization_mp $addFilter $filter_shift ";
+    $sqlMp = mysqli_query($link, $qryMp)or die(mysqli_error($link));
+    $dataMp_current = mysqli_fetch_assoc($sqlMp);
+    $mp_current = isset($dataMp_current['jml_mp'])?$dataMp_current['jml_mp']:0;
+    // echo "jumlah MP : $mp_current"."<br>";
+
+
+    // jumlah ot
+    $q = "SELECT SUM(jml_ot) AS jm_ot, COUNT(mp_ot) AS jm_mp,  working_days.id,working_days.date,working_days.wh,working_days.shift,working_days.ket,working_days.break_id ,view_req_ot_bulk.sub_post, view_req_ot_bulk.post, view_req_ot_bulk.grp, view_req_ot_bulk.sect, view_req_ot_bulk.dept, view_req_ot_bulk.dept_account , view_req_ot_bulk.division, view_req_ot_bulk.plant FROM working_days 
+    LEFT JOIN (
+        SELECT npk , SUM(over_time) AS jml_ot, COUNT(npk) AS mp_ot, work_date,  sub_post, post, grp, sect, dept, dept_account , division, plant FROM view_req_ot_bulk 
+        WHERE `work_date` BETWEEN '$tgl_mulai' AND '$tgl_selesai' $addFilterOt
+        GROUP BY npk, work_date , sub_post, post, grp, sect, dept, dept_account , division, plant
+    ) view_req_ot_bulk  ON view_req_ot_bulk.work_date = working_days.date
+    WHERE working_days.date BETWEEN '$tgl_mulai' AND '$tgl_selesai' 
+    GROUP BY 
+        working_days.date";
+    $sql = mysqli_query($link, $q)or die(mysqli_error($link));
+    $arrayOt = array();
+    if(mysqli_num_rows($sql)>0){
+        while($data = mysqli_fetch_assoc($sql)){
+            // array_push($arrayOt, $data['jm_ot']);
+            if($data['jm_ot'] != null){
+                array_push($arrayOt, $data['jm_ot']);
+            }else{
+                
+                array_push($arrayOt, 0);
+            }
+        }
+    }
+    $dataOt = json_encode($arrayOt);
+
+    $qHistoriMp = "SELECT working_days.date, mp AS jml FROM working_days LEFT JOIN 
+        ( SELECT SUM(mp) AS mp , `date` FROM view_karyawan_record 
+            WHERE `date` BETWEEN '$tgl_mulai' AND '$tgl_selesai' AND id_area = '$id_area' AND part = '$id_part' GROUP BY `date`
+         ) view_karyawan_record ON working_days.date = view_karyawan_record.date 
+            WHERE working_days.date BETWEEN '$tgl_mulai' AND '$tgl_selesai' GROUP BY working_days.date";
+    $sqlHistori = mysqli_query($link, $qHistoriMp)or die(mysqli_error($link));
+    $arrayData = array();
+    if(mysqli_num_rows($sqlHistori)>0){
+        while($data = mysqli_fetch_assoc($sqlHistori)){
+            if($data['jml']!= null){
+                array_push($arrayData, $data['jml']);
+            }else{
+                
+                array_push($arrayData, $mp_current);
+            }
+        }
+    }
+    $dataMp = json_encode($arrayData);
+    return array($dataOt,$dataMp);
+}
+
+// echo $dataOt;
+
+
+
 // echo "tes";
 ?>
