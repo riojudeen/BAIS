@@ -36,14 +36,14 @@ if(isset($_SESSION['user'])){
                                     <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left" role="tablist">
                                         <!--  -->
                                         <li class="nav-item ">
-                                            <a class="btn  btn-link btn-round btn-info org navigasi-absensi active data-active"  data-toggle="tab" data-id="mp" href="#mp" role="tab" aria-expanded="true"></i>Employee Movement</a>
+                                            <a class="btn  btn-link btn-round btn-info org navigasi-absensi "  data-toggle="tab" data-id="mp" href="#mp" role="tab" aria-expanded="true"></i>Employee Movement</a>
                                         </li>
                                         
                                         <li class="nav-item ">
                                             <a class="btn  btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="at" href="#at" role="tab" aria-expanded="true">Attendance Rate</a>
                                         </li>
                                         <li class="nav-item ">
-                                            <a class="btn btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="ot" href="#ot" role="tab" aria-expanded="true">Overtime Achievement</a>
+                                            <a class="btn btn-link btn-round btn-info org navigasi-absensi active data-active"  data-toggle="tab" data-id="ot" href="#ot" role="tab" aria-expanded="true">Overtime Achievement</a>
                                         </li>
                                         <li class="nav-item ">
                                             <a class="btn btn-link btn-round btn-info org navigasi-absensi"  data-toggle="tab" data-id="sc" href="#sc" role="tab" aria-expanded="true">Request Overview</a>
@@ -63,7 +63,7 @@ if(isset($_SESSION['user'])){
                                     <h5 class="title title-page">Area</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="input-group ">
+                                        <div class="input-group no-border">
                                             <input type="text" class="form-control datepicker" id="start_date" data-date-format="YYYY-MM-DD" value="<?=$startDate?>">
                                             <input type="text" disabled class="form-control text-center"  value="to" style="max-width:50px">
                                             <input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" id="end_date" value="<?=$endDate?>">
@@ -94,40 +94,7 @@ if(isset($_SESSION['user'])){
                                                 <option value="">Pilih Group</option>
                                                 <option value="" disabled>Pilih Section Terlebih Dahulu</option>
                                             </select>
-                                            <select class="form-control" name="shift" id="s_shift">
-                                                <option value="">Pilih Shift</option>
-                                                <?php
-                                                    $query_shift = mysqli_query($link, "SELECT `id_shift`,`shift` FROM `shift` ")or die(mysqli_error($link));
-                                                    if(mysqli_num_rows($query_shift)>0){
-                                                        while($data = mysqli_fetch_assoc($query_shift)){
-                                                            ?>
-                                                            <option value="<?=$data['id_shift']?>"><?=$data['shift']?></option>
-                                                            <?php
-                                                        }
-                                                    }else{
-                                                        ?>
-                                                        <option value="">Belum Ada Data Shift</option>
-                                                        <?php
-                                                    }
-                                                ?>
-                                            </select>
-                                            <select class="form-control" name="deptacc" id="s_deptAcc">
-                                                <option value="">Pilih Department Administratif</option>
-                                                <?php
-                                                    $q_div = mysqli_query($link, "SELECT `id`,`nama_org`,`cord`,`nama_cord` FROM `view_cord_area` WHERE `part` = 'deptAcc'")or die(mysqli_error($link));
-                                                    if(mysqli_num_rows($q_div) > 0){
-                                                        while($data = mysqli_fetch_assoc($q_div)){
-                                                        ?>
-                                                        <option value="<?=$data['id']?>"><?=$data['nama_org']?></option>
-                                                        <?php
-                                                        }
-                                                    }else{
-                                                        ?>
-                                                        <option value="">Belum Ada Data Department Administratif</option>
-                                                        <?php
-                                                    }
-                                                ?>
-                                                </select>
+                                            
                                             <div class="input-group-append ">
                                                 <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
                                             </div>

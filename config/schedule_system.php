@@ -488,11 +488,11 @@ function WD($link, $shift, $tanggal){
 
     return array($tglMasuk, $tglPulang, $checkIn, $checkOut, $jml);
 }
-function arrayMP($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $add_shift, $absensi){
+function arrayMP($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $add_shift, $req){
     
     $filter_shift = '';
     list($ket, $shift) = getShiftByTime3($link, date('Y-m-d'), date('H:i:s'));
-    if($absensi == 'absensi'){
+    if($req == 'absensi'){
         if($add_shift != ''){
             $filter_shift = "AND ($shift) ";
         }
@@ -526,9 +526,22 @@ function arrayMP($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $add_shift
 
 
     // jumlah ot
-    $q = "SELECT SUM(jml_ot) AS jm_ot, COUNT(mp_ot) AS jm_mp,  working_days.id,working_days.date,working_days.wh,working_days.shift,working_days.ket,working_days.break_id ,view_req_ot_bulk.sub_post, view_req_ot_bulk.post, view_req_ot_bulk.grp, view_req_ot_bulk.sect, view_req_ot_bulk.dept, view_req_ot_bulk.dept_account , view_req_ot_bulk.division, view_req_ot_bulk.plant FROM working_days 
+    $q = "SELECT SUM(jml_ot) AS jm_ot, SUM(ot_non_prod) AS ot_non_prod, SUM(ot_prod) AS ot_prod,  COUNT(mp_ot) AS jm_mp,  working_days.id,working_days.date,working_days.wh,working_days.shift,working_days.ket,working_days.break_id ,view_req_ot_bulk.sub_post, view_req_ot_bulk.post, view_req_ot_bulk.grp, view_req_ot_bulk.sect, view_req_ot_bulk.dept, view_req_ot_bulk.dept_account , view_req_ot_bulk.division, view_req_ot_bulk.plant FROM working_days 
     LEFT JOIN (
-        SELECT npk , SUM(over_time) AS jml_ot, COUNT(npk) AS mp_ot, work_date,  sub_post, post, grp, sect, dept, dept_account , division, plant FROM view_req_ot_bulk 
+        SELECT npk , SUM(over_time) AS jml_ot, 
+        SUM(CASE 
+            WHEN job_code <> 'PROD' 
+                THEN over_time 
+                ELSE 0 
+            END 
+        ) AS ot_non_prod, 
+        SUM(CASE 
+            WHEN job_code = 'PROD' 
+                THEN over_time 
+                ELSE 0 
+            END 
+        ) AS ot_prod,
+        COUNT(npk) AS mp_ot, work_date,  sub_post, post, grp, sect, dept, dept_account , division, plant FROM view_req_ot_bulk 
         WHERE `work_date` BETWEEN '$tgl_mulai' AND '$tgl_selesai' $addFilterOt
         GROUP BY npk, work_date , sub_post, post, grp, sect, dept, dept_account , division, plant
     ) view_req_ot_bulk  ON view_req_ot_bulk.work_date = working_days.date
@@ -537,18 +550,34 @@ function arrayMP($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $add_shift
         working_days.date";
     $sql = mysqli_query($link, $q)or die(mysqli_error($link));
     $arrayOt = array();
+    $arrayOt_nonProd = array();
+    $arrayOt_prod = array();
+    $arrayOt_acc = array();
+    $ot_acc = 0;
     if(mysqli_num_rows($sql)>0){
         while($data = mysqli_fetch_assoc($sql)){
             // array_push($arrayOt, $data['jm_ot']);
+            
             if($data['jm_ot'] != null){
+                $ot_acc += $data['jm_ot'];
                 array_push($arrayOt, $data['jm_ot']);
+                array_push($arrayOt_prod, $data['ot_prod']);
+                array_push($arrayOt_nonProd, $data['ot_non_prod']);
             }else{
-                
+                $ot_acc += 0;
+                array_push($arrayOt_prod, 0);
+                array_push($arrayOt_nonProd, 0);
                 array_push($arrayOt, 0);
+                
             }
+            array_push($arrayOt_acc, $ot_acc);
+            
         }
     }
     $dataOt = json_encode($arrayOt);
+    $dataOt_nonProd = json_encode($arrayOt_nonProd);
+    $dataOt_prod = json_encode($arrayOt_prod);
+    $dataOt_acc = json_encode($arrayOt_acc);
 
     $qHistoriMp = "SELECT working_days.date, mp AS jml FROM working_days LEFT JOIN 
         ( SELECT SUM(mp) AS mp , `date` FROM view_karyawan_record 
@@ -568,12 +597,79 @@ function arrayMP($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $add_shift
         }
     }
     $dataMp = json_encode($arrayData);
-    return array($dataOt,$dataMp);
+    if($req == 'ot_total'){
+        return array($dataOt,$dataMp);
+    }else if($req == 'ot_non_prod'){
+        return array($dataOt_nonProd,$dataMp);
+    }else if($req == 'ot_prod'){
+        return array($dataOt_prod,$dataMp);
+    }else if($req == 'ot_acc'){
+        return array($dataOt_acc,$dataMp);
+    }
+    
 }
+function arrayOTnonProd($link, $tgl_mulai, $tgl_selesai, $id_area, $id_part, $code){
+    
+    
+    if($id_part == 'division'){
+        $addFilterOt = " AND division = '$id_area' ";
+    }else if($id_part == 'dept'){
+        $addFilterOt = " AND dept = '$id_area' ";
+    }else if($id_part == 'section'){
+        $addFilterOt = " AND sect = '$id_area' ";
+    }else if($id_part == 'group'){
+        $addFilterOt = " AND grp = '$id_area' ";
+    }else{
+        $addFilterOt = '';
+    }
+   
+    // jumlah ot
+    $q = "SELECT  SUM(ot_non_prod) AS ot_non_prod,  SUM(tot_nonProd) AS ot_tot,  working_days.id,working_days.date,working_days.wh,working_days.shift,working_days.ket,working_days.break_id ,view_req_ot_bulk.sub_post, view_req_ot_bulk.post, view_req_ot_bulk.grp, view_req_ot_bulk.sect, view_req_ot_bulk.dept, view_req_ot_bulk.dept_account , view_req_ot_bulk.division, view_req_ot_bulk.plant FROM working_days 
+    LEFT JOIN (
+        SELECT npk , SUM(over_time) AS jml_ot, 
+        SUM(CASE 
+            WHEN job_code = '$code' 
+                THEN over_time 
+                ELSE 0 
+            END 
+        ) AS ot_non_prod, 
+        SUM(CASE 
+            WHEN job_code <> 'PROD' 
+                THEN over_time 
+                ELSE 0 
+            END 
+        ) AS tot_nonProd, 
+        work_date,  sub_post, post, grp, sect, dept, dept_account , division, plant FROM view_req_ot_bulk 
+        WHERE `work_date` BETWEEN '$tgl_mulai' AND '$tgl_selesai' $addFilterOt
+        GROUP BY npk, work_date , sub_post, post, grp, sect, dept, dept_account , division, plant
+    ) view_req_ot_bulk  ON view_req_ot_bulk.work_date = working_days.date
+    WHERE working_days.date BETWEEN '$tgl_mulai' AND '$tgl_selesai' 
+    GROUP BY 
+        working_days.date";
+    $sql = mysqli_query($link, $q)or die(mysqli_error($link));
+    $arrayOt_nonProd = array();
+    
+    $arrayOt_acc = array();
+    $ot_acc = 0;
+    if(mysqli_num_rows($sql)>0){
+        while($data = mysqli_fetch_assoc($sql)){
+            // array_push($arrayOt, $data['jm_ot']);
+            if($data['ot_non_prod'] != null){
+                $ot_acc += $data['ot_tot'];
+                array_push($arrayOt_nonProd, $data['ot_non_prod']);
+            }else{
+                $ot_acc += 0;
+                array_push($arrayOt_nonProd, 0);
+                
+            }
+            array_push($arrayOt_acc, $ot_acc);
+            
+        }
+    }
+    $dataOt_nonProd = json_encode($arrayOt_nonProd);
+    $dataOt_acc = json_encode($arrayOt_acc);
 
-// echo $dataOt;
-
-
-
-// echo "tes";
+    return array($dataOt_acc,$dataOt_nonProd);
+    
+}
 ?>
