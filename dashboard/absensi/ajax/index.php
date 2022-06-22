@@ -449,6 +449,7 @@ if(isset($_SESSION['user'])){
                 view_absen_req.req_date_out,
                 view_absen_req.req_in,
                 view_absen_req.req_out,
+                view_absen_req.note_return,
                 view_absen_req.shift_req,
                 view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
                 FROM view_absen_req ";
@@ -529,6 +530,7 @@ if(isset($_SESSION['user'])){
                                     <th>Ket</th>
                                     <th>Progress</th>
                                     <th></th>
+                                    <th>Note</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                             </thead>
@@ -569,6 +571,7 @@ if(isset($_SESSION['user'])){
                                     $clr = authColor($data['req_status']);
                                     $stt = authText($data['status']);
                                     $prs = $data['req_status_absen'];
+                                    $note = $data['note_return'];
                                     $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                                     $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
                                         $sql_absensiHR = mysqli_query($link, "SELECT check_in AS 'in_abs' , check_out AS 'out_abs' FROM absensi WHERE id = '$data[id_absensi]'")or die(mysqli_error($link));
@@ -605,6 +608,7 @@ if(isset($_SESSION['user'])){
                                             </div>
                                         </td>
                                         <td class="td"><?=$stt?></td>
+                                        <td class="td"><?=$note?></td>
                                         <td class="text-right">
                                             
                                                 
@@ -727,6 +731,7 @@ if(isset($_SESSION['user'])){
                 view_absen_req.req_date_out,
                 view_absen_req.req_in,
                 view_absen_req.req_out,
+                view_absen_req.note_return,
                 view_absen_req.shift_req,
                 view_absen_req.req_code,CONCAT(view_absen_req.req_status_absen,view_absen_req.req_status) AS `status`,view_absen_req.req_status, view_absen_req.req_status_absen
                 FROM view_absen_req ";
@@ -807,6 +812,7 @@ if(isset($_SESSION['user'])){
                                     <th>Ket</th>
                                     <th>Progress</th>
                                     <th></th>
+                                    <th>Note</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                             </thead>
@@ -847,6 +853,7 @@ if(isset($_SESSION['user'])){
                                     $clr = authColor($data['req_status']);
                                     $stt = authText($data['status']);
                                     $prs = $data['req_status_absen'];
+                                    $note = $data['note_return'];
                                     $checkIn = ($data['req_in'] == '00:00:00')? "-" : jam($data['req_in']);
                                     $checkOut = ($data['req_out'] == '00:00:00')? "-" : jam($data['req_out']);
                                         $sql_absensiHR = mysqli_query($link, "SELECT check_in AS 'in_abs' , check_out AS 'out_abs' FROM absensi WHERE id = '$data[id_absensi]'")or die(mysqli_error($link));
@@ -882,6 +889,7 @@ if(isset($_SESSION['user'])){
                                             </div>
                                         </td>
                                         <td class="td"><?=$stt?></td>
+                                        <td class="td"><?=$note?></td>
                                         <td class="text-right">
                                             
                                                 

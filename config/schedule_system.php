@@ -277,11 +277,11 @@ function DateOut2($link, $shift, $date){
     }
     return array($tglini, $sesudah);
 }
-// $start = $_POST['start_date'];
-// $end = $_POST['end_date'];
-// $shift_start = $_POST['shift_start'];
-// $start_day = $_POST['start_day'];
-// $skema = $_POST['skema'];
+
+
+// foreach()
+// echo json_encode($array);
+
 function get_date($mulai, $selesai){
     $mulai = $month = strtotime($mulai);
     $selesai = strtotime($selesai);
@@ -314,16 +314,16 @@ function loopHari($mulai, $jmlHari){
     return $data;
 
 }
-$tgl_mulai = '2021-01-13';
-$tgl_selesai = '2021-10-1';
+// $tgl_mulai = '2021-01-13';
+// $tgl_selesai = '2021-10-1';
 
-$default_holiday = array('Sun','Sat');
+// $default_holiday = array('Sun','Sat');
 
-$dataShifting = 
-$arrayShifting = array('DAY','NIGHT');
-$skemaShift = 7;
+// $dataShifting = 
+// $arrayShifting = array('DAY','NIGHT');
+// $skemaShift = 7;
 
-$jmlShift = count($arrayShifting);
+// $jmlShift = count($arrayShifting);
 
 
 // echo $start;

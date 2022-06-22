@@ -161,6 +161,7 @@ if(isset($_SESSION['user'])){
                                 $str_limit = strtotime($limit_date);
                                 $today = date('Y-m-d');//harus diganti tanggal out kerja
                                 $str_today = strtotime($today);
+                                
                                 ?>
                                 <tr id="<?=$dataAbsen['id_absensi']?>" >
                                     <td class="td"><?=$no?></td>
@@ -798,16 +799,16 @@ if(isset($_SESSION['user'])){
             FROM view_organization ";
 
         $origin_query_absen = "SELECT view_absen_hr.id_absensi,
-                                        view_absen_hr.npk,
-                                        view_absen_hr.nama,
-                                        view_absen_hr.employee_shift,
-                                        view_absen_hr.grp,
-                                        view_absen_hr.dept_account,
-                                        view_absen_hr.work_date,
-                                        view_absen_hr.check_in,
-                                        view_absen_hr.check_out,
-                                        view_absen_hr.CODE
-                                        FROM view_absen_hr ";
+                view_absen_hr.npk,
+                view_absen_hr.nama,
+                view_absen_hr.employee_shift,
+                view_absen_hr.grp,
+                view_absen_hr.dept_account,
+                view_absen_hr.work_date,
+                view_absen_hr.check_in,
+                view_absen_hr.check_out,
+                view_absen_hr.CODE
+                FROM view_absen_hr ";
 
         $access_org = orgAccessOrg($level);
         $data_access = generateAccess($link,$level,$npk);

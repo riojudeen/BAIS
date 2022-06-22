@@ -70,7 +70,7 @@ if(isset($_SESSION['user'])){
         // echo $filter_cari;
         // $filterOtCode = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY grp, dept_account, work_date";
+        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL GROUP BY id_ot, grp, dept_account, work_date";
         $filterProg = "";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
         
@@ -306,7 +306,7 @@ if(isset($_SESSION['user'])){
         // echo $filter_cari;
         $filterType = ($_GET['att_type'] != '' )?" AND att_type = '$_GET[att_type]'":"";
         // list($status, $req_status) = pecahProg("$_GET[prog]");
-        $filterDraft = " AND CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL AND view_req_ot.id_ot = '$ot_type' ";
+        $filterDraft = " AND (CONCAT(view_req_ot.status_approve, view_req_ot.status_progress) IS NULL) AND view_req_ot.id_ot = '$ot_type' ";
         $filterProg = "";
         $query_req_overtime = filtergenerator($link, $level, $generate, $origin_query, $access_org)." AND work_date BETWEEN '$start' AND '$end' ".$add_filter.$filterProg.$filterDraft;
         

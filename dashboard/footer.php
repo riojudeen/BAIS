@@ -6,6 +6,11 @@ $time_lock = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/time_lock/";
 
 ?>
 
+<div id="center">
+  <div id="button">
+      <a href='#'>Easy</a>
+  </div>
+</div>
 <!-- maintnance  -->
 <label for="" class="d-none"  id="waktu_maintenance">5</label>
 <div class="modal fade modal-primary" id="myModal_maintenance" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -194,9 +199,6 @@ if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
 <script src="<?=base_url('assets/js/jquery.idle-master/jquery.idle.js')?>"></script>
 <script src="<?=base_url('assets/jquery-table2excel-master/dist/jquery.table2excel.min.js')?>"></script>
 <script src="<?=base_url('assets/js/register.js')?>"></script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/sticksy/dist/sticksy.min.js"></script>
 <!--
 <script>
 $(document).ready(function() {
@@ -218,6 +220,7 @@ $(document).ready(function() {
 <?php
 $url_style = base_url('dashboard/style.php');
 ?>
+
 <script>
   $(document).ready(function(){
     function ubah_sidebar_color(sidebarcolor){
@@ -705,6 +708,7 @@ if($actual_link != $link_exception2){
     });
   }
 </script>
+
 <?php
 $i = 1;
 $query_notif = "SELECT info, publisher, title, category, stats, date_start, date_end, `image` FROM info 

@@ -360,16 +360,20 @@ if(($_GET['upload_cat']) == "absensi_upload"){
                 // echo $date_mulai."-".$start."-".$end."<br>";
                 $q_replace_overtime .= " ('$id','$npk','$date','$date_mulai','$date_selesai','$start','$end','$npkUser'),";
                 // update request 
-                $q_cekOt = mysqli_query($link, $q_cek_reqOt." WHERE npk = '$npk' AND `work_date` = '$date'  ")or die(mysqli_error($link));
-                if(mysqli_num_rows($q_cekOt)>0){
-                    // jika ada cek pengajuan
-                    $dataReq = mysqli_fetch_assoc($q_cekOt);
-                    $approve = $dataReq['status_approve'];
-                    $stats = $dataReq['status'];
-                    // jika request SKTA 
-                    mysqli_query($link, "UPDATE lembur SET status_approve = 'a' , 
-                            `status` = '100' WHERE npk  = '$npk' AND work_date = '$date' 
-                            ")or die(mysqli_error($link));
+                // $q_cekOt = mysqli_query($link, $q_cek_reqOt." WHERE npk = '$npk' AND `work_date` = '$date'  ")or die(mysqli_error($link));
+                if($start != '00:00:00' && $end != '00:00:00'){
+                    $q_cekOt = mysqli_query($link, $q_cek_reqOt." WHERE npk = '$npk' AND `work_date` = '$date'  ")or die(mysqli_error($link));
+                    
+                    if(mysqli_num_rows($q_cekOt)>0){
+                        // jika ada cek pengajuan
+                        $dataReq = mysqli_fetch_assoc($q_cekOt);
+                        $approve = $dataReq['status_approve'];
+                        $stats = $dataReq['status'];
+                        // if($approve)
+                        mysqli_query($link, "UPDATE lembur SET status_approve = '100' , 
+                                `status` = 'a' WHERE npk  = '$npk' AND work_date = '$date' 
+                                ")or die(mysqli_error($link));
+                    }
                 }
                 ?>
                 
