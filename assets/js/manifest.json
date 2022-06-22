@@ -12,5 +12,14 @@
     "start_url": "/BAIS/dashboard/profile/index.php",
     "display": "fullscreen",
     "theme_color": "#66615B",
-    "background_color": "#66615B"
+    "background_color": "#66615B",
+    "manifest_version": 2,
+  "permissions": [
+    "notifications"
+  ],
+  "web_accessible_resources": [
+    "../img/img/logo-mini-01.png"
+  ]
+
+
 }

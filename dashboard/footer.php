@@ -5,12 +5,8 @@ $link_exception2 = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/c
 $time_lock = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/time_lock/";
 
 ?>
+<button class="tmbl" onclick="notifyMe('Title Notif', 'Body Notif')">Notify me!</button>
 
-<div id="center">
-  <div id="button">
-      <a href='#'>Easy</a>
-  </div>
-</div>
 <!-- maintnance  -->
 <label for="" class="d-none"  id="waktu_maintenance">5</label>
 <div class="modal fade modal-primary" id="myModal_maintenance" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -199,7 +195,36 @@ if(mysqli_num_rows($queryLock_maintenance) > 0 && $actual_link != $time_lock){
 <script src="<?=base_url('assets/js/jquery.idle-master/jquery.idle.js')?>"></script>
 <script src="<?=base_url('assets/jquery-table2excel-master/dist/jquery.table2excel.min.js')?>"></script>
 <script src="<?=base_url('assets/js/register.js')?>"></script>
-<!--
+
+<script type="text/javascript">
+  function notifyMe() {
+  // Let's check if the browser supports notifications
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted") {
+    // If it's okay let's create a notification
+    var notification = new Notification("Hi there!");
+  }
+
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        var notification = new Notification("Hi there!");
+      }
+    });
+  }
+
+  // At last, if the user has denied notifications, and you
+  // want to be respectful there is no need to bother them anymore.
+}
+
+</script>
+
 <script>
 $(document).ready(function() {
     // Javascript method's body can be found in assets/js/demos.js
