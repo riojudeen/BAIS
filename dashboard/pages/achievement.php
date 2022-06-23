@@ -19,7 +19,7 @@ if(isset($_SESSION['user'])){
         ?>
         
         <div class="row ">
-            <div class="col-md-3 position-sticky" >
+            <div class="col-md-3 position-sticky tab" >
                 <!-- <div class="card card-plain" >  -->
                     <div class="nav-tabs-wrapper "  data-spy="affix" data-offset-top="205" >
                         <ul id="tabs" class="nav nav-tabs flex-column nav-stacked text-left "   role="tablist">
@@ -44,29 +44,28 @@ if(isset($_SESSION['user'])){
                     </div>
                <!-- </div> -->
             </div> 
-            <div class="col-md-9 ">
+            <div class="col-md-9 main-tab col-active-min">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
+                            
                             <div class="col-md-6">
-                            <h5 class="title title-page">Area</h5>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group no-border">
-                                    <input type="text" class="form-control datepicker" id="start_date" data-date-format="YYYY-MM-DD" value="<?=$startDate?>">
-                                    <input type="text" disabled class="form-control text-center"  value="to" style="max-width:50px">
-                                    <input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" id="end_date" value="<?=$endDate?>">
-                                    
-                                    
-                                    <div class="input-group-append ">
-                                        <span id="filterDate" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span class="btn btn-sm btn-round btn-danger btn-icon trigger-tab">
+                                            <i class="nc-icon nc-minimal-right text-center icon-trigger"></i>
+                                        </span>
+                                        <span class="title h5 title-page text-danger">Area</span>
                                     </div>
                                 </div>
+                                
                             </div>
+                            
                         </div>
                         <hr class="py-0 mx-0">
                         <div class="row">
                             <div class="col-md-12">
+                                <label for="">Report By Organization : </label>
                                 <div class="input-group no-border">
                                     <select class="form-control" name="div" id="s_div">
                                         <option value="">Pilih Divisi</option>
@@ -86,6 +85,21 @@ if(isset($_SESSION['user'])){
                                     
                                     <div class="input-group-append ">
                                         <span id="filterGo" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="">Report By Date : </label>
+                                <div class="input-group no-border">
+                                    <input type="text" class="form-control datepicker" id="start_date" data-date-format="YYYY-MM-DD" value="<?=$startDate?>">
+                                    <input type="text" disabled class="form-control text-center"  value="to" style="max-width:50px">
+                                    <input type="text" class="form-control datepicker" data-date-format="YYYY-MM-DD" id="end_date" value="<?=$endDate?>">
+                                    
+                                    
+                                    <div class="input-group-append ">
+                                        <span id="filterDate" class="btn btn-sm input-group-text text-sm px-2 py-0 m-0">go</span>
                                     </div>
                                 </div>
                             </div>
@@ -148,6 +162,26 @@ if(isset($_SESSION['user'])){
     ?>
     <script>
         $(document).ready(function(){
+            $('.trigger-tab').click(function(){
+                if($('.col-active-min')[0]){
+                    $('.tab').addClass('d-none');
+                    $('.main-tab').removeClass('col-md-6');
+                    $('.main-tab').addClass('col-md-12');
+                    $('.main-tab').removeClass('col-active-min');
+                    $('.main-tab').addClass('col-active-max');
+                    $('.icon-trigger').removeClass('nc-minimal-right');
+                    $('.icon-trigger').addClass('nc-minimal-left');
+                    
+
+                }else{
+                    $('.icon-trigger').removeClass('nc-minimal-left');
+                    $('.icon-trigger').addClass('nc-minimal-right');
+                    $('.main-tab').addClass('col-active-min');
+                    $('.tab').removeClass('d-none');
+                    $('.main-tab').removeClass('col-md-12');
+                    $('.main-tab').addClass('col-md-6');
+                }
+            })
             function getDiv(){
                 console.log("tes");
                 var data = $('#s_div').val()
