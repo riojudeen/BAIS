@@ -3,6 +3,7 @@
         "phpoffice/phpexcel": "^1.8",
         "ramsey/uuid": "^3.9.3",
         "phpoffice/phpspreadsheet": "^1.12.0",
-        "mpdf/mpdf": "^8.0"
+        "mpdf/mpdf": "^8.0",
+        "cboden/ratchet": "^0.4.4"
     }
 }
