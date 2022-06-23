@@ -5,7 +5,7 @@ $link_exception2 = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/setting/c
 $time_lock = "http://$_SERVER[HTTP_HOST]".base_url()."/dashboard/time_lock/";
 
 ?>
-<button class="tmbl" onclick="notifyMe('Title Notif', 'Body Notif')">Notify me!</button>
+<!-- <button class="tmbl" onclick="notifyMe('Title Notif', 'Body Notif')">Notify me!</button> -->
 
 <!-- maintnance  -->
 <label for="" class="d-none"  id="waktu_maintenance">5</label>

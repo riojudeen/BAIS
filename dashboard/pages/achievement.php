@@ -12,12 +12,25 @@ $halaman = "Achievement Area";
 if(isset($_SESSION['user'])){
 
     include("../header.php");
+    
     $startDate = date('Y-m-01');
     $endDate = date('Y-m-t');
     if($level >=1 && $level <=8){
         ?>
-        <div class="row">
-            <div class="col-md-12">
+        <style>
+            .sidebar2 {
+            /* width: 250px; */
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background-color: green;
+            }
+
+            main2 { margin-left: 250px; }
+        </style>
+       
+        <div class="row ">
+            <div class="col-md-12 ">
                 <div class="alert alert-info alert-with-icon alert-dismissible fade show" data-notify="container">
                     <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
                     <i class="nc-icon nc-simple-remove"></i>
@@ -27,9 +40,9 @@ if(isset($_SESSION['user'])){
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card card-user card-plain">
+                <div class="row content">
+                    <div class="col-md-3 sidebar2">
+                        <div class="card card-user card-plain border rounded-lg sidebar2">
                             <div class="sticker">
                                 
                                 <div class="nav-tabs-wrapper">
